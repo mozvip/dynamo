@@ -41,7 +41,7 @@ public class FindSubtitleEpisodeBackLogTask extends TaskExecutor<FindSubtitleEpi
 			return;
 		}
 
-		VideoMetaData metaData = VideoManager.getInstance().getMetaData(episode);
+		VideoMetaData metaData = VideoManager.getInstance().getMetaData(episode, episode.getPath());
 		if (metaData.getSubtitleLanguages() != null && metaData.getSubtitleLanguages().contains( series.getSubtitleLanguage() )) {
 			tvShowDAO.setSubtitled(episode.getId());
 			return;

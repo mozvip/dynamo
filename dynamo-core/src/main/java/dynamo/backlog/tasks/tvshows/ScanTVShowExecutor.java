@@ -101,8 +101,10 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 							}
 						}
 
-						VideoManager.getInstance().getMetaData(managedEpisode);
 						TVShowManager.getInstance().saveEpisode( managedEpisode );
+						
+						VideoManager.getInstance().getMetaData(managedEpisode, p);
+
 					}
 				}
 			}

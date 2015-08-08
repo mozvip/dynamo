@@ -97,13 +97,18 @@ public class VideoManager {
 		return mediaInfo;
 	}
 	
-	public VideoMetaData getMetaData(Downloadable video) throws IOException, InterruptedException { 
+	public VideoMetaData getMetaData(Downloadable video, Path videoFilePath) throws IOException, InterruptedException { 
 		VideoMetaData metaData = videoDAO.getMetaData( video.getId() );
 		if (metaData == null) {
-			MediaInfo mediaInfo = getMediaInfo( video.getPath() );
-			String openSubtitlesHash = OpenSubtitlesHasher.computeHash( video.getPath() );
-			metaData = new VideoMetaData(mediaInfo.getAudioLanguages(), mediaInfo.getSubtitles(), mediaInfo.getWidth(), mediaInfo.getHeight(), openSubtitlesHash);
-			videoDAO.saveMetaData( video.getId(), mediaInfo.getAudioLanguages(), mediaInfo.getSubtitles(), mediaInfo.getWidth(), mediaInfo.getHeight(), openSubtitlesHash);
+			String openSubtitlesHash = OpenSubtitlesHasher.computeHash( videoFilePath );
+
+			MediaInfo mediaInfo = getMediaInfo( videoFilePath );
+			if (mediaInfo != null) {
+				metaData = new VideoMetaData(mediaInfo.getAudioLanguages(), mediaInfo.getSubtitles(), mediaInfo.getWidth(), mediaInfo.getHeight(), openSubtitlesHash);
+			} else {
+				metaData = new VideoMetaData(null, null, -1, -1, openSubtitlesHash);
+			}
+			videoDAO.saveMetaData( video.getId(), metaData.getAudioLanguages(), metaData.getSubtitleLanguages(), metaData.getWidth(), metaData.getHeight(), metaData.getOpenSubtitlesHash());
 		}
 		return metaData;
 	}

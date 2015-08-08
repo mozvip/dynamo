@@ -12,11 +12,11 @@ import dynamo.core.VideoSource;
 public class InfoMatcher {
 	
 	public static boolean qualityMatch( String subtitleName, VideoQuality quality ) {
-		return quality.match( subtitleName );
+		return quality != null && quality.match( subtitleName );
 	}
 
 	public static boolean sourceMatch( String subtitleName, VideoSource source ) {
-		return source.match( subtitleName );
+		return source != null && source.match( subtitleName );
 	}
 	
 	public static boolean releaseMatch( String subtitleName, ReleaseGroup group ) {

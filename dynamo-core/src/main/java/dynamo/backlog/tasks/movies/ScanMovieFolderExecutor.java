@@ -82,7 +82,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 				downloadableDAO.delete( movie.getId() );
 			} else {
 				
-				VideoMetaData metaData = VideoManager.getInstance().getMetaData( movie );
+				VideoMetaData metaData = VideoManager.getInstance().getMetaData( movie, p );
 
 				// fix missing data if possible
 				if (movie.getMovieDbId() == 0 || movie.getYear() <= 0 ) {
@@ -132,7 +132,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 			}
 
 			MovieManager.getInstance().save( movie );
-			VideoManager.getInstance().getMetaData( movie );
+			VideoManager.getInstance().getMetaData( movie, p );
 			
 			moviesMap.put( moviePath, movie );
 		}

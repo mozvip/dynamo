@@ -58,7 +58,7 @@ public class SubTitleDownloader implements Reconfigurable {
 
 	public Path downloadSubTitle( Downloadable video, String name, VideoQuality quality, VideoSource source, String releaseGroup, int season, int episode, Language subtitlesLanguage ) throws Exception {
 
-		VideoMetaData metaData = VideoManager.getInstance().getMetaData(video);
+		VideoMetaData metaData = VideoManager.getInstance().getMetaData(video, video.getPath());
 		
 		VideoDetails details = new VideoDetails( video.getPath(), name, quality, source, releaseGroup, season, episode, metaData.getOpenSubtitlesHash() );
 		
