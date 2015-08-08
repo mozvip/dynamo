@@ -50,13 +50,18 @@ public class BackLogProcessor extends Thread {
 	}
 	
 	protected AbstractDynamoQueue getQueueForTask( Task task ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, ClassNotFoundException {
-		AbstractDynamoQueue queue = (AbstractDynamoQueue) queues.get( task.getQueueClass().getName() );
-
-		if (queue == null) {
-			queue = (AbstractDynamoQueue) ConfigurationManager.configureQueue( task.getQueueClass() );
-			queues.put( task.getQueueClass().getName(), queue );
-		}	
-		
+		AbstractDynamoQueue queue = null;
+		if (!queues.containsKey( task.getQueueClass().getName() )) {
+			synchronized (task.getQueueClass()) {
+				queue = (AbstractDynamoQueue) queues.get( task.getQueueClass().getName() );
+				if (queue == null) {
+					queue = (AbstractDynamoQueue) ConfigurationManager.configureQueue( task.getQueueClass() );
+					queues.put( task.getQueueClass().getName(), queue );
+				}	
+			}
+		} else {
+			queue = (AbstractDynamoQueue) queues.get( task.getQueueClass().getName() );
+		}
 		return queue;
 	}
 	
@@ -179,6 +184,7 @@ public class BackLogProcessor extends Thread {
 	}
 
 	public void unschedule( Class<? extends Task> taskClass, String expressionToVerify ) {
+		// FIXME : if taskClass is known, we should be able to automatically select the corresponding queue
 		for (AbstractDynamoQueue queue : getQueues().values()) {
 			for (Task task : queue.getTaskBackLog()) {
 				if (match( task, taskClass, expressionToVerify)) {
@@ -195,8 +201,13 @@ public class BackLogProcessor extends Thread {
 
 	private void unschedule(Task task) {
 		items.remove( task );
-		for (AbstractDynamoQueue queue : getQueues().values()) {
-			queue.cancel( task );
+		try {
+			AbstractDynamoQueue queue = getQueueForTask(task);
+			if (queue != null) {
+				queue.cancel( task );
+			}
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException | ClassNotFoundException e) {
+			ErrorManager.getInstance().reportThrowable( e );
 		}
 	}
 	
