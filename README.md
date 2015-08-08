@@ -2,7 +2,10 @@
 
 ### What is this repository for? ###
 
-This is the main development repository for Dynamo
+This is the main development repository for Dynamo.
+Dynamo is an attempt at creating a single application that has the main functionnalities of SickBeard, CouchPotato, Headphones, ...
+
+It is coded in Java 7.
 
 ### How do I get set up? ###
 
