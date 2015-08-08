@@ -1,0 +1,9 @@
+/.apt_generated
+/target
+/dynamo.h2.db
+/dynamo.lock.db
+/dynamo.log
+/dynamo.trace.db
+/dynamo-create-ddl.sql
+/{java.io.tmpdir}
+/httpclient-cache.mv.db

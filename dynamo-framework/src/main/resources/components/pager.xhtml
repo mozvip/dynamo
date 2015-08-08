@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://java.sun.com/jsf/passthrough">
+
+<ui:fragment rendered="#{pager.lastPage > 0}">
+	<div class="col-lg-12 col-md-12 col-sm12 col-xs12">
+		<ul class="pager">
+			<li class="#{pager.currentPage == 0 ? 'previous disabled' : 'previous'}">
+				<h:commandLink action="#{pager.goToPage( pager.currentPage - 1 )}" disabled="#{pager.currentPage == 0}">Previous
+					<f:ajax render="@form"></f:ajax>
+				</h:commandLink>
+			</li>
+			<li class="#{pager.currentPage lt pager.lastPage ? 'next' : ' next disabled'}">
+				<h:commandLink action="#{pager.goToPage( pager.currentPage + 1 )}" disabled="#{pager.currentPage == pager.lastPage}">Next
+					<f:ajax render="@form"></f:ajax>
+				</h:commandLink>
+			</li>
+		</ul>
+	</div>
+</ui:fragment>
+
+</html>

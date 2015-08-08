@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<div id="manualSearch" class="modal fade" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3>Manual Movie Search</h3>
+			</div>
+			<div class="modal-body">
+				<h:form id="manualMovieSearchForm">
+
+					<p class="form-control-static">
+						<h:outputText styleClass="manualSearchFieldPath" value="&nbsp;" />
+					</p>
+
+					<div class="input-group">
+						<div class="input-group-btn">
+							<h:selectOneMenu value="#{movies.searchLanguage}"
+								styleClass="form-control" required="true" style="width: 110px">
+								<f:selectItems value="#{listOfValues.languages}" />
+							</h:selectOneMenu>
+						</div>
+						<h:inputText id="name" label="Movie Name"
+							value="#{movies.searchMovie}" required="true"
+							styleClass="form-control manualSearchField" />
+						<div class="input-group-btn">
+							<h:commandLink styleClass="btn btn-primary"
+								action="#{movies.search}">
+								<f:ajax execute="@form" render="movieSearchResults" />
+								<i class="fa fa-search" />&nbsp;Search
+									</h:commandLink>
+						</div>
+					</div>
+
+					<h:panelGroup id="movieSearchResults">
+						<h:dataTable styleClass="table table-condensed"
+							value="#{movies.searchResults}" var="movie"
+							rendered="#{not empty movies.searchResults}">
+							<h:column>
+								<h:outputLink styleClass="btn btn-default"
+									value="http://www.themoviedb.org/movie/#{movie.id}"
+									target="_blank">
+									<i class="fa fa-external-link" />#{movie.title}
+										</h:outputLink>
+							</h:column>
+							<h:column>
+										#{movie.releaseDate}
+									</h:column>
+							<h:column>
+								<h:commandLink styleClass="btn btn-success"
+									action="#{movies.select(movie)}" value="Select this movie">
+									<i class="fa fa-download" />
+								</h:commandLink>
+							</h:column>
+							<f:facet name="footer">
+								<div class="checkbox">
+									<label> <h:selectBooleanCheckbox
+											value="#{movies.renameFile}" />Rename movie files
+									</label>
+								</div>
+							</f:facet>
+						</h:dataTable>
+					</h:panelGroup>
+					<h:inputText value="#{movies.searchMovieId}"
+						styleClass="manualSearchMovieId" style="display:none" />
+				</h:form>
+			</div>
+		</div>
+	</div>
+</div>
+
+</html>

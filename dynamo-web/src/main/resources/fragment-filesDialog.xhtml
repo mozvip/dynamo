@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough" lang="en">
+
+<h:form id="showFilesForm">
+	<div id="fileList" class="modal fade" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h3>Files List</h3>
+				</div>
+				<div class="modal-body">
+					<h:inputHidden value="#{fileList.downloadableId}"
+						styleClass="downloadableId" />
+					<h:dataTable styleClass="table table-condensed"
+						value="#{fileList.files}" var="file">
+						<h:column>
+							<h:commandLink styleClass="btn btn-sm btn-danger"
+								onclick="return (confirm('Are you sure you want to delete #{movies.fixName(file.filePath)} ?'));">
+								<f:ajax execute="@this" listener="#{fileList.delete}"
+									onevent="removeFile" />
+								<f:param name="path" value="#{file.filePath}" />
+								<i class="fa fa-trash-o"></i>
+							</h:commandLink>
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+									Path
+									</f:facet>
+									#{file.filePath}
+								</h:column>
+						<h:column>
+							<f:facet name="header">
+									Size
+									</f:facet>
+							<h:outputText value="#{file.size}">
+								<f:converter converterId="FileSizeConverter" />
+							</h:outputText>
+						</h:column>
+					</h:dataTable>
+				</div>
+			</div>
+		</div>
+	</div>
+</h:form>
+<script>
+			function showFiles(e) {
+				if (e.status == 'success') {
+					$('#fileList').modal();
+				}
+			}
+			function removeFile( data ) {
+				if (data.status == 'begin') {
+					removeParent($(data.source), 'tr');
+				}
+			}			
+		</script>
+
+</html>

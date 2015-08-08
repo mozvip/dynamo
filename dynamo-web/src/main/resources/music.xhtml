@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition template="/template.xhtml">
+
+	<ui:define name="content">
+	
+		<style>
+			.caption {
+				font-size: 12px;
+				font-weight: bold;
+				width: 100%;
+				text-align: center;
+			}
+			.albumThumb {
+				height: 225px; margin: 0px; border: none;
+			}
+			.albumName {
+				overflow: hidden;
+				white-space: nowrap;
+				display: block;
+				font-weight: bold;
+			}
+			.artistName {
+				overflow: hidden;
+				white-space: nowrap;
+				display: block;
+				font-weight: bold;
+			}
+			.albumGenre {
+				overflow: hidden;
+				white-space: nowrap;
+			}
+			.buttons {
+				position: absolute; right: 32px; top: 10px; width: 20px;
+			}
+			.albumCover {
+				width: 160px;
+				height: 160px;
+			}
+		</style>	
+
+		<h:form styleClass="form-inline">
+			<div class="form-group">
+				<h:outputLabel value="Artist&nbsp;" for="artist" />
+				<h:inputText styleClass="form-control artistSuggestion" id="artist" value="#{music.artistsSearchFilter}" p:placeholder="Artist" autocomplete="off" />
+				<h:commandButton styleClass="suggestionButton" style="visibility: hidden;">
+					<f:ajax listener="#{music.filter}" render="downloadableList" execute="@form" />
+				</h:commandButton>
+			</div>
+		</h:form>
+		<h:form id="downloadableList">
+			<ui:include src="/components/pager.xhtml" />
+			<ui:repeat var="album" value="#{pager.items}">
+				<div class="album col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{album.id}">
+					<div class="thumbnail albumThumb" id="#{album.searchString}">
+						<ui:fragment rendered="#{album.status == 'DOWNLOADED'}">
+							<a href="#{album.relativeLink}">
+								<img class="img-responsive albumCover" data-src="#{album.urlEncodedCoverImage}" alt="#{album.album}" />
+							</a>
+						</ui:fragment>
+						<ui:fragment rendered="#{album.status != 'DOWNLOADED'}">
+							<img class="img-responsive albumCover" data-src="#{album.urlEncodedCoverImage}" alt="#{album.album}" />
+						</ui:fragment>
+						<div class="caption">
+							<span class="albumName">#{album.album}</span>
+							<span class="artistName">#{album.artistName}</span>
+							<span class="albumGenre">#{album.genre}</span>
+						</div>
+						<div class="buttons">
+							<ui:fragment rendered="#{album.status == 'SUGGESTED'}" title="Want Suggestion">
+								<a href="#" class="btn btn-success btn-sm" onclick="want('#{album.id}');">
+									<i class="fa fa-download"></i>
+								</a>
+							</ui:fragment>
+							<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{album.status == 'SNATCHED' or album.status == 'DOWNLOADED'}" title="Redownload" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(album.album)} ?'));">
+								<f:ajax render="@none" listener="#{music.redownload}" execute="@this" />
+								<f:param name="id" value="#{movie.id}" />
+								<i class="fa fa-refresh" />
+							</h:commandLink>
+							<h:commandLink title="Blacklist Artist" styleClass="btn btn-danger btn-sm" action="#{music.blackListArtist}" rendered="#{album.status == 'SUGGESTED'}"
+								onclick="return confirm('Are you sure you want to blacklist #{movies.fixName(album.artistName)} ?');">
+								<f:ajax render="@none" execute="@this" onevent="removeThumbnail"/>
+								<f:param name="id" value="#{album.id}" />
+								<i class="fa fa-trash-o"></i>
+							</h:commandLink>
+							<h:commandLink title="Delete Album" styleClass="btn btn-danger btn-sm" action="#{music.deleteAlbum}" rendered="#{album.status == 'DOWNLOADED'}"
+								onclick="return confirm('Are you sure you want to delete #{movies.fixName(album.album)} ?');">
+								<f:ajax render="@none" execute="@this" onevent="removeThumbnail"/>
+								<f:param name="id" value="#{album.id}" />
+								<i class="fa fa-trash-o"></i>
+							</h:commandLink>
+						</div>
+					</div>
+				</div>
+			</ui:repeat>
+			<ui:include src="/components/pager.xhtml" />
+		</h:form>
+		
+		<script>
+			function initPage() {
+				
+				$('.artistSuggestion').typeahead(
+						{source: function( query, process ) {
+							$.getJSON( "/services/suggest-music-artist/?prefix=" + query, function( data ) {
+								process(data);
+							});	
+						}},
+						autoSelect=false
+				);
+				
+				$('.artistSuggestion').change( function() {
+					$(this).closest('form').find('.suggestionButton').click();
+				});
+			}
+
+		function removeThumbnail( data ) {
+				if (data.status == 'begin') {
+					disappear( 'bounceOutUp', $(data.source).closest('div.album') );
+				}
+			}
+			function want(id) {
+				$.ajax({
+					  url: "want",
+					  data: {
+					    id: id
+					  },
+					  beforeSend: function() {
+						  disappear( 'bounceOutUp', $('#' + id) );
+					  }
+				});
+			}				
+		</script>		
+
+	</ui:define>
+
+</ui:composition>
+
+</html>

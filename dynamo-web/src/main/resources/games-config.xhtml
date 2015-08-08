@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<ui:composition template="/template.xhtml">
+
+	<ui:define name="title">
+		Games - Setup Folders
+	</ui:define>
+
+	<ui:define name="content">
+
+		<ui:include src="fragment-fileBrowser.xhtml" />
+		<ui:include src="fragment-folderBrowser.xhtml" />
+
+		<h:form p:role="form" styleClass="form-horizontal">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<h:commandLink styleClass="btn btn-success" style="width: 100%;">
+						<i class="fa fa-save" />&nbsp;Save Configuration
+							<f:ajax render=":messages" listener="#{games.save}"
+							execute="@form" />
+					</h:commandLink>
+				</div>
+			</div>
+
+			<ui:repeat value="#{games.platforms}" var="platform"
+				styleClass="table">
+
+				<div class="panel-group" id="accordion">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion"
+									href="#collapse#{platform}">#{platform.label}</a>
+							</h4>
+						</div>
+						<div id="collapse#{platform}" class="panel-collapse collapse in">
+							<div class="panel-body">
+								<h:outputLabel value="Folder :"></h:outputLabel>
+								<div class="input-group">
+									<span class="input-group-addon"><i
+										class="fa fa-folder-open-o" /></span>
+									<h:inputText label="Folder for #{platform.label}"
+										value="#{games.folder[platform]}" required="true"
+										converter="PathConverter" styleClass="form-control">
+										<f:ajax execute="@form" render=":tabs :messages" />
+										<f:passThroughAttribute name="placeholder"
+											value="Enter Folder..." />
+									</h:inputText>
+									<span class="input-group-btn"> <a href="#"
+										class="btn btn-default"
+										onclick="window.browserTargetField = $(this).parent().prev();"
+										data-toggle="modal" data-target="#browseFolder"> <span
+											class="fa fa-search" /></a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ui:repeat>
+
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>
+
+</html>

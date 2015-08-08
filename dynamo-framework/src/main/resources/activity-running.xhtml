@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/template.xhtml">
+
+	<ui:define name="title">
+		Running Tasks
+    </ui:define>
+
+	<ui:define name="content">
+		<h:form id="runningTasksForm">
+			<ui:repeat var="queue" value="#{backlog.queues}">
+				<h:panelGroup rendered="#{not empty queue.backLog}">
+					<h2>#{queue.queueName}</h2>
+					<h:dataTable styleClass="table table-condensed"
+						value="#{queue.backLog}" var="executor" rows="20"
+						rowClasses="#{backlog.getRowClasses(queue)}">
+						<f:facet name="header">
+							<span class="badge">#{queue.backLog.size()}</span>
+						</f:facet>
+						<h:column>
+							<h:commandLink styleClass="btn btn-default"
+								action="#{queue.cancel(executor.task)}">
+								<i class="fa fa-trash-o" />Cancel
+									<f:ajax execute="@form" render="@form" />
+							</h:commandLink>
+						</h:column>
+						<h:column>
+							<ui:fragment rendered="#{executor.reportProgress}">
+								<h:outputText value="#{executor.currentLabel}" escape="false" />
+								<div class="progress">
+									<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="#{executor.itemsDone}" aria-valuemin="0" aria-valuemax="#{executor.totalItems}"
+										style="width: #{executor.itemsPercent}%">
+										<h:outputText value="#{executor.itemsPercent}%" escape="false" />
+									</div>
+								</div>
+							</ui:fragment>
+							<ui:fragment rendered="#{!executor.reportProgress}">
+								<h:outputText value="#{executor.currentLabel}" escape="false" />
+							</ui:fragment>
+						</h:column>
+					</h:dataTable>
+				</h:panelGroup>
+			</ui:repeat>
+			<h:commandButton id="refreshButton" style="visibility:hidden;"></h:commandButton>
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="custom_js">
+		<script>
+			window.setInterval("jsf.ajax.request('runningTasksForm:refreshButton', null, {'javax.faces.behavior.event': 'action', 'execute': '@none', 'render': '@form'});", 1500);
+		</script>
+	</ui:define>
+
+
+</ui:composition>
+
+</html>

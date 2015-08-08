@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:body>
+	<ui:composition template="/template.xhtml">
+		<ui:define name="title">
+	       		TV Shows
+       	 	</ui:define>
+
+		<ui:define name="page-header">
+			<h1>TV Shows</h1>
+		</ui:define>
+
+		<ui:define name="content">
+		
+			<h:dataTable value="#{tvshows.series}" var="show" cellpadding="0" width="100%" styleClass="table">
+				<h:column>
+					<h3 class="hidden-sm hidden-xs">
+						#{show.name}
+					</h3>
+				</h:column>						
+				<h:column>
+					<h:link outcome="tvshow">
+						<h:graphicImage value="#{show.banner}" styleClass="img-responsive" />
+						<f:param name="id" value="#{show.id}" />
+					</h:link>
+				</h:column>
+			</h:dataTable>
+
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

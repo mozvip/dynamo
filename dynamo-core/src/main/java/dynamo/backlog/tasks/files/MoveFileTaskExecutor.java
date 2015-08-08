@@ -1,0 +1,47 @@
+package dynamo.backlog.tasks.files;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+
+import dynamo.manager.DownloadableManager;
+
+public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask> {
+	
+	private Path source;
+	private Path destination;
+
+	public MoveFileTaskExecutor(MoveFileTask item) {
+		super(item);
+		this.source = item.getSource();
+		this.destination = item.getDestination();
+	}
+
+	@Override
+	public void execute() throws IOException {
+		
+		if (!Files.isDirectory( destination.getParent())) {
+			Files.createDirectories( destination.getParent() );
+		}
+
+		if (Files.isWritable(source.getParent()) && !source.toAbsolutePath().equals( destination.toAbsolutePath() )) {
+			Files.move( source, destination, StandardCopyOption.REPLACE_EXISTING);
+			DownloadableManager.getInstance().newFile( task, task.getDownloadable(), destination );
+		}
+		boolean parentFolderEmpty = FileUtils.isDirEmpty( source.getParent() );
+		if (parentFolderEmpty) {
+			queue( new DeleteTask(source.getParent(), false), false );
+		}
+
+	}
+	
+	@Override
+	public boolean isFinished() {
+		if (!Files.exists( source )) {
+			return true;
+		}
+		return Files.exists( destination );
+	}
+
+}

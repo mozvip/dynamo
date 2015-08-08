@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="mozvip" id="1406620788324-1">
+        <createTable tableName="ANDROIDAPPLICATION">
+            <column name="ID" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GOOGLEID" type="VARCHAR(2147483647)"/>
+            <column name="ICONURL" type="VARCHAR(2147483647)"/>
+            <column name="NAME" type="VARCHAR(2147483647)"/>
+            <column name="VERSION" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-3">
+        <createTable tableName="DOWNLOADABLE">
+            <column autoIncrement="true" name="ID" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="PK_DOWNLOADINFO"/>
+            </column>
+            <column name="DTYPE" type="VARCHAR(100)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="PATH" type="VARCHAR(2048)"/>
+            <column name="STATUS" type="VARCHAR(50)"/>
+            <column name="AKA" type="VARCHAR(2147483647)" />
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-5">
+        <createTable tableName="HISTORYITEM">
+            <column autoIncrement="true" name="ID" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="PK_HISTORYITEM"/>
+            </column>
+            <column name="COMMENT" type="VARCHAR(2147483647)"/>
+            <column name="DATE" type="TIMESTAMP"/>
+            <column name="STATUS" type="VARCHAR(50)"/>
+            <column name="DOWNLOADABLE_ID" type="INT(10)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-8">
+        <createTable tableName="MAGAZINE">
+            <column name="SEARCHNAME" type="VARCHAR(512)">
+                <constraints primaryKey="true" primaryKeyName="PK_MAGAZINE"/>
+            </column>
+            <column name="LANGUAGE" type="INT(10)">
+            	<constraints nullable="false"/>
+           	</column>
+            <column name="NAME" type="VARCHAR(2147483647)">
+            	<constraints nullable="false"/>
+           	</column>
+            <column name="PATH" type="VARCHAR(2147483647)">
+            	<constraints nullable="false"/>
+           	</column>
+            <column name="PERIODICITY" type="INT(10)"/>
+            <column name="AUTODOWNLOAD" type="BOOLEAN(1)"/>
+            <column name="CURRENTISSUE" type="VARCHAR(2147483647)"/>
+            <column name="AKA" type="VARCHAR(2147483647)"/>
+            <column name="BLACKLIST" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-9">
+        <createTable tableName="MAGAZINEISSUE">
+            <column name="ID" type="INT(10)">
+            	<constraints primaryKey="true" primaryKeyName="PK_MAGAZINEISSUE"/>
+            </column>
+            <column name="ISSUE" type="INT(10)"/>
+            <column name="ISSUEDATE" type="date"/>
+            <column name="ISSUENAME" type="VARCHAR(2147483647)"/>
+            <column name="RAWNAME" type="VARCHAR(2147483647)"/>
+            <column name="SPECIAL" type="BOOLEAN(1)"/>
+            <column name="MAGAZINE_SEARCHNAME" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-12">
+        <createTable tableName="MANAGEDEPISODE">
+            <column name="ID" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="PK_MANAGEDEPISODE"/>
+            </column>
+            <column name="SEASON_ID" type="INT(10)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="EPISODENUMBER" type="INT(10)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="ABSOLUTENUMBER" type="INT(10)" />
+            <column name="EPISODENAME" type="VARCHAR(500)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="FIRSTAIRED" type="date"/>
+            <column name="QUALITY" type="VARCHAR(100)"/>
+            <column name="RELEASEGROUP" type="VARCHAR(100)"/>
+            <column name="SOURCE" type="VARCHAR(100)"/>
+            <column name="SUBTITLED" type="BOOLEAN(1)"/>
+            <column name="SUBTITLESPATH" type="VARCHAR(2147483647)"/>
+            <column name="TVDBID" type="VARCHAR(2147483647)"/>
+            <column name="WATCHED" type="BOOLEAN(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-13">
+        <createTable tableName="MANAGEDSERIES">
+            <column name="ID" type="VARCHAR(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="METADATALANGUAGE" type="VARCHAR(50)"/>
+            <column name="AUDIOLANGUAGE" type="VARCHAR(50)"/>
+            <column name="SUBTITLELANGUAGE" type="VARCHAR(50)"/>
+            <column name="AUTODOWNLOAD" type="BOOLEAN(1)"/>
+            <column name="BANNER" type="VARCHAR(2147483647)"/>
+            <column name="DOWNLOADED" type="INT(10)"/>
+            <column name="ENDED" type="BOOLEAN(1)"/>
+            <column name="FOLDER" type="VARCHAR(2147483647)"/>
+            <column name="IMDBID" type="VARCHAR(2147483647)"/>
+            <column name="LASTUPDATEDDATE" type="TIMESTAMP"/>
+            <column name="MISSING" type="INT(10)"/>
+            <column name="NETWORK" type="VARCHAR(2147483647)"/>
+            <column name="POSTER" type="VARCHAR(2147483647)"/>
+            <column name="USEABSOLUTENUMBERING" type="BOOLEAN(1)"/>
+            <column name="AKA" type="VARCHAR(2147483647)" />
+            <column name="QUALITIES" type="VARCHAR(2147483647)" />
+            <column name="BLACKLIST" type="VARCHAR(2147483647)" />
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-17">
+        <createTable tableName="MOVIE">
+            <column name="ID" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IMDBID" type="VARCHAR(9)"/>
+            <column name="MOVIEDBID" type="INT(10)"/>
+            <column name="NAME" type="VARCHAR(2147483647)"/>
+            <column name="YEAR" type="INT(4)"/>
+            <column name="ORIGINALLANGUAGE" type="VARCHAR(100)"/>
+            <column name="POSTERPATH" type="VARCHAR(2147483647)"/>
+            <column name="QUALITY" type="VARCHAR(100)"/>
+            <column name="RATING" type="DOUBLE(17)"/>
+            <column name="RELEASEGROUP" type="VARCHAR(100)"/>
+            <column name="SOURCE" type="VARCHAR(100)"/>
+            <column name="SUBTITLED" type="BOOLEAN(1)"/>
+            <column name="SUBTITLESPATH" type="VARCHAR(2147483647)"/>
+            <column name="TRAKTURL" type="VARCHAR(2147483647)"/>
+            <column name="WANTEDAUDIOLANGUAGE" type="VARCHAR(100)"/>
+            <column name="WANTEDSUBTITLESLANGUAGE" type="VARCHAR(100)"/>
+            <column name="WANTEDQUALITY" type="VARCHAR(100)"/>
+            <column name="WATCHED" type="BOOLEAN(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-19">
+        <createTable tableName="MUSICALBUM">
+            <column name="ID" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="PK_MUSICALBUM"/>
+            </column>
+            <column name="ARTIST_NAME" type="VARCHAR(255)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="ALBUM" type="VARCHAR(2147483647)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="YEAR" type="INT(4)" />
+            <column name="ALLMUSICURL" type="VARCHAR(2147483647)"/>
+            <column name="GENRE" type="VARCHAR(2147483647)"/>
+            <column name="IMAGE" type="VARCHAR(2147483647)"/>
+            <column name="QUALITY" type="VARCHAR(50)"/>
+            <column name="SEARCHSTRING" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-20">
+        <createTable tableName="MUSICARTIST">
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="PK_MUSICARTIST"/>
+            </column>
+            <column name="ALLMUSICURL" type="VARCHAR(2147483647)"/>
+            <column name="BLACKLISTED" type="BOOLEAN(1)"/>
+            <column name="FAVORITE" type="BOOLEAN(1)"/>
+            <column name="AKA" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-22">
+        <createTable tableName="MUSICFILE">
+            <column name="PATH" type="VARCHAR(2147483647)">
+                <constraints primaryKey="true" primaryKeyName="PK_MUSICFILE"/>
+            </column>
+            <column name="SIZE" type="BIGINT(19)"/>
+            <column name="SONGARTIST" type="VARCHAR(2147483647)"/>
+            <column name="SONGTITLE" type="VARCHAR(2147483647)"/>
+            <column name="TAGSMODIFIED" type="BOOLEAN(1)"/>
+            <column name="TRACK" type="INT(10)"/>
+            <column name="YEAR" type="INT(10)"/>
+            <column name="ALBUM_ID" type="INT(10)">
+            	<constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-23">
+        <createTable tableName="REMOTESUBTITLES">
+            <column autoIncrement="true" name="ID" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_3F"/>
+            </column>
+            <column name="DATA" type="BLOB"/>
+            <column name="SCORE" type="INT(10)"/>
+            <column name="URL" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-24">
+        <createTable tableName="SEARCHRESULT">
+            <column name="URL" type="VARCHAR(2147483647)">
+                <constraints primaryKey="true" primaryKeyName="PK_SEARCHRESULT"/>
+            </column>
+			<column name="PROVIDERNAME" type="VARCHAR(255)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="PROVIDERCLASSNAME" type="VARCHAR(500)"/>
+            <column name="REFERER" type="VARCHAR(500)"/>
+            <column name="SIZEINMEGS" type="DOUBLE(17)"/>
+            <column name="TITLE" type="VARCHAR(500)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="VARCHAR(100)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="DOWNLOADABLE_ID" type="INT(10)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="CLIENTID" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-25">
+        <createTable tableName="SEARCHRESULTFILE">
+            <column autoIncrement="true" name="ID" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="PK_SEARCHRESULTFILE"/>
+            </column>
+            <column name="DESTINATION" type="VARCHAR(2147483647)"/>
+            <column name="EXPIREDATE" type="TIMESTAMP"/>
+            <column name="NAME" type="VARCHAR(2147483647)"/>
+            <column name="SIZE" type="BIGINT(19)"/>
+            <column name="RESULT_URL" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-26">
+        <createTable tableName="TVSHOWSEASON">
+            <column name="ID" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="PK_TVSHOWSEASON"/>
+            </column>
+            <column name="SERIES_ID" type="VARCHAR(2147483647)">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="SEASON" type="INT(10)">
+            	<constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-27">
+        <createTable tableName="UNRECOGNIZEDFILE">
+            <column autoIncrement="true" name="ID" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_7D"/>
+            </column>
+            <column name="PATH" type="VARCHAR(2048)">
+            	 <constraints nullable="false"/>
+            </column>
+            <column name="SERIES_ID" type="VARCHAR(20)">
+            	 <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-28">
+        <createTable tableName="UNRECOGNIZEDFOLDER">
+            <column name="PATH" type="VARCHAR(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-29">
+        <createTable tableName="VIDEOGAME">
+            <column name="ID" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="PK_VIDEOGAME"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PLATFORM" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COVER_IMAGE" type="VARCHAR(500)" />
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-31">
+        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_4" tableName="MOVIE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-39">
+        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_CE" tableName="ANDROIDAPPLICATION"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-40">
+        <addPrimaryKey columnNames="ID" constraintName="CONSTRAINT_D3" tableName="MANAGEDSERIES"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-41">
+        <addPrimaryKey columnNames="PATH" constraintName="CONSTRAINT_DA" tableName="UNRECOGNIZEDFOLDER"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-45">
+        <addUniqueConstraint columnNames="TVDBID" constraintName="UNIQUE_TVDBID" deferrable="false" disabled="false" initiallyDeferred="false" tableName="MANAGEDEPISODE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-46">
+        <addUniqueConstraint columnNames="NAME" constraintName="CONSTRAINT_D" deferrable="false" disabled="false" initiallyDeferred="false" tableName="MANAGEDSERIES"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-47">
+        <addUniqueConstraint columnNames="SEARCHSTRING" constraintName="CONSTRAINT_E" deferrable="false" disabled="false" initiallyDeferred="false" tableName="MUSICALBUM"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-48">
+        <addUniqueConstraint columnNames="SERIES_ID,SEASON" constraintName="UNIQUE_SERIES_ID_SEASON" deferrable="false" disabled="false" initiallyDeferred="false" tableName="TVSHOWSEASON"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-49">
+        <addUniqueConstraint columnNames="SEASON_ID,EPISODENUMBER" constraintName="UNIQUE_SEASON_ID_EPISODENUMBER" deferrable="false" disabled="false" initiallyDeferred="false" tableName="MANAGEDEPISODE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-50">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="ANDROIDAPPLICATION" constraintName="FK_ANDROIDAPPLICATION_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-51">
+        <addForeignKeyConstraint baseColumnNames="DOWNLOADABLE_ID" baseTableName="HISTORYITEM" constraintName="FK_HISTORYITEM_DOWNLOADABLE_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-53">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="MAGAZINEISSUE" constraintName="FK_MAGAZINEISSUE_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-54">
+        <addForeignKeyConstraint baseColumnNames="MAGAZINE_SEARCHNAME" baseTableName="MAGAZINEISSUE" constraintName="FK_MAGAZINEISSUE_MAGAZINE_SEARCHNAME" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="SEARCHNAME" referencedTableName="MAGAZINE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-57">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="MANAGEDEPISODE" constraintName="FK_MANAGEDEPISODE_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-58">
+        <addForeignKeyConstraint baseColumnNames="SEASON_ID" baseTableName="MANAGEDEPISODE" constraintName="FK_MANAGEDEPISODE_SEASON_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-63">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="MOVIE" constraintName="FK_MOVIE_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-64">
+        <addForeignKeyConstraint baseColumnNames="ARTIST_NAME" baseTableName="MUSICALBUM" constraintName="FK_MUSICALBUM_ARTIST_NAME" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="NAME" referencedTableName="MUSICARTIST"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-65">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="MUSICALBUM" constraintName="FK_MUSICALBUM_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-67">
+        <addForeignKeyConstraint baseColumnNames="ALBUM_ID" baseTableName="MUSICFILE" constraintName="FK_MUSICFILE_ALBUM_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="MUSICALBUM"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-68">
+        <addForeignKeyConstraint baseColumnNames="RESULT_URL" baseTableName="SEARCHRESULTFILE" constraintName="FK_SEARCHRESULTFILE_RESULT_URL" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="URL" referencedTableName="SEARCHRESULT"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-69">
+        <addForeignKeyConstraint baseColumnNames="DOWNLOADABLE_ID" baseTableName="SEARCHRESULT" constraintName="FK_SEARCHRESULT_DOWNLOADABLE_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-70">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="TVSHOWSEASON" constraintName="FK_TVSHOWSEASON_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-71">
+        <addForeignKeyConstraint baseColumnNames="SERIES_ID" baseTableName="TVSHOWSEASON" constraintName="FK_TVSHOWSEASON_SERIES_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="MANAGEDSERIES"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-72">
+        <addForeignKeyConstraint baseColumnNames="SERIES_ID" baseTableName="UNRECOGNIZEDFILE" constraintName="FK_UNRECOGNIZEDFILE_SERIES_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="MANAGEDSERIES"/>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-73">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="VIDEOGAME" constraintName="FK_VIDEOGAME_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+    </changeSet>
+    
+    <changeSet author="mozvip" id="2">
+    	<modifyDataType tableName="MAGAZINE" columnName="LANGUAGE" newDataType="VARCHAR(255)"/>
+    </changeSet>
+    
+    <changeSet author="mozvip" id="3">
+    	<addColumn tableName="SEARCHRESULT">
+    		<column name="DESTINATION" type="VARCHAR(2048)" />
+    	</addColumn>
+    	<sql>UPDATE SEARCHRESULT SET DESTINATION = (SELECT DISTINCT SEARCHRESULTFILE.DESTINATION FROM SEARCHRESULTFILE WHERE SEARCHRESULTFILE.RESULT_URL = SEARCHRESULT.URL)</sql>
+    	<dropColumn tableName="SEARCHRESULTFILE" columnName="DESTINATION"/>
+    	<dropColumn tableName="SEARCHRESULTFILE" columnName="EXPIREDATE"/>
+    </changeSet>
+
+	<changeSet author="mozvip" id="4">
+		<addColumn tableName="MAGAZINEISSUE">
+			<column name="COVER_IMAGE" type="VARCHAR(2048)"/>
+		</addColumn>
+	</changeSet>
+
+    <changeSet author="mozvip" id="5">
+        <createTable tableName="MAGAZINE_KIOSK_ISSUES">
+            <column name="TITLE" type="VARCHAR(512)">
+            	<constraints primaryKey="true" primaryKeyName="PK_MAGAZINE_KIOSK_ISSUES"/>
+            </column>
+            <column name="LANGUAGE" type="VARCHAR(32)" />
+            <column name="IMAGE" type="VARCHAR(512)" />
+        </createTable>
+    </changeSet>
+
+	<changeSet author="mozvip" id="6">
+		<addColumn tableName="MAGAZINEISSUE">
+			<column name="PERIOD" type="VARCHAR(255)"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="mozvip" id="7">
+		<addColumn tableName="MAGAZINEISSUE">
+			<column name="YEAR" type="INT"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="mozvip" id="8">
+		<addColumn tableName="MAGAZINEISSUE">
+			<column name="LANGUAGE" type="VARCHAR(255)"/>
+		</addColumn>
+		<dropTable tableName="MAGAZINE_KIOSK_ISSUES"/>
+	</changeSet>
+	<changeSet author="mozvip" id="9">
+		<dropColumn tableName="MAGAZINEISSUE" columnName="ISSUENAME"/>
+	</changeSet>
+	<changeSet author="mozvip" id="10">
+		<addColumn tableName="MUSICARTIST">
+			<column name="IMAGE" type="VARCHAR(255)"/>
+			<column name="BACKGROUND_IMAGE" type="VARCHAR(255)"/>
+		</addColumn>
+	</changeSet>
+    <changeSet author="mozvip" id="11">
+    	<addColumn tableName="SEARCHRESULT">
+    		<column name="BLACKLISTED" type="BOOLEAN(1)" />
+    	</addColumn>
+    </changeSet>
+    <changeSet author="mozvip" id="12">
+    	<addColumn tableName="MAGAZINEISSUE">
+    		<column name="CREATION_DATE" type="TIMESTAMP" />
+    	</addColumn>
+    </changeSet>
+    <changeSet author="mozvip" id="13">
+    	<modifyDataType tableName="MANAGEDSERIES" columnName="IMDBID" newDataType="VARCHAR(10)"/>
+    	<modifyDataType tableName="MOVIE" columnName="IMDBID" newDataType="VARCHAR(10)"/>
+    </changeSet>
+    <changeSet author="mozvip" id="15">
+    	<dropColumn tableName="SEARCHRESULT" columnName="DESTINATION"/>
+    </changeSet>    
+    <changeSet author="mozvip" id="16">
+    	<addColumn tableName="VIDEOGAME">
+    		<column name="THEGAMESDB_ID" type="BIGINT" />
+    	</addColumn>
+    	<sql>DELETE FROM MAGAZINEISSUE WHERE ID IN ( SELECT ID FROM DOWNLOADABLE WHERE STATUS = 'SUGGESTED' AND DTYPE='dynamo.model.magazines.MagazineIssue')</sql>
+    </changeSet>    
+    <changeSet author="mozvip" id="17">
+    	<dropColumn tableName="MAGAZINEISSUE" columnName="PERIOD"/>
+    </changeSet>
+    <changeSet author="mozvip" id="18">
+    	<sql>DELETE FROM DOWNLOADABLE WHERE PATH IN (SELECT PATH FROM DOWNLOADABLE WHERE PATH IS NOT NULL GROUP BY PATH HAVING COUNT(*) > 1) AND  DTYPE = 'dynamo.model.movies.Movie'</sql>
+    </changeSet>
+
+    <changeSet author="mozvip" id="19">
+    	<addColumn tableName="DOWNLOADABLE">
+    		<column name="COVER_IMAGE" type="VARCHAR(512)" />
+    	</addColumn>
+    	<sql>UPDATE DOWNLOADABLE SET COVER_IMAGE=(SELECT COVER_IMAGE FROM VIDEOGAME WHERE VIDEOGAME.ID = DOWNLOADABLE.ID) WHERE DOWNLOADABLE.DTYPE='dynamo.model.games.VideoGame'</sql>
+    	<dropColumn tableName="VIDEOGAME" columnName="COVER_IMAGE"/>
+    	<sql>UPDATE DOWNLOADABLE SET COVER_IMAGE=(SELECT IMAGE FROM MUSICALBUM WHERE MUSICALBUM.ID = DOWNLOADABLE.ID) WHERE DOWNLOADABLE.DTYPE='dynamo.model.music.MusicAlbum'</sql>
+    	<dropColumn tableName="MUSICALBUM" columnName="IMAGE"/>
+    	<sql>UPDATE DOWNLOADABLE SET COVER_IMAGE=(SELECT POSTERPATH FROM MOVIE WHERE MOVIE.ID = DOWNLOADABLE.ID) WHERE DOWNLOADABLE.DTYPE='dynamo.model.movies.Movie'</sql>
+    	<dropColumn tableName="MOVIE" columnName="POSTERPATH"/>
+    	<sql>UPDATE DOWNLOADABLE SET COVER_IMAGE=(SELECT COVER_IMAGE FROM MAGAZINEISSUE WHERE MAGAZINEISSUE.ID = DOWNLOADABLE.ID) WHERE DOWNLOADABLE.DTYPE='dynamo.model.magazines.MagazineIssue'</sql>
+    	<dropColumn tableName="MAGAZINEISSUE" columnName="COVER_IMAGE"/>
+    </changeSet>
+    
+    <changeSet author="mozvip" id="20">
+    	<dropNotNullConstraint tableName="MAGAZINE" columnName="LANGUAGE" columnDataType="INT(10)"/>
+    </changeSet>
+    
+    <changeSet author="mozvip" id="21">
+        <createTable tableName="BOOK">
+            <column name="ID" type="INT(10)">
+            	<constraints primaryKey="true" primaryKeyName="PK_BOOK"/>
+            </column>
+            <column name="NAME" type="VARCHAR(2147483647)">
+            	<constraints nullable="false" />
+            </column>
+            <column name="AUTHOR" type="VARCHAR(2147483647)">
+            	<constraints nullable="false" />
+            </column>
+            <column name="LANGUAGE" type="INT(10)"/>
+        </createTable>    
+    </changeSet>
+
+	<changeSet author="mozvip" id="22">
+		<modifyDataType tableName="BOOK" columnName="LANGUAGE" newDataType="VARCHAR(255)"/>
+	</changeSet>
+
+	<changeSet author="mozvip" id="23">
+		<addColumn tableName="DOWNLOADABLE">
+			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+	</changeSet>
+	<changeSet author="mozvip" id="24">
+		<addColumn tableName="MANAGEDSERIES">
+			<column name="ORIGINAL_LANGUAGE" type="VARCHAR(50)" defaultValue="EN">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+	</changeSet>
+	<changeSet author="mozvip" id="25">
+		<createTable tableName="DOWNLOADABLE_FILES">
+			<column name="DOWNLOADABLE_ID" type="INT(10)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="FILE_PATH" type="VARCHAR(2048)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SIZE" type="BIGINT(19)"/>
+			<column name="FILE_INDEX" type="INT(10)" defaultValue="0">
+				<constraints nullable="false"/>
+			</column>
+			<column name="FILE_IDENTIFIER" type="VARCHAR(255)" />
+		</createTable>
+		<addPrimaryKey constraintName="PK_DOWNLOADABLE_FILES" tableName="DOWNLOADABLE_FILES" columnNames="DOWNLOADABLE_ID,FILE_PATH"/>
+		<addForeignKeyConstraint constraintName="FK_DOWNLOADABLE_FILES_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="DOWNLOADABLE_ID" baseTableName="DOWNLOADABLE_FILES" referencedColumnNames="ID" onDelete="CASCADE"/>
+	</changeSet>
+	<changeSet author="mozvip" id="26">
+		<delete tableName="VIDEOGAME" />
+	</changeSet>
+	<changeSet author="mozvip" id="27">
+		<addColumn tableName="DOWNLOADABLE">
+			 <column name="SUGGESTEDBY" type="VARCHAR(500)"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="mozvip" id="28">
+		<createTable tableName="VIDEO_METADATA">
+			<column name="VIDEO_ID" type="INT(10)">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="AUDIO_LANGUAGES" type="VARCHAR(4096)" />
+			<column name="SUBTITLE_LANGUAGES" type="VARCHAR(4096)" />
+			<column name="WIDTH" type="INT(5)" />
+			<column name="HEIGHT" type="INT(5)" />
+		</createTable>
+		<addForeignKeyConstraint constraintName="FK_VIDEO_METADATA_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="VIDEO_ID" baseTableName="VIDEO_METADATA" referencedColumnNames="ID" onDelete="CASCADE"/>
+	</changeSet>
+	<changeSet author="mozvip" id="29">
+		<delete tableName="VIDEO_METADATA"></delete>
+	</changeSet>
+	<changeSet author="mozvip" id="30">
+		<addColumn tableName="VIDEO_METADATA">
+			<column name="OPENSUBTITLES_HASH" type="CHAR(16)"></column>
+		</addColumn>
+		<delete tableName="VIDEO_METADATA"></delete>
+	</changeSet>
+	<changeSet author="mozvip" id="31">
+		<addColumn tableName="DOWNLOADABLE">
+			<column name="XXX" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+	</changeSet>
+</databaseChangeLog>

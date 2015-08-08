@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:body>
+	<ui:composition template="/template.xhtml">
+		<ui:define name="title">
+	       	#{magazine.magazine.name}
+       	</ui:define>
+
+		<ui:define name="page-header">
+			<div class="row">
+				<h1>#{magazine.magazine.name}</h1>
+			</div>
+		</ui:define>
+
+		<ui:define name="content">
+
+			<f:metadata>
+				<f:viewParam name="searchName" value="#{magazine.searchName}" />
+			</f:metadata>
+
+			<h:form p:role="form">
+			
+				<h:commandLink styleClass="btn btn-default" action="#{magazine.save}">
+					<i class="fa fa-save" />&nbsp;Save changes
+				</h:commandLink>
+
+				<h:dataTable id="akaTable" value="#{magazine.magazine.aka}" var="aka" styleClass="table">
+					<f:facet name="header">
+						<h:outputText value="Alternate Names"/>
+					</f:facet>
+					<h:column>
+						<h:commandLink styleClass="btn btn-danger">
+							<f:ajax execute="@this" render=":akaTable"/>
+							<i class="fa fa-trash-o" />
+						</h:commandLink>
+					</h:column>
+					<h:column>
+						<h:inputText value="#{aka}" p:placeholder="Alternate name" styleClass="form-control" required="true"/>
+					</h:column>
+					<f:facet name="footer">
+						<h:commandLink styleClass="btn btn-default" action="#{magazine.addAka}">
+							<f:ajax execute="@this" render=":akaTable"/>
+							<i class="fa fa-plus"/>&nbsp;Add
+						</h:commandLink>
+					</f:facet>
+				</h:dataTable>
+			
+				<h:dataTable id="blackListTable" value="#{magazine.magazine.wordsBlackList}" var="blackListedWord" styleClass="table">
+					<f:facet name="header">
+						<h:outputText value="Words blacklist"/>
+					</f:facet>
+					<h:column>
+						<h:commandLink styleClass="btn btn-danger">
+							<f:ajax execute="@this" render=":blackListTable"/>
+							<i class="fa fa-trash-o" />
+						</h:commandLink>
+					</h:column>
+					<h:column>
+						<h:inputText value="#{blackListedWord}" p:placeholder="Words to exclude" styleClass="form-control" required="true"/>
+					</h:column>	
+					<f:facet name="footer">
+						<h:commandLink styleClass="btn btn-default" action="#{magazine.addBlackListedWord}">
+							<f:ajax execute="@this" render=":blackListTable"/>
+							<i class="fa fa-plus"/>&nbsp;Add
+						</h:commandLink>
+					</f:facet>
+				</h:dataTable>
+
+				<h:dataTable value="#{magazine.allIssues}" var="issue" styleClass="table">
+					<h:column>
+						<h:commandLink action="#{magazine.download(issue)}" styleClass="btn btn-default" rendered="#{!issue.downloaded}">
+							<f:ajax execute="@this" render="@form :messages" />
+							<i class="fa fa-download" />
+						</h:commandLink>
+					</h:column>
+					<h:column><f:facet name="header">Issue Number</f:facet>
+						<h:panelGroup rendered="#{issue.issue > 0}">#{issue.issue}</h:panelGroup>
+					</h:column>
+					<h:column><h:panelGroup rendered="#{issue.special}">Special Issue</h:panelGroup></h:column>
+					<h:column><f:facet name="header">Name</f:facet>
+						#{issue.rawName}
+					</h:column>
+					<h:column>
+						<h:outputLink value="/download?id=#{issue.id}" rendered="#{issue.downloaded}">
+							<i class="fa fa-download" />
+						</h:outputLink>
+					</h:column>
+					<h:column>
+						<h:outputText value="#{issue.issueDate}">
+							<f:convertDateTime type="date" pattern="dd/MM/yyyy" timeZone="CEST" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						#{issue.status.label}
+					</h:column>
+				</h:dataTable>
+			</h:form>
+
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+
+</html>

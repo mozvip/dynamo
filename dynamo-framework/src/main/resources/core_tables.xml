@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="mozvip" id="1406620788324-6">
+        <createTable tableName="LOGITEM">
+            <column autoIncrement="true" name="ID" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="PK_LOGITEM"/>
+            </column>
+            <column name="DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MESSAGE" type="VARCHAR(5000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SEVERITY" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TASKNAME" type="VARCHAR(500)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-7">
+        <createTable tableName="LOGSTACKTRACEELEMENT">
+            <column autoIncrement="true" name="ID" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_8"/>
+            </column>
+            <column name="DECLARINGCLASS" type="VARCHAR(2147483647)"/>
+            <column name="FILENAME" type="VARCHAR(2147483647)"/>
+            <column name="LINENUMBER" type="INT(10)"/>
+            <column name="METHODNAME" type="VARCHAR(2147483647)"/>
+            <column name="LOGITEM_ID" type="INT(10)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-52">
+        <addForeignKeyConstraint baseColumnNames="LOGITEM_ID" baseTableName="LOGSTACKTRACEELEMENT" constraintName="FK_LOGSTACKTRACEELEMENT_LOGITEM_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="LOGITEM"/>
+    </changeSet>
+</databaseChangeLog>

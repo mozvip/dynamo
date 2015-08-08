@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<ui:repeat var="season" value="#{tvshow.seasons}">
+	<a id="season#{season.season}" />
+	<h2>Season #{season.season}</h2>
+	<h:form>
+		<h:dataTable value="#{tvshow.getEpisodes(season.season)}"
+			var="episode" styleClass="table table-condensed"
+			rowClasses="#{tvshow.getRowClasses(season.season)}" width="100%">
+			<f:facet name="header">
+				<h:commandLink styleClass="btn btn-default" value="Select Missing">
+					<f:ajax listener="#{tvshow.selectMissing(season.season)}"
+						execute="@form" render="@form" />
+				</h:commandLink>
+				<div class="btn-group">
+					<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#"> Action <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><h:commandLink value="Mark Selected as Wanted"
+								action="#{tvshow.wantEpisodes(season.season)}">
+								<f:ajax execute="@form" render="@form" />
+							</h:commandLink></li>
+						<li><h:commandLink value="Mark Selected as Ignored"
+								action="#{tvshow.deleteFiles(season.season)}">
+								<f:ajax execute="@form" render="@form" />
+							</h:commandLink></li>
+						<li><h:commandLink value="Delete Files"
+								action="#{tvshow.deleteFiles(season.season)}">
+								<f:ajax execute="@form" render="@form" />
+							</h:commandLink></li>
+					</ul>
+				</div>
+			</f:facet>
+			<h:column>
+				<f:facet name="header">
+					<a href="#" class="btn btn-sm btn-default checkBoxSelectionButton">
+						<i class="fa fa-check-square-o" />
+					</a>
+				</f:facet>			
+				<h:selectBooleanCheckbox value="#{tvshow.selection[episode.id]}" rendered="#{episode.aired}" />
+			</h:column>
+			<h:column rendered="#{!tvshow.managedSeries.useAbsoluteNumbering}">
+									#{episode.episodeNumber}
+								</h:column>
+			<h:column rendered="#{tvshow.managedSeries.useAbsoluteNumbering}">
+									#{episode.absoluteNumber}
+								</h:column>
+			<h:column>
+				<h:outputText class="hidden-xs" value="#{episode.episodeName}" />
+			</h:column>
+			<h:column>
+				<h:commandLink styleClass="btn btn-default" rendered="#{episode.status == 'DOWNLOADED' or episode.status == 'SNATCHED'}" action="#{tvshow.redownload(episode)}" onclick="return confirm('Are you sure you want to redownload this episode ?');"
+					title="Re-download episode">
+					<f:ajax execute="@form" render="@form" />
+					<i class="fa fa-thumbs-o-down" />
+				</h:commandLink>
+				<h:panelGroup rendered="#{episode.status == 'DOWNLOADED'}" styleClass="hidden-sm hidden-xs">
+					#{episode.fileName}
+				</h:panelGroup>
+				<h:panelGroup rendered="#{!episode.aired}">
+					#{episode.firstAired}
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{episode.status != 'DOWNLOADED' and episode.status != 'FUTURE'}">
+										#{episode.status.label}
+									</h:panelGroup>
+			</h:column>
+			<h:column rendered="#{tvshow.managedSeries.subtitleLanguage != null}">
+				<h:panelGroup rendered="#{episode.status == 'DOWNLOADED'}">
+					<h:panelGroup rendered="#{episode.subtitled}">
+						<div width="100%" style="text-align: center;">
+							<h:commandLink class="btn btn-default"
+								title="Download current subtitles"
+								action="#{tvshow.downloadSubtitles(episode)}">
+								<span class="fa fa-download" />
+							</h:commandLink>
+							<h:commandLink class="btn btn-default"
+								title="Redownload subtitles"
+								action="#{tvshow.redownloadSubtitles(episode)}">
+								<f:ajax execute="@form" render="@form" />
+								<span class="fa fa-thumbs-o-down" />
+							</h:commandLink>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{!episode.subtitled}">
+						<h:commandLink styleClass="btn btn-default"
+							action="#{tvshow.findSubtitle(episode)}"
+							title="Download subtitles">
+							<f:ajax render=":messages" />
+							<i class="fa fa-warning" />&nbsp;No Subs
+											</h:commandLink>
+					</h:panelGroup>
+				</h:panelGroup>
+			</h:column>
+			<h:column>
+				<h:panelGroup rendered="#{episode.status == 'DOWNLOADED' and episode.quality != null}">
+					<span
+						class="badge #{tvshow.acceptQuality(episode.quality) ? 'badge-success' : 'badge-important'}">#{episode.quality.label}</span>
+				</h:panelGroup>
+			</h:column>
+			<h:column>
+				<h:panelGroup rendered="#{episode.status == 'DOWNLOADED' and episode.source != null}">
+					<span class="badge badge-success">#{episode.source}</span>
+				</h:panelGroup>
+			</h:column>
+			<h:column>
+				<h:panelGroup rendered="#{episode.watched}">
+					<i class="fa fa-eye"></i>
+				</h:panelGroup>
+			</h:column>
+		</h:dataTable>
+	</h:form>
+</ui:repeat>
+</html>

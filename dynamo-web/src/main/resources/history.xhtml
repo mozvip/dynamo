@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/template.xhtml">
+
+	<ui:define name="title">
+		History
+    </ui:define>
+ 
+	<ui:define name="content">
+
+		<div class="table-responsive">
+			<h:dataTable id="historyTable" styleClass="table table-striped" value="#{history.items}" var="item" rows="100">
+				<h:column>
+					<h:outputText escape="false" value="#{item.comment}" />
+				</h:column>
+				<h:column>
+					<h:outputText value="#{item.date}">
+						<f:convertDateTime type="both" dateStyle="short" timeStyle="short"></f:convertDateTime>
+					</h:outputText>
+				</h:column>
+	
+			</h:dataTable>
+		</div>
+
+	</ui:define>
+
+
+</ui:composition>
+
+</html>

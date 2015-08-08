@@ -1,0 +1,7 @@
+dynamo-web/data/
+dynamo/{java.io.tmpdir}/
+dynamo/target/
+dynamo-web/dynamo.mv.db
+dynamo-subtitles/{java.io.tmpdir}/
+/target/
+/target/

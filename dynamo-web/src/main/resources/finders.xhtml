@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/template.xhtml">
+
+
+	<ui:define name="title">
+	       		History
+       	 	</ui:define>
+
+	<ui:define name="page-header">
+		<h1>History</h1>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form>
+
+			<h:commandButton value="Refresh">
+				<f:ajax render="@form" />
+			</h:commandButton>
+
+			<h:dataTable styleClass="table" value="#{history.items}" var="item">
+
+				<h:column>
+					<f:facet name="header">
+						Task
+					</f:facet>
+					#{item}
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						When
+					</f:facet>
+					<h:outputText value="#{item.date}">
+						<f:convertDateTime type="both"></f:convertDateTime>
+					</h:outputText>
+				</h:column>
+
+			</h:dataTable>
+		</h:form>
+
+	</ui:define>
+
+
+</ui:composition>
+
+</html>

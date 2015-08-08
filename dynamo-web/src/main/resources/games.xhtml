@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<ui:composition template="/template.xhtml">
+
+	<ui:define name="content">
+	
+		<ui:include src="/fragment-filesDialog.xhtml" />
+
+		<style>
+			.videoGameThumb {
+				border: none;
+				height: 280px;
+			}
+			
+			.videoGameCover {
+				min-height: 200px;
+				max-height: 200px;
+			}			
+			
+			.videoGameCaption {
+				font-size: 12px;
+				font-weight: bold;
+				text-align: center;
+			}
+			
+			.buttons {
+				position: absolute; right: 32px; top: 10px; width: 20px;
+			}			
+		</style>
+
+		<div id="manualSearch" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3>Manual Video Game Search</h3>
+					</div>
+					<div class="modal-body">
+						<h:form id="manualVideoGameSearchForm">
+							<div class="input-group">
+								<div class="input-group-btn">
+									<h:selectOneMenu styleClass="form-control manualSearchPlatform" value="#{games.newGamePlatform}" required="true" style="width: 200px">
+										<f:selectItems value="#{listOfValues.gamePlatforms}" />
+									</h:selectOneMenu>
+								</div>
+								<h:inputText id="name" label="Name" value="#{games.newGameName}" required="true" styleClass="form-control manualSearchField" />
+								<div class="input-group-btn">
+									<h:commandLink styleClass="btn btn-primary" action="#{games.search}">
+										<f:ajax execute="@form" render="gamesSearchResults" />
+										<i class="fa fa-search" />&nbsp;Search
+									</h:commandLink>
+								</div>
+							</div>
+
+							<h:dataTable id="gamesSearchResults" styleClass="table table-condensed" value="#{games.suggestedGames}" var="game">
+								<h:column>
+									<h:outputLink styleClass="btn btn-default" value="http://thegamesdb.net/game/#{game.id}/" target="_blank">
+										<i class="fa fa-external-link" />
+									</h:outputLink>
+								</h:column>
+								<h:column>
+									#{game.gameTitle}
+								</h:column>
+								<h:column>
+									#{game.releaseDate}
+								</h:column>
+								<h:column>
+									<h:commandLink styleClass="btn btn-success" action="#{games.select(game)}" value="Select this game">
+										<i class="fa fa-download" />
+									</h:commandLink>
+								</h:column>
+							</h:dataTable>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			function showGameSearch(e) {
+				if (e.status == 'success') { $('#manualSearch').modal(); }
+			}
+		</script>
+
+		<h:form styleClass="form-inline">
+			<div class="form-group">
+				<h:outputLabel value="Platform" for="platform" />
+				<h:selectOneMenu styleClass="form-control" id="platform" value="#{games.filterPlatform}">
+					<f:selectItem itemLabel="" itemValue="" />
+					<f:selectItems value="#{listOfValues.gamePlatforms}" />
+					<f:ajax listener="#{games.filter}" render="gamesList" execute="@this" />
+				</h:selectOneMenu>
+			</div>
+		</h:form>
+		<h:form id="gamesList">
+			<ui:include src="/components/pager.xhtml" />
+			<ui:repeat var="game" value="#{pager.items}">
+				<div class="game book col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{game.id}">
+					<div class="thumbnail videoGameThumb">
+						<img class="videoGameCover" data-src="#{game.coverImage}" alt="#{game.name}" />
+						<div class="caption videoGameCaption">
+							<span>#{game.name} (#{game.platform.label})</span>
+						</div>
+					</div>
+					<div class="buttons">
+						<h:commandLink styleClass="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete #{movies.fixName(game.name)} ?');" rendered="#{game.status != 'SUGGESTED'}">
+							<f:ajax execute="@this" listener="#{games.delete}" onevent="removeGame" />
+							<f:param name="id" value="#{game.id}" />
+							<i class="fa fa-trash-o"></i>
+						</h:commandLink>
+						<h:commandLink styleClass="btn btn-sm btn-default" onclick="return confirm('Are you sure you want to redownload #{movies.fixName(game.name)} ?');" rendered="#{game.status == 'SNATCHED' or game.status == 'DOWNLOADED'}">
+							<f:ajax execute="@this" listener="#{games.redownload}" onevent="removeThis" />
+							<f:param name="id" value="#{game.id}" />
+							<i class="fa fa-refresh"></i>
+						</h:commandLink>
+						<h:commandLink styleClass="btn btn-sm btn-default" action="#{games.search}" rendered="#{game.status == 'DOWNLOADED'}">
+							<f:setPropertyActionListener value="#{game.id}" target="#{games.searchId}" />
+							<f:setPropertyActionListener value="#{game.platform}" target="#{games.newGamePlatform}" />
+							<f:setPropertyActionListener value="#{game.name}" target="#{games.newGameName}" />
+							<f:ajax onevent="showGameSearch" render=":manualSearch" />
+							<i class="fa fa-search"></i>
+						</h:commandLink>
+						<h:commandLink styleClass="btn btn-sm btn-default" action="#{fileList.search}" title="Show game files" rendered="#{game.status == 'DOWNLOADED'}">
+							<f:setPropertyActionListener value="#{game.id}" target="#{fileList.downloadableId}" />
+							<f:ajax onevent="showFiles" render=":showFilesForm" />
+							<i class="fa fa-list"></i>
+						</h:commandLink>
+					</div>					
+				</div>
+			</ui:repeat>
+			<ui:include src="/components/pager.xhtml" />
+		</h:form>
+
+	</ui:define>
+	<ui:define name="custom_js">
+		<script>
+
+			function removeGame( data ) {
+				if (data.status == 'success') {
+					disappear( 'bounceOutUp', $(data.source).closest('div.game') );
+				}
+			}
+			function removeThis( data ) {
+				if (data.status == 'begin') {
+					disappear( 'bounceOutUp', $(data.source) );
+				}
+			}			
+
+			$('#games_tab a:first').tab('show'); // Select first tab
+		</script>
+	</ui:define>
+</ui:composition>
+
+</html>

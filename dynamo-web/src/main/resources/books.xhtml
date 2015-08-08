@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/template.xhtml">
+
+	<ui:define name="title">
+		Books Collection
+	</ui:define>
+
+	<ui:define name="content">
+	
+		<ui:include src="fragment-filesDialog.xhtml" />
+
+		<style>
+			.bookThumb {
+				border: none;
+			}
+			
+			.bookCover {
+				min-height: 215px;
+				max-height: 215px;
+			}
+			
+			.bookCaption {
+				font-size: 12px;
+				font-weight: bold;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+			
+			.buttons {
+				position: absolute; right: 32px; top: 10px; width: 20px;
+			}
+		</style>
+
+
+		<h:form styleClass="form-inline">
+			<div class="col-lg-12 col-md-12 col-sm12 col-xs12">
+				<div class="form-group">
+					<h:outputLabel value="Language" styleClass="control-label" />
+					<h:selectOneMenu styleClass="form-control"
+						value="#{bookKiosk.language}">
+						<f:selectItem itemValue="" itemLabel="All" />
+						<f:selectItems value="#{listOfValues.languages}" />
+						<f:ajax render="@form" execute="@form"
+							listener="#{bookKiosk.changeFilter}" />
+					</h:selectOneMenu>
+				</div>
+				<div class="form-group">
+					<h:outputLabel value="Name" styleClass="control-label" />
+					<h:inputText value="#{bookKiosk.filter}" styleClass="form-control">
+						<f:ajax render="@form" execute="@form"
+							listener="#{bookKiosk.changeFilter}" />
+					</h:inputText>
+				</div>
+			</div>
+			
+			<ui:include src="/components/pager.xhtml" />
+
+			<ui:repeat var="book" value="#{pager.items}">
+				<div class="book col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{book.id}">
+					<div class="thumbnail bookThumb">
+						<ui:fragment rendered="#{book.status == 'DOWNLOADED'}">
+							<a href="/download?id=#{book.id}" target="_blank">
+								<img class="bookCover" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+							</a>
+						</ui:fragment>
+						<ui:fragment rendered="#{book.status == 'SUGGESTED'}">
+							<a href="#" onclick="want('#{book.id}');">
+								<img class="bookCover" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+							</a>
+						</ui:fragment>
+						<ui:fragment rendered="#{book.status != 'SUGGESTED' and book.status != 'DOWNLOADED'}">
+							<img class="bookCover" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+						</ui:fragment>
+						<div class="caption bookCaption">#{book.name}</div>
+					</div>
+					<div class="buttons">
+						<h:commandLink styleClass="btn btn-sm btn-danger" onclick="return (confirm('Are you sure you want to delete #{movies.fixName(book.name)} ?'));" rendered="#{book.status != 'SUGGESTED'}">
+							<f:ajax execute="@this" render="@none" listener="#{bookKiosk.delete}" onevent="removeIssueFromKiosk"/>
+							<f:param name="id" value="#{book.id}" />
+							<i class="fa fa-trash-o"></i>
+						</h:commandLink>
+						<h:commandLink styleClass="btn btn-sm btn-default" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(book.name)} ?'));" rendered="#{book.status == 'SNATCHED' or book.status == 'DOWNLOADED'}">
+							<f:ajax execute="@this" render="@none" listener="#{bookKiosk.redownload(book.id)}" />
+							<i class="fa fa-refresh"></i>
+						</h:commandLink>
+						<h:commandLink styleClass="btn btn-sm btn-default" action="#{fileList.search}" title="Show Files" rendered="#{book.status == 'DOWNLOADED'}">
+							<f:setPropertyActionListener value="#{book.id}" target="#{fileList.downloadableId}" />
+							<f:ajax onevent="showFiles" render=":showFilesForm" />
+							<i class="fa fa-list"></i>
+						</h:commandLink>
+					</div>
+				</div>
+			</ui:repeat>
+
+			<ui:include src="/components/pager.xhtml" />
+		</h:form>
+
+	</ui:define>
+	<ui:define name="custom_js">
+		<script>
+		function removeIssueFromKiosk( data ) {
+			if (data.status == 'begin') {
+				disappear( 'bounceOutUp', $(data.source).closest('div.book') );
+			}
+		}
+		function want(id) {
+			$.ajax({
+				  url: "want",
+				  data: {
+				    id: id
+				  },
+				  beforeSend: function() {
+					  disappear( 'bounceOutUp', $('#' + id) );
+				  }
+				});
+		}
+		</script>
+	</ui:define>
+</ui:composition>
+
+</html>

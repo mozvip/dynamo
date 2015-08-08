@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/template.xhtml">
+	<ui:define name="title">
+	       		TV Shows - Unrecognized Folders
+       	 	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form>
+			<h:dataTable id="unrecognizedFoldersTable" styleClass="table"
+				value="#{tvshows.unrecognizedFolders}" var="folder">
+				<h:column>
+					<h:commandLink styleClass="btn btn-default"
+						action="#{tvshows.removeUnrecognizedFolder(folder)}"
+						onclick="return confirm('Are you sure you want to ignore this folder ?');">
+						<i class="fa fa-trash-o" />
+						<f:ajax execute="@form" render="@form"></f:ajax>
+					</h:commandLink>
+				</h:column>
+				<h:column>
+								#{folder.path}
+							</h:column>
+				<h:column>
+					<h:commandLink styleClass="btn btn-default"
+						action="#{tvshows.searchSeries}">
+						<f:setPropertyActionListener target="#{tvshows.searchPath}"
+							value="#{folder.path}" />
+						<f:ajax onevent="openSearchDialog" render=":searchShowForm" />
+						<i class="fa fa-search" />&nbsp;Search Show
+								</h:commandLink>
+				</h:column>
+			</h:dataTable>
+
+		</h:form>
+		<ui:include src="fragment-searchShow.xhtml" />
+
+	</ui:define>
+</ui:composition>
+</html>

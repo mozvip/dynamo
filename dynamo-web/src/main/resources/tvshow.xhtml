@@ -1,0 +1,215 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:body>
+	<ui:composition template="/template.xhtml">
+		<ui:define name="title">
+	       	#{tvshow.managedSeries.name}
+       	</ui:define>
+
+		<ui:define name="content">
+		
+			<f:metadata>
+				<f:viewParam name="id" value="#{tvshow.id}" />
+			</f:metadata>
+			
+			<div class="row">
+			
+				<div class="col-md-4">
+					<a href="http://www.imdb.com/title/#{tvshow.managedSeries.imdbId}/" target="_blank" style="text-decoration: none; color: white;">
+						<h:graphicImage value="#{tvshow.managedSeries.poster}" styleClass="img-responsive img-thumbnail" style="width: 100%;"></h:graphicImage>
+					</a>
+				</div>
+				 
+				<div class="col-md-8">
+			
+					<h:form styleClass="form-horizontal" p:role="form">
+
+						<h:panelGroup rendered="#{!tvshow.managedSeries.ended}">
+							<div class="form-group">
+								<h:outputLabel styleClass="col-lg-4 control-label" value="Path" />
+								<div class="col-lg-8">
+									<p class="form-control-static">#{tvshow.managedSeries.folder}</p>
+								</div>
+							</div>
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{!tvshow.managedSeries.ended}">
+							<div class="form-group">
+							  <div class="col-lg-offset-4 col-lg-8">
+								<h:commandButton value="#{tvshow.managedSeries.autoDownload?'Disable Auto Download':'Enable Auto Download'}" type="button" class="btn btn-default #{tvshow.managedSeries.autoDownload?'active':''}">
+									<f:ajax render="@form" listener="#{tvshow.toogleAutoDownload}" />
+								</h:commandButton>							  
+							  </div>
+							</div>
+						</h:panelGroup>
+						
+						<h:panelGroup rendered="#{tvshow.managedSeries.ended}" style="width: 100%">
+							<h4>This show is ended</h4>
+						</h:panelGroup>
+
+						<div class="form-group">
+							<h:outputLabel styleClass="col-lg-4 control-label" for="qualities" value="Qualities" />
+							<div class="col-lg-8">
+								<h:selectManyListbox id="qualities" value="#{tvshow.managedSeries.qualities}" required="true" converter="VideoQualityConverter" styleClass="form-control">
+									<f:selectItems value="#{tvshows.allQualities}" />
+								</h:selectManyListbox>
+							</div>
+						</div>
+						<div class="form-group">
+							<h:outputLabel styleClass="col-lg-4 control-label" for="originalLanguage" value="Original language" />
+							<div class="col-lg-8">
+								<h:selectOneMenu id="originalLanguage" value="#{tvshow.managedSeries.originalLanguage}" required="true" styleClass="form-control">
+									<f:selectItems value="#{listOfValues.languages}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="form-group">
+							<h:outputLabel styleClass="col-lg-4 control-label" for="metaDataLanguage" value="Desired meta-data language" />
+							<div class="col-lg-8">
+								<h:selectOneMenu id="metaDataLanguage" value="#{tvshow.managedSeries.metaDataLanguage}" required="true" styleClass="form-control">
+									<f:selectItems value="#{listOfValues.languages}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="form-group">
+							<h:outputLabel styleClass="col-lg-4 control-label" value="Desired audio language" />
+							<div class="col-lg-8">
+								<h:selectOneMenu value="#{tvshow.managedSeries.audioLanguage}" styleClass="form-control">
+									<f:selectItem  itemValue="" itemLabel="Original" />
+									<f:selectItems value="#{listOfValues.languages}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<div class="form-group">
+							<h:outputLabel styleClass="col-lg-4 control-label" value="Desired subtitles language" />
+							<div class="col-lg-8">
+								<h:selectOneMenu value="#{tvshow.managedSeries.subtitleLanguage}" styleClass="form-control">
+									<f:selectItem  itemValue="" itemLabel="None" />
+									<f:selectItems value="#{listOfValues.languages}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						
+						<div class="form-group">
+						  <div class="col-lg-offset-4 col-lg-8">
+						  	<div class="checkbox">
+						  		<label>
+						  			<h:selectBooleanCheckbox value="#{tvshow.managedSeries.useAbsoluteNumbering}">
+						  				<f:ajax listener="#{tvshow.save}" />
+						  			</h:selectBooleanCheckbox>Uses Absolute Numbering
+						  		</label>
+						  	</div>
+						  </div>
+						</div>
+												
+						<div class="form-group">
+							<h:outputLabel styleClass="col-lg-4 control-label" value="Alternate names" />
+							<div class="col-lg-8">
+								<h:inputText value="#{tvshow.managedSeries.alternateNames}" styleClass="form-control" p:placeholder="Use ; to separate names"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<h:outputLabel styleClass="col-lg-4 control-label" value="Words Black List" />
+							<div class="col-lg-8">
+								<h:inputText value="#{tvshow.managedSeries.blackList}" styleClass="form-control" p:placeholder="Use ; to separate words" />
+							</div>
+						</div>
+						<div class="col-lg-offset-2 col-lg-10">
+							<div class="btn-group">
+								<h:commandLink action="#{tvshow.deleteShow}" styleClass="btn btn-danger" onclick="return confirm('Are you sure you want to delete this show and all associated files ?');">
+									<i class="fa fa-trash-o" />
+								</h:commandLink>
+								<h:commandLink styleClass="btn btn-default" action="#{tvshows.searchSeries}">
+									<i class="fa fa-question" />
+									<h:outputText value="&nbsp;Wrong Show" />
+									<f:setPropertyActionListener target="#{tvshows.searchLanguage}" value="#{tvshow.managedSeries.metaDataLanguage}" />
+									<f:setPropertyActionListener target="#{tvshows.searchPath}" value="#{tvshow.managedSeries.folder}" />
+									<f:ajax onevent="openSearchDialog" render=":searchShowForm" />
+								</h:commandLink>
+								<h:commandLink actionListener="#{tvshow.scanFiles}" styleClass="btn btn-default">
+									<i class="fa fa-refresh" />
+									<f:ajax />
+								</h:commandLink>
+								<h:commandLink action="#{tvshow.save}" styleClass="btn btn-primary">
+									<i class="fa fa-save" />
+									&nbsp;Save
+								</h:commandLink>
+							</div>
+						</div>
+					</h:form>
+					<ui:include src="fragment-searchShow.xhtml"/>
+				
+				</div>
+	
+			</div>
+			
+			<ui:fragment rendered="#{tvshow.unrecognizedFiles.size() == 0}">
+				<ui:include src="tvshow-seasons.xhtml" />
+			</ui:fragment>
+			
+			<ui:fragment rendered="#{tvshow.unrecognizedFiles.size() > 0}">
+				<ul class="nav nav-tabs" id="tvshow_tab">
+					<li><a href="#seasons" data-toggle="tab">Seasons</a></li>
+					<li><a href="#unrecognizedfiles" data-toggle="tab">Unrecognized Files&nbsp;<span class="badge alert-danger">#{tvshow.unrecognizedFiles.size()}</span></a></li>
+				</ul>
+
+				<div class="tab-content">
+					<div class="tab-pane" id="seasons">
+						<ui:include src="tvshow-seasons.xhtml" />
+					</div>
+					
+					<div class="tab-pane" id="unrecognizedfiles">
+						<h:form id="unrecognizedfilesForm">
+							<h:dataTable value="#{tvshow.unrecognizedFiles}" var="file" styleClass="table">
+								<h:column>
+									<h:commandLink styleClass="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this file ?');" action="#{tvshow.deleteFile(file)}">
+										<f:ajax render="@form :messages" />
+										<i class="fa fa-trash-o" />
+									</h:commandLink>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Path</f:facet>
+									#{tvshow.getShortPath(file)}
+								</h:column>
+								<h:column rendered="#{!tvshow.managedSeries.useAbsoluteNumbering}">
+									<f:facet name="header">Season</f:facet>
+									<h:selectOneMenu value="#{tvshow.selectedSeasonForFile[file]}" id="seasonSelect" styleClass="form-control" converter="javax.faces.Integer">
+										<f:ajax render="episodeSelect" />
+										<f:selectItems value="#{tvshow.availableSeasons}" />
+									</h:selectOneMenu>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Episodes</f:facet>
+									<h:selectManyMenu id="episodeSelect" value="#{tvshow.selectedEpisodesForFile[file]}" styleClass="form-control" converter="javax.faces.Integer">
+										<f:selectItems value="#{tvshow.getAvailableEpisodes(file, tvshow.selectedSeasonForFile[file])}" />
+										<f:ajax execute="@form" render="@form" />
+									</h:selectManyMenu>
+								</h:column>
+								<h:column>
+									<h:commandLink styleClass="btn btn-default">
+										<i class="fa fa-save" />
+										<f:ajax execute="@form" render="@form" listener="#{tvshow.assignEpisodes(file)}"/>
+									</h:commandLink>
+								</h:column>
+							</h:dataTable>
+						</h:form>				
+					</div>
+				</div>
+			</ui:fragment>
+	
+		</ui:define>
+		<ui:define name="custom_js">
+			<script>
+				$('#tvshow_tab a:first').tab('show'); // Select first tab
+			</script>
+		</ui:define>		
+	</ui:composition>
+</h:body>
+</html>

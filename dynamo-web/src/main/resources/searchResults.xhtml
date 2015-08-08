@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+	<ui:composition template="/template.xhtml">
+		<ui:define name="title">		
+	       	Search Results
+		</ui:define>
+
+		<ui:define name="page-header">
+			<h1>Search Results</h1>
+		</ui:define>
+
+		<ui:define name="content">
+
+			<h:dataTable value="#{searchResultsUI.searchResults}" var="result" styleClass="table">
+				<h:column>
+					<f:facet name="header">
+						Title
+					</f:facet>
+					#{result.title}
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						Provider
+					</f:facet>
+					#{result.providerName}
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						Size
+					</f:facet>
+					#{result.sizeInMegs}
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						Client ID
+					</f:facet>
+					#{result.clientId}
+				</h:column>
+			</h:dataTable>
+
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

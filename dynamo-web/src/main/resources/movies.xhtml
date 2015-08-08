@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/template.xhtml">
+	<ui:define name="title">
+  		Movies
+ 	</ui:define>
+
+	<ui:define name="content">
+	
+		<ui:include src="fragment-filesDialog.xhtml" />
+		<ui:include src="fragment-movie-search.xhtml" />
+	
+		<style>
+			.movieThumb {
+				height: 280px;
+				border: none;
+			}
+			.movieCaption {
+				font-size: 12px;
+				font-weight: bold;
+				width: 100%;
+				text-align: center;
+			}
+			
+			.buttons {
+				position: absolute; right: 32px; top: 10px; width: 20px;
+			}
+		</style>
+
+		<h:form id="collection">
+		
+			<ui:include src="/components/pager.xhtml" />
+		
+			<ui:repeat var="movie" value="#{pager.items}">
+				<div class="movie col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{movie.id}">
+					<div class="thumbnail movieThumb">
+						<a href="http://www.imdb.com/title/#{movie.imdbID}" class="poster" title="#{movie.path}"
+							target="_blank">
+							<img class="img-responsive" data-src="#{movie.coverImage}" width="145" height="220" alt="#{movie.name}" />
+						</a>
+						<div class="caption movieCaption">
+							<span>#{movie.name} (#{movie.year})</span>
+							<i class="fa fa-star" />
+							<h:outputText value="#{movie.rating}" />
+						</div>
+					</div>
+					<div class="buttons">
+						<h:commandLink styleClass="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(movie.name)} ?')) { disappear( 'bounceOutUp', $('##{movie.id}') ); return true; }  else { return false; }"
+							rendered="#{movie.status != 'SUGGESTED'}">
+							<f:ajax execute="@this" listener="#{movies.delete}" />
+							<f:param name="id" value="#{movie.id}" />
+							<i class="fa fa-trash-o"></i>
+						</h:commandLink>
+						<h:outputLink styleClass="btn btn-sm btn-default"
+							p:data-toggle="modal" p:data-target="#manualSearch" value="#"
+							onclick="$('.manualSearchMovieId').val('#{movie.id}'); $('.manualSearchField').val('#{movies.searchName(movie.name)}'); $('.manualSearchFieldPath').html('#{movies.fixName(movie.path.fileName)}');"
+							rendered="#{movie.status == 'DOWNLOADED'}">
+							<i class="fa fa-search"></i>
+						</h:outputLink>
+						<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{movie.status == 'SNATCHED' or movie.status == 'DOWNLOADED'}" title="Redownload" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(movie.name)} ?'));">
+							<f:ajax render="@none" listener="#{movies.redownload}" execute="@this" />
+							<f:param name="id" value="#{movie.id}" />
+							<i class="fa fa-refresh" />
+						</h:commandLink>
+						<h:commandLink styleClass="btn btn-sm btn-success" onclick="disappear( 'bounceOutUp', $('##{movie.id}') );" rendered="#{movie.status == 'SUGGESTED'}">
+							<f:ajax listener="#{movies.wantSuggestion}" execute="@this" />
+							<f:param name="id" value="#{movie.id}" />
+							<i class="fa fa-download" />
+						</h:commandLink>
+						<h:commandLink styleClass="btn btn-sm btn-default" action="#{fileList.search}" title="Show Files" rendered="#{movie.status == 'DOWNLOADED'}">
+							<f:setPropertyActionListener value="#{movie.id}" target="#{fileList.downloadableId}" />
+							<f:ajax onevent="showFiles" render=":showFilesForm" />
+							<i class="fa fa-list"></i>
+						</h:commandLink>
+						<h:panelGroup rendered="#{movies.isSeen(movie)}">
+							<a href="#" class="btn btn-sm btn-default">
+								<i class="fa fa-eye" />
+							</a>
+						</h:panelGroup>
+					</div>
+				</div>
+			</ui:repeat>
+
+			<ui:include src="/components/pager.xhtml" />
+		
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>

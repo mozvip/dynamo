@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:body>
+
+	<ui:composition template="/template.xhtml">
+		<ui:define name="title">		
+	       	Plugins Selection
+		</ui:define>
+
+		<ui:define name="page-header">
+			<h1>Plugins Selection</h1>
+		</ui:define>
+
+		<ui:define name="content">
+
+			<h:form p:role="form">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ui:repeat value="#{plugins.pluginsWithOptions}" var="plugin">
+							<h:panelGroup rendered="#{plugin.value.size() > 1}">
+								<div class="form-group">
+									<label for="#{plugin.key.simpleName}">#{plugins.getClassDescription(plugin.key)}</label>
+									<h:selectOneMenu value="#{plugins.activePlugins[plugin.key]}" styleClass="form-control" converter="ClassConverter">
+										<f:selectItem itemLabel="Disabled" itemValue="" />
+										<f:selectItems value="#{plugin.value}" var="executorClass" itemLabel="#{plugins.getClassDescription(executorClass)}" />
+										<f:ajax execute="@form" render="@form" />
+									</h:selectOneMenu>
+								</div>
+							</h:panelGroup>
+						</ui:repeat>
+					</div>
+					<div class="panel-footer">
+						<h:commandLink styleClass="btn btn-primary" action="#{plugins.save}"><f:ajax execute="@form" /><i class="fa fa-save" />&nbsp;Save Changes</h:commandLink>
+					</div>
+				</div>
+			</h:form>
+
+		</ui:define>
+
+	</ui:composition>
+
+</h:body>
+</html>
