@@ -81,7 +81,7 @@
 							</ui:fragment>
 							<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{album.status == 'SNATCHED' or album.status == 'DOWNLOADED'}" title="Redownload" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(album.album)} ?'));">
 								<f:ajax render="@none" listener="#{music.redownload}" execute="@this" />
-								<f:param name="id" value="#{movie.id}" />
+								<f:param name="id" value="#{album.id}" />
 								<i class="fa fa-refresh" />
 							</h:commandLink>
 							<h:commandLink title="Blacklist Artist" styleClass="btn btn-danger btn-sm" action="#{music.blackListArtist}" rendered="#{album.status == 'SUGGESTED'}"
