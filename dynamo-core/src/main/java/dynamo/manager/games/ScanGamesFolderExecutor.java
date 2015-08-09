@@ -52,6 +52,7 @@ public class ScanGamesFolderExecutor extends AbstractNewFolderExecutor<ScanGames
 					return theGamesDBGame;
 				}
 			}
+			return games.get(0);
 		}
 		
 		return null;
@@ -64,6 +65,10 @@ public class ScanGamesFolderExecutor extends AbstractNewFolderExecutor<ScanGames
 
 		if (!folder.equals(task.getFolder())) {
 			String title = folder.getFileName().toString();
+			
+			title = title.replaceAll("\\_", " ");
+			title = title.replaceAll("\\s+", " ");
+			
 			GetGamesListResponse gamesList = TheGamesDB.getInstance().getGamesList(title, platform.getLabel(), null);
 			currentGame = selectGame( gamesList.getGames(), title );
 		}
