@@ -16,17 +16,20 @@ import dynamo.core.VideoQuality;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.EpisodeFinder;
+import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
 import dynamo.finders.music.MusicAlbumFinder;
 import dynamo.finders.music.MusicAlbumSearchException;
 import dynamo.magazines.MagazineProvider;
+import dynamo.model.games.GamePlatform;
+import dynamo.model.games.VideoGame;
 import dynamo.model.movies.MovieManager;
 import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
 
-public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, MagazineProvider {
+public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, MagazineProvider, GameFinder {
 
 	public NZBIndexNLProvider() {
 		super("http://nzbindex.nl");
@@ -115,6 +118,28 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 		int minimumSize = 30;
 		String searchURL = String.format( "%s/search/?q=%s+-PASSWORDED&age=&max=250&minage=&sort=agedesc&minsize=%d&maxsize=&dq=&poster=&nfo=&complete=1&hidespam=0&hidespam=1&more=1",
 				rootURL, plus(issueSearchString), minimumSize );
+		return extractResults( searchURL );
+	}
+
+	@Override
+	public List<SearchResult> findGame(VideoGame videoGame) throws Exception {
+		
+		int minSizeInMbs = 500;
+		int group = -1;
+		
+		if ( videoGame.getPlatform() == GamePlatform.XBOX360 ) {
+			group = 113;
+			minSizeInMbs = 5000;
+		} else if ( videoGame.getPlatform() == GamePlatform.NINTENDO_WII ) {
+			group = 116;
+			minSizeInMbs = 1000;
+		} else {
+			return null;	// FIXME
+		}
+
+		String searchURL = String.format( "%s/search/?q=%s&age=&max=25&g[]=%d&minage=&sort=agedesc&minsize=%d&maxsize=&dq=&poster=&nfo=&hidespam=0&more=1",
+				rootURL, plus( videoGame.getName() ), group, minSizeInMbs );
+
 		return extractResults( searchURL );
 	}
 
