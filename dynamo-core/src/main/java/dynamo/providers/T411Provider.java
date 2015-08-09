@@ -40,7 +40,7 @@ import dynamo.model.games.VideoGame;
 import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
-import dynamo.utils.images.FindCoverImage;
+import dynamo.utils.images.CoverImageFinder;
 import dynamo.webapps.googleimages.GoogleImages;
 import hclient.HTTPClient;
 
@@ -342,7 +342,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		Elements images = torrentDocument.jsoup("article img");
 		List<Element> elligibleImages = filterImages(images);
 
-		imageSrc = FindCoverImage.selectCoverImage(elligibleImages, 0.7f, 200);
+		imageSrc = CoverImageFinder.getInstance().selectCoverImage(elligibleImages, 0.7f, 200);
 		if (imageSrc == null) {
 			WebResource resource = GoogleImages.findImage( title, 0.7f);
 			imageSrc = resource != null ? resource.getUrl() : null;	// FIXME: referer ?

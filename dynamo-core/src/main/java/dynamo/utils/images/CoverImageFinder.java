@@ -11,11 +11,30 @@ import javax.imageio.ImageIO;
 import org.jsoup.nodes.Element;
 
 import core.RegExp;
+import dynamo.core.manager.ErrorManager;
 import hclient.HTTPClient;
 
-public class FindCoverImage {
+public class CoverImageFinder {
 	
-	public static String selectCoverImage( Iterable<Element> images, float targetRatio, int minHeight ) throws IOException, URISyntaxException {
+	Path tempFolder;
+	
+	private CoverImageFinder() {
+		try {
+			tempFolder = Files.createTempDirectory( "images" );
+		} catch (IOException e) {
+			ErrorManager.getInstance().reportThrowable(e);
+		}
+	}
+
+	static class SingletonHolder {
+		static CoverImageFinder instance = new CoverImageFinder();
+	}
+
+	public static CoverImageFinder getInstance() {
+		return SingletonHolder.instance;
+	}	
+	
+	public String selectCoverImage( Iterable<Element> images, float targetRatio, int minHeight ) throws IOException, URISyntaxException {
 			
 		String imageURL = null;
 		
@@ -41,7 +60,7 @@ public class FindCoverImage {
 				
 				String url = element.absUrl("src");
 				
-				Path p = HTTPClient.getInstance().download( url, null, Files.createTempDirectory("temp"), HTTPClient.REFRESH_ONE_MONTH );
+				Path p = HTTPClient.getInstance().download( url, null, tempFolder, HTTPClient.REFRESH_ONE_MONTH );
 				if (p == null) {
 					continue;
 				}
