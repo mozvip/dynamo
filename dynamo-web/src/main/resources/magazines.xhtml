@@ -41,19 +41,22 @@
 			<ui:repeat var="issue" value="#{pager.items}">
 				<div id="#{issue.id}" class="magazine col-lg-2 col-md-2 col-sm-3 col-xs-6">
 					<div class="thumbnail magazineThumb">
-						<ui:fragment rendered="#{issue.status == 'SUGGESTED'}">
-							<a href="#" onclick="want('#{issue.id}');" title="Want Suggestion">
-								<img class="magazineCover" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.rawName}" title="#{issue.rawName}" />
-							</a>
-						</ui:fragment>
 						<ui:fragment rendered="#{issue.status == 'DOWNLOADED'}">					
 							<a href="/download?id=#{issue.id}" target="_blank">
 								<img class="magazineCover" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.rawName}" title="#{issue.rawName}" />
 							</a>
 						</ui:fragment>
+						<ui:fragment rendered="#{issue.status != 'DOWNLOADED'}">					
+							<img class="magazineCover" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.rawName}" title="#{issue.rawName}" />
+						</ui:fragment>
 						<div class="caption magazineCaption">#{issue.rawName}</div>
 					</div>
 					<div class="buttons">
+						<ui:fragment rendered="#{issue.status == 'SUGGESTED'}">
+							<a href="#" class="btn btn-sm btn-default" onclick="want('#{issue.id}');" title="Want Suggestion">
+								<i class="fa fa-heart"></i>
+							</a>
+						</ui:fragment>
 						<h:commandLink styleClass="btn btn-sm btn-danger" onclick="return (confirm('Are you sure you want to delete #{movies.fixName(issue.rawName)} ?'));" rendered="#{issue.status != 'SUGGESTED'}">
 							<f:ajax execute="@this" render="@none" listener="#{kiosk.delete}" onevent="removeIssueFromKiosk"/>
 							<f:param name="id" value="#{issue.id}" />
