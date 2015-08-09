@@ -378,21 +378,21 @@ public class HTTPClient {
 			destinationFolder = Files.createTempDirectory("httpclient");
 		}
 		
-		Path destinationFile = null;
-		if (StringUtils.isEmpty( fileName )) {
-			destinationFile = Files.createTempFile( destinationFolder, "", "" );
-		} else {
-			destinationFile = destinationFolder.resolve( fileName );
-		}
-
 		SimpleResponse response = get( url, referer, cacheRefreshPeriod );
 		
 		if (response.getCode() == 404) {
 			return null;
 		}
 		
+		Path destinationFile = null;
 		if (!StringUtils.isEmpty( response.getFileName() )) {
 			destinationFile = destinationFolder.resolve( response.getFileName() );
+		} else {
+			if (StringUtils.isEmpty( fileName )) {
+				destinationFile = Files.createTempFile( destinationFolder, "", "" );
+			} else {
+				destinationFile = destinationFolder.resolve( fileName );
+			}
 		}
 		
 		return createFile(response, destinationFile);
