@@ -1,7 +1,9 @@
 package dynamo.webapps.googleimages;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -16,7 +18,7 @@ public class GoogleImages {
 	public static WebResource findImage( String searchString, float ratio ) {
 		
 		String googleSearchString = searchString.replaceAll("[\\W]", " ");
-		googleSearchString = googleSearchString.replaceAll("\\s+", " ");
+		googleSearchString = googleSearchString.replaceAll("\\s+", " ").trim();
 		googleSearchString = googleSearchString.replaceAll("\\s", "+");
 
 		String referer = String.format("http://www.google.com/search?q=%s&tbm=isch&tbs=isz:m", googleSearchString);
@@ -30,6 +32,11 @@ public class GoogleImages {
 			for (Element element : images) {
 				String href = element.select("a.rg_l[href*=imgurl]").first().attr("href");
 				String imageURL = RegExp.extract(href, ".*imgurl=([^\\&]*).*");
+				
+				while (imageURL.contains("%")) {
+					imageURL = URLEncodedUtils.parse(imageURL, Charset.defaultCharset()).get(0).getName();
+				}
+
 				String imageRefURL = RegExp.extract(href, ".*imgrefurl=([^\\&]*).*");
 				
 				String[] imageInfo = RegExp.parseGroups( element.select("span.rg_ilmn").text(), "(\\d+)\\D+(\\d+) - (.*)" );
