@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition template="/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form p:role="form">
+			<div class="form-group">
+				<h:outputLabel styleClass="control-label" for="newAlbumFolder"
+					value="Add to folder" />
+				<div class="input-group">
+					<span class="input-group-addon"><i
+						class="fa fa-folder-open-o" /></span>
+					<h:selectOneMenu id="newAlbumFolder"
+						value="#{music.destinationPathForNewAlbum}" required="true"
+						styleClass="form-control" converter="PathConverter">
+						<f:selectItems value="#{music.allFolders}" />
+					</h:selectOneMenu>
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel styleClass="control-label" for="newAlbumArtist"
+					value="Album Artist" />
+				<div class="controls">
+					<h:inputText id="newAlbumArtist" label="Album Artist"
+						styleClass="form-control artist"
+						value="#{music.newMusicAlbumArtistName}" required="true" />
+				</div>
+			</div>
+			<div class="form-group">
+				<h:outputLabel styleClass="control-label" for="newAlbum"
+					value="Album" />
+				<div class="input-group">
+					<h:inputText id="newAlbum" value="#{music.newMusicAlbumName}"
+						label="Album" required="true" styleClass="form-control" />
+					<div class="input-group-btn">
+						<h:commandLink styleClass="btn btn-primary" action="#{music.addNewAlbum}">
+							<i class="fa fa-plus" />&nbsp;Add New Album
+						</h:commandLink>
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
+	
+	<ui:define name="custom_js">
+		<script>
+			function initPage() {
+				$('.artist').typeahead({
+					  name: 'artists',
+					  remote: '#{request.contextPath}/suggest-music-artist/?q=%QUERY'
+				});
+			}
+		</script>
+	</ui:define>	
+
+</ui:composition>
+
+</html>

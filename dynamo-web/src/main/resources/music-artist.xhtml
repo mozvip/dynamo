@@ -108,7 +108,7 @@
 					<div class="row">
 						<div class="col-lg-2">
 							<h:commandLink action="#{musicArtist.findNewImage(album)}">
-								<h:graphicImage value="#{album.coverImage}" width="125" height="125" styleClass="img-thumbnail" />
+								<h:graphicImage value="#{album.urlEncodedCoverImage}" width="125" height="125" styleClass="img-thumbnail" />
 								<f:ajax />
 							</h:commandLink>
 						</div>

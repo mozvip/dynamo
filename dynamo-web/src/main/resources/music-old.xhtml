@@ -90,40 +90,7 @@
 				</h:dataTable>
 			</div>
 			<div class="tab-pane" id="newalbum">
-					<h:form p:role="form">
-				<div class="panel panel-default">
-				<div class="panel-body">				
-	
-						<div class="form-group">
-							<h:outputLabel styleClass="control-label" for="newAlbumFolder" value="Add to folder" />
-							<div class="input-group">
-								<span class="input-group-addon"><i class="fa fa-folder-open-o" /></span>
-								<h:selectOneMenu id="newAlbumFolder" value="#{music.destinationPathForNewAlbum}" required="true"
-									styleClass="form-control" converter="PathConverter">
-									<f:selectItems value="#{music.allFolders}" />
-								</h:selectOneMenu>
-							</div>
-						</div>
-						<div class="form-group">
-							<h:outputLabel styleClass="control-label" for="newAlbumArtist" value="Album Artist" />
-							<div class="controls">
-								<h:inputText id="newAlbumArtist" label="Album Artist" styleClass="form-control artist"
-									value="#{music.newMusicAlbumArtistName}" required="true" />
-							</div>
-						</div>
-						<div class="form-group">
-							<h:outputLabel styleClass="control-label" for="newAlbum" value="Album" />
-							<h:inputText id="newAlbum" value="#{music.newMusicAlbumName}" label="Album" required="true"
-								styleClass="form-control" />
-						</div>
-					</div>
-					<div class="panel-footer">
-						<h:commandLink styleClass="btn btn-primary" action="#{music.addNewAlbum}">
-							<i class="fa fa-plus" />&nbsp;Add New Album
-						</h:commandLink>
-					</div>
-				</div>
-					</h:form>
+
 			</div>
 			<div class="tab-pane" id="folderImport">
 						<h:form p:role="form">

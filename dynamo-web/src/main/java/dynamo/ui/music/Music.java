@@ -150,7 +150,7 @@ public class Music extends DynamoManagedBean {
 				, null,
 				DownloadableStatus.WANTED,
 				MusicManager.getInstance().getPath(newMusicAlbumArtistName, newMusicAlbumName),
-				MusicManager.getInstance().getMusicQuality(), true) ));
+				MusicManager.getInstance().getMusicQuality(), true) ), true);
 	}
 	
 	public List<SelectItem> getAllFolders() {
