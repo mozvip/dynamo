@@ -74,7 +74,7 @@
 							<span class="albumGenre">#{album.genre}</span>
 						</div>
 						<div class="buttons">
-							<ui:fragment rendered="#{album.status == 'SUGGESTED'}" title="Want Suggestion">
+							<ui:fragment title="Want Suggestion" rendered="#{album.status == 'SUGGESTED'}">
 								<a href="#" class="btn btn-success btn-sm" onclick="want('#{album.id}');">
 									<i class="fa fa-download"></i>
 								</a>
@@ -90,7 +90,7 @@
 								<f:param name="id" value="#{album.id}" />
 								<i class="fa fa-trash-o"></i>
 							</h:commandLink>
-							<h:commandLink title="Delete Album" styleClass="btn btn-danger btn-sm" action="#{music.deleteAlbum}" rendered="#{album.status == 'DOWNLOADED'}"
+							<h:commandLink title="Delete Album" styleClass="btn btn-danger btn-sm" action="#{music.deleteAlbum}" rendered="#{album.status != 'SUGGESTED'}"
 								onclick="return confirm('Are you sure you want to delete #{movies.fixName(album.album)} ?');">
 								<f:ajax render="@none" execute="@this" onevent="removeThumbnail"/>
 								<f:param name="id" value="#{album.id}" />
