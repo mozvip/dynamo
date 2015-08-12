@@ -35,10 +35,12 @@ public class FindVideoGameExecutor extends FindDownloadableExecutor<VideoGame> {
 		VideoGame game = (VideoGame)downloadable;
 		try {
 			List<SearchResult> games = ((GameFinder)finder).findGame( game );
-			for (Iterator<SearchResult> iterator = games.iterator(); iterator.hasNext();) {
-				SearchResult searchResult = iterator.next();
-				if (game.getPlatform().getMaxSizeInMbs() > 0 && searchResult.getSizeInMegs() > game.getPlatform().getMaxSizeInMbs()) {
-					iterator.remove();
+			if (games != null) {
+				for (Iterator<SearchResult> iterator = games.iterator(); iterator.hasNext();) {
+					SearchResult searchResult = iterator.next();
+					if (game.getPlatform().getMaxSizeInMbs() > 0 && searchResult.getSizeInMegs() > game.getPlatform().getMaxSizeInMbs()) {
+						iterator.remove();
+					}
 				}
 			}
 			return games;
