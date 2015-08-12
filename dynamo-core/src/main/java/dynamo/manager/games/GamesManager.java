@@ -192,6 +192,9 @@ public class GamesManager implements Reconfigurable {
 			TheGamesDBGame theGamesDbGame = TheGamesDB.getInstance().getGame( theGamesDbId );
 			if (theGamesDbGame != null) {
 				game = GamesManager.getInstance().createGame( theGamesDbGame.getGameTitle(), theGamesDbGame.getPlatform(), theGamesDbId, null, DownloadableStatus.WANTED );
+				if (theGamesDbGame.getAlternateTitles() != null && theGamesDbGame.getAlternateTitles().size() > 0) {
+					DownloadableManager.getInstance().setAkas(game.getId(), theGamesDbGame.getAlternateTitles());
+				}
 				DownloadableManager.getInstance().scheduleFind( game );
 			}
 		} else {
