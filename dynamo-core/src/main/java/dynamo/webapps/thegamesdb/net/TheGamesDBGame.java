@@ -60,6 +60,9 @@ public class TheGamesDBGame {
 	@Element(name="Rating", required=false)
 	private float rating;
 
+	@Element(name="Similar", required=false)
+	private SimilarXML similar;
+
 	public long getId() {
 		return id;
 	}
@@ -194,6 +197,14 @@ public class TheGamesDBGame {
 	
 	public void setAlternateTitles(List<String> alternateTitles) {
 		this.alternateTitles = alternateTitles;
+	}
+	
+	public SimilarXML getSimilar() {
+		return similar;
+	}
+	
+	public void setSimilar(SimilarXML similar) {
+		this.similar = similar;
 	}
 
 }
