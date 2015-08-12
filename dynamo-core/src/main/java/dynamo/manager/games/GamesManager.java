@@ -118,7 +118,7 @@ public class GamesManager implements Reconfigurable {
 		DownloadableManager.getInstance().updateCoverImage( game.getId(), image);		
 	}
 	
-	private String getLocalImage( long theGamesDbId, String title, GamePlatform platform ) throws MalformedURLException {
+	private String getLocalImage( long theGamesDbId, String title, GamePlatform platform ) {
 		String imageId = String.format("%s-%s", title, platform.name());
 
 		GetArtResponse response = TheGamesDB.getInstance().getArt(theGamesDbId);
@@ -142,12 +142,14 @@ public class GamesManager implements Reconfigurable {
 			imageReferer = resource.getReferer();
 		}
 
-		String localImage = LocalImageCache.getInstance().download("games", imageId, imageURL, imageReferer);
-		
-		return localImage;
+		return LocalImageCache.getInstance().download("games", imageId, imageURL, imageReferer);
+	}
+	
+	public VideoGame findByTheGamesDbId( long theGamesDbId ) {
+		return videoGameDAO.findByTheGamesDbId(theGamesDbId);
 	}
 
-	public VideoGame createGame( String title, String platform, long theGamesDbId, Path folder, DownloadableStatus status ) throws MalformedURLException {
+	public VideoGame createGame( String title, String platform, long theGamesDbId, Path folder, DownloadableStatus status )  {
 
 		GamePlatform newGamePlatform = GamePlatform.match( platform );
 		String image = getLocalImage(theGamesDbId, title, newGamePlatform );
@@ -181,6 +183,22 @@ public class GamesManager implements Reconfigurable {
 		DownloadableManager.getInstance().updateCoverImage( videoGameId, image );
 		
 		videoGameDAO.save( videoGameId, game.getGameTitle(), newGamePlatform, game.getId() );
+
+	}
+
+	public void want(long theGamesDbId) {
+		VideoGame game = GamesManager.getInstance().findByTheGamesDbId( theGamesDbId );
+		if (game == null) {
+			TheGamesDBGame theGamesDbGame = TheGamesDB.getInstance().getGame( theGamesDbId );
+			if (theGamesDbGame != null) {
+				game = GamesManager.getInstance().createGame( theGamesDbGame.getGameTitle(), theGamesDbGame.getPlatform(), theGamesDbId, null, DownloadableStatus.WANTED );
+				DownloadableManager.getInstance().scheduleFind( game );
+			}
+		} else {
+			if (game.getStatus() != DownloadableStatus.DOWNLOADED) {
+				DownloadableManager.getInstance().want( game );
+			}
+		}
 
 	}
 

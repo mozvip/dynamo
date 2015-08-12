@@ -37,4 +37,8 @@ public interface VideoGameDAO {
 	@SqlUpdate("MERGE INTO VIDEOGAME(ID, NAME, PLATFORM, THEGAMESDB_ID) VALUES (:id, :name, :platform, :theGamesDBId)")
 	void save(@Bind("id") long id, @Bind("name") String name, @BindEnum("platform") GamePlatform platform, @Bind("theGamesDBId") Long theGamesDBId);
 
+	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID WHERE VIDEOGAME.THEGAMESDB_ID = :theGamesDbId")
+	@Mapper(VideoGameMapper.class)
+	public VideoGame findByTheGamesDbId(@Bind("theGamesDbId") long theGamesDbId);
+
 }

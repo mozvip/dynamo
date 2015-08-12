@@ -47,7 +47,7 @@
 				<h:column>#{suggestion.gameTitle}</h:column>
 				<h:column>#{suggestion.platform}</h:column>
 				<h:column>
-					<h:commandLink styleClass="btn btn-primary" onclick="$(this).closest('tr').hide();" action="#{games.downloadGame(suggestion.id, suggestion.gameTitle, suggestion.platform)}">
+					<h:commandLink styleClass="btn btn-primary" onclick="$(this).closest('tr').hide();" action="#{games.downloadGame(suggestion.id)}">
 						<f:ajax execute="@this" render="@none" />
 						<i class="fa fa-download" />&nbsp;Download
 					</h:commandLink>

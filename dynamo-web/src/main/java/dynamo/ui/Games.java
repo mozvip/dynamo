@@ -171,9 +171,8 @@ public class Games extends DynamoManagedBean implements Serializable {
 	}
 	
 	
-	public void downloadGame(int id, String title, String platform) throws MalformedURLException {
-		VideoGame game = GamesManager.getInstance().createGame( title, platform, id, null, DownloadableStatus.WANTED );
-		DownloadableManager.getInstance().want( game );
+	public void downloadGame( long theGamesDbId ) throws MalformedURLException {
+		GamesManager.getInstance().want( theGamesDbId );
 	}
 
 	private List<TheGamesDBGame> suggestedGames = null;

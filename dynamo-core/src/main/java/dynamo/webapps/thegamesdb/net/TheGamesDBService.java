@@ -14,6 +14,9 @@ public interface TheGamesDBService {
 	@GET("/api/GetGame.php")
 	public GetGamesListResponse getGame( @Query("name") String name, @Query("id") Long id );
 	
+	@GET("/api/GetGame.php")
+	public GetGamesListResponse getGame( @Query("id") Long id );
+
 	@GET("/api/GetArt.php")
 	public GetArtResponse getArt( @Query("id") Long id );
 

@@ -34,6 +34,14 @@ public class TheGamesDB {
 		return service.getGame(name, id);
 	}
 
+	public TheGamesDBGame getGame(Long id) {
+		GetGamesListResponse response = service.getGame(id);
+		if (response.getGames() != null && response.getGames().size() > 0) {
+			return response.getGames().get(0);
+		}
+		return null;
+	}
+
 	public GetArtResponse getArt(long id) {
 		return service.getArt(id);
 	}
