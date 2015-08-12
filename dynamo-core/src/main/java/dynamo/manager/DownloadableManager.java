@@ -401,5 +401,9 @@ public class DownloadableManager {
 			}
 		}		
 	}
+	
+	public void setAkas( long downloadableId, Collection<String> akas ) {
+		downloadableDAO.saveAka(downloadableId, akas);
+	}
 
 }
