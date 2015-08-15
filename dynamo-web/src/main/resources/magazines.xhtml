@@ -57,11 +57,11 @@
 								<i class="fa fa-heart"></i>
 							</a>
 						</ui:fragment>
-						<h:commandLink styleClass="btn btn-sm btn-danger" onclick="return (confirm('Are you sure you want to delete #{movies.fixName(issue.rawName)} ?'));" rendered="#{issue.status != 'SUGGESTED'}">
-							<f:ajax execute="@this" render="@none" listener="#{kiosk.delete}" onevent="removeIssueFromKiosk"/>
-							<f:param name="id" value="#{issue.id}" />
-							<i class="fa fa-trash-o"></i>
-						</h:commandLink>
+						<ui:fragment rendered="#{issue.status != 'SUGGESTED'}">
+							<a class="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(issue.rawName)} ?')) { delete('#{issue.id}'); };" title="Delete Issue">
+								<i class="fa fa-trash-o"></i>
+							</a>
+						</ui:fragment>
 						<h:commandLink styleClass="btn btn-sm btn-default" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(issue.rawName)} ?'));" rendered="#{issue.status == 'SNATCHED' or issue.status == 'DOWNLOADED'}">
 							<f:ajax execute="@this" render="@none" listener="#{kiosk.redownload(issue.id)}" />
 							<i class="fa fa-refresh"></i>
@@ -92,6 +92,17 @@
 		function want(id) {
 			$.ajax({
 				  url: "want",
+				  data: {
+				    id: id
+				  },
+				  beforeSend: function() {
+					  disappear( 'bounceOutUp', $('#' + id) );
+				  }
+			});
+		}
+		function remove(id) {
+			$.ajax({
+				  url: "delete",
 				  data: {
 				    id: id
 				  },

@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 
 import dynamo.core.DynamoApplication;
 import dynamo.ui.servlets.DownloadDownloadableServlet;
+import dynamo.ui.servlets.DeleteDownloadableServlet;
 import dynamo.ui.servlets.WantDownloadableServlet;
 import io.undertow.servlet.api.ServletInfo;
 
@@ -28,7 +29,8 @@ public class Dynamo extends DynamoApplication {
 	protected List<ServletInfo> getCustomServletsInfo() {
 		return Arrays.asList(
 				new ServletInfo("DownloadDownloadableServlet", DownloadDownloadableServlet.class).addMapping("/download"),
-				new ServletInfo("WantDownloadableServlet", WantDownloadableServlet.class).addMapping("/want")
+				new ServletInfo("WantDownloadableServlet", WantDownloadableServlet.class).addMapping("/want"),
+				new ServletInfo("DeleteDownloadableServlet", DeleteDownloadableServlet.class).addMapping("/delete")
 		);
 	}
 

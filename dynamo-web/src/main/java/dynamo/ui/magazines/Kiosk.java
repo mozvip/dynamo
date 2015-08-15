@@ -6,7 +6,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import dynamo.backlog.BackLogProcessor;
-import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.core.Language;
 import dynamo.core.tasks.InvokeMethodTask;
 import dynamo.magazines.MagazineManager;
@@ -41,14 +40,11 @@ public class Kiosk extends DynamoManagedBean {
 	private MagazineIssuePager kioskContents = null;
 	private MagazineIssuePager collectionContents = null;
 	private MagazineIssuePager wantedContents = null;
-	
-	private MagazineIssuePager displayedContents = null;
 
 	public MagazineIssuePager getKioskContents() {
 		if (kioskContents == null) {
 			kioskContents = new MagazineIssuePager( MagazineManager.getInstance().getKioskContents( language, filter ) );
 		}
-		displayedContents = kioskContents;
 		return kioskContents;
 	}
 
@@ -56,7 +52,6 @@ public class Kiosk extends DynamoManagedBean {
 		if (collectionContents == null) {
 			collectionContents = new MagazineIssuePager( MagazineManager.getInstance().getCollectionContents( language, filter ) );
 		}
-		displayedContents = collectionContents;
 		return collectionContents;
 	}
 
@@ -64,7 +59,6 @@ public class Kiosk extends DynamoManagedBean {
 		if (wantedContents == null) {
 			wantedContents = new MagazineIssuePager( MagazineManager.getInstance().getWantedContents( language, filter ) );
 		}
-		displayedContents = wantedContents;
 		return wantedContents;
 	}
 
@@ -73,13 +67,7 @@ public class Kiosk extends DynamoManagedBean {
 		collectionContents = null;
 		wantedContents = null;
 	}
-
-	public void delete() {
-		int idToDelete = getIntegerParameter("id");
-		queue( new DeleteDownloadableTask( displayedContents.remove( idToDelete ) ));
-		changeFilter();
-	}
-
+	
 	public void reset() throws NoSuchMethodException, SecurityException {
 		changeFilter();
 		BackLogProcessor.getInstance().unschedule(RefreshKioskTask.class);
