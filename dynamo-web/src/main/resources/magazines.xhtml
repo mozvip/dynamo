@@ -58,7 +58,7 @@
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{issue.status != 'SUGGESTED'}">
-							<a class="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(issue.rawName)} ?')) { remove('#{issue.id}'); };" title="Delete Issue">
+							<a class="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(issue.rawName)} ?')) { deleteDownloadable('#{issue.id}'); };" title="Delete Issue">
 								<i class="fa fa-trash-o"></i>
 							</a>
 						</ui:fragment>
@@ -84,11 +84,6 @@
 
 	<ui:define name="custom_js">
 		<script>
-		function removeIssueFromKiosk( data ) {
-			if (data.status == 'begin') {
-				disappear( 'bounceOutUp', $(data.source).closest('div.magazine') );
-			}
-		}
 		function want(id) {
 			$.ajax({
 				  url: "want",
@@ -100,7 +95,7 @@
 				  }
 			});
 		}
-		function remove(id) {
+		function deleteDownloadable(id) {
 			$.ajax({
 				  url: "delete",
 				  data: {
