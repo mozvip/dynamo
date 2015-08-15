@@ -58,7 +58,7 @@
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{issue.status != 'SUGGESTED'}">
-							<a class="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(issue.rawName)} ?')) { delete('#{issue.id}'); };" title="Delete Issue">
+							<a class="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(issue.rawName)} ?')) { remove('#{issue.id}'); };" title="Delete Issue">
 								<i class="fa fa-trash-o"></i>
 							</a>
 						</ui:fragment>
