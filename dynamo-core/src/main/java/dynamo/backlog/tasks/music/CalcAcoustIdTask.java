@@ -2,17 +2,13 @@ package dynamo.backlog.tasks.music;
 
 import java.nio.file.Path;
 
-import dynamo.core.model.AbstractDynamoQueue;
+import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
 import dynamo.webapps.acoustid.AcoustIdQueue;
 
+@DynamoTask(queueClass=AcoustIdQueue.class)
 public class CalcAcoustIdTask extends Task {
-	
-	@Override
-	public Class<? extends AbstractDynamoQueue> getQueueClass() {
-		return AcoustIdQueue.class;
-	}
-	
+
 	private Path musicFilePath;
 	
 	public CalcAcoustIdTask( Path path ) {

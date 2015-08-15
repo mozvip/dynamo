@@ -1,11 +1,12 @@
 package dynamo.model.backlog.core;
 
-import dynamo.core.model.AbstractDynamoQueue;
+import dynamo.core.DynamoTask;
 import dynamo.core.model.CancellableTask;
 import dynamo.core.model.Task;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
 
+@DynamoTask(queueClass=FindDownloadableQueue.class)
 public abstract class FindDownloadableTask<T extends Downloadable> extends Task implements CancellableTask {
 	
 	protected T downloadable = null;
@@ -17,11 +18,6 @@ public abstract class FindDownloadableTask<T extends Downloadable> extends Task 
 	@Override
 	public String toString() {
 		return String.format("Searching for %s", downloadable.toString());
-	}
-	
-	@Override
-	public Class<? extends AbstractDynamoQueue> getQueueClass() {
-		return FindDownloadableQueue.class;
 	}
 	
 	@Override

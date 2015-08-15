@@ -2,11 +2,12 @@ package dynamo.backlog.tasks.files;
 
 import java.lang.reflect.InvocationTargetException;
 
+import dynamo.core.DynamoTask;
 import dynamo.core.manager.DownloadableFactory;
-import dynamo.core.model.AbstractDynamoQueue;
 import dynamo.core.model.DownloadableTask;
 import dynamo.model.Downloadable;
 
+@DynamoTask(queueClass=DeleteDownloadableQueue.class)
 public class DeleteDownloadableTask extends DownloadableTask {
 	
 	public DeleteDownloadableTask( long id ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
@@ -15,11 +16,6 @@ public class DeleteDownloadableTask extends DownloadableTask {
 
 	public DeleteDownloadableTask( Downloadable downloadable ) {
 		super(downloadable);
-	}
-	
-	@Override
-	public Class<? extends AbstractDynamoQueue> getQueueClass() {
-		return DeleteDownloadableQueue.class;
 	}
 
 	@Override

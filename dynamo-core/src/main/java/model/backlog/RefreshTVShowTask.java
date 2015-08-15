@@ -1,9 +1,11 @@
 package model.backlog;
 
 import dynamo.backlog.queues.TVDBQueue;
+import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
 import model.ManagedSeries;
 
+@DynamoTask(queueClass=TVDBQueue.class)
 public class RefreshTVShowTask extends Task {
 	
 	private ManagedSeries series;
@@ -24,10 +26,5 @@ public class RefreshTVShowTask extends Task {
 	public String toString() {
 		return String.format( "Refresh <a href='%s'>%s</a> from TVDB", series.getRelativeLink(), series.getName() );
 	}
-	
-	
-	@Override
-	public Class getQueueClass() {
-		return TVDBQueue.class;
-	}
+
 }

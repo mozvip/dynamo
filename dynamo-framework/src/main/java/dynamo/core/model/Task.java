@@ -7,10 +7,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public abstract class Task {
 
 	private Date minDate;
-
-	public Class<? extends AbstractDynamoQueue> getQueueClass() {
-		return DynamoDefaultQueue.class;
-	}
 	
 	public Date getMinDate() {
 		return minDate;

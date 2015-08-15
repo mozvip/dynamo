@@ -4,7 +4,7 @@ import java.nio.file.Path;
 
 import dynamo.model.Downloadable;
 
-public class MoveFileTask extends FileOperationBackLogItem {
+public class MoveFileTask extends FileOperationTask {
 	
 	private Path source;
 	private Path destination;

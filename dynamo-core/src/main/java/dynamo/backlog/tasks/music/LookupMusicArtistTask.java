@@ -1,9 +1,11 @@
 package dynamo.backlog.tasks.music;
 
 import dynamo.backlog.queues.AllMusicQueue;
+import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
 import dynamo.model.music.MusicArtist;
 
+@DynamoTask(queueClass=AllMusicQueue.class)
 public class LookupMusicArtistTask extends Task {
 
 	private MusicArtist artist;
@@ -19,11 +21,6 @@ public class LookupMusicArtistTask extends Task {
 	public void setArtist(MusicArtist artist) {
 		this.artist = artist;
 	}
-
-	@Override
-	public Class getQueueClass() {
-		return AllMusicQueue.class;
-	}	
 	
 	@Override
 	public String toString() {

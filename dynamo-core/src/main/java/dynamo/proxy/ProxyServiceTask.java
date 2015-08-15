@@ -2,10 +2,11 @@
 package dynamo.proxy;
 
 import dynamo.backlog.queues.ServiceQueue;
+import dynamo.core.DynamoTask;
 import dynamo.core.configuration.Configurable;
-import dynamo.core.model.AbstractDynamoQueue;
 import dynamo.core.model.ServiceTask;
 
+@DynamoTask(queueClass=ServiceQueue.class)
 public class ProxyServiceTask extends ServiceTask {
 	
 	@Configurable(category="Main Settings", name="Enable Local Dynamo Proxy")
@@ -13,11 +14,6 @@ public class ProxyServiceTask extends ServiceTask {
 	
 	@Configurable(category="Main Settings", name="Listen on port", disabled="#{!ProxyServiceTask.enabled}", required="#{ProxyServiceTask.enabled}", defaultValue="3128")
 	private int port = 3128;
-	
-	@Override
-	public Class<? extends AbstractDynamoQueue> getQueueClass() {
-		return ServiceQueue.class;
-	}
 
 	@Override
 	public boolean isEnabled() {

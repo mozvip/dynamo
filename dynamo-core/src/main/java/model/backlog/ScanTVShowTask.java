@@ -1,10 +1,11 @@
 package model.backlog;
 
 import dynamo.backlog.tasks.tvshows.ScanFolderQueue;
-import dynamo.core.model.AbstractDynamoQueue;
+import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
 import model.ManagedSeries;
 
+@DynamoTask(queueClass=ScanFolderQueue.class)
 public class ScanTVShowTask extends Task {
 
 	private ManagedSeries series;
@@ -20,11 +21,6 @@ public class ScanTVShowTask extends Task {
 	public void setSeries(ManagedSeries series) {
 		this.series = series;
 	}
-	
-	@Override
-	public Class<? extends AbstractDynamoQueue> getQueueClass() {
-		return ScanFolderQueue.class;
-	}	
 	
 	@Override
 	public String toString() {

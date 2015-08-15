@@ -4,7 +4,7 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.core.model.LogSuccess;
 import dynamo.core.model.TaskExecutor;
 
-public abstract class FileOperationTaskExecutor<T extends FileOperationBackLogItem> extends TaskExecutor<FileOperationBackLogItem> implements LogSuccess {
+public abstract class FileOperationTaskExecutor<T extends FileOperationTask> extends TaskExecutor<FileOperationTask> implements LogSuccess {
 	
 	public FileOperationTaskExecutor(T task) {
 		super(task);
@@ -13,7 +13,7 @@ public abstract class FileOperationTaskExecutor<T extends FileOperationBackLogIt
 	public abstract boolean isFinished();
 
 	@Override
-	public void rescheduleTask( FileOperationBackLogItem item ) {
+	public void rescheduleTask( FileOperationTask item ) {
 		if (!isFinished()) {
 			// we will try again in 5 minutes
 			item.setMinDate( getNextDate( 5 ) );

@@ -3,19 +3,15 @@ package dynamo.core.tasks;
 import java.nio.file.Path;
 
 import dynamo.backlog.queues.DynamoFileOperationQueue;
-import dynamo.core.model.AbstractDynamoQueue;
+import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
 
+@DynamoTask(queueClass=DynamoFileOperationQueue.class)
 public class MoveFolderTask extends Task {
 	
 	Path sourceFolder;
 	Path destinationFolder;
 	
-	@Override
-	public Class<? extends AbstractDynamoQueue> getQueueClass() {
-		return DynamoFileOperationQueue.class;
-	}
-
 	public MoveFolderTask(Path sourceFolder, Path destinationFolder) {
 		this.sourceFolder = sourceFolder;
 		this.destinationFolder = destinationFolder;

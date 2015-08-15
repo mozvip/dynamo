@@ -3,9 +3,10 @@ package dynamo.model.backlog.core;
 import java.nio.file.Path;
 
 import dynamo.backlog.queues.HTTPDownloadQueue;
-import dynamo.core.model.AbstractDynamoQueue;
+import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
 
+@DynamoTask(queueClass=HTTPDownloadQueue.class)
 public class HTTPDownloadTask extends Task {
 	
 	private String url;
@@ -34,10 +35,5 @@ public class HTTPDownloadTask extends Task {
 	public String toString() {
 		return String.format( "Downloading <a href='%s'>%s</a> to %s", url, url, destinationFile.toAbsolutePath().toString() );
 	}
-	
-	@Override
-	public Class<? extends AbstractDynamoQueue> getQueueClass() {
-		return HTTPDownloadQueue.class;
-	}	
 
 }

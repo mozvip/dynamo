@@ -1,9 +1,10 @@
 package dynamo.model.backlog.subtitles;
 
-import dynamo.core.model.AbstractDynamoQueue;
+import dynamo.core.DynamoTask;
 import dynamo.core.model.DownloadableTask;
 import model.ManagedEpisode;
 
+@DynamoTask(queueClass=FindSubtitlesQueue.class)
 public class FindSubtitleEpisodeTask extends DownloadableTask {
 
 	public FindSubtitleEpisodeTask(ManagedEpisode episode) {
@@ -17,11 +18,6 @@ public class FindSubtitleEpisodeTask extends DownloadableTask {
 	public void setEpisode(ManagedEpisode episode) {
 		this.downloadable = episode;
 	}
-	
-	@Override
-	public Class<? extends AbstractDynamoQueue> getQueueClass() {
-		return FindSubtitlesQueue.class;
-	}	
 
 	@Override
 	public String toString() {

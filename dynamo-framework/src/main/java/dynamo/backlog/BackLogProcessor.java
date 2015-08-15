@@ -12,6 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.el.ExpressionFactory;
 
+import dynamo.core.DynamoTask;
 import dynamo.core.Enableable;
 import dynamo.core.EventManager;
 import dynamo.core.el.DynamoELContext;
@@ -19,6 +20,7 @@ import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.AbstractDynamoQueue;
 import dynamo.core.model.CancellableTask;
+import dynamo.core.model.DynamoDefaultQueue;
 import dynamo.core.model.Task;
 import dynamo.core.model.TaskExecutor;
 
@@ -49,18 +51,33 @@ public class BackLogProcessor extends Thread {
 		return items;
 	}
 	
-	protected AbstractDynamoQueue getQueueForTask( Task task ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, ClassNotFoundException {
+	public Class<? extends AbstractDynamoQueue> getQueueClass( Class<? extends Task> taskClass ) {
+		DynamoTask annotation = taskClass.getAnnotation( DynamoTask.class );
+		Class<? extends AbstractDynamoQueue> queueClass = DynamoDefaultQueue.class;
+		if (annotation != null) {
+			queueClass = annotation.queueClass();
+		}
+		return queueClass;
+	}
+	
+	protected AbstractDynamoQueue getQueueForTaskClass( Class<? extends Task> taskClass )  {
+		Class<? extends AbstractDynamoQueue> queueClass = getQueueClass( taskClass );
 		AbstractDynamoQueue queue = null;
-		if (!queues.containsKey( task.getQueueClass().getName() )) {
-			synchronized (task.getQueueClass()) {
-				queue = (AbstractDynamoQueue) queues.get( task.getQueueClass().getName() );
+		if (!queues.containsKey( queueClass.getName() )) {
+			synchronized (queueClass) {
+				queue = (AbstractDynamoQueue) queues.get( queueClass.getName() );
 				if (queue == null) {
-					queue = (AbstractDynamoQueue) ConfigurationManager.configureQueue( task.getQueueClass() );
-					queues.put( task.getQueueClass().getName(), queue );
+					try {
+						queue = (AbstractDynamoQueue) ConfigurationManager.configureQueue( queueClass );
+						queues.put( queueClass.getName(), queue );
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException
+							| ClassNotFoundException e) {
+						ErrorManager.getInstance().reportThrowable( e );
+					}
 				}	
 			}
 		} else {
-			queue = (AbstractDynamoQueue) queues.get( task.getQueueClass().getName() );
+			queue = (AbstractDynamoQueue) queues.get( queueClass.getName() );
 		}
 		return queue;
 	}
@@ -100,7 +117,7 @@ public class BackLogProcessor extends Thread {
 				
 				items.remove( currentItem );
 
-				AbstractDynamoQueue queue = getQueueForTask( currentItem );
+				AbstractDynamoQueue queue = getQueueForTaskClass( currentItem.getClass() );
 				if (!queue.executeTask( currentItem )) {
 					// blacklist this task class : no executor can execute it
 					blackListedTasks.add( currentItem.getClass() );
@@ -182,14 +199,14 @@ public class BackLogProcessor extends Thread {
 		return result;
 		
 	}
-
+	
 	public void unschedule( Class<? extends Task> taskClass, String expressionToVerify ) {
-		// FIXME : if taskClass is known, we should be able to automatically select the corresponding queue
-		for (AbstractDynamoQueue queue : getQueues().values()) {
-			for (Task task : queue.getTaskBackLog()) {
-				if (match( task, taskClass, expressionToVerify)) {
-					queue.cancel(task);
-				}
+		if (taskClass != null) {
+			AbstractDynamoQueue queue = getQueueForTaskClass(taskClass);
+			cancelMatchingTasks(queue, taskClass, expressionToVerify);			
+		} else {
+			for (AbstractDynamoQueue queue : getQueues().values()) {
+				cancelMatchingTasks(queue, null, expressionToVerify);
 			}
 		}
 		for (Task task : items) {
@@ -199,15 +216,19 @@ public class BackLogProcessor extends Thread {
 		}
 	}
 
+	protected void cancelMatchingTasks(AbstractDynamoQueue queue, Class<? extends Task> taskClass, String expressionToVerify) {
+		for (Task task : queue.getTaskBackLog()) {
+			if (match( task, taskClass, expressionToVerify)) {
+				queue.cancel(task);
+			}
+		}
+	}
+
 	private void unschedule(Task task) {
 		items.remove( task );
-		try {
-			AbstractDynamoQueue queue = getQueueForTask(task);
-			if (queue != null) {
-				queue.cancel( task );
-			}
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException | ClassNotFoundException e) {
-			ErrorManager.getInstance().reportThrowable( e );
+		AbstractDynamoQueue queue = getQueueForTaskClass(task.getClass());
+		if (queue != null) {
+			queue.cancel( task );
 		}
 	}
 	

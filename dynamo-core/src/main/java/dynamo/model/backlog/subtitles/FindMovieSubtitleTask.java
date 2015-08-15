@@ -1,10 +1,11 @@
 package dynamo.model.backlog.subtitles;
 
+import dynamo.core.DynamoTask;
 import dynamo.core.Language;
-import dynamo.core.model.AbstractDynamoQueue;
 import dynamo.core.model.Task;
 import dynamo.model.movies.Movie;
 
+@DynamoTask(queueClass=FindSubtitlesQueue.class)
 public class FindMovieSubtitleTask extends Task {
 	
 	private Movie movie;
@@ -29,12 +30,6 @@ public class FindMovieSubtitleTask extends Task {
 	
 	public void setMovie(Movie movie) {
 		this.movie = movie;
-	}
-	
-	
-	@Override
-	public Class<? extends AbstractDynamoQueue> getQueueClass() {
-		return FindSubtitlesQueue.class;
 	}
 
 	@Override
