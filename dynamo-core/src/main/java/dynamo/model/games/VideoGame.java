@@ -35,9 +35,9 @@ public class VideoGame extends Downloadable {
 	@Override
 	public String getRelativeLink() {
 		if (isDownloaded()) {
-			return String.format("games-collection.jsf?platform=%d", platform.name());
+			return String.format("games-collection.jsf?platform=%s", platform.name());
 		} else {
-			return String.format("games-wanted.jsf?platform=%d", platform.name());
+			return String.format("games-wanted.jsf?platform=%s", platform.name());
 		}
 	}
 
