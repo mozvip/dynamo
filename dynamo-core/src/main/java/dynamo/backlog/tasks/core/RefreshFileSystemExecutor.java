@@ -126,8 +126,6 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 				} else if (downloadable instanceof EBook) {
 					// ebook becomes suggested
 					DownloadableManager.getInstance().suggest(downloadable);
-				} else if (downloadable instanceof Movie || downloadable instanceof VideoGame) {
-					queue( new DeleteDownloadableTask(downloadable));
 				} else {
 					ErrorManager.getInstance().reportError( String.format("%s is marked as downloaded but can't be found", downloadable.toString()));
 				}
