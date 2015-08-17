@@ -47,7 +47,7 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 			// remove subtitles
 			for ( Path subtitle : Files.newDirectoryStream( folder, SubtitlesFileFilter.getInstance() )) {
 				if (Files.isRegularFile(subtitle)) {
-					queue( new DeleteTask(subtitle, false));
+					queue( new DeleteTask(subtitle, false), false );
 				}
 			}
 		}
