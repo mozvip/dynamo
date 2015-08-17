@@ -10,7 +10,7 @@ public enum GamePlatform {
 	UNKNOWN("Unknown", null),
 	PC("PC", null),
 	PS1("Sony Playstation", new ExtensionsFileFilter(".cue", ".ccd", ".img", ".sub", ".bin", ".iso"), 1.0f, 3000),
-	PS2("Sony Playstation 2", new ExtensionsFileFilter(".cso", ".iso", ".nrg", ".gi", ".mdf"), 0.70f, 10000),
+	PS2("Sony Playstation 2", new ExtensionsFileFilter(".cso", ".iso", ".gz", ".nrg", ".gi", ".mdf"), 0.70f, 10000),
 	PS3("Sony Playstation 3", null, 0.86f, 40000),
 	PSP("Sony PSP", new ExtensionsFileFilter(".iso", ".cso"), 0.582f, 3000),
 	XBOX360("Microsoft Xbox 360", new ExtensionsFileFilter(".iso")),
