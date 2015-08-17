@@ -9,7 +9,7 @@
 <ui:composition template="/template.xhtml">
 
 	<ui:define name="content">
-	
+
 		<ui:include src="/fragment-filesDialog.xhtml" />
 
 		<style>
@@ -87,16 +87,18 @@
 			}
 		</script>
 
-		<h:form styleClass="form-inline">
-			<div class="form-group">
-				<h:outputLabel value="Platform" for="platform" />
-				<h:selectOneMenu styleClass="form-control" id="platform" value="#{games.filterPlatform}">
-					<f:selectItem itemLabel="" itemValue="" />
-					<f:selectItems value="#{listOfValues.gamePlatforms}" />
-					<f:ajax listener="#{games.filter}" render="gamesList" execute="@this" />
-				</h:selectOneMenu>
-			</div>
-		</h:form>
+		<h1>#{games.platform.label}
+		<div class="dropdown">
+		  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuPlatform" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				Change Platform<span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu" aria-labelledby="dropdownMenuPlatform">
+		  	<ui:repeat var="platform" value="#{listOfValues.gamePlatforms}">
+			    <li><a href="?platform=#{platform.value}">#{platform.label}</a></li>
+		  	</ui:repeat>
+		  </ul>
+		</div>						
+		</h1>
 		<h:form id="gamesList">
 			<ui:include src="/components/pager.xhtml" />
 			<ui:repeat var="game" value="#{pager.items}">

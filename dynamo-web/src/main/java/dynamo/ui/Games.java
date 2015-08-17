@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.core.EventManager;
@@ -26,7 +27,7 @@ import dynamo.webapps.thegamesdb.net.TheGamesDB;
 import dynamo.webapps.thegamesdb.net.TheGamesDBGame;
 
 @ManagedBean
-@SessionScoped
+@RequestScoped
 public class Games extends DynamoManagedBean implements Serializable {
 	
 	/**
@@ -39,7 +40,8 @@ public class Games extends DynamoManagedBean implements Serializable {
 	private GamePlatform newGamePlatform;
 	private long searchId;
 	
-	private GamePlatform filterPlatform;
+	@ManagedProperty("#{param.platform}")
+	private GamePlatform platform;
 	private DownloadablePager<VideoGame> collection;
 	private DownloadablePager<VideoGame> wanted;
 	private DownloadablePager<VideoGame> suggested;
@@ -47,7 +49,7 @@ public class Games extends DynamoManagedBean implements Serializable {
 	
 	public DownloadablePager<VideoGame> getCollection() {
 		if (collection == null) {
-			collection = new DownloadablePager<>(GamesManager.getInstance().getGames( filterPlatform, DownloadableStatus.DOWNLOADED ));
+			collection = new DownloadablePager<>(GamesManager.getInstance().getGames( platform, DownloadableStatus.DOWNLOADED ));
 			displayed = collection;
 		}
 		return collection;
@@ -55,8 +57,8 @@ public class Games extends DynamoManagedBean implements Serializable {
 	
 	public DownloadablePager<VideoGame> getWanted() {
 		if (wanted == null) {
-			List<VideoGame> wantedGames = GamesManager.getInstance().getGames( filterPlatform, DownloadableStatus.WANTED );
-			wantedGames.addAll( GamesManager.getInstance().getGames( filterPlatform, DownloadableStatus.SNATCHED ) );
+			List<VideoGame> wantedGames = GamesManager.getInstance().getGames( platform, DownloadableStatus.WANTED );
+			wantedGames.addAll( GamesManager.getInstance().getGames( platform, DownloadableStatus.SNATCHED ) );
 			wanted = new DownloadablePager<>(wantedGames);
 			displayed = wanted;
 		}
@@ -65,25 +67,18 @@ public class Games extends DynamoManagedBean implements Serializable {
 		
 	public DownloadablePager<VideoGame> getSuggested() {
 		if (suggested == null) {
-			suggested = new DownloadablePager<>(GamesManager.getInstance().getGames( filterPlatform, DownloadableStatus.SUGGESTED ));
+			suggested = new DownloadablePager<>(GamesManager.getInstance().getGames( platform, DownloadableStatus.SUGGESTED ));
 			displayed = suggested;
 		}
 		return suggested;
 	}
 	
-	public void filter() {
-		collection = null;
-		wanted = null;
-		suggested = null;
-		displayed = null;
+	public GamePlatform getPlatform() {
+		return platform;
 	}
 	
-	public GamePlatform getFilterPlatform() {
-		return filterPlatform;
-	}
-	
-	public void setFilterPlatform(GamePlatform filterPlatform) {
-		this.filterPlatform = filterPlatform;
+	public void setPlatform(GamePlatform platform) {
+		this.platform = platform;
 	}
 	
 	public long getSearchId() {
@@ -120,10 +115,6 @@ public class Games extends DynamoManagedBean implements Serializable {
 		for (GamePlatform platform : platforms) {
 			folder.put( platform, GamesManager.getInstance().getFolder( platform) );
 		}
-	}
-	
-	public List<VideoGame> getWantedGames() {
-		return GamesManager.getInstance().getWantedAndSnatched();
 	}
 
 	public Map<GamePlatform, Path> getFolder() {
