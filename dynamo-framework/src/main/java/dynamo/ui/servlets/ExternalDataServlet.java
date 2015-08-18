@@ -34,12 +34,15 @@ public class ExternalDataServlet extends HttpServlet {
 		if (!Files.isReadable( path )) {
 			response.sendError( 404 );
 		} else {
+			
+			Calendar calendar = Calendar.getInstance();
+			calendar.add( Calendar.DAY_OF_MONTH, 7);
+			
+			response.addDateHeader("Expires", calendar.getTimeInMillis());
+
 			try (InputStream input = Files.newInputStream( path )) {
 				IOUtils.copy( input, response.getOutputStream() );
 			}
-			Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.DAY_OF_YEAR, 7);
-			response.setDateHeader("Expires", calendar.getTimeInMillis());
 		}
 	}
 
