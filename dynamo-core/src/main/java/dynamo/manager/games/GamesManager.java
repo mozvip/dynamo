@@ -5,8 +5,11 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.skife.jdbi.v2.Handle;
+import org.skife.jdbi.v2.Query;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -24,6 +27,7 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.games.GamePlatform;
 import dynamo.model.games.VideoGame;
 import dynamo.model.games.VideoGameDAO;
+import dynamo.model.games.VideoGameMapper;
 import dynamo.webapps.googleimages.GoogleImages;
 import dynamo.webapps.thegamesdb.net.GetArtResponse;
 import dynamo.webapps.thegamesdb.net.TheGamesDB;
@@ -93,19 +97,20 @@ public class GamesManager implements Reconfigurable {
 		return pathValue != null ? Paths.get( pathValue ) : null;
 	}
 
-	public List<VideoGame> getVideoGames() {
-		return videoGameDAO.findAll();
-	}
-	
-	public List<VideoGame> getWantedAndSnatched() {
-		return videoGameDAO.findWantedAndSnatched();
-	}
-
-	public List<VideoGame> getGames( GamePlatform filterPlatform, DownloadableStatus status ) {
-		if (filterPlatform == null) {
-			return videoGameDAO.findAll( status );
+	public List<VideoGame> getGames( GamePlatform platform, DownloadableStatus status1, DownloadableStatus status2 ) {
+		
+		if (platform == null) {
+			if (status2 == null) {
+				return videoGameDAO.findAll( status1 );
+			} else {
+				return videoGameDAO.findAll( status1, status2 );
+			}
 		} else {
-			return videoGameDAO.findAll( status, filterPlatform );
+			if (status2 == null) {
+				return videoGameDAO.findAll( status1, platform );
+			} else {
+				return videoGameDAO.findAll( status1, status2, platform );
+			}
 		}
 	}
 
@@ -203,6 +208,10 @@ public class GamesManager implements Reconfigurable {
 			}
 		}
 
+	}
+
+	public List<VideoGame> getGames(GamePlatform platform, DownloadableStatus status) {
+		return getGames(platform, status, null);
 	}
 
 }

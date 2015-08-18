@@ -18,21 +18,21 @@ public interface VideoGameDAO {
 	@Mapper(VideoGameMapper.class)
 	public VideoGame find(@Bind("videoGameId") long videoGameId);
 
-	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID")
+	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID AND DOWNLOADABLE.STATUS = :status AND PLATFORM = :platform")
 	@Mapper(VideoGameMapper.class)
-	public List<VideoGame> findAll();
+	public List<VideoGame> findAll( @BindEnum("status") DownloadableStatus status, @BindEnum("platform") GamePlatform platform );
+
+	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID AND ( DOWNLOADABLE.STATUS = :status1 OR DOWNLOADABLE.STATUS = :status2 ) AND PLATFORM = :platform")
+	@Mapper(VideoGameMapper.class)
+	public List<VideoGame> findAll( @BindEnum("status1") DownloadableStatus status1, @BindEnum("status2") DownloadableStatus status2, @BindEnum("platform") GamePlatform platform );
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID AND DOWNLOADABLE.STATUS = :status")
 	@Mapper(VideoGameMapper.class)
 	public List<VideoGame> findAll( @BindEnum("status") DownloadableStatus status );
 
-	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID AND DOWNLOADABLE.STATUS = :status AND PLATFORM = :platform")
+	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID AND ( DOWNLOADABLE.STATUS = :status1 OR DOWNLOADABLE.STATUS = :status2 )")
 	@Mapper(VideoGameMapper.class)
-	public List<VideoGame> findAll( @BindEnum("status") DownloadableStatus status, @BindEnum("platform") GamePlatform platform );
-
-	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID AND DOWNLOADABLE.STATUS IN ('WANTED', 'SNATCHED')")
-	@Mapper(VideoGameMapper.class)
-	public List<VideoGame> findWantedAndSnatched();
+	public List<VideoGame> findAll( @BindEnum("status1") DownloadableStatus status1, @BindEnum("status2") DownloadableStatus status2 );
 
 	@SqlUpdate("MERGE INTO VIDEOGAME(ID, NAME, PLATFORM, THEGAMESDB_ID) VALUES (:id, :name, :platform, :theGamesDBId)")
 	void save(@Bind("id") long id, @Bind("name") String name, @BindEnum("platform") GamePlatform platform, @Bind("theGamesDBId") Long theGamesDBId);

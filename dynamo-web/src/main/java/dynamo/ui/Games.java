@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -57,10 +56,7 @@ public class Games extends DynamoManagedBean implements Serializable {
 
 	public DownloadablePager<VideoGame> getGames() {
 		if (games == null) {
-			List<VideoGame> gamesToDisplay = GamesManager.getInstance().getGames(platform, status1);
-			if (status2 != null) {
-				gamesToDisplay.addAll(GamesManager.getInstance().getGames(platform, status2));
-			}
+			List<VideoGame> gamesToDisplay = GamesManager.getInstance().getGames(platform, status1, status2 );
 			games = new DownloadablePager<>( gamesToDisplay );
 			games.goToPage(page - 1);
 		}
