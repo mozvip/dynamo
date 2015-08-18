@@ -28,6 +28,10 @@ public class DAOManager {
 	public JdbcConnectionPool getDatasource( String databaseId ) {
 		return connectionPools.get(databaseId);
 	}
+	
+	public DBI getDBIInstance(String database) {
+		return dbiInstances.get( database );
+	}
 
 	private DAOManager() {
 		
