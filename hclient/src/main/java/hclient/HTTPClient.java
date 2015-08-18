@@ -435,15 +435,15 @@ public class HTTPClient {
 		return false;
     }
     
-    public SimpleResponse post( String url, String referer, Map<String, Object> params) throws ClientProtocolException, IOException {
+    public SimpleResponse post( String url, String referer, Map<String, Object> params) throws IOException {
     	return post( new URL(url), referer != null ? new URL( referer ) : null, params, false );
     }
 
-    public SimpleResponse post( String url, String referer, Map<String, Object> params, boolean ajax) throws ClientProtocolException, IOException {
+    public SimpleResponse post( String url, String referer, Map<String, Object> params, boolean ajax) throws IOException {
     	return post( new URL(url), referer != null ? new URL( referer ) : null, params, ajax );
     }
 
-    public SimpleResponse post( URL url, URL referer, Map<String, Object> params, boolean ajax ) throws ClientProtocolException, IOException {
+    public SimpleResponse post( URL url, URL referer, Map<String, Object> params, boolean ajax ) throws IOException {
 
         List <NameValuePair> nvps = new ArrayList <NameValuePair>();
     	for (Iterator<Map.Entry<String, Object>> iterator = params.entrySet().iterator(); iterator.hasNext();) {
@@ -459,7 +459,7 @@ public class HTTPClient {
     	return post( url, referer, new UrlEncodedFormEntity(nvps, Charset.forName("UTF-8")), ajax );
     }
     
-    protected SimpleResponse post( URL url, URL referer, AbstractHttpEntity postEntity, boolean ajax ) throws ClientProtocolException, IOException {
+    protected SimpleResponse post( URL url, URL referer, AbstractHttpEntity postEntity, boolean ajax ) throws IOException {
     	HttpPost post = RequestFactory.getPost(url, referer);
         post.setEntity( postEntity );
 
@@ -530,15 +530,15 @@ public class HTTPClient {
 		apacheClient = buildClient(proxyHost);
 	}
 	
-	public SimpleResponse post(String url, String referer, String... params) throws ClientProtocolException, IOException {
+	public SimpleResponse post(String url, String referer, String... params) throws IOException {
 		return post( new URL( url ), referer != null ? new URL(referer) : null, false, params );
 	}
 
-	public SimpleResponse postAjax(String url, String referer, String... params) throws ClientProtocolException, IOException {
+	public SimpleResponse postAjax(String url, String referer, String... params) throws IOException {
 		return post( new URL( url ), referer != null ? new URL(referer) : null, true, params );
 	}
 
-	protected SimpleResponse post(URL url, URL referer, boolean ajax, String... parameters) throws ClientProtocolException, IOException {
+	protected SimpleResponse post(URL url, URL referer, boolean ajax, String... parameters) throws IOException {
 		Map<String, Object> paramsMap = getParamsMap( parameters );
 		return post(url, referer, paramsMap, ajax);
 	}
@@ -554,7 +554,7 @@ public class HTTPClient {
 		return paramsMap;
 	}
 
-	public SimpleResponse submit(Element jsoupFormElement, String... parameters) throws ClientProtocolException, IOException {
+	public SimpleResponse submit(Element jsoupFormElement, String... parameters) throws IOException {
 		
 		Map<String, Object> paramsMap = getParamsMap( parameters );
 				
@@ -608,7 +608,7 @@ public class HTTPClient {
 
 	}
 
-	public HttpResponse execute(HttpUriRequest request) throws ClientProtocolException, IOException {
+	public HttpResponse execute(HttpUriRequest request) throws IOException {
 		return apacheClient.execute(request);
 	}
 
