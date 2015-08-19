@@ -17,9 +17,10 @@ public class RegExp {
 	private static LoadingCache<String, Pattern> patterns = CacheBuilder.newBuilder()
 		       .build(
 		           new CacheLoader<String, Pattern>() {
-		             public Pattern load(String regex) {
-		               return Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-		             }
+		        	   @Override
+		        	   public Pattern load(String regex) {
+		        		   return Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		        	   }
 		           });
 
 	private RegExp() {

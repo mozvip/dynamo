@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 
 public class WebDocument {
 
-	private final static Logger logger = LoggerFactory.getLogger( WebDocument.class );
+	private final static Logger LOGGER = LoggerFactory.getLogger( WebDocument.class );
 
 	private static HtmlCleaner cleaner = new HtmlCleaner();
 	private static CleanerProperties cleanerProperties = new CleanerProperties();
@@ -58,7 +58,7 @@ public class WebDocument {
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 
 	}
@@ -127,7 +127,7 @@ public class WebDocument {
 					TagNode node = cleaner.clean( getContents() );
 					orgW3CDOMDocument = new DomSerializer(cleanerProperties, true).createDOM(node);	
 				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
+					LOGGER.error(e.getMessage(), e);
 				}
 			}
 		}
