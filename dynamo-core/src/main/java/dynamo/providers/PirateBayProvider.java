@@ -1,5 +1,6 @@
 package dynamo.providers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,16 +12,18 @@ import core.WebDocument;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
+import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
 import dynamo.magazines.MagazineProvider;
+import dynamo.model.games.VideoGame;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
 
-public class PirateBayProvider extends DownloadFinder implements MovieProvider, MagazineProvider {
+public class PirateBayProvider extends DownloadFinder implements MovieProvider, MagazineProvider, GameFinder {
 
 	public PirateBayProvider() {
-		super("http://thepiratebay.se");
+		super("https://pirateproxy.sx");
 	}
 
 	@Override
@@ -48,6 +51,10 @@ public class PirateBayProvider extends DownloadFinder implements MovieProvider, 
 		
 		String searchURL = String.format("%s/search/%s/0/7/%d", rootURL, searchString, subcat);
 		
+		return extractResults(searchURL);
+	}
+
+	protected List<SearchResult> extractResults(String searchURL) throws IOException {
 		WebDocument document = client.getDocument( searchURL, HTTPClient.REFRESH_ONE_DAY );
 		
 		List<SearchResult> searchResults = new ArrayList<>();
@@ -80,8 +87,39 @@ public class PirateBayProvider extends DownloadFinder implements MovieProvider, 
 
 	@Override
 	public List<SearchResult> findDownloadsForMagazine(String issueSearchString) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		String searchURL = String.format("%s/search/%s/0/99/601", rootURL, issueSearchString);
+		return extractResults(searchURL);
+	}
+
+	@Override
+	public List<SearchResult> findGame(VideoGame videoGame) throws Exception {
+		
+		int subcat = -1;
+		
+		switch (videoGame.getPlatform()) {
+		case PS1:
+			subcat = 403;
+			break;
+		case PS2:
+			subcat = 403;
+			break;
+		case PS3:
+			subcat = 403;
+			break;
+		case XBOX360:
+			subcat = 404;
+			break;
+		case NINTENDO_WII:
+			subcat = 405;
+			break;
+
+		default:
+			break;
+		}
+		
+		String searchString = plus(videoGame.getName());
+		String searchURL = String.format("%s/search/%s/0/99/%d", rootURL, searchString, subcat);
+		return extractResults(searchURL);
 	}
 
 }

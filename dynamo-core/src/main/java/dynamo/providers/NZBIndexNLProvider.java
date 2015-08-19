@@ -125,20 +125,29 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 	public List<SearchResult> findGame(VideoGame videoGame) throws Exception {
 		
 		int minSizeInMbs = 500;
-		int group = -1;
+		int[] groups = new int[] {};
 		
 		if ( videoGame.getPlatform() == GamePlatform.XBOX360 ) {
-			group = 113;
+			groups= new int[] { 113 };
 			minSizeInMbs = 5000;
 		} else if ( videoGame.getPlatform() == GamePlatform.NINTENDO_WII ) {
-			group = 116;
+			groups= new int[] { 116 };
+			minSizeInMbs = 1000;
+		} else if ( videoGame.getPlatform() == GamePlatform.NINTENDO_GAMECUBE ) {
+			groups= new int[] { 752 };
+			minSizeInMbs = 500;
+		} else if (videoGame.getPlatform() == GamePlatform.PS2) {
+			groups= new int[] { 29, 31, 32 };
 			minSizeInMbs = 1000;
 		} else {
 			return null;	// FIXME
 		}
-
-		String searchURL = String.format( "%s/search/?q=%s&age=&max=25&g[]=%d&minage=&sort=agedesc&minsize=%d&maxsize=&dq=&poster=&nfo=&hidespam=0&more=1",
-				rootURL, plus( videoGame.getName() ), group, minSizeInMbs );
+		
+		String searchURL = String.format( "%s/search/?q=%s&age=&max=25", rootURL, plus( videoGame.getName() ) );
+		for (int group : groups) {
+			searchURL = searchURL + "&g[]=" + group;
+		}
+		searchURL = searchURL + String.format( "&minage=&sort=agedesc&minsize=%d&maxsize=&dq=&poster=&nfo=&hidespam=1&more=1", minSizeInMbs );
 
 		return extractResults( searchURL );
 	}
