@@ -46,7 +46,7 @@ public abstract class DynamoApplication implements Reconfigurable {
 	private void upgradeDatabases() {
 		try (Connection conn = DAOManager.getInstance().getDatasource("core").getConnection()) {
 			DatabaseConnection connection = new JdbcConnection( conn );
-			Liquibase liquibase = new Liquibase("core_tables.xml", new ClassLoaderResourceAccessor( getClass().getClassLoader()), connection );
+			Liquibase liquibase = new Liquibase("databases/core.xml", new ClassLoaderResourceAccessor( getClass().getClassLoader()), connection );
 			liquibase.update( "" );
 		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable( e );
@@ -54,7 +54,7 @@ public abstract class DynamoApplication implements Reconfigurable {
 		
 		try (Connection conn = DAOManager.getInstance().getDatasource("dynamo").getConnection()) {
 			DatabaseConnection connection = new JdbcConnection( conn );
-			Liquibase liquibase = new Liquibase("migrations.xml", new ClassLoaderResourceAccessor( getClass().getClassLoader()), connection );
+			Liquibase liquibase = new Liquibase("databases/dynamo.xml", new ClassLoaderResourceAccessor( getClass().getClassLoader()), connection );
 			liquibase.update( "" );
 		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable( e );
@@ -70,6 +70,29 @@ public abstract class DynamoApplication implements Reconfigurable {
 		rootFolder = Paths.get(".").toAbsolutePath();
 		LocalImageCache.getInstance().init( rootFolder.resolve( "data" ).toAbsolutePath() );
 	
+		determineIPAdress();
+
+		if (!BackLogProcessor.getInstance().isAlive()) {
+			BackLogProcessor.getInstance().start();
+		}
+
+		Set<InitTask> initTasks = new DynamoObjectFactory<>(getBasePackageName(), InitTask.class).getInstances();
+		for (InitTask initTask : initTasks) {
+			BackLogProcessor.getInstance().schedule( initTask, false );
+		}
+
+		daemons = new DynamoObjectFactory<>(getBasePackageName(), DaemonTask.class).getInstances();
+		for (DaemonTask daemonTask : daemons) {
+			BackLogProcessor.getInstance().schedule( daemonTask, false );
+		}
+		
+		server = DynamoObjectFactory.getInstance(DynamoServer.class);
+		server.start( getApplicationName(), getCustomServletsInfo() );
+
+		DynamoApplication.instance = this;
+	}
+
+	protected void determineIPAdress() {
 		try {
 			Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
 			while(e.hasMoreElements()) {
@@ -96,26 +119,6 @@ public abstract class DynamoApplication implements Reconfigurable {
 		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}
-		
-
-		if (!BackLogProcessor.getInstance().isAlive()) {
-			BackLogProcessor.getInstance().start();
-		}
-
-		Set<InitTask> initTasks = new DynamoObjectFactory<>(getBasePackageName(), InitTask.class).getInstances();
-		for (InitTask initTask : initTasks) {
-			BackLogProcessor.getInstance().schedule( initTask, false );
-		}
-
-		daemons = new DynamoObjectFactory<>(getBasePackageName(), DaemonTask.class).getInstances();
-		for (DaemonTask daemonTask : daemons) {
-			BackLogProcessor.getInstance().schedule( daemonTask, false );
-		}
-		
-		server = DynamoObjectFactory.getInstance(DynamoServer.class);
-		server.start( getApplicationName(), getCustomServletsInfo() );
-
-		DynamoApplication.instance = this;
 	}
 	
 	public Set<DaemonTask> getDaemons() {
