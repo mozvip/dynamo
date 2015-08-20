@@ -210,6 +210,13 @@ public class MovieManager implements Reconfigurable {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
 		}
+		
+		try {
+			api = new TheMovieDbApi("5a1a77e2eba8984804586122754f969f", new YAMJHttpClient( HTTPClient.getInstance() ));
+		} catch (MovieDbException e) {
+			ErrorManager.getInstance().reportThrowable(e);
+		}
+		
 	}
 	
 	public TmdbResultsList<MovieDb> search( String name, int year, Language language ) throws MovieDbException {
@@ -379,11 +386,6 @@ public class MovieManager implements Reconfigurable {
 	@Override
 	public void reconfigure() {
 		if (enabled) {
-			try {
-				api = new TheMovieDbApi("5a1a77e2eba8984804586122754f969f", new YAMJHttpClient( HTTPClient.getInstance() ));
-			} catch (MovieDbException e) {
-				ErrorManager.getInstance().reportThrowable(e);
-			}
 			if (getFolders() != null) {
 				for (Path path : getFolders()) {
 					if (Files.isReadable( path )) {

@@ -37,14 +37,17 @@ import dynamo.model.ebooks.books.BookFinder;
 import dynamo.model.ebooks.books.BookManager;
 import dynamo.model.ebooks.books.BookSuggester;
 import dynamo.model.games.VideoGame;
+import dynamo.model.movies.Movie;
+import dynamo.model.movies.MovieManager;
 import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
+import dynamo.suggesters.movies.MovieSuggester;
 import dynamo.utils.images.CoverImageFinder;
 import dynamo.webapps.googleimages.GoogleImages;
 import hclient.HTTPClient;
 
-public class T411Provider extends DownloadFinder implements BookFinder, EpisodeFinder, SeasonFinder, MusicAlbumFinder, MovieProvider, MagazineProvider, GameFinder, KioskIssuesSuggester, BookSuggester {
+public class T411Provider extends DownloadFinder implements BookFinder, EpisodeFinder, SeasonFinder, MusicAlbumFinder, MovieProvider, MagazineProvider, GameFinder, KioskIssuesSuggester, BookSuggester, MovieSuggester {
 
 	@Configurable(category="Providers", name="T411 Login", disabled="#{!T411Provider.enabled}", required="#{T411Provider.enabled}")
 	private String login;
@@ -282,7 +285,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		return extractResults( searchURL, 1 );
 	}
 	
-	public List<DownloadSuggestion> extractSuggestions( String startingURL, int pagesToRetrieve ) throws IOException, URISyntaxException {
+	public List<DownloadSuggestion> extractSuggestions( String startingURL, int pagesToRetrieve, boolean retrieveImages ) throws IOException, URISyntaxException {
 		String currentURL = startingURL;
 		
 		List<DownloadSuggestion> suggestions = new ArrayList<>();
@@ -302,23 +305,25 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 				Element nfoLink = row.select("a.nfo").first();
 				String torrentId = RegExp.extract( nfoLink.attr("href"), ".*id=(\\d+)" );
 				String torrentURL = String.format( "%s/torrents/download/?id=%s", getRootURL(), torrentId );
-				
-				WebDocument torrentDocument = client.getDocument(href, currentURL, HTTPClient.REFRESH_ONE_WEEK);
-				if (torrentDocument.getResponseCode() != 404) {
-					String imageSrc = null;
-					try {
-						imageSrc = findCoverImage( title, torrentDocument, currentURL );
-					} catch ( IOException | URISyntaxException e ) {
-						ErrorManager.getInstance().reportThrowable(e);
+
+				String imageSrc = null;
+
+				if (retrieveImages) {
+					WebDocument torrentDocument = client.getDocument(href, currentURL, HTTPClient.REFRESH_ONE_WEEK);
+					if (torrentDocument.getResponseCode() != 404) {
+						try {
+							imageSrc = findCoverImage( title, torrentDocument, currentURL );
+						} catch ( IOException | URISyntaxException e ) {
+							ErrorManager.getInstance().reportThrowable(e);
+						}
 					}
-					
-					Set<DownloadLocation> downloadLocations = new HashSet<>();
-					downloadLocations.add( new DownloadLocation(SearchResultType.TORRENT, torrentURL));
-					try {
-						suggestions.add( new DownloadSuggestion(title, imageSrc, href, downloadLocations, Language.FR, parseSize(size), toString(), getClass(), false) );
-					} catch (Exception e) {
-						ErrorManager.getInstance().reportThrowable(e);
-					}
+				}
+				Set<DownloadLocation> downloadLocations = new HashSet<>();
+				downloadLocations.add( new DownloadLocation(SearchResultType.TORRENT, torrentURL));
+				try {
+					suggestions.add( new DownloadSuggestion(title, imageSrc, href, downloadLocations, Language.FR, parseSize(size), toString(), getClass(), false) );
+				} catch (Exception e) {
+					ErrorManager.getInstance().reportThrowable(e);
 				}
 			}
 			
@@ -377,7 +382,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	public void suggestIssues() throws KioskIssuesSuggesterException {
 		List<DownloadSuggestion> magazineSuggestions;
 		try {
-			magazineSuggestions = extractSuggestions(String.format("%s/torrents/search/?subcat=410&order=added&type=desc", getRootURL()), 10);
+			magazineSuggestions = extractSuggestions(String.format("%s/torrents/search/?subcat=410&order=added&type=desc", getRootURL()), 10, true);
 		} catch (IOException | URISyntaxException e) {
 			throw new KioskIssuesSuggesterException( e );
 		}
@@ -392,7 +397,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 
 	@Override
 	public void suggestBooks() throws Exception {
-		List<DownloadSuggestion> bookSuggestions = extractSuggestions(String.format("%s/torrents/search/?subcat=408&order=added&type=desc", getRootURL()), 10);
+		List<DownloadSuggestion> bookSuggestions = extractSuggestions(String.format("%s/torrents/search/?subcat=408&order=added&type=desc", getRootURL()), 10, true);
 		for (DownloadSuggestion bookSuggestion : bookSuggestions) {
 			BookManager.getInstance().suggest( bookSuggestion );
 		}
@@ -402,6 +407,22 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	public List<SearchResult> findBook(Book book) throws Exception {
 		String searchURL = String.format("%s/torrents/search/?search=%s&subcat=408&order=added&type=desc", getRootURL(), plus(book.getName()) );
 		return extractResults( searchURL, 1 );		
+	}
+
+	@Override
+	public void suggestMovies() throws Exception {
+		List<DownloadSuggestion> movieSuggestions = extractSuggestions(String.format("%s/torrents/search/?search=&subcat=631&term[7][]=16", getRootURL()), 2, false);
+		for (DownloadSuggestion movieSuggestion : movieSuggestions) {
+			String titleToParse = movieSuggestion.getTitle();
+			titleToParse = titleToParse.replaceAll("1080p", "");
+
+			String[] groups = RegExp.parseGroups( titleToParse, "([\\w\\s\\.]+)(\\d{4})(.*)");
+			if (groups != null) {
+				String movieName =  groups[0].trim();
+				movieName = movieName.replaceAll("\\.", " ").trim();
+				Movie movie = MovieManager.getInstance().suggestByName( movieName, Integer.parseInt( groups[1] ), null, Language.FR);
+			}
+		}
 	}
 
 }

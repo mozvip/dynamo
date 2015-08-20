@@ -23,7 +23,7 @@ public abstract class AbstractDynamoTest {
 	public static void init() {
 		try (Connection conn = DAOManager.getInstance().getDatasource("dynamo").getConnection()) {
 			DatabaseConnection connection = new JdbcConnection( conn );
-			Liquibase liquibase = new Liquibase("migrations.xml", new ClassLoaderResourceAccessor( AbstractDynamoTest.class.getClassLoader()), connection );
+			Liquibase liquibase = new Liquibase("databases/dynamo.xml", new ClassLoaderResourceAccessor( AbstractDynamoTest.class.getClassLoader()), connection );
 			liquibase.update( "" );
 		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable( e );

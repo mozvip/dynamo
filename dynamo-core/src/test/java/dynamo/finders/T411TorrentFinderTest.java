@@ -38,5 +38,10 @@ public class T411TorrentFinderTest extends AbstractDynamoTest {
 			System.out.println( searchResult );
 		}		
 	}
+	
+	@Test
+	public void testSuggestMovies() throws Exception {
+		finder.suggestMovies();
+	}
 
 }
