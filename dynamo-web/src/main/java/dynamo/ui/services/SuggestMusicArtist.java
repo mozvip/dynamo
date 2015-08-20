@@ -1,6 +1,5 @@
 package dynamo.ui.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -20,12 +19,7 @@ public class SuggestMusicArtist {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> getArtists( @QueryParam("prefix") String prefix ) {
-		List<String> results = musicDAO.suggestArtists( prefix.toUpperCase()+"%" );
-		List<String> suggestions = new ArrayList<>();
-		for (String suggestion : results) {
-			suggestions.add( suggestion);
-		}
-		return suggestions;
+		return musicDAO.suggestArtists( prefix.toUpperCase()+"%" );
 	}
 
 }
