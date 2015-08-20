@@ -118,26 +118,24 @@
 			<ui:include src="/components/simple-pager.xhtml" />
 			<ui:repeat var="game" value="#{pager.items}">
 				<div class="game book col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{game.id}">
-					<div class="buttons">
-						<div class="btn-group-vertical" role="group">
-							<a href="#" class="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(game.name)} ?')) { deleteDownloadable('#{game.id}'); } else { return false;}">
-								<i class="fa fa-trash"></i>
+					<div class="">
+						<a href="#" class="btn btn-sm btn-danger" data-downloadable="${game.id}" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(game.name)} ?')) { deleteDownloadable('#{game.id}'); } else { return false;}">
+							<i class="fa fa-trash"></i>
+						</a>
+						<ui:fragment rendered="#{game.status == 'SNATCHED' or game.status == 'DOWNLOADED'}">
+							<a href="#" class="btn btn-sm btn-danger" data-downloadable="${game.id}" onclick="if (confirm('Are you sure you want to redownload #{movies.fixName(game.name)} ?')) { redownload('#{game.id}'); } else { return false;}">
+								<i class="fa fa-refresh"></i>
 							</a>
-							<ui:fragment rendered="#{game.status == 'SNATCHED' or game.status == 'DOWNLOADED'}">
-								<a href="#" class="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to redownload #{movies.fixName(game.name)} ?')) { redownload('#{game.id}'); } else { return false;}">
-									<i class="fa fa-refresh"></i>
-								</a>
-							</ui:fragment>
-							<ui:fragment rendered="#{game.status == 'DOWNLOADED'}">
-								<a class="btn btn-sm btn-default" onclick="$('#manualSearch').modal()">
-									<i class="fa fa-search"></i>
-								</a>
-								<a class="btn btn-sm btn-default" onclick="$('#fileList').modal()" title="Show game files">
-									<i class="fa fa-list"></i>
-								</a>
-							</ui:fragment>
-						</div>
-					</div>					
+						</ui:fragment>
+						<ui:fragment rendered="#{game.status == 'DOWNLOADED'}">
+							<a class="btn btn-sm btn-default" data-downloadable="${game.id}" onclick="$('#manualSearch').modal()">
+								<i class="fa fa-search"></i>
+							</a>
+							<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#fileList" data-downloadable="${game.id}" title="Show game files">
+								<i class="fa fa-list"></i>
+							</a>
+						</ui:fragment>
+					</div>
 					<div class="thumbnail videoGameThumb">
 						<img class="videoGameCover" data-src="#{game.coverImage}" alt="#{game.name}" />
 						<div class="caption videoGameCaption">
@@ -154,7 +152,7 @@
 
 	</ui:define>
 	<ui:define name="custom_js">
-		<script>
+		<script>		
 			function want(id) {
 				$.ajax({
 					  url: "want",
