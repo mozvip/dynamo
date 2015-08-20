@@ -23,8 +23,8 @@ public class DownloadableFile {
 		return downloadableId;
 	}
 
-	public void setDownloadableId(long videoGameId) {
-		this.downloadableId = videoGameId;
+	public void setDownloadableId(long downloadableId) {
+		this.downloadableId = downloadableId;
 	}
 
 	public Path getFilePath() {
