@@ -1,11 +1,11 @@
-# README #
+# Dynamo #
 
 [![Build Status](https://api.travis-ci.org/mozvip/dynamo.svg?branch=master)](https://travis-ci.org/mozvip/dynamo)
 
 ### What is this repository for? ###
 
 This is the main development repository for Dynamo.
-Dynamo is an attempt at creating a single application that has the main functionnalities of SickBeard, CouchPotato, Headphones, ...
+Dynamo is an highly experimental attempt at creating a single application that has the main functionnalities of SickBeard, CouchPotato, Headphones and other similar download automation apps.
 
 It is coded in Java 7.
 
@@ -21,11 +21,9 @@ cd into this project folder then
 
 
 ```
-mvn clean
-mvn install -DskipTests=true
+mvn install 
 ```
 Dynamo is built in a single jar that you can run with:
-
 
 ```
 java -jar {your-maven-repository}\dynamo\dynamo-web\0.0.1-SNAPSHOT\dynamo-web-0.0.1-SNAPSHOT.jar
