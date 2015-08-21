@@ -24,23 +24,27 @@ public class RefreshWantedExecutor extends TaskExecutor<RefreshWantedTask> {
 
 	@Override
 	public void execute() throws Exception {
-		
+
 		DownloadableManager.getInstance().cleanData();
-		
+
 		List<DownloadInfo> infos = DownloadableManager.getInstance().findWanted();
 		List<ManagedEpisode> episodes = new ArrayList<>();
-		
+
 		for (DownloadInfo downloadInfo : infos) {
 			Downloadable downloadable;
 			try {
-				downloadable = DownloadableFactory.getInstance().createInstance( downloadInfo.getId() );
+				downloadable = DownloadableFactory.getInstance().createInstance( downloadInfo.getId(), downloadInfo.getDownloadableClass() );
 			} catch (Exception e) {
 				ErrorManager.getInstance().reportThrowable( task, e );
 				continue;
 			}
 			
 			if (downloadable == null) {
-				DownloadableManager.getInstance().delete(downloadInfo.getId());
+				try {
+					DownloadableManager.getInstance().delete(downloadInfo.getId());
+				} catch (Exception e) {
+					ErrorManager.getInstance().reportThrowable( task, e );
+				}
 				continue;
 			}
 			

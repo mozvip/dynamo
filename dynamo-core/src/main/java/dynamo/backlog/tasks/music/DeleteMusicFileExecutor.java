@@ -30,7 +30,7 @@ public class DeleteMusicFileExecutor extends TaskExecutor<DeleteMusicFileTask> {
 		if (remainingMusicFiles.size() == 0) {
 			MusicAlbum album = task.getMusicAlbum();
 			if (album == null) {
-				album = (MusicAlbum) DownloadableFactory.getInstance().createInstance(task.getMusicFile().getAlbumId());
+				album = (MusicAlbum) DownloadableFactory.getInstance().createInstance(task.getMusicFile().getAlbumId(), MusicAlbum.class);
 			}
 			queue( new DeleteDownloadableTask( album ), false );
 		}

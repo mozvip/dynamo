@@ -335,10 +335,6 @@ public class DownloadableManager {
 		BackLogProcessor.getInstance().unschedule( String.format( "this.downloadable.id == %d", downloadable.getId() ) );
 	}
 
-	public boolean isDownloaded(long downloadableId) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		return DownloadableFactory.getInstance().createInstance(downloadableId).isDownloaded();
-	}
-
 	public void cancelDownload( Downloadable downloadable, SearchResult searchResult ) {
 		BackLogProcessor.getInstance().schedule( new CancelDownloadTask( downloadable, searchResult ));
 	}
@@ -404,6 +400,10 @@ public class DownloadableManager {
 	
 	public void setAkas( long downloadableId, Collection<String> akas ) {
 		downloadableDAO.saveAka(downloadableId, akas);
+	}
+
+	public DownloadInfo find(long downloadableId) {
+		return downloadableDAO.find(downloadableId);
 	}
 
 }

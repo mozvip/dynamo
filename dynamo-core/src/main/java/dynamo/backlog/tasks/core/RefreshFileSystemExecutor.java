@@ -18,7 +18,6 @@ import dynamo.manager.MusicManager;
 import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
 import dynamo.model.ebooks.EBook;
-import dynamo.model.games.VideoGame;
 import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
 import dynamo.model.music.MusicAlbum;
@@ -53,7 +52,7 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 		totalItems = downloadeds.size();
 
 		for (DownloadInfo downloadInfo : downloadeds) {
-			Downloadable downloadable = DownloadableFactory.getInstance().createInstance(downloadInfo);
+			Downloadable downloadable = DownloadableFactory.getInstance().createInstance(downloadInfo.getId(), downloadInfo.getDownloadableClass());
 			if (downloadable == null) {
 				DownloadableManager.getInstance().delete( downloadInfo.getId() );
 				continue;

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import dynamo.core.model.DownloadableDAO;
+import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
 
@@ -27,12 +28,12 @@ public class DownloadableFactory {
 	private DownloadableFactory() {
 	}
 	
-	public Downloadable createInstance( long downloadableId ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		return createInstance( getDownloadInfo(downloadableId) );
+	public synchronized Downloadable createInstance( long downloadableId ) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, IllegalArgumentException {
+		DownloadInfo downloadInfo = DownloadableManager.getInstance().find( downloadableId );
+		return createInstance(downloadableId, downloadInfo.getDownloadableClass());
 	}
 	
-	public synchronized Downloadable createInstance( DownloadInfo downloadInfo ) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, IllegalArgumentException {
-		Class<Downloadable> klass = downloadInfo.getDownloadableClass();
+	public synchronized Downloadable createInstance( long downloadableId, Class<? extends Downloadable> klass ) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, IllegalArgumentException {
 		Method factoryMethod = null;
 		if( factoryMethodsMap.containsKey( klass )) {
 			factoryMethod = factoryMethodsMap.get( klass );
@@ -41,14 +42,23 @@ public class DownloadableFactory {
 			factoryMethodsMap.put( klass, factoryMethod );
 		}
 		Object daoInstance = DAOManager.getInstance().getDAO( factoryMethod.getDeclaringClass() );
-		return (Downloadable) factoryMethod.invoke( daoInstance, downloadInfo.getId() );
+		return (Downloadable) factoryMethod.invoke( daoInstance, downloadableId );
 	}
+	
+	Set<Class> daoInterfaces = null;
 
 	Method getMethod( Class<? extends Downloadable> classToCreate ) {
 		
 		// find corresponding DAO method that takes a long as a parameter and return the expected object type
-		DynamoObjectFactory factory = new DynamoObjectFactory("dynamo", ".*DAO");
-		Set<Class> daoInterfaces = factory.getMatchingClasses( false, true );
+		if (daoInterfaces == null) {
+			synchronized (this) {
+				if (daoInterfaces == null) {
+					DynamoObjectFactory factory = new DynamoObjectFactory("dynamo", ".*DAO");
+					daoInterfaces = factory.getMatchingClasses( false, true );
+				}
+			}
+		}
+
 		for (Class daoInterface : daoInterfaces) {
 			Method[] methods = daoInterface.getMethods();
 			for (Method method : methods) {

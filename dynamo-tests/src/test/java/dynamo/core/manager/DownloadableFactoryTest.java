@@ -21,6 +21,7 @@ public class DownloadableFactoryTest {
 		Assert.assertNotNull( DownloadableFactory.getInstance().getMethod( MusicAlbum.class ) );
 		Assert.assertNotNull( DownloadableFactory.getInstance().getMethod( Movie.class ) );
 		Assert.assertNotNull( DownloadableFactory.getInstance().getMethod( VideoGame.class ) );
+		Assert.assertNotNull( DownloadableFactory.getInstance().getMethod( TVShowSeason.class ) );
 		
 		System.out.println( System.currentTimeMillis() - start );
 	}
