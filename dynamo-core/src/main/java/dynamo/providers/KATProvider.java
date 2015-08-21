@@ -28,7 +28,7 @@ import hclient.HTTPClient;
 public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicAlbumFinder, SeasonFinder, MovieProvider, MagazineProvider, GameFinder {
 
 	public KATProvider() {
-		super("http://kickass.to");
+		super("https://kat.cr");
 	}
 	
 	private WebDocument getDocument( String searchParams, int pageNumber ) throws IOException, URISyntaxException {
@@ -37,6 +37,7 @@ public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicA
 		searchParams = searchParams.replace(":", "%3A");
 		searchParams = searchParams.replace("[", "%5B");
 		searchParams = searchParams.replace("]", "%5D");
+		searchParams = searchParams.replace("&", "%26");
 		searchParams = searchParams.replace("'", "%27");
 		searchParams = searchParams.replace("!", "");
 
