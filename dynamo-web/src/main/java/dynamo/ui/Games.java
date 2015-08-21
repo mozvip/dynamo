@@ -115,7 +115,7 @@ public class Games extends DynamoManagedBean implements Serializable {
 		return GamesManager.getInstance().getPlatforms();
 	}
 
-	public void changeImage() throws NoSuchMethodException, SecurityException {
+	public void changeImage() throws NoSuchMethodException {
 		long id = getIntegerParameter("id");
 		for (Iterator<VideoGame> iterator = getGames().objects.iterator(); iterator.hasNext();) {
 			VideoGame videoGame = iterator.next();

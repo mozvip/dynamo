@@ -178,6 +178,6 @@
 		<groupId>dynamo</groupId>
 		<artifactId>dynamo</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../dynamo</relativePath>
+		<relativePath>../</relativePath>
 	</parent>
 </project>

@@ -68,7 +68,7 @@ public class Kiosk extends DynamoManagedBean {
 		wantedContents = null;
 	}
 	
-	public void reset() throws NoSuchMethodException, SecurityException {
+	public void reset() throws NoSuchMethodException {
 		changeFilter();
 		BackLogProcessor.getInstance().unschedule(RefreshKioskTask.class);
 		queue( new InvokeMethodTask( MagazineManager.getInstance(), "deleteKiosk", "Delete Kiosk Contents" ), false );

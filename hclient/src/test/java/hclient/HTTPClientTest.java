@@ -3,6 +3,7 @@ package hclient;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.zip.ZipException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -26,27 +27,6 @@ public class HTTPClientTest {
 	@BeforeClass
 	public static void init() {
 	}
-	
-	@Test
-	public void testDeflateIssueFailing() throws ClientProtocolException, IOException {
-		HttpGet httpget = new HttpGet("http://nzbindex.nl/download/72441827/BackTrack5R3.Gnome.iSO.32bit-LiNUX-0171-bt5r2gis32.par2.nzb");
-		HttpClient client = HttpClientBuilder.create().build();
-		HttpResponse response = client.execute(httpget);
-		HttpEntity entity = response.getEntity();
-		byte[] data = EntityUtils.toByteArray( entity );
-		Assert.assertEquals( data.length, 423548 );
-	}
-	
-	@Test
-	public void testDeflateIssueWorking() throws ClientProtocolException, IOException {
-		HttpGet httpget = new HttpGet("http://nzbindex.nl/download/72441827/BackTrack5R3.Gnome.iSO.32bit-LiNUX-0171-bt5r2gis32.par2.nzb");
-		httpget.setHeader("Accept-Encoding", "gzip");
-		HttpClient client = HttpClientBuilder.create().build();
-		HttpResponse response = client.execute(httpget);
-		HttpEntity entity = response.getEntity();
-		byte[] data = EntityUtils.toByteArray( entity );
-		Assert.assertEquals( data.length, 423548 );
-	}	
 
 	@Test
 	public void testGetZip() throws IOException, URISyntaxException {
