@@ -23,3 +23,4 @@ httpclient-cache.mv.db
 dynamo.log
 dynamo.mv.db
 dynamo-web/core.trace.db
+dynamo-tests/src/test/resources/private-data-do-not-commit.properties
