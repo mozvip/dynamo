@@ -1,7 +1,6 @@
 package dynamo.providers.magazines;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +9,6 @@ import org.jsoup.select.Elements;
 
 import core.WebDocument;
 import dynamo.core.Language;
-import dynamo.core.manager.ErrorManager;
 import dynamo.magazines.KioskIssuesSuggester;
 import dynamo.magazines.KioskIssuesSuggesterException;
 import dynamo.magazines.MagazineManager;
@@ -44,11 +42,7 @@ public class RLSBBCom implements KioskIssuesSuggester {
 					downloadLocations.add( new DownloadLocation(SearchResultType.HTTP, link.absUrl("href") ));
 				}
 
-				try {
-					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, downloadLocations, Language.EN, -1.0f, toString(), null, false));
-				} catch (MalformedURLException e) {
-					ErrorManager.getInstance().reportThrowable( e );
-				}
+				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, downloadLocations, Language.EN, -1.0f, toString(), null, false));
 			}
 		}
 	}

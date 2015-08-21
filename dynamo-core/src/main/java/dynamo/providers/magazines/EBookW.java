@@ -35,11 +35,7 @@ public class EBookW implements KioskIssuesSuggester {
 				Element shortNews = element.nextElementSibling().nextElementSibling();
 				String coverImage = shortNews.select("img").first().absUrl("src");
 
-				try {
-					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, null, -1.0f, toString(), null, false));
-				} catch (MalformedURLException e) {
-					ErrorManager.getInstance().reportThrowable( e );
-				}
+				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, null, -1.0f, toString(), null, false));
 			}
 		}
 	}

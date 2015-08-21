@@ -1,7 +1,6 @@
 package dynamo.providers;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -387,11 +386,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 			throw new KioskIssuesSuggesterException( e );
 		}
 		for (DownloadSuggestion magazineSuggestion : magazineSuggestions) {
-			try {
-				MagazineManager.getInstance().suggest( magazineSuggestion );
-			} catch (MalformedURLException e) {
-				ErrorManager.getInstance().reportThrowable( e );
-			}
+			MagazineManager.getInstance().suggest( magazineSuggestion );
 		}
 	}
 

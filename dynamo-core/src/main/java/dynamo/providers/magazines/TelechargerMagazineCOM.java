@@ -1,7 +1,6 @@
 package dynamo.providers.magazines;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -9,7 +8,6 @@ import org.jsoup.select.Elements;
 import core.RegExp;
 import core.WebDocument;
 import dynamo.core.Language;
-import dynamo.core.manager.ErrorManager;
 import dynamo.magazines.KioskIssuesSuggester;
 import dynamo.magazines.KioskIssuesSuggesterException;
 import dynamo.magazines.MagazineManager;
@@ -39,11 +37,7 @@ public class TelechargerMagazineCOM implements KioskIssuesSuggester {
 				String coverImage = image.absUrl("src");
 				String title = RegExp.extract( image.attr("title"), "télécharger (.*)" );
 				
-				try {
-					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, Language.FR, -1.0f, toString(), null, false));
-				} catch (MalformedURLException e) {
-					ErrorManager.getInstance().reportThrowable( e );
-				}
+				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, Language.FR, -1.0f, toString(), null, false));
 			}
 		}
 	}

@@ -1,6 +1,5 @@
 package dynamo.magazines;
 
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
@@ -190,7 +189,7 @@ public class MagazineManager implements Reconfigurable {
 		return magazineDAO.getWantedContents( language, filter );
 	}
 	
-	public synchronized void suggest( DownloadSuggestion suggestion ) throws MalformedURLException {
+	public synchronized void suggest( DownloadSuggestion suggestion ) {
 		MagazineIssueInfo issueInfo = MagazineNameParser.getIssueInfo( suggestion.getTitle() );
 		
 		if ( issueInfo == null || issueInfo.getMagazineName() == null ) {
