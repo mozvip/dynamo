@@ -1,5 +1,7 @@
 # README #
 
+[![Build Status](https://api.travis-ci.org/mozvip/dynamo.svg?branch=master)](https://travis-ci.org/mozvip/dynamo)
+
 ### What is this repository for? ###
 
 This is the main development repository for Dynamo.
