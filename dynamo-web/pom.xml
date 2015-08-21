@@ -59,50 +59,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>com.akathist.maven.plugins.launch4j</groupId>
-				<artifactId>launch4j-maven-plugin</artifactId>
-				<version>1.7.6</version>
-				<executions>
-					<execution>
-						<id>l4j-clui</id>
-						<phase>package</phase>
-						<goals>
-							<goal>launch4j</goal>
-						</goals>
-						<configuration>
-							<dontWrapJar>true</dontWrapJar>
-							<headerType>gui</headerType>
-							<jar>./${project.build.finalName}.jar</jar>
-							<outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
-							<icon>src/main/resources/favicon.ico</icon>
-							<downloadUrl>http://java.com/download</downloadUrl>
-							<restartOnCrash>true</restartOnCrash>
-							<singleInstance>
-								<mutexName>dynamo</mutexName>
-								<windowTitle>Dynamo</windowTitle>
-							</singleInstance> 							
-							<jre>
-								<minVersion>1.7.0</minVersion>
-								<jdkPreference>preferJre</jdkPreference>
-								<runtimeBits>64</runtimeBits>
-								<maxHeapSize>768</maxHeapSize>
-							</jre>					
-							<versionInfo>
-								<fileVersion>1.0.0.0</fileVersion>
-								<txtFileVersion>${project.version}</txtFileVersion>
-								<fileDescription>${project.name}</fileDescription>
-								<copyright>2015 guillaume.serre@gmail.com</copyright>
-								<productVersion>1.0.0.0</productVersion>
-								<txtProductVersion>1.0.0.0</txtProductVersion>
-								<productName>${project.name}</productName>
-								<internalName>${project.name}</internalName>
-								<originalFilename>${project.name}.exe</originalFilename>
-							</versionInfo>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
