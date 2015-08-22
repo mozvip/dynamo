@@ -73,7 +73,7 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 			return null;
 		}
 
-		String imdbURL = "http://www.imdb.com/title/" + imdbID;
+		String imdbURL = "http://www.imdb.com/title/" + imdbID + "/";
 		
 		boolean tvSeries = false;
 		

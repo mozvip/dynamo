@@ -29,6 +29,8 @@ import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
 import dynamo.parsers.MovieInfo;
 import dynamo.parsers.VideoNameParser;
+import dynamo.suggesters.movies.IMDBTitle;
+import dynamo.suggesters.movies.IMDBWatchListSuggester;
 import dynamo.video.VideoManager;
 
 public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovieFolderTask> {
@@ -84,7 +86,14 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 				
 				VideoMetaData metaData = VideoManager.getInstance().getMetaData( movie, p );
 
-				// fix missing data if possible
+				// fix imdb data if not set
+				if ( (movie.getRating() <= 0 || movie.getYear() <= 0) && movie.getImdbID() != null) {
+					IMDBTitle imdbInfo = IMDBWatchListSuggester.extractIMDBTitle( movie.getImdbID() );
+					movie.setRating( imdbInfo.getRating() );
+					movie.setYear( imdbInfo.getYear() );
+				}
+
+				// fix movieDB data if not set
 				if (movie.getMovieDbId() == 0 || movie.getYear() <= 0 ) {
 					MovieInfo movieInfo = VideoNameParser.getMovieInfo( p );
 					if ( movieInfo != null ) {
@@ -129,6 +138,12 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 				} catch (MovieDbException e) {
 					ErrorManager.getInstance().reportThrowable( e );
 				}
+			}
+			
+			if (movie.getImdbID() != null) {
+				IMDBTitle imdbInfo = IMDBWatchListSuggester.extractIMDBTitle( movie.getImdbID() );
+				movie.setRating( imdbInfo.getRating() );
+				movie.setYear( imdbInfo.getYear() );
 			}
 
 			MovieManager.getInstance().save( movie );

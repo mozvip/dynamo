@@ -316,14 +316,12 @@ public class MovieManager implements Reconfigurable {
 	}
 	
 	public MovieDb getMovieDb( String name, int year ) throws MovieDbException {
-		String rawMovieName = name.replaceAll("[\\W]", "").toUpperCase();
 		TmdbResultsList<MovieDb> movieDbResults = search( name, year, MovieManager.getInstance().getMetaDataLanguage() );
 		if (movieDbResults.getTotalResults() == 1) {
 			return movieDbResults.getResults().get( 0 );
 		} else if (movieDbResults.getTotalResults() > 0) {
 			for (MovieDb movieDb : movieDbResults.getResults()) {
-				String rawName = movieDb.getTitle().replaceAll("[\\W]", "").toUpperCase();
-				if ( rawName.equals( rawMovieName )) {
+				if (nameEquals( name, movieDb.getTitle())) {
 					return movieDb;
 				}
 			}
@@ -482,30 +480,32 @@ public class MovieManager implements Reconfigurable {
 	}
 
 	public Movie suggestByName( String name, int year, WebResource defaultImage, Language language ) throws MovieDbException, IOException, URISyntaxException, ParseException {
-		Date now = new Date();
 		TmdbResultsList<MovieDb> movieResults = MovieManager.getInstance().search( name, year, language);
 		if (movieResults.getTotalResults() > 0) {
-			MovieDb selectedMovie = movieResults.getResults().get(0);	// FIXME : use character match
+
+			Date now = new Date();
+			MovieDb selectedMovie = null;
 			Date currentDate = null;
+
 			for (MovieDb movieDb : movieResults.getResults()) {
-				try {
-					if (StringUtils.isNotBlank(movieDb.getReleaseDate())) {
-						Date releaseDate = new SimpleDateFormat("yyyy-MM-dd").parse(movieDb.getReleaseDate());
-						if (releaseDate.after( now )) {
-							continue;
-						}
-						if ( currentDate == null || releaseDate.after(currentDate)) {
-							selectedMovie = movieDb;
-							currentDate = releaseDate;
-						}
+				if ( !nameEquals( movieDb.getTitle(), name ) ) {
+					continue;
+				}
+				if (StringUtils.isNotBlank(movieDb.getReleaseDate())) {
+					Date releaseDate = new SimpleDateFormat("yyyy-MM-dd").parse(movieDb.getReleaseDate());
+					if (releaseDate.after( now )) {
+						continue;
 					}
-				} catch (ParseException e) {
-					ErrorManager.getInstance().reportThrowable( e );
+					if ( currentDate == null || releaseDate.after(currentDate)) {
+						selectedMovie = movieDb;
+						currentDate = releaseDate;
+					}
 				}
 			}
-			if (selectedMovie != null) {
-				selectedMovie = getMovieInfo( selectedMovie.getId() );
+			if (selectedMovie == null) {
+				return null;
 			}
+			selectedMovie = getMovieInfo( selectedMovie.getId() );
 			if (selectedMovie.getImdbID() != null) {
 				return suggestByImdbID( selectedMovie.getImdbID(), defaultImage, language );
 			} else {
@@ -513,6 +513,15 @@ public class MovieManager implements Reconfigurable {
 			}
 		}
 		return null;
+	}
+
+
+	private boolean nameEquals(String title, String name) {
+		
+		title = title.replaceAll("[\\W]", "").toLowerCase();
+		name = name.replaceAll("[\\W]", "").toLowerCase();
+		
+		return title.equals( name );
 	}
 
 	public void setWatched(String imdbId) {
