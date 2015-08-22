@@ -406,4 +406,9 @@ public class DownloadableManager {
 		return downloadableDAO.find(downloadableId);
 	}
 
+	public void ignore(long downloadableId) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, IllegalArgumentException {
+		Downloadable downloadable = DownloadableFactory.getInstance().createInstance(downloadableId);
+		ignore( downloadable );	
+	}
+
 }

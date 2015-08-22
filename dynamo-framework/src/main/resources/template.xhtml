@@ -235,6 +235,42 @@
 				initPage();
 			}
 		}
+		
+		function redownload(id) {
+			$.ajax({
+				  url: "redownload",
+				  data: {
+				    id: id
+				  },
+				  beforeSend: function() {
+					  disappear( 'bounceOutUp', $('#' + id) );
+				  }
+			});
+		}
+		
+		function want(id) {
+			$.ajax({
+				  url: "want",
+				  data: {
+				    id: id
+				  },
+				  beforeSend: function() {
+					  disappear( 'bounceOutUp', $('#' + id) );
+				  }
+			});
+		}
+
+		function ignore(id) {
+			$.ajax({
+				  url: "ignore",
+				  data: {
+				    id: id
+				  },
+				  beforeSend: function() {
+					  disappear( 'bounceOutUp', $('#' + id) );
+				  }
+			});
+		}			
 	</script>
 
 	<ui:insert name="custom_js">

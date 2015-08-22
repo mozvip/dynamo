@@ -153,17 +153,6 @@
 	</ui:define>
 	<ui:define name="custom_js">
 		<script>		
-			function want(id) {
-				$.ajax({
-					  url: "want",
-					  data: {
-					    id: id
-					  },
-					  beforeSend: function() {
-						  disappear( 'bounceOutUp', $('#' + id) );
-					  }
-				});
-			}
 			function deleteDownloadable(id) {
 				$.ajax({
 					  url: "delete",
@@ -175,17 +164,7 @@
 					  }
 				});
 			}		
-			function redownload(id) {
-				$.ajax({
-					  url: "redownload",
-					  data: {
-					    id: id
-					  },
-					  beforeSend: function() {
-						  disappear( 'bounceOutUp', $('#' + id) );
-					  }
-				});
-			}		
+	
 			function removeThis( data ) {
 				if (data.status == 'begin') {
 					disappear( 'bounceOutUp', $(data.source) );

@@ -57,6 +57,11 @@
 							<f:param name="id" value="#{movie.id}" />
 							<i class="fa fa-trash-o"></i>
 						</h:commandLink>
+						<ui:fragment rendered="#{movie.status == 'SUGGESTED'}">
+							<a href="#" class="btn btn-sm btn-danger" data-downloadable="${movie.id}" onclick="if (confirm('Are you sure you want to ignore #{movies.fixName(movie.name)} ?')) { ignore('#{movie.id}'); } else { return false;}">
+								<i class="fa fa-trash-o"></i>
+							</a>
+						</ui:fragment>
 						<h:outputLink styleClass="btn btn-sm btn-default"
 							p:data-toggle="modal" p:data-target="#manualSearch" value="#"
 							onclick="$('.manualSearchMovieId').val('#{movie.id}'); $('.manualSearchField').val('#{movies.searchName(movie.name)}'); $('.manualSearchFieldPath').html('#{movies.fixName(movie.path.fileName)}');"
