@@ -73,11 +73,11 @@
 							<f:param name="id" value="#{movie.id}" />
 							<i class="fa fa-download" />
 						</h:commandLink>
-						<h:commandLink styleClass="btn btn-sm btn-default" action="#{fileList.search}" title="Show Files" rendered="#{movie.status == 'DOWNLOADED'}">
-							<f:setPropertyActionListener value="#{movie.id}" target="#{fileList.downloadableId}" />
-							<f:ajax onevent="showFiles" render=":showFilesForm" />
-							<i class="fa fa-list"></i>
-						</h:commandLink>
+						<ui:fragment rendered="#{movie.status == 'DOWNLOADED'}">
+							<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#fileList" data-downloadable="${movie.id}" title="Show movie files">
+								<i class="fa fa-list"></i>
+							</a>
+						</ui:fragment>
 						<h:panelGroup rendered="#{movies.isSeen(movie)}">
 							<a href="#" class="btn btn-sm btn-default">
 								<i class="fa fa-eye" />
