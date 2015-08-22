@@ -79,15 +79,12 @@ public class Transmission implements Reconfigurable, Enableable {
 		return executeRequest(request).getResult();
 	}
 
-	public String remove(int id) {
-		
-		ErrorManager.getInstance().reportDebug(null, String.format("Removing Torrent with id %d", id));
-
+	public String remove(int id, boolean deleteLocalData) {
 		TransmissionRequest request = new TransmissionRequest( "torrent-remove" );
 		List<Integer> ids = new ArrayList<>();
 		ids.add( id );
 		request.getArguments().setIds(ids);
-		request.getArguments().setDeleteLocalData(true);
+		request.getArguments().setDeleteLocalData( deleteLocalData );
 		return executeRequest(request).getResult();
 	}
 

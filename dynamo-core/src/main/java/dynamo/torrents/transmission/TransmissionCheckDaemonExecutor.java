@@ -47,7 +47,8 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 	public void execute() throws Exception {
 
 		List<SearchResult> results = searchResultDAO.getActiveSearchResults( SearchResultType.TORRENT );
-		List<TransmissionResponseTorrent> torrents = Transmission.getInstance().getTorrents();
+		Transmission transmission = Transmission.getInstance();
+		List<TransmissionResponseTorrent> torrents = transmission.getTorrents();
 
 		for (SearchResult searchResult : results) {
 			boolean torrentFound = false;
@@ -75,7 +76,14 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 					}
 					// MAYBE_FIXME : sourceFolder is local to the transmission server, not to the dynamo server
 					// This only works if transmission and dynamo are on the same server !
-					DownloadableManager.getInstance().downloaded(task, downloadable, searchResult, sourceFolder, files, false );
+					
+					boolean move = false;
+					if (limitUploadRatio <= 0) {
+						move = true;
+						transmission.remove( torrent.getId(), false );
+					}
+
+					DownloadableManager.getInstance().downloaded(task, downloadable, searchResult, sourceFolder, files, move );
 					searchResultDAO.freeClientId(searchResult.getClientId());
 				}
 			}
@@ -93,7 +101,7 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 			if (searchResult.getClientId() != null) {
 				for (TransmissionResponseTorrent torrent : torrents) {
 					if (Integer.parseInt(searchResult.getClientId()) == torrent.getId()) {
-						Transmission.getInstance().remove( torrent.getId() );
+						transmission.remove( torrent.getId(), true );
 						searchResultDAO.freeClientId(searchResult.getClientId());
 						break;
 					}
@@ -103,9 +111,10 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 		
 		for (TransmissionResponseTorrent torrent : torrents) {
 			if (torrent.getDoneDate() > 0 && torrent.getUploadRatio() > limitUploadRatio) {
+				
 				// delete the files : FIXME : how to check that we have no file copy or move in progress ?
 				searchResultDAO.freeClientId("" + torrent.getId());
-				Transmission.getInstance().remove( torrent.getId() );
+				transmission.remove( torrent.getId(), true );
 			}
 		}
 		
