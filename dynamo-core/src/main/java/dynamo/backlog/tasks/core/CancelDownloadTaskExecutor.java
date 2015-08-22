@@ -16,7 +16,7 @@ public class CancelDownloadTaskExecutor extends TaskExecutor<CancelDownloadTask>
 	public void execute() throws Exception {
 		// hackish : shouldn't be implemented like this
 		if ( task.getResult().getType() == SearchResultType.TORRENT && Transmission.getInstance().isEnabled()) {
-			Transmission.getInstance().remove( Integer.parseInt( task.getResult().getClientId() ) );
+			Transmission.getInstance().remove( Integer.parseInt( task.getResult().getClientId() ), true );
 		}
 		
 		else if ( task.getResult().getType() == SearchResultType.NZB && SabNzbd.getInstance().isEnabled()) {
