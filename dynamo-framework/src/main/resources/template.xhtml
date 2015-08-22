@@ -270,7 +270,20 @@
 					  disappear( 'bounceOutUp', $('#' + id) );
 				  }
 			});
+		}	
+		
+		function deleteDownloadable(id) {
+			$.ajax({
+				  url: "delete",
+				  data: {
+				    id: id
+				  },
+				  beforeSend: function() {
+					  disappear( 'bounceOutUp', $('#' + id) );
+				  }
+			});
 		}			
+		
 	</script>
 
 	<ui:insert name="custom_js">

@@ -38,7 +38,7 @@
 			}
 			
 			.buttons {
-				position: absolute;
+				position: absolute; right: 10px;
 			}			
 		</style>
 
@@ -118,7 +118,7 @@
 			<ui:include src="/components/simple-pager.xhtml" />
 			<ui:repeat var="game" value="#{pager.items}">
 				<div class="game book col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{game.id}">
-					<div class="">
+					<div class="buttons btn-group-vertical" role="group">
 						<a href="#" class="btn btn-sm btn-danger" data-downloadable="${game.id}" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(game.name)} ?')) { deleteDownloadable('#{game.id}'); } else { return false;}">
 							<i class="fa fa-trash"></i>
 						</a>
@@ -150,27 +150,6 @@
 			<ui:include src="/components/simple-pager.xhtml" />
 		</h:form>
 
-	</ui:define>
-	<ui:define name="custom_js">
-		<script>		
-			function deleteDownloadable(id) {
-				$.ajax({
-					  url: "delete",
-					  data: {
-					    id: id
-					  },
-					  beforeSend: function() {
-						  disappear( 'bounceOutUp', $('#' + id) );
-					  }
-				});
-			}		
-	
-			function removeThis( data ) {
-				if (data.status == 'begin') {
-					disappear( 'bounceOutUp', $(data.source) );
-				}
-			}			
-		</script>
 	</ui:define>
 </ui:composition>
 

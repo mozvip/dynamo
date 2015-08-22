@@ -1,7 +1,6 @@
 package dynamo.ui;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -204,14 +203,6 @@ public class Movies extends DynamoManagedBean {
 		MovieManager.getInstance().save( wantedMovie );
 
 		DownloadableManager.getInstance().want( wantedMovie );
-	}
-
-	public void redownload() throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		int id = getIntegerParameter("id");
-		DownloadableManager.getInstance().redownload( id );
-		if (collectionContents != null) {
-			collectionContents.remove( id );
-		}
 	}
 
 }
