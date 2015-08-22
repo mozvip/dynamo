@@ -277,7 +277,6 @@ public class HTTPClient {
     
     public SimpleResponse get( String url, String referer, long cacheRefreshPeriod ) throws IOException {
 
-		String fileName = FileNameUtils.sanitizeFileName( url.substring( url.lastIndexOf('/') + 1) );
 		String key = url;
 
 		SimpleResponse cachedContent = null;
@@ -307,6 +306,7 @@ public class HTTPClient {
 	
 				ContentType ct = ContentType.getOrDefault( entity );
 	
+				String fileName;
 				Header contentDisposition = response.getLastHeader("Content-Disposition");
 				if (contentDisposition != null) {
 					List<String> groups = RegExpMatcher.groups( contentDisposition.getValue(), ".*filename\\*?=\"(.*)\"");
@@ -314,6 +314,8 @@ public class HTTPClient {
 						groups = RegExpMatcher.groups( contentDisposition.getValue(), ".*filename\\*?=(.*)");
 					}
 					fileName = groups.get(0);
+				} else {
+					fileName = FileNameUtils.sanitizeFileName( url.substring( url.lastIndexOf('/') + 1) );
 				}
 						
 				int statusCode = response.getStatusLine().getStatusCode();
