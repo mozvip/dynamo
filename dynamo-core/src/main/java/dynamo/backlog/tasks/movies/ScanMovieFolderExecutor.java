@@ -142,8 +142,10 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 			
 			if (movie.getImdbID() != null) {
 				IMDBTitle imdbInfo = IMDBWatchListSuggester.extractIMDBTitle( movie.getImdbID() );
-				movie.setRating( imdbInfo.getRating() );
-				movie.setYear( imdbInfo.getYear() );
+				if (imdbInfo != null) {
+					movie.setRating( imdbInfo.getRating() );
+					movie.setYear( imdbInfo.getYear() );
+				}
 			}
 
 			MovieManager.getInstance().save( movie );

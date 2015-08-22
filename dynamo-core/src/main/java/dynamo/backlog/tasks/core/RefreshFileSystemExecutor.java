@@ -9,7 +9,6 @@ import java.util.Set;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.music.DeleteMusicFileTask;
 import dynamo.core.manager.DownloadableFactory;
-import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
@@ -126,7 +125,8 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 					// ebook becomes suggested
 					DownloadableManager.getInstance().suggest(downloadable);
 				} else {
-					ErrorManager.getInstance().reportError( String.format("%s is marked as downloaded but can't be found", downloadable.toString()));
+					// was deleted manually
+					queue( new DeleteDownloadableTask(downloadable), false );
 				}
 			}
 
