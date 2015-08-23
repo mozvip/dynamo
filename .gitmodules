@@ -1,0 +1,3 @@
+[submodule "hclient"]
+	path = hclient
+	url = https://github.com/mozvip/hclient
