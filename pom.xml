@@ -8,7 +8,7 @@
   	<module>dynamo-core</module>
   	<module>dynamo-subtitles</module>
     <module>dynamo-web</module>
-    <module>hclient</module>
+    <module>hclient/hclient</module>
     <module>dynamo-framework</module>
   </modules>
 </project>
