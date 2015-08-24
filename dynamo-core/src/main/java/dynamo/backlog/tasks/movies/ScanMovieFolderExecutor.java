@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.model.MovieDb;
 
@@ -20,7 +22,6 @@ import dynamo.core.Language;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableDAO;
-import dynamo.core.model.video.VideoMetaData;
 import dynamo.jdbi.MovieDAO;
 import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadableStatus;
@@ -84,13 +85,15 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 				downloadableDAO.delete( movie.getId() );
 			} else {
 				
-				VideoMetaData metaData = VideoManager.getInstance().getMetaData( movie, p );
+				VideoManager.getInstance().getMetaData( movie, p );
 
 				// fix imdb data if not set
-				if ( (movie.getRating() <= 0 || movie.getYear() <= 0) && movie.getImdbID() != null) {
+				if ( (movie.getRating() <= 0 || movie.getYear() <= 0) && StringUtils.isNotBlank(movie.getImdbID())) {
 					IMDBTitle imdbInfo = IMDBWatchListSuggester.extractIMDBTitle( movie.getImdbID() );
-					movie.setRating( imdbInfo.getRating() );
-					movie.setYear( imdbInfo.getYear() );
+					if (imdbInfo != null) {
+						movie.setRating( imdbInfo.getRating() );
+						movie.setYear( imdbInfo.getYear() );
+					}
 				}
 
 				// fix movieDB data if not set
