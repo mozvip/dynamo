@@ -42,6 +42,10 @@ public abstract class DynamoApplication implements Reconfigurable {
 	public String getIpAddress() {
 		return ipAddress;
 	}
+	
+	public String getAppSpeficicDatabaseName() {
+		return "dynamo";
+	}
 
 	private void upgradeDatabases() {
 		try (Connection conn = DAOManager.getInstance().getDatasource("core").getConnection()) {
@@ -52,9 +56,9 @@ public abstract class DynamoApplication implements Reconfigurable {
 			ErrorManager.getInstance().reportThrowable( e );
 		}
 		
-		try (Connection conn = DAOManager.getInstance().getDatasource("dynamo").getConnection()) {
+		try (Connection conn = DAOManager.getInstance().getDatasource( getAppSpeficicDatabaseName() ).getConnection()) {
 			DatabaseConnection connection = new JdbcConnection( conn );
-			Liquibase liquibase = new Liquibase("databases/dynamo.xml", new ClassLoaderResourceAccessor( getClass().getClassLoader()), connection );
+			Liquibase liquibase = new Liquibase( String.format("databases/%s.xml", getAppSpeficicDatabaseName()), new ClassLoaderResourceAccessor( getClass().getClassLoader()), connection );
 			liquibase.update( "" );
 		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable( e );
