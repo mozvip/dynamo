@@ -29,7 +29,7 @@ public class BookInfo {
 	
 	@Override
 	public String toString() {
-		return String.format("%s - %s (%s)", name, author, language != null ? language.getFullName() : "Unknown Language");
+		return String.format("%s - %s (%s)", name, author, language != null ? language.getLabel() : "Unknown Language");
 	}
 
 }

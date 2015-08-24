@@ -95,7 +95,7 @@ public class MagazineManager implements Reconfigurable {
 		Magazine m = magazineDAO.findBySearchName(searchName);
 		if (m == null ) {
 			
-			String folderName = String.format( "%s (%s)", magazineName, language != null ? language.getFullName() : "Unknown Language" );
+			String folderName = String.format( "%s (%s)", magazineName, language != null ? language.getLabel() : "Unknown Language" );
 			Path magazinePath = path.resolve( FileNameUtils.sanitizeFileName(folderName) ).toAbsolutePath();
 
 			List<String> aka = new ArrayList<>();

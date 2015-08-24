@@ -488,7 +488,6 @@ public class MovieManager implements Reconfigurable {
 
 			Date now = new Date();
 			MovieDb selectedMovie = null;
-			Date currentDate = null;
 
 			for (MovieDb movieDb : movieResults.getResults()) {
 				if ( !nameEquals( movieDb.getTitle(), name ) ) {
@@ -499,10 +498,8 @@ public class MovieManager implements Reconfigurable {
 					if (releaseDate.after( now )) {
 						continue;
 					}
-					if ( currentDate == null || releaseDate.after(currentDate)) {
-						selectedMovie = movieDb;
-						currentDate = releaseDate;
-					}
+					selectedMovie = movieDb;
+					break;
 				}
 			}
 			if (selectedMovie == null) {

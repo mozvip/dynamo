@@ -70,7 +70,7 @@ public class OpenSubtitlesOrg extends SubtitlesFinder {
 		
 		OsLanguage lang = OsLanguage.find(language);
 		if ( lang == null ) {
-			ErrorManager.getInstance().reportWarning( String.format("Language %s is not supported by the opensubtitles.org subtitles finder", language.getFullName() ));
+			ErrorManager.getInstance().reportWarning( String.format("Language %s is not supported by the opensubtitles.org subtitles finder", language.getLabel() ));
 			return null;
 		}
 

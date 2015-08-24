@@ -53,7 +53,7 @@ public class Addic7ed extends SubtitlesFinder {
 
 			WebDocument document = client.getDocument( episodeURL, episodeLookupURL, HTTPClient.REFRESH_ONE_HOUR );
 
-			String languageFullName = language.getFullName();
+			String languageFullName = language.getLabel();
 			
 			String xpathExpression = "//tr[contains(., '" + languageFullName + "') and contains(.,'Completed') and contains(.,'Download')]/td[contains(., 'Download')]/a";
 

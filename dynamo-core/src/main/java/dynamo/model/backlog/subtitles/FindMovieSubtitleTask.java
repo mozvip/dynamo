@@ -34,6 +34,6 @@ public class FindMovieSubtitleTask extends Task {
 
 	@Override
 	public String toString() {
-		return String.format("Find subtitles for <a href='%s'>%s</a> in %s", movie.getRelativeLink(), movie.toString(), subtitlesLanguage.getFullName());
+		return String.format("Find subtitles for <a href='%s'>%s</a> in %s", movie.getRelativeLink(), movie.toString(), subtitlesLanguage.getLabel());
 	}
 }

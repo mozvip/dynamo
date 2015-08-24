@@ -2,7 +2,10 @@ package dynamo.suggesters.movies;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -95,8 +98,20 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 		}
 
 		boolean released = true;
-		if (imdbPage.jsoupSingle(".showtime h2:contains(Coming Soon)") != null) {
-			released = false;
+		
+		
+		Element datePublishedElement = imdbPage.jsoupSingle("[itemprop=datePublished]");
+		if (datePublishedElement != null) {
+			String datePublishedStr = datePublishedElement.attr("content");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				Date datePublished = sdf.parse( datePublishedStr );
+				if (datePublished.after( new Date() )) {
+					released = false;
+				}
+			} catch (ParseException e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}
 		}
 		if (imdbPage.jsoupSingle(".rating-ineligible a:contains(Not yet released)") != null) {
 			released = false;

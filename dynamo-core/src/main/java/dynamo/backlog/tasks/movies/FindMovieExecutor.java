@@ -102,10 +102,10 @@ public class FindMovieExecutor extends FindDownloadableExecutor<Movie> {
 
 					if (StringUtils.equalsIgnoreCase(language, "(original title)") || StringUtils.isBlank(language)) {
 						akas.add(aka);
-					} else if (movie.getWantedAudioLanguage() != null && StringUtils.containsIgnoreCase(language, movie.getWantedAudioLanguage().getFullName())) {
+					} else if (movie.getWantedAudioLanguage() != null && StringUtils.containsIgnoreCase(language, movie.getWantedAudioLanguage().getLabel())) {
 						akas.add(aka);
 					} else if (movie.getWantedSubtitlesLanguage() != null
-							&& StringUtils.containsIgnoreCase(language, movie.getWantedSubtitlesLanguage().getFullName())) {
+							&& StringUtils.containsIgnoreCase(language, movie.getWantedSubtitlesLanguage().getLabel())) {
 						akas.add(aka);
 					}
 				}
