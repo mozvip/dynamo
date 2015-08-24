@@ -3,6 +3,7 @@ package dynamo.suggesters.movies;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import core.RegExp;
 import core.WebDocument;
 import core.WebResource;
 import dynamo.core.Language;
@@ -24,7 +25,16 @@ public class ITunesMoviesSuggester implements MovieSuggester {
 			Element img = element.select("img").first();
 			String moviesName = img.attr("alt");
 			WebResource image = new WebResource(img.absUrl("src"), url);
-			MovieManager.getInstance().suggestByName(moviesName, -1, image, Language.EN);
+			
+			int year = -1;
+			
+			String[] groups = RegExp.parseGroups( moviesName, "(.*)\\((\\d{4})\\)" );
+			if ( groups != null ) {
+				moviesName = groups[0].trim();
+				year = Integer.parseInt( groups[1]);
+			}
+			
+			MovieManager.getInstance().suggestByName(moviesName, year, image, Language.EN);
 		}
 	}
 	

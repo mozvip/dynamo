@@ -467,6 +467,9 @@ public class MovieManager implements Reconfigurable {
 		if (imdbTitle == null || imdbTitle.isTvSeries() ) {
 			return null;
 		}
+		if (imdbTitle.getGenres() != null && imdbTitle.getGenres().contains("Short")) {
+			return null;
+		}
 		if ( !imdbTitle.isReleased() ) {
 			return null;
 		}

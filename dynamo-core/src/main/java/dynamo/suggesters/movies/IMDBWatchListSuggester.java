@@ -3,6 +3,7 @@ package dynamo.suggesters.movies;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -84,6 +85,15 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 			tvSeries = infoText.contains("TV Series");
 		}
 
+		Set<String> genres = null;
+		Elements genreElements = imdbPage.jsoup(".itemprop[itemprop=genre]");
+		if (genreElements != null) {
+			genres = new HashSet<>();
+			for (Element element : genreElements) {
+				genres.add( element.text().trim() );
+			}
+		}
+
 		boolean released = true;
 		if (imdbPage.jsoupSingle(".showtime h2:contains(Coming Soon)") != null) {
 			released = false;
@@ -118,7 +128,7 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 			image = new WebResource( imageElement.attr("abs:src"), imdbURL );
 		}
 		
-		return new IMDBTitle( imdbID, name, year, rating, tvSeries, released, image );
+		return new IMDBTitle( imdbID, name, year, rating, tvSeries, genres, released, image );
 	}
 
 	@Override

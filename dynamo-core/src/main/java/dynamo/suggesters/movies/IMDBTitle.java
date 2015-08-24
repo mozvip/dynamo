@@ -1,5 +1,7 @@
 package dynamo.suggesters.movies;
 
+import java.util.Collection;
+
 import core.WebResource;
 
 public class IMDBTitle {
@@ -11,14 +13,16 @@ public class IMDBTitle {
 	private boolean tvSeries;
 	private WebResource image;
 	private boolean released;
+	private Collection<String> genres;
 
-	public IMDBTitle(String id, String name, int year, float rating, boolean tvSeries, boolean released, WebResource image) {
+	public IMDBTitle(String id, String name, int year, float rating, boolean tvSeries, Collection<String> genres, boolean released, WebResource image) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.year = year;
 		this.rating = rating; 
 		this.tvSeries = tvSeries;
+		this.genres = genres;
 		this.released = released;
 		this.image = image;
 	}
@@ -43,6 +47,9 @@ public class IMDBTitle {
 	}
 	public WebResource getImage() {
 		return image;
+	}
+	public Collection<String> getGenres() {
+		return genres;
 	}
 
 }
