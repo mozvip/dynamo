@@ -5,11 +5,8 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.skife.jdbi.v2.Handle;
-import org.skife.jdbi.v2.Query;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -27,7 +24,6 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.games.GamePlatform;
 import dynamo.model.games.VideoGame;
 import dynamo.model.games.VideoGameDAO;
-import dynamo.model.games.VideoGameMapper;
 import dynamo.webapps.googleimages.GoogleImages;
 import dynamo.webapps.thegamesdb.net.GetArtResponse;
 import dynamo.webapps.thegamesdb.net.TheGamesDB;

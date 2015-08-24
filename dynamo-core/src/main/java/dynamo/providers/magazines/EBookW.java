@@ -1,13 +1,11 @@
 package dynamo.providers.magazines;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import core.WebDocument;
-import dynamo.core.manager.ErrorManager;
 import dynamo.magazines.KioskIssuesSuggester;
 import dynamo.magazines.KioskIssuesSuggesterException;
 import dynamo.magazines.MagazineManager;
