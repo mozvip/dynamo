@@ -98,8 +98,8 @@ public class Games extends DynamoManagedBean implements Serializable {
 	public Games() {
 		folder = new HashMap<GamePlatform, Path>();
 		List<GamePlatform> platforms = GamesManager.getInstance().getPlatforms();
-		for (GamePlatform platform : platforms) {
-			folder.put(platform, GamesManager.getInstance().getFolder(platform));
+		for (GamePlatform pf : platforms) {
+			folder.put(pf, GamesManager.getInstance().getFolder(pf));
 		}
 	}
 
@@ -133,9 +133,9 @@ public class Games extends DynamoManagedBean implements Serializable {
 
 	public void save() {
 		try {
-			for (GamePlatform platform : getPlatforms()) {
-				Path folderForPlatform = folder.get(platform);
-				GamesManager.getInstance().setPlatformFolder(platform, folderForPlatform);
+			for (GamePlatform pf : getPlatforms()) {
+				Path folderForPlatform = folder.get(pf);
+				GamesManager.getInstance().setPlatformFolder(pf, folderForPlatform);
 			}
 			EventManager.getInstance().reportInfo("Game settings saved successfully");
 		} catch (Exception e) {
