@@ -17,6 +17,7 @@ public class KATTorrentFinderTest {
 	public void testFindDownloadsForEpisode() throws Exception {
 		List<SearchResult> results = finder.findDownloadsForEpisode("Game of Thrones", Language.EN, 3, 4);
 		for (SearchResult searchResult : results) {
+			finder.download( searchResult.getUrl(), searchResult.getReferer() );
 			System.out.println( searchResult );
 		}
 	}

@@ -32,18 +32,9 @@ public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicA
 	}
 	
 	private WebDocument getDocument( String searchParams, int pageNumber ) throws IOException, URISyntaxException {
-		
-		searchParams = searchParams.replace(" ", "%20");
-		searchParams = searchParams.replace(":", "%3A");
-		searchParams = searchParams.replace("[", "%5B");
-		searchParams = searchParams.replace("]", "%5D");
-		searchParams = searchParams.replace("&", "%26");
-		searchParams = searchParams.replace("'", "%27");
 		searchParams = searchParams.replace("!", "");
-
 		String searchURL = rootURL + "/usearch/" + searchParams + "/" + pageNumber + "?field=seeders&sorder=desc";
 		return client.getDocument( searchURL, rootURL + "/", HTTPClient.REFRESH_ONE_HOUR );
-
 	}
 
 	private List<SearchResult> findDownloadsForURL( String searchParams ) throws Exception {
