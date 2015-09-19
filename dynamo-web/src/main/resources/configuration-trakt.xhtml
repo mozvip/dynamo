@@ -25,10 +25,6 @@
 				<h:commandButton value="Save" styleClass="btn btn-default" action="#{trakt.save}"/>
 			</div>
 		</h:form>
-		
-		<h:dataTable styleClass="table" value="#{trakt.movies}" var="movie">
-			<h:column> #{movie.title} (#{movie.year}) </h:column>
-		</h:dataTable>
 
 	</ui:define>
 </ui:composition>

@@ -26,8 +26,8 @@ public class TraktManager implements Reconfigurable, MovieSuggester, Enableable 
 	@Configurable(category="Trakt", name="Trakt Username", required="#{TraktManager.enabled}", disabled="#{!TraktManager.enabled}")
 	private String username;
 
-	public static String clientId = "1f93ab28686a87d36c0e198f15a34ba7c0d3fb45cbd3303515da246718b570a6";
-	private String clientSecret = "6c2324d35586037c7940b0d021a8ed88995a87ff964514011876d4ba03b2459d";
+	public static final String clientId = "1f93ab28686a87d36c0e198f15a34ba7c0d3fb45cbd3303515da246718b570a6";
+	private static final String clientSecret = "6c2324d35586037c7940b0d021a8ed88995a87ff964514011876d4ba03b2459d";
 
 	private TraktService service;
 
