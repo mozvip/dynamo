@@ -103,14 +103,17 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 		Element datePublishedElement = imdbPage.jsoupSingle("[itemprop=datePublished]");
 		if (datePublishedElement != null) {
 			String datePublishedStr = datePublishedElement.attr("content");
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				Date datePublished = sdf.parse( datePublishedStr );
-				if (datePublished.after( new Date() )) {
-					released = false;
+			String[] datePatterns = new String[] {"yyyy-MM-dd", "yyyy-MM", "yyyy"};
+			for (String datePattern : datePatterns) {
+				SimpleDateFormat sdf = new SimpleDateFormat( datePattern );
+				try {
+					Date datePublished = sdf.parse( datePublishedStr );
+					if (datePublished.after( new Date() )) {
+						released = false;
+					}
+					break;
+				} catch (ParseException e) {
 				}
-			} catch (ParseException e) {
-				ErrorManager.getInstance().reportThrowable( e );
 			}
 		}
 		if (imdbPage.jsoupSingle(".rating-ineligible a:contains(Not yet released)") != null) {
