@@ -19,6 +19,8 @@ import com.omertron.thetvdbapi.model.Episode;
 import com.omertron.thetvdbapi.model.Series;
 
 import dynamo.backlog.BackLogProcessor;
+import dynamo.backlog.tasks.core.SubtitlesFileFilter;
+import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.core.configuration.Configurable;
@@ -311,7 +313,7 @@ public class TVShowManager implements Reconfigurable {
 		return api.getEpisode(seriesId, seasonNbr, episodeNbr, language.getShortName());
 	}
 	
-	public void saveSeries( ManagedSeries managedSeries ) {
+	public void saveSeries( ManagedSeries managedSeries ) throws IOException {
 
 		tvShowDAO.saveTVShow(
 				managedSeries, managedSeries.getId(), managedSeries.getName(), managedSeries.getOriginalLanguage(), managedSeries.getMetaDataLanguage(), managedSeries.getAudioLanguage(), managedSeries.getSubtitleLanguage(),  managedSeries.getFolder(),
@@ -319,6 +321,12 @@ public class TVShowManager implements Reconfigurable {
 		
 		// remvove tasks to obtain subtitles if applicable
 		if (managedSeries.getSubtitleLanguage() == null) {
+			// remove subtitles
+			for ( Path subtitle : Files.newDirectoryStream( managedSeries.getFolder(), SubtitlesFileFilter.getInstance() )) {
+				if (Files.isRegularFile(subtitle)) {
+					BackLogProcessor.getInstance().schedule( new DeleteTask(subtitle, false), false );
+				}
+			}
 			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "this.episode.seriesId == '%s'", managedSeries.getId() ) );
 		}
 

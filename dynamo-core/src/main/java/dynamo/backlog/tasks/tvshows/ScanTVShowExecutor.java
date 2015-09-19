@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dynamo.backlog.BackLogProcessor;
-import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
-import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.ReleaseGroup;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.core.model.TaskExecutor;
@@ -41,15 +39,6 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 
 		if (! Files.isReadable( folder )) {
 			return;
-		}
-
-		if (series.getSubtitleLanguage() == null) {
-			// remove subtitles
-			for ( Path subtitle : Files.newDirectoryStream( folder, SubtitlesFileFilter.getInstance() )) {
-				if (Files.isRegularFile(subtitle)) {
-					queue( new DeleteTask(subtitle, false), false );
-				}
-			}
 		}
 
 		DirectoryStream<Path> ds = Files.newDirectoryStream( folder, VideoFileFilter.getInstance() );
