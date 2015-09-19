@@ -76,7 +76,7 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 							// This only works if SABnzbd and dynamo are on the same server !
 	
 							for (Iterator<Path> iterator = files.iterator(); iterator.hasNext();) {
-								Path path = (Path) iterator.next();
+								Path path = iterator.next();
 								if (!Files.exists(path)) {
 									iterator.remove();
 								} else if (DownloadableManager.getInstance().isBlackListed(path, downloadable)) {
