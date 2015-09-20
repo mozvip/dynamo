@@ -81,7 +81,7 @@ public class NewTVShowFolderExecutor extends AbstractNewFolderExecutor<NewTVShow
 			}
 
 			if (mustRefresh) {
-				RefreshTVShowTask task = new RefreshTVShowTask( managed );
+				RefreshTVShowTask task = new RefreshTVShowTask( managed.getId() );
 				task.setMinDate( nextRefreshDate );
 				queue( task, false );
 			}

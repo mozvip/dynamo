@@ -31,6 +31,10 @@ public interface TVShowDAO {
 	@Mapper(ManagedSeriesMapper.class)
 	public List<ManagedSeries> getTVShows();
 
+	@SqlQuery("SELECT * FROM MANAGEDSERIES WHERE MANAGEDSERIES.ID = :tvShowId")
+	@Mapper(ManagedSeriesMapper.class)
+	public List<ManagedSeries> getTVShow(@Bind("tvShowId") long tvShowId);
+
 	@SqlQuery("SELECT * FROM MANAGEDSERIES WHERE UPPER(NAME) = :name OR INSTR(:name, UPPER(AKA)) > 0")
 	@Mapper(ManagedSeriesMapper.class)
 	public ManagedSeries findTVShowByName(@BindUpper("name") String name);

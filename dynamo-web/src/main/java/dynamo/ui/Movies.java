@@ -1,5 +1,6 @@
 package dynamo.ui;
 
+import java.awt.Desktop;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -188,6 +189,10 @@ public class Movies extends DynamoManagedBean {
 	
 	public void setRenameFile(boolean renameFile) {
 		this.renameFile = renameFile;
+	}
+	
+	public void play( Movie movie ) throws IOException {
+		Desktop.getDesktop().open( movie.getPath().toFile() );
 	}
 	
 	public void wantSuggestion() {

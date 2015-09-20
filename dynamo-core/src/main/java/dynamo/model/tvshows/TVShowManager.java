@@ -330,7 +330,7 @@ public class TVShowManager implements Reconfigurable {
 			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "this.episode.seriesId == '%s'", managedSeries.getId() ) );
 		}
 
-		RefreshTVShowTask task = new RefreshTVShowTask( managedSeries );
+		RefreshTVShowTask task = new RefreshTVShowTask( managedSeries.getId() );
 		
 		if (!Files.exists( managedSeries.getFolder() )) {
 			try {
@@ -433,7 +433,11 @@ public class TVShowManager implements Reconfigurable {
 	}
 
 	public List<ManagedEpisode> findEpisodes(String seriesId) {
-		return tvShowDAO.findEpisodesForTVShow(seriesId);
+		List<ManagedEpisode> episodes = tvShowDAO.findEpisodesForTVShow(seriesId);
+		if (episodes == null) {
+			BackLogProcessor.getInstance().schedule( new RefreshTVShowTask( seriesId ) );
+		}
+		return episodes;
 	}
 
 	public List<ManagedEpisode> findEpisodesForSeason(long seasonId) {
@@ -442,6 +446,10 @@ public class TVShowManager implements Reconfigurable {
 
 	public TVShowSeason findSeason(long seasonId) {
 		return tvShowDAO.findSeason(seasonId);
+	}
+	
+	public ManagedSeries findTVShow( String id ) {
+		return tvShowDAO.findTVShow(id);
 	}
 
 	public ManagedSeries findManagedSeries(String name) {

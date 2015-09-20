@@ -1,5 +1,6 @@
 package dynamo.ui;
 
+import java.awt.Desktop;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -114,18 +115,21 @@ public class TVShow extends DynamoManagedBean {
 	
 	public String getRowClasses( int season) throws ParseException {
 		List<String> classes = new ArrayList<>();
-		for (ManagedEpisode episode : getEpisodes( season )) {
-			if (!episode.isAired()) {
-				classes.add("warning");
-			} else {
-				if (DownloadableStatus.WANTED.equals(episode.getStatus())) {
-					classes.add("danger");
-				} else if (DownloadableStatus.SNATCHED.equals(episode.getStatus())) {
-					classes.add("info");
-				} else if (DownloadableStatus.DOWNLOADED.equals(episode.getStatus())) {
-					classes.add("success");
+		List<ManagedEpisode> episodes = getEpisodes( season );
+		if (episodes != null) {
+			for (ManagedEpisode episode : episodes) {
+				if (!episode.isAired()) {
+					classes.add("warning");
 				} else {
-					classes.add("active");
+					if (DownloadableStatus.WANTED.equals(episode.getStatus())) {
+						classes.add("danger");
+					} else if (DownloadableStatus.SNATCHED.equals(episode.getStatus())) {
+						classes.add("info");
+					} else if (DownloadableStatus.DOWNLOADED.equals(episode.getStatus())) {
+						classes.add("success");
+					} else {
+						classes.add("active");
+					}
 				}
 			}
 		}
@@ -321,6 +325,10 @@ public class TVShow extends DynamoManagedBean {
 	
 	public void findSubtitle( ManagedEpisode episode ) {
 		runNow( new FindSubtitleEpisodeTask( episode ), false );
+	}
+	
+	public void play( ManagedEpisode episode ) throws IOException  {
+		Desktop.getDesktop().open( episode.getPath().toFile() );
 	}
 
 	public void redownload( ManagedEpisode episode ) throws NoSuchMethodException, SecurityException {
