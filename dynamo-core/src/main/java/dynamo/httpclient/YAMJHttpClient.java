@@ -2,7 +2,6 @@ package dynamo.httpclient;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -134,11 +133,7 @@ public class YAMJHttpClient implements CommonHttpClient {
 	@Override
 	public String requestContent(String uri, Charset charset)
 			throws IOException {
-		try {
-			return client.get(uri, HTTPClient.REFRESH_ONE_DAY).getStringContents( charset );
-		} catch (URISyntaxException e) {
-			throw new IOException(e);
-		}
+		return client.get(uri, HTTPClient.REFRESH_ONE_DAY).getStringContents( charset );
 	}
 
 	@Override

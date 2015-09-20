@@ -48,7 +48,7 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 		return rootURL;
 	}
 
-	public Path download( String url, String referer ) throws IOException, URISyntaxException {
+	public Path download( String url, String referer ) throws IOException {
 		if (isEnabled()) {
 			while (!isReady()) {
 				try {
