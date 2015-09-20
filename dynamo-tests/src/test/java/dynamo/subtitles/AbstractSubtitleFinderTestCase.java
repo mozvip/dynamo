@@ -29,6 +29,14 @@ public abstract class AbstractSubtitleFinderTestCase extends AbstractDynamoTest 
 		mockSpecificConfig();
 		ConfigurationManager.getInstance().configureInstance( webSite );
 	}
+	
+	@Test
+	public void testMrRobot() throws Exception {
+		VideoDetails details = new VideoDetails( null, "Mr. Robot",VideoQuality._720p, VideoSource.HDTV, null, 1, 10, null );
+		
+		RemoteSubTitles subTitles = webSite.findSubtitles( details, Language.FR );
+		Assert.assertNotNull( subTitles );
+	}
 
 	@Test
 	public void testGOTS03E04_French() throws Exception {

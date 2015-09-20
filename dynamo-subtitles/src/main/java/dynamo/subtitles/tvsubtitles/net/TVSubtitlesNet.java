@@ -61,57 +61,44 @@ public class TVSubtitlesNet extends SubtitlesFinder {
 		String url = "http://www.tvsubtitles.net/tvshow-" + seriesMap.get( showName ) + "-" + details.getSeason() + ".html";
 		
 		WebDocument document = client.getDocument( url, HTTPClient.REFRESH_ONE_HOUR );
-		List<Node> nodes = document.evaluateXPath( "//table[@id='table5']//tr/td[1]" );
-		
+		Elements rows = document.jsoup("table#table5 tr");
+
 		int maxScore = -100;
-		Element selectedLinkNode = null;
+		Element selectedSubtitle = null;
 		String subTitlesURL = null;
-		
-		for( Node node : nodes ) {
-			String text = node.getTextContent();
-			if (SubTitlesUtils.isExactMatch(text, details.getSeason(), details.getEpisode())) {
-				Node link = WebDocument.evaluateSingleNodeXPath( node.getNextSibling().getNextSibling(), ".//a");
-				String href = link.getAttributes().getNamedItem("href").getTextContent();
-				subTitlesURL = "http://www.tvsubtitles.net/" + href;
-				
-				document = client.getDocument( subTitlesURL, HTTPClient.REFRESH_ONE_HOUR );
-				Elements titles = document.jsoup( String.format( "h5 img[src*=%s]", language.getShortName() ));
-				for ( Element flagImageNode : titles ) {
-					int score = SubTitlesZip.evaluateScore( flagImageNode.text(), language, details, 0 );
-					if (score > maxScore) {
-						selectedLinkNode = flagImageNode.parent().parent().parent();
-						maxScore = score;
-					}
+
+		for (Element row : rows) {
+			if (row.select("td").isEmpty()) {
+				continue;
+			}
+			String episode = row.select("td").first().text();
+			if (!SubTitlesUtils.isExactMatch(episode, details.getSeason(), details.getEpisode())) {
+				continue;
+			}
+			subTitlesURL = row.select("a").first().absUrl("href");
+			document = client.getDocument( subTitlesURL, HTTPClient.REFRESH_ONE_HOUR );
+			
+			Elements subtitles = document.jsoup( String.format( "a:has(h5 img[src*=%s])", language.getShortName() ));
+			if (subtitles.isEmpty()) {
+				continue;
+			}
+			for ( Element subtitle : subtitles ) {
+				int score = SubTitlesZip.evaluateScore( subtitle.select("h5").first().text(), language, details, 0 );
+				if (score > maxScore) {
+					selectedSubtitle = subtitle;
+					maxScore = score;
 				}
-			}			
+			}
+			break;
 		}
 		
-		if (selectedLinkNode != null) {
-			String href = selectedLinkNode.attr("abs:href");
+		if (selectedSubtitle != null) {
+			String href = selectedSubtitle.absUrl("href");
 			document = client.getDocument( href, url, HTTPClient.REFRESH_ONE_HOUR );
-			Node textNode = document.evaluateSingleNodeXPath( ".//a/*/h3" );
-			href = textNode.getParentNode().getParentNode().getAttributes().getNamedItem("href").getTextContent();
-			
-			String downloadURL = "http://www.tvsubtitles.net/" + href;
+			String downloadURL = document.jsoup("a:has(h3)").first().absUrl("href");
 			
 			SimpleResponse response = client.get( downloadURL, null );
-			URI redirectionURI = response.getLastRedirectLocation();
-			
-			String path = redirectionURI.getPath();
-			path = path.replace("%2F", "/");
-			path = path.replace("+", "%20");
-			
-			redirectionURI = new URI( redirectionURI.getScheme() + "://" + redirectionURI.getHost() + path );
-			
-//			BasicClientCookie cookie = new BasicClientCookie("user", "yes" );
-//			cookie.setVersion(0);
-//			cookie.setDomain("www.tvsubtitles.net");
-//			cookie.setPath("/");
-//			
-//			client.addCookie(cookie);
-			
-			byte[] data = client.get( redirectionURI.toString(), downloadURL ).getByteContents();
-			return SubTitlesZip.extractSubTitleFromZip( url, data, details, language, 0 );
+			return SubTitlesZip.extractSubTitleFromZip( url, response.getByteContents(), details, language, 0 );
 		}
 
 		return null;
