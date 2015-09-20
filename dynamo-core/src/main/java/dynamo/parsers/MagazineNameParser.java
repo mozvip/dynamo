@@ -1,13 +1,13 @@
 package dynamo.parsers;
 
 import java.text.DateFormatSymbols;
-import java.text.Normalizer;
 import java.util.Calendar;
 
 import org.apache.commons.lang3.StringUtils;
 
 import core.RegExp;
 import dynamo.core.Language;
+import dynamo.utils.DynamoStringUtils;
 
 public class MagazineNameParser {
 	
@@ -77,11 +77,6 @@ public class MagazineNameParser {
 		"(.*) Fench Ebook.*"
 		
 	};
-
-	public static String formatStringNormalizer(String s) {
-		String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
-		return temp.replaceAll("[^\\p{ASCII}]", "");
-	}
 	
 	private static boolean isValidDate( int day, int month, int year ) {
 		// try to create a valid date from day, month and year
@@ -155,7 +150,7 @@ public class MagazineNameParser {
 
 				issueLanguage = parser.getLanguage();
 
-				String monthStr = formatStringNormalizer(groups[2]);
+				String monthStr = DynamoStringUtils.removeAccents(groups[2]);
 
 				if (RegExp.matches( monthStr, "\\d+")) {
 					month = Integer.parseInt( monthStr );
@@ -163,7 +158,7 @@ public class MagazineNameParser {
 					for (Language l : Language.values()) {
 						DateFormatSymbols dfs = DateFormatSymbols.getInstance( l.getLocale() );
 						for(int i=0; i<12; i++) {
-							String monthToCompareWith = formatStringNormalizer(dfs.getMonths()[i]);
+							String monthToCompareWith = DynamoStringUtils.removeAccents(dfs.getMonths()[i]);
 							if (StringUtils.equalsIgnoreCase(monthToCompareWith, monthStr)) {
 								month = i;
 								issueLanguage = l;
@@ -209,11 +204,11 @@ public class MagazineNameParser {
 			};
 			for (String regExp : monthYearGroups) {
 				while ((groups = RegExp.parseGroups( remainingString, regExp )) != null) {
-					String monthStr = formatStringNormalizer( groups[1] );
+					String monthStr = DynamoStringUtils.removeAccents( groups[1] );
 					for (Language l : Language.values()) {
 						DateFormatSymbols dfs = DateFormatSymbols.getInstance( l.getLocale() );
 						for(int i=0; i<12; i++) {
-							String monthToCompareWith = formatStringNormalizer(dfs.getMonths()[i]);
+							String monthToCompareWith = DynamoStringUtils.removeAccents(dfs.getMonths()[i]);
 							if (StringUtils.equalsIgnoreCase(monthToCompareWith, monthStr)) {
 								month = i;
 								issueLanguage = l;
@@ -256,7 +251,7 @@ public class MagazineNameParser {
 					DateFormatSymbols dfs = DateFormatSymbols.getInstance( l.getLocale() );
 		
 					for(int i=0; i<12; i++) {
-						String regExp = "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(" + formatStringNormalizer(dfs.getMonths()[i]) + ")?";
+						String regExp = "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(" + DynamoStringUtils.removeAccents(dfs.getMonths()[i]) + ")?";
 						groups = RegExp.parseGroups( remainingString, regExp );
 						if (groups != null) {
 							found = true;
@@ -287,7 +282,7 @@ public class MagazineNameParser {
 				for (Language l : Language.values()) {
 					if (l.getSeasons() != null) {
 						for(int i=0; i<l.getSeasons().length; i++) {
-							String regExp = "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(" + formatStringNormalizer(l.getSeasons()[i]) + ")?";
+							String regExp = "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(" + DynamoStringUtils.removeAccents(l.getSeasons()[i]) + ")?";
 							groups = RegExp.parseGroups( remainingString, regExp );
 							if (groups != null) {
 								found = true;

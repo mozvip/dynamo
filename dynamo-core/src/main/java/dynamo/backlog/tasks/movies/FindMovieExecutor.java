@@ -26,6 +26,7 @@ import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
 import dynamo.model.result.SearchResult;
 import dynamo.parsers.VideoNameParser;
+import dynamo.utils.DynamoStringUtils;
 import hclient.HTTPClient;
 
 public class FindMovieExecutor extends FindDownloadableExecutor<Movie> {
@@ -133,6 +134,8 @@ public class FindMovieExecutor extends FindDownloadableExecutor<Movie> {
 			if (cancelled) {
 				return null;
 			}
+			
+			name = DynamoStringUtils.removeAccents( name );
 
 			try {
 				List<SearchResult> results = movieFinder.findMovie(name, year, wantedQuality, movie.getWantedAudioLanguage(),
