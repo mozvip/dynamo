@@ -27,17 +27,15 @@ import hclient.HTTPClient;
 
 public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicAlbumFinder, SeasonFinder, MovieProvider, MagazineProvider, GameFinder {
 
-	public KATProvider() {
-		super("https://kat.cr");
-	}
+	private static final String BASE_URL = "https://kat.cr";
 	
 	private WebDocument getDocument( String searchParams, int pageNumber ) throws IOException, URISyntaxException {
 		searchParams = searchParams.replace("!", "");
-		String searchURL = rootURL + "/usearch/" + searchParams + "/" + pageNumber + "?field=seeders&sorder=desc";
-		return client.getDocument( searchURL, rootURL + "/", HTTPClient.REFRESH_ONE_HOUR );
+		String searchURL = BASE_URL + "/usearch/" + searchParams + "/" + pageNumber + "?field=seeders&sorder=desc";
+		return client.getDocument( searchURL, BASE_URL + "/", HTTPClient.REFRESH_ONE_HOUR );
 	}
 
-	private List<SearchResult> findDownloadsForURL( String searchParams ) throws Exception {
+	private List<SearchResult> findDownloadsForURL( String searchParams ) throws IOException, URISyntaxException {
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		WebDocument	document = getDocument( searchParams, 1 );
 		if ( document.jsoupSingle("p:contains(did not match any documents)") == null ) {

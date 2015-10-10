@@ -9,9 +9,7 @@ import dynamo.model.result.SearchResult;
 
 public class BinNewzFranceProvider extends DownloadFinder implements EpisodeFinder {
 
-	public BinNewzFranceProvider() {
-		super("http://www.binnews.in/");
-	}
+	private static final String BASE_URL = "http://www.binnews.in/";
 
 	@Override
 	public List<SearchResult> findDownloadsForEpisode(String seriesName,

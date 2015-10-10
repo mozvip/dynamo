@@ -12,6 +12,7 @@ import core.WebDocument;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
+import dynamo.core.configuration.Configurable;
 import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
 import dynamo.magazines.MagazineProvider;
@@ -22,8 +23,15 @@ import hclient.HTTPClient;
 
 public class PirateBayProvider extends DownloadFinder implements MovieProvider, MagazineProvider, GameFinder {
 
-	public PirateBayProvider() {
-		super("https://pirateproxy.sx");
+	@Configurable(category="Providers", name="Pirate Bay Base URL", disabled="#{!PirateBayProvider.enabled}", required="#{PirateBayProvider.enabled}", defaultValue="https://pirateproxy.sx")
+	private String baseURL;
+	
+	public String getBaseURL() {
+		return baseURL;
+	}
+	
+	public void setBaseURL(String baseURL) {
+		this.baseURL = baseURL;
 	}
 
 	@Override
@@ -49,7 +57,7 @@ public class PirateBayProvider extends DownloadFinder implements MovieProvider, 
 			subcat = 207;
 		}
 		
-		String searchURL = String.format("%s/search/%s/0/7/%d", rootURL, searchString, subcat);
+		String searchURL = String.format("%s/search/%s/0/7/%d", baseURL, searchString, subcat);
 		
 		return extractResults(searchURL);
 	}
@@ -87,7 +95,7 @@ public class PirateBayProvider extends DownloadFinder implements MovieProvider, 
 
 	@Override
 	public List<SearchResult> findDownloadsForMagazine(String issueSearchString) throws Exception {
-		String searchURL = String.format("%s/search/%s/0/99/601", rootURL, issueSearchString);
+		String searchURL = String.format("%s/search/%s/0/99/601", baseURL, issueSearchString);
 		return extractResults(searchURL);
 	}
 
@@ -118,7 +126,7 @@ public class PirateBayProvider extends DownloadFinder implements MovieProvider, 
 		}
 		
 		String searchString = plus(videoGame.getName());
-		String searchURL = String.format("%s/search/%s/0/99/%d", rootURL, searchString, subcat);
+		String searchURL = String.format("%s/search/%s/0/99/%d", baseURL, searchString, subcat);
 		return extractResults(searchURL);
 	}
 

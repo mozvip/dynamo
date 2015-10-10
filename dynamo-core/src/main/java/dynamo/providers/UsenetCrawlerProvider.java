@@ -21,15 +21,13 @@ import hclient.SimpleResponse;
 
 public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvider {
 
+	private static final String BASE_URL = "https://www.usenet-crawler.com";
+
 	@Configurable(category = "Providers", name="UsenetCrawler Login", disabled="#{!UsenetCrawlerProvider.enabled}", required="#{UsenetCrawlerProvider.enabled}")
 	private String login;
 
 	@Configurable(category = "Providers", name="UsenetCrawler Password", disabled="#{!UsenetCrawlerProvider.enabled}", required="#{UsenetCrawlerProvider.enabled}")
 	private String password;
-
-	public UsenetCrawlerProvider() {
-		super("https://www.usenet-crawler.com");
-	}
 
 	public String getLogin() {
 		return login;
@@ -61,7 +59,7 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 		
 		name = plus(name);
 		
-		String searchURL = String.format("%s/search?val=%s&min=%d&t=2000", rootURL, name, minSize);
+		String searchURL = String.format("%s/search?val=%s&min=%d&t=2000", BASE_URL, name, minSize);
 		if (audioLanguage == Language.EN) {
 			searchURL += "&audiolang=0";
 		}

@@ -2,7 +2,6 @@ package dynamo.core;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 
@@ -38,15 +37,6 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 	}
 
 	protected HTTPClient client = HTTPClient.getInstance();
-	protected String rootURL;
-
-	public DownloadFinder( String rootURL ) {
-		this.rootURL = rootURL;
-	}
-
-	public String getRootURL() {
-		return rootURL;
-	}
 
 	public Path download( String url, String referer ) throws IOException {
 		if (isEnabled()) {

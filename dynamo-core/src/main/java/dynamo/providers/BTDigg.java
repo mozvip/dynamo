@@ -18,13 +18,11 @@ import hclient.HTTPClient;
 
 public class BTDigg extends DownloadFinder implements MagazineProvider {
 
-	public BTDigg() {
-		super("http://btdigg.org");
-	}
+	private static final String BASE_URL = "http://btdigg.org";
 
 	@Override
 	public List<SearchResult> findDownloadsForMagazine(String issueSearchString) throws Exception {
-		String searchURL = String.format( "%s/search?q=%s", rootURL, plus(issueSearchString) );
+		String searchURL = String.format( "%s/search?q=%s", BASE_URL, plus(issueSearchString) );
 		return extractResults( searchURL, 30, 500 );
 	}
 

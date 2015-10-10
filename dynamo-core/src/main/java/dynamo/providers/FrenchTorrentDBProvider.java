@@ -35,14 +35,11 @@ import hclient.SimpleResponse;
 
 public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, GameFinder, MusicAlbumFinder, SeasonFinder {
 
+	private static final String BASE_URL = "http://www.frenchtorrentdb.com";
 	@Configurable(category = "Providers", name = "FrenchTorrentDB Login", disabled = "#{!FrenchTorrentDBProvider.enabled}", required = "#{FrenchTorrentDBProvider.enabled}")
 	private String login;
 	@Configurable(category = "Providers", name = "FrenchTorrentDB Password", disabled = "#{!FrenchTorrentDBProvider.enabled}", required = "#{FrenchTorrentDBProvider.enabled}")
 	private String password;
-
-	public FrenchTorrentDBProvider() {
-		super("http://www.frenchtorrentdb.com");	
-	}
 
 	public String getLogin() {
 		return login;
@@ -80,27 +77,27 @@ public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProv
 	@Override
 	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
 		String additionalFilters = getTVShowFilters(audioLanguage);
-		return extractResults(String.format("%s/?name=%s+S%02dE%02d&exact=1%s&section=TORRENTS&group=series", getRootURL(), plus(seriesName), seasonNumber,
+		return extractResults(String.format("%s/?name=%s+S%02dE%02d&exact=1%s&section=TORRENTS&group=series", BASE_URL, plus(seriesName), seasonNumber,
 				episodeNumber, additionalFilters));
 	}
 
 	@Override
 	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
 		String additionalFilters = getTVShowFilters(audioLanguage);
-		return extractResults(String.format("%s/?name=%s+%d&exact=1%s&section=TORRENTS&group=series", getRootURL(), plus(seriesName), absoluteEpisodeNumber,
+		return extractResults(String.format("%s/?name=%s+%d&exact=1%s&section=TORRENTS&group=series", BASE_URL, plus(seriesName), absoluteEpisodeNumber,
 				additionalFilters));
 	}
 
 	@Override
 	public List<SearchResult> findMovie(String name, int year, VideoQuality videoQuality, Language audioLanguage, Language subtitlesLanguage) throws Exception {
 		return extractResults(String.format("%s/?name=%s+%d&search=Rechercher&search=Rechercher&exact=1&year=&year_end=&section=TORRENTS&group=films",
-				getRootURL(), plus(name), year));
+				BASE_URL, plus(name), year));
 	}
 
 	@Override
 	public void configureProvider() throws Exception {
 
-		SimpleResponse loginPageResponse = client.get( getRootURL() + "/?section=INDEX");
+		SimpleResponse loginPageResponse = client.get( BASE_URL + "/?section=INDEX");
 		if (loginPageResponse.getLastRedirectLocation() != null) {
 			
 			String loginPageURL = loginPageResponse.getLastRedirectLocation().toString();
@@ -135,7 +132,7 @@ public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProv
 			String[] groups = RegExp.parseGroups(cookie, "(.+)=(.+)");
 			client.addCookie("frenchtorrentdb.com", groups[0], groups[1]);
 
-			String contents = client.postAjax(getRootURL() + "/?section=LOGIN&ajax=1", loginPageURL, "username=" + login, "password=" + password, "secure_login=" + secure_login, "hash=" + hash).getStringContents();
+			String contents = client.postAjax(BASE_URL + "/?section=LOGIN&ajax=1", loginPageURL, "username=" + login, "password=" + password, "secure_login=" + secure_login, "hash=" + hash).getStringContents();
 
 			if( !contents.equals("{\"success\":true}")) {
 				ErrorManager.getInstance().reportError( String.format("Login failed for %s, disabling provider", toString() ));
@@ -155,7 +152,7 @@ public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProv
 		}
 
 		try {
-			return extractResults(getRootURL() + "/?name=" + plus(artist) + "+" + plus(album) + "&exact=1&adv_cat[m][" + cat1 + "]=" + cat2
+			return extractResults(BASE_URL + "/?name=" + plus(artist) + "+" + plus(album) + "&exact=1&adv_cat[m][" + cat1 + "]=" + cat2
 					+ "&section=TORRENTS&group=musiques");
 		} catch (IOException | URISyntaxException e) {
 			throw new MusicAlbumSearchException( e );
@@ -187,13 +184,13 @@ public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProv
 			cat2 = 104;
 		}
 
-		return extractResults(String.format("%s/?name=%s&exact=1&adv_cat[a][%d]=%d&section=TORRENTS&group=jeux", getRootURL(), plus(videoGame.getName()), cat1,
+		return extractResults(String.format("%s/?name=%s&exact=1&adv_cat[a][%d]=%d&section=TORRENTS&group=jeux", BASE_URL, plus(videoGame.getName()), cat1,
 				cat2));
 	}
 
 	@Override
 	public List<SearchResult> findDownloadsForSeason(String aka, Language audioLanguage, int seasonNumber) throws Exception {
-		return extractResults(String.format("%s/?name=%s+s%02d&exact=1&adv_cat[s][7]=199&section=TORRENTS&group=series", getRootURL(), plus(aka), seasonNumber));
+		return extractResults(String.format("%s/?name=%s+s%02d&exact=1&adv_cat[s][7]=199&section=TORRENTS&group=series", BASE_URL, plus(aka), seasonNumber));
 	}
 
 	public List<SearchResult> extractResults(String url) throws IOException, URISyntaxException {
@@ -218,7 +215,7 @@ public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProv
 
 //	@Override
 //	public void suggestBooks() throws Exception {	
-//		String resultPageURL = String.format("%s/?name=&exact=1&adv_cat[d][1]=122&section=TORRENTS&group=autres", getRootURL());
+//		String resultPageURL = String.format("%s/?name=&exact=1&adv_cat[d][1]=122&section=TORRENTS&group=autres", BASE_URL);
 //		List<SearchResult> results = extractResults( resultPageURL );
 //		for (SearchResult searchResult : results) {
 //

@@ -22,9 +22,7 @@ import hclient.HTTPClient;
 
 public class TorrentProjectSE extends DownloadFinder implements MagazineProvider, MusicAlbumFinder, GameFinder {
 
-	public TorrentProjectSE() {
-		super("http://torrentproject.se");
-	}
+	private static final String BASE_URL = "http://torrentproject.se";
 
 	@Override
 	public void configureProvider() throws Exception {
@@ -58,7 +56,7 @@ public class TorrentProjectSE extends DownloadFinder implements MagazineProvider
 
 	@Override
 	public List<SearchResult> findDownloadsForMagazine(String issueSearchString) throws Exception {
-		return extractResults( client.getDocument(String.format("%s/?s=%s&filter=3000", getRootURL(), plus(issueSearchString)), HTTPClient.REFRESH_ONE_DAY));
+		return extractResults( client.getDocument(String.format("%s/?s=%s&filter=3000", BASE_URL, plus(issueSearchString)), HTTPClient.REFRESH_ONE_DAY));
 	}
 	
 	@Override
@@ -69,7 +67,7 @@ public class TorrentProjectSE extends DownloadFinder implements MagazineProvider
 	@Override
 	public List<SearchResult> findMusicAlbum(String artist, String album, MusicQuality quality) throws MusicAlbumSearchException {
 		try {
-			return extractResults( client.getDocument(String.format("%s/?s=%s+%s&filter=1000", getRootURL(), plus(artist), plus(album)), HTTPClient.REFRESH_ONE_DAY));
+			return extractResults( client.getDocument(String.format("%s/?s=%s+%s&filter=1000", BASE_URL, plus(artist), plus(album)), HTTPClient.REFRESH_ONE_DAY));
 		} catch (IOException | URISyntaxException e) {
 			throw new MusicAlbumSearchException( e );
 		}
@@ -105,7 +103,7 @@ public class TorrentProjectSE extends DownloadFinder implements MagazineProvider
 			break;
 		}
 
-		return extractResults( client.getDocument(String.format("%s/?s=%s+%s&filter=%s", getRootURL(), plus(videoGame.getName()), additionalParams, filter), HTTPClient.REFRESH_ONE_DAY));
+		return extractResults( client.getDocument(String.format("%s/?s=%s+%s&filter=%s", BASE_URL, plus(videoGame.getName()), additionalParams, filter), HTTPClient.REFRESH_ONE_DAY));
 	}
 
 }

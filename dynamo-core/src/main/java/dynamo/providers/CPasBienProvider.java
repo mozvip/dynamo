@@ -32,9 +32,7 @@ import hclient.HTTPClient;
 
 public class CPasBienProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, SeasonFinder, MagazineProvider, MovieSuggester {
 
-	public CPasBienProvider() {
-		super("http://www.cpasbien.pw");
-	}
+	private static final String BASE_URL = "http://www.cpasbien.pw";
 	
 	private List<SearchResult> extractResults( WebDocument document, String urlMatchRegexp ) throws IOException, URISyntaxException {
 		List<SearchResult> results = new ArrayList<SearchResult>();
@@ -46,7 +44,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 						
 				String url = node.select("a").attr("abs:href");
 				if ( urlMatchRegexp == null || RegExp.matches( url, urlMatchRegexp) ) {
-					String torrentURL = rootURL + "/_torrents" + url.substring(url.lastIndexOf('/')).replace(".html", ".torrent");
+					String torrentURL = BASE_URL + "/_torrents" + url.substring(url.lastIndexOf('/')).replace(".html", ".torrent");
 					results.add( new SearchResult( this, SearchResultType.TORRENT, title, torrentURL, url, parseSize(sizeExpression), false ) );
 				}
 			}
@@ -64,7 +62,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 	}
 
 	private List<SearchResult> extractResults( String searchParam, String urlMatchRegexp ) throws Exception {
-		WebDocument currentDocument = client.post(rootURL+"/recherche/", rootURL, "champ_recherche="+searchParam).getDocument();
+		WebDocument currentDocument = client.post(BASE_URL+"/recherche/", BASE_URL, "champ_recherche="+searchParam).getDocument();
 		return extractResults( currentDocument, urlMatchRegexp );
 	}
 
@@ -125,7 +123,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get( Calendar.YEAR );
 		
-		WebDocument currentDocument = client.getDocument( String.format("%s/recherche/1080p/%d/page-0", getRootURL(), year), HTTPClient.REFRESH_ONE_DAY);
+		WebDocument currentDocument = client.getDocument( String.format("%s/recherche/1080p/%d/page-0", BASE_URL, year), HTTPClient.REFRESH_ONE_DAY);
 
 		int pagesToRetrieve = 4;
 		int currentPage = 0;
@@ -144,7 +142,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 				}
 			}
 			currentPage ++;
-			currentDocument = client.getDocument( String.format("%s/recherche/1080p/%d/page-%d", getRootURL(), year, currentPage), HTTPClient.REFRESH_ONE_DAY);
+			currentDocument = client.getDocument( String.format("%s/recherche/1080p/%d/page-%d", BASE_URL, year, currentPage), HTTPClient.REFRESH_ONE_DAY);
 		}
 	}
 

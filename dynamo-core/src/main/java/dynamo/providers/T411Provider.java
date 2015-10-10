@@ -52,10 +52,8 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	private String login;
 	@Configurable(category="Providers", name="T411 Password", disabled="#{!T411Provider.enabled}", required="#{T411Provider.enabled}")
 	private String password;
-
-	public T411Provider() {
-		super("http://www.t411.io");
-	}
+	@Configurable(category="Providers", name="T411 Base URL", disabled="#{!T411Provider.enabled}", required="#{T411Provider.enabled}", defaultValue="http://www.t411.in")
+	private String baseURL;
 
 	public String getLogin() {
 		return login;
@@ -73,9 +71,17 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		this.password = password;
 	}
 
+	public String getBaseURL() {
+		return baseURL;
+	}
+
+	public void setBaseURL(String baseURL) {
+		this.baseURL = baseURL;
+	}
+
 	@Override
 	public void configureProvider() throws Exception {
-		WebDocument loginPage = client.getDocument(getRootURL() + "/users/login/", 0);
+		WebDocument loginPage = client.getDocument(baseURL + "/users/login/", 0);
 		if (loginPage.jsoupSingle("a.logout") == null) { // not already logged in
 			WebDocument newPage = client.submit( loginPage.jsoupSingle("form#loginform"), "login="+login, "password="+password ).getDocument();
 			if ( newPage.jsoupSingle("a.logout") == null) {
@@ -88,7 +94,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	protected List<SearchResult> extractResults( String searchURL, int pages ) throws Exception {
 
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		WebDocument document = client.getDocument( searchURL, rootURL + "/", HTTPClient.REFRESH_ONE_HOUR );
+		WebDocument document = client.getDocument( searchURL, baseURL + "/", HTTPClient.REFRESH_ONE_HOUR );
 		int currentPage = 0;
 		while (document != null) {
 			Elements rows = document.jsoup( "table.results tbody tr" );
@@ -102,7 +108,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	
 				Element nfoLink = row.select("a.nfo").first();
 				String torrentId = RegExp.extract( nfoLink.attr("href"), ".*id=(\\d+)" );
-				String torrentURL = String.format( "%s/torrents/download/?id=%s", getRootURL(), torrentId );
+				String torrentURL = String.format( "%s/torrents/download/?id=%s", baseURL, torrentId );
 	
 				results.add( new SearchResult( this, SearchResultType.TORRENT, title, torrentURL, href, parseSize(size), false ));
 			}
@@ -130,7 +136,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		}
 
 		search = URLEncoder.encode(search, "UTF-8");
-		String searchURL = String.format( rootURL + "/torrents/search/?search=%s&cat=210&submit=Recherche&subcat=%d%s", search, subcat, languageSuffix);
+		String searchURL = String.format( baseURL + "/torrents/search/?search=%s&cat=210&submit=Recherche&subcat=%d%s", search, subcat, languageSuffix);
 		
 		if (additionalParams != null) {
 			searchURL += "&" + additionalParams;
@@ -142,7 +148,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	protected List<SearchResult> searchMusicAlbum( String search, String additionalParams ) throws Exception {
 
 		search = URLEncoder.encode(search, "UTF-8");
-		String searchURL = String.format( rootURL + "/torrents/search/?search=%s&cat=395&submit=Recherche&subcat=623", search );
+		String searchURL = String.format( baseURL + "/torrents/search/?search=%s&cat=395&submit=Recherche&subcat=623", search );
 		
 		if (additionalParams != null) {
 			searchURL += "&" + additionalParams;
@@ -209,7 +215,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	public List<SearchResult> findDownloadsForMagazine( String issueSearchString ) throws Exception {
 
 		issueSearchString = URLEncoder.encode(issueSearchString, "UTF-8");
-		String searchURL = String.format( rootURL + "/torrents/search/?search=%s&submit=Recherche&subcat=410&order=added&type=desc", issueSearchString );
+		String searchURL = String.format( baseURL + "/torrents/search/?search=%s&submit=Recherche&subcat=410&order=added&type=desc", issueSearchString );
 
 		return extractResults( searchURL, 1 );
 	}
@@ -279,7 +285,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 			break;
 		}
 
-		String searchURL = String.format( rootURL + "/torrents/search/?search=%s&cat=624&submit=Recherche&subcat=%d&order=added&type=desc" + term, search, subcat );
+		String searchURL = String.format( baseURL + "/torrents/search/?search=%s&cat=624&submit=Recherche&subcat=%d&order=added&type=desc" + term, search, subcat );
 
 		return extractResults( searchURL, 1 );
 	}
@@ -303,7 +309,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	
 				Element nfoLink = row.select("a.nfo").first();
 				String torrentId = RegExp.extract( nfoLink.attr("href"), ".*id=(\\d+)" );
-				String torrentURL = String.format( "%s/torrents/download/?id=%s", getRootURL(), torrentId );
+				String torrentURL = String.format( "%s/torrents/download/?id=%s", baseURL, torrentId );
 
 				String imageSrc = null;
 
@@ -381,7 +387,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	public void suggestIssues() throws KioskIssuesSuggesterException {
 		List<DownloadSuggestion> magazineSuggestions;
 		try {
-			magazineSuggestions = extractSuggestions(String.format("%s/torrents/search/?subcat=410&order=added&type=desc", getRootURL()), 10, true);
+			magazineSuggestions = extractSuggestions(String.format("%s/torrents/search/?subcat=410&order=added&type=desc", baseURL), 10, true);
 		} catch (IOException | URISyntaxException e) {
 			throw new KioskIssuesSuggesterException( e );
 		}
@@ -392,7 +398,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 
 	@Override
 	public void suggestBooks() throws Exception {
-		List<DownloadSuggestion> bookSuggestions = extractSuggestions(String.format("%s/torrents/search/?subcat=408&order=added&type=desc", getRootURL()), 10, true);
+		List<DownloadSuggestion> bookSuggestions = extractSuggestions(String.format("%s/torrents/search/?subcat=408&order=added&type=desc", baseURL), 10, true);
 		for (DownloadSuggestion bookSuggestion : bookSuggestions) {
 			BookManager.getInstance().suggest( bookSuggestion );
 		}
@@ -400,13 +406,13 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 
 	@Override
 	public List<SearchResult> findBook(Book book) throws Exception {
-		String searchURL = String.format("%s/torrents/search/?search=%s&subcat=408&order=added&type=desc", getRootURL(), plus(book.getName()) );
+		String searchURL = String.format("%s/torrents/search/?search=%s&subcat=408&order=added&type=desc", baseURL, plus(book.getName()) );
 		return extractResults( searchURL, 1 );		
 	}
 
 	@Override
 	public void suggestMovies() throws Exception {
-		List<DownloadSuggestion> movieSuggestions = extractSuggestions(String.format("%s/torrents/search/?search=&subcat=631&term[7][]=16", getRootURL()), 2, false);
+		List<DownloadSuggestion> movieSuggestions = extractSuggestions(String.format("%s/torrents/search/?search=&subcat=631&term[7][]=16", baseURL), 2, false);
 		for (DownloadSuggestion movieSuggestion : movieSuggestions) {
 			String titleToParse = movieSuggestion.getTitle();
 			titleToParse = titleToParse.replaceAll("1080p", "");
