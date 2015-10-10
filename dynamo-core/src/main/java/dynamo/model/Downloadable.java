@@ -88,6 +88,11 @@ public abstract class Downloadable {
 		return id.intValue();
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		return (obj instanceof Downloadable) && ((Downloadable)obj).getId() == id;
+	}
+	
 	public Date getCreationDate() {
 		return creationDate;
 	}

@@ -167,6 +167,11 @@ public abstract class TaskExecutor<T extends Task> extends Thread {
 	}
 
 	public abstract void execute() throws Exception; 
+	
+	@Override
+	public int hashCode() {
+		return getTask().toString().hashCode();
+	}
 
 	@Override
 	public boolean equals(Object obj) {
