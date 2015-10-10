@@ -15,6 +15,7 @@ import dynamo.jdbi.TVShowDAO;
 import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.tvshows.TVShowManager;
+import liquibase.sqlgenerator.core.GetViewDefinitionGeneratorMSSQL;
 import model.ManagedEpisode;
 import model.ManagedSeries;
 import model.backlog.NewTVShowFolderTask;

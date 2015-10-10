@@ -2,15 +2,15 @@ package dynamo.backlog.tasks.tvshows;
 
 import dynamo.core.model.AbstractDynamoQueue;
 
-public class ScanFolderQueue extends AbstractDynamoQueue {
+public class ScanFileSystemQueue extends AbstractDynamoQueue {
 
-	public ScanFolderQueue() {
+	public ScanFileSystemQueue() {
 		super(1);
 	}
 
 	@Override
 	public String getQueueName() {
-		return "Scan Filesystem folder Queue";
+		return "Scan File System Queue";
 	}
 
 }

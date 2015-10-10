@@ -8,9 +8,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.el.ExpressionFactory;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import dynamo.core.DynamoTask;
 import dynamo.core.Enableable;
@@ -30,6 +35,19 @@ public class BackLogProcessor extends Thread {
 	protected Map<String, AbstractDynamoQueue> queues = new ConcurrentHashMap<String, AbstractDynamoQueue>();
 	private BlockingQueue<Task> items = new LinkedBlockingQueue<Task>();
 	private Set<Class> blackListedTasks = new HashSet<>();
+
+	LoadingCache<Class<? extends Task>, Class<? extends AbstractDynamoQueue>> queueClassCache = CacheBuilder.newBuilder().maximumSize(1000)
+			.build(new CacheLoader<Class<? extends Task>, Class<? extends AbstractDynamoQueue>>() {
+				public Class<? extends AbstractDynamoQueue> load(Class<? extends Task> taskClass) throws Exception {
+					DynamoTask annotation = getAnnotation(taskClass);
+					if (annotation != null) {
+						return annotation.queueClass();
+					} else {
+						return DynamoDefaultQueue.class;
+					}
+
+				}
+			});
 
 	private BackLogProcessor() {
 		setDaemon( true );
@@ -51,17 +69,22 @@ public class BackLogProcessor extends Thread {
 		return items;
 	}
 	
-	public Class<? extends AbstractDynamoQueue> getQueueClass( Class<? extends Task> taskClass ) {
+	private DynamoTask getAnnotation( Class<? extends Task> taskClass ) {
 		DynamoTask annotation = taskClass.getAnnotation( DynamoTask.class );
-		Class<? extends AbstractDynamoQueue> queueClass = DynamoDefaultQueue.class;
-		if (annotation != null) {
-			queueClass = annotation.queueClass();
+		if (annotation == null && taskClass.getSuperclass() != null) {
+			return getAnnotation( (Class<? extends Task>) taskClass.getSuperclass() );
 		}
-		return queueClass;
+		return annotation;
 	}
 	
-	protected AbstractDynamoQueue getQueueForTaskClass( Class<? extends Task> taskClass )  {
-		Class<? extends AbstractDynamoQueue> queueClass = getQueueClass( taskClass );
+	protected AbstractDynamoQueue getQueueForTaskClass( Class<? extends Task> taskClass ) {
+		Class<? extends AbstractDynamoQueue> queueClass;
+		try {
+			queueClass = queueClassCache.get( taskClass );
+		} catch (ExecutionException e) {
+			ErrorManager.getInstance().reportThrowable(e);
+			queueClass = DynamoDefaultQueue.class;
+		}
 		AbstractDynamoQueue queue = null;
 		if (!queues.containsKey( queueClass.getName() )) {
 			synchronized (queueClass) {
