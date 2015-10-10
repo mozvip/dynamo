@@ -11,8 +11,10 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.ReleaseGroup;
 import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.TVShowDAO;
+import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
@@ -50,11 +52,13 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 				Integer seasonNumber = null;
 				List<Integer> episodes = new ArrayList<Integer>();
 				
+				DownloadableFile downloadableFile = DownloadableManager.getInstance().getFile( p );
+				
 				TVShowEpisodeInfo episodeInfo = VideoNameParser.getTVShowEpisodeInfo(series, p);
 				if ( episodeInfo == null ) {
 					
 					for (ManagedEpisode episode : existingEpisodes) {
-						if (p.equals( episode.getPath())) {
+						if ( downloadableFile != null && downloadableFile.getDownloadableId() == episode.getId()) {
 							seasonNumber = episode.getSeasonNumber();
 							episodes.add( episode.getEpisodeNumber() );
 						}
@@ -119,14 +123,28 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 		List<ManagedEpisode> managedEpisodes = tvShowDAO.findEpisodesForTVShow( task.getSeries().getId() );
 		for ( ManagedEpisode managedEpisode : managedEpisodes ) {
 			if (managedEpisode.isDownloaded()) {
-				Path p = managedEpisode.getPath();
-				if (!Files.exists( p ) || Files.isDirectory( p )) {
+				
+				List<DownloadableFile> episodeFiles = DownloadableManager.getInstance().getAllFiles( managedEpisode.getId() );
+				boolean atLeastOneFileFound = false;
+				if (episodeFiles != null) {
+					for (DownloadableFile downloadableFile : episodeFiles) {
+						if (Files.exists( downloadableFile.getFilePath())) {
+							atLeastOneFileFound = true;	// IMPROVE : make sure the video file is found
+						} else {
+							DownloadableManager.getInstance().deleteFile( downloadableFile.getFilePath()  );		
+						}
+					}
+				}
+				if (!atLeastOneFileFound) {
+					
+					// reset episode to 'ignored'
+					
 					managedEpisode.setReleaseGroup( null );
 					managedEpisode.setSource( null );
 					managedEpisode.setQuality( null );
 					managedEpisode.setSubtitled( false );
+					managedEpisode.setIgnored();
 
-					downloadableDAO.nullifyPath( managedEpisode.getId() );
 					TVShowManager.getInstance().saveEpisode( managedEpisode );
 				}
 			}

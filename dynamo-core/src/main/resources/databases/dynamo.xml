@@ -552,5 +552,11 @@
 		<dropForeignKeyConstraint baseTableName="MANAGEDEPISODE" constraintName="FK_MANAGEDEPISODE_SEASON_ID"/>
         <addForeignKeyConstraint baseColumnNames="SEASON_ID" baseTableName="MANAGEDEPISODE" constraintName="FK_MANAGEDEPISODE_SEASON_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
     </changeSet>
+    
+    <changeSet author="mozvip" id="33">
+    	<addColumn tableName="MAGAZINE">
+    		<column name="CATEGORY" type="VARCHAR(512)" />
+    	</addColumn>
+    </changeSet>
 	
 </databaseChangeLog>

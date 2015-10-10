@@ -20,6 +20,7 @@ import com.omertron.thetvdbapi.model.Series;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
+import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
@@ -28,6 +29,7 @@ import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableFile;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.SeasonFinder;
 import dynamo.httpclient.YAMJHttpClient;
@@ -51,6 +53,8 @@ import model.backlog.RefreshTVShowTask;
 
 
 public class TVShowManager implements Reconfigurable {
+
+	private static final String TVDBAPI_KEY = "2805AD2873519EC5";
 
 	@Configurable( category="TV Shows", name="Enable TV Shows", bold=true )
 	private boolean enabled;
@@ -372,7 +376,21 @@ public class TVShowManager implements Reconfigurable {
 			return true;
 		}
 
-		String filename = videoDownloadable.getPath().getFileName().toString();
+		String filename = null;
+		Path folder = null;
+		List<DownloadableFile> allFiles = DownloadableManager.getInstance().getAllFiles( videoDownloadable.getId() );
+		for (DownloadableFile downloadableFile : allFiles) {
+			if (VideoFileFilter.getInstance().accept( downloadableFile.getFilePath())) {
+				filename = downloadableFile.getFilePath().getFileName().toString();
+				folder = downloadableFile.getFilePath().getParent();
+				break;
+			}
+		}
+		
+		if (filename == null) {
+			// log error ?
+			return true;
+		}
 
 		if (subtitlesLanguage.getSubTokens() != null) {
 			for (String subToken : subtitlesLanguage.getSubTokens()) {
@@ -388,9 +406,7 @@ public class TVShowManager implements Reconfigurable {
 			filenameWithoutExtension = filenameWithoutExtension.substring( 0, filenameWithoutExtension.lastIndexOf('.'));
 		}
 
-		Path parentFolder = videoDownloadable.getPath().getParent();
-		
-		Path[] subtitlesPaths = new Path[] { parentFolder.resolve( filenameWithoutExtension + "." + subtitlesLanguage.getShortName() + ".srt" ), parentFolder.resolve( filenameWithoutExtension + ".srt" ) };
+		Path[] subtitlesPaths = new Path[] { folder.resolve( filenameWithoutExtension + "." + subtitlesLanguage.getShortName() + ".srt" ), folder.resolve( filenameWithoutExtension + ".srt" ) };
 		for (Path destinationPath : subtitlesPaths) {
 			if (Files.exists( destinationPath )) {
 				((Video)videoDownloadable).setSubtitlesPath( destinationPath );
@@ -403,7 +419,7 @@ public class TVShowManager implements Reconfigurable {
 	@Override
 	public void reconfigure() {
 		if (enabled) {
-			api = new TheTVDBApi( "2805AD2873519EC5", new YAMJHttpClient( HTTPClient.getInstance() ) );
+			api = new TheTVDBApi( TVDBAPI_KEY, new YAMJHttpClient( HTTPClient.getInstance() ) );
 			if (getFolders() != null) {
 				for (Path path : getFolders()) {
 					BackLogProcessor.getInstance().schedule( new NewTVShowFolderTask( path ), false );

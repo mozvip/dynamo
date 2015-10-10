@@ -59,21 +59,11 @@ public class ProxyServiceExecutor extends TaskExecutor<ProxyServiceTask> impleme
 			                    return null;
 			                } else {
 			                    return new HttpFiltersAdapter(originalRequest) {
-			                        @Override
-			                        public HttpResponse requestPre(HttpObject httpObject) {
-			                            // TODO: implement your filtering here
-			                            return null;
-			                        }
-
-			                        @Override
-			                        public HttpResponse requestPost(HttpObject httpObject) {
-			                            // TODO: implement your filtering here
-			                            return null;
-			                        }
-
-			                        @Override
-			                        public HttpObject responsePre(HttpObject httpObject) {
-			                        	if (httpObject instanceof HttpResponse) {
+			                    	
+			                    	@Override
+			                    	public HttpObject proxyToClientResponse(HttpObject httpObject) {
+			                    		
+			                    		if (httpObject instanceof HttpResponse) {
 				                        	HttpResponse response = (HttpResponse) httpObject;
 				                        	String contentType = response.headers().get("Content-Type");
 				                        	if (StringUtils.equalsIgnoreCase(contentType, "application/x-bittorrent")) {
@@ -82,15 +72,9 @@ public class ProxyServiceExecutor extends TaskExecutor<ProxyServiceTask> impleme
 				                        	} else if(StringUtils.equalsIgnoreCase(contentType, "application/x-nzb")) {
 				                        		queue( new DownloadNZBTask( originalRequest.getUri() ) );
 				                        	}
-			                        	}
+			                    		}
 			                        	return httpObject;
-			                        }
-			                        
-			                        @Override
-			                        public HttpObject responsePost(HttpObject httpObject) {
-			                        	return httpObject;
-			                        };
-
+			                    	}
 
 			                    };
 			                }

@@ -302,6 +302,10 @@ public class DownloadableManager {
 		downloadableDAO.delete(id);
 	}
 
+	public void deleteFile( Path path ) {
+		downloadableDAO.deleteFile( path );
+	}
+
 	public void redownload(Downloadable downloadable) {
 		// blacklist search result
 		searchResultDAO.blacklist(downloadable.getId());
@@ -409,6 +413,10 @@ public class DownloadableManager {
 	public void ignore(long downloadableId) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, IllegalArgumentException {
 		Downloadable downloadable = DownloadableFactory.getInstance().createInstance(downloadableId);
 		ignore( downloadable );	
+	}
+
+	public DownloadableFile getFile(Path p) {
+		return downloadableDAO.getFile( p );
 	}
 
 }
