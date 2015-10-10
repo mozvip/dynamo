@@ -2,6 +2,7 @@ package dynamo.tests;
 
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.junit.BeforeClass;
@@ -17,8 +18,8 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 
 public abstract class AbstractDynamoTest {
 	
-	protected static ResourceBundle privateData = ResourceBundle.getBundle("private-data-do-not-commit");
-
+	protected static ResourceBundle privateData;
+	
 	@BeforeClass
 	public static void init() {
 		try (Connection conn = DAOManager.getInstance().getDatasource("dynamo").getConnection()) {
@@ -27,7 +28,12 @@ public abstract class AbstractDynamoTest {
 			liquibase.update( "" );
 		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable( e );
-		}		
+		}
+		try {
+			privateData = ResourceBundle.getBundle("private-data-do-not-commit");
+		} catch (MissingResourceException e) {
+			ErrorManager.getInstance().reportThrowable( e );
+		}
 		ConfigurationManager.mockConfiguration("test", "test");
 		LocalImageCache.getInstance().setCacheTempFolder(Paths.get("temp"));
 	}
