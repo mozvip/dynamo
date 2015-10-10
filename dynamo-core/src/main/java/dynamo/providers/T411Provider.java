@@ -148,7 +148,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	protected List<SearchResult> searchMusicAlbum( String search, String additionalParams ) throws Exception {
 
 		search = URLEncoder.encode(search, "UTF-8");
-		String searchURL = String.format( baseURL + "/torrents/search/?search=%s&cat=395&submit=Recherche&subcat=623", search );
+		String searchURL = String.format( "%s/torrents/search/?search=%s&cat=395&submit=Recherche&subcat=623", baseURL, search );
 		
 		if (additionalParams != null) {
 			searchURL += "&" + additionalParams;
