@@ -151,7 +151,7 @@ public class TVShow extends DynamoManagedBean {
 				if (episodeNumbers != null) {
 					for (int episodeNumber : episodeNumbers) {
 						for (Iterator<ManagedEpisode> iterator = availableEpisodes.iterator(); iterator.hasNext();) {
-							ManagedEpisode episode = (ManagedEpisode) iterator.next();
+							ManagedEpisode episode = iterator.next();
 							if (episode.getEpisodeNumber() == episodeNumber) {
 								iterator.remove();
 							}
@@ -353,10 +353,10 @@ public class TVShow extends DynamoManagedBean {
 	public void redownloadSubtitles( ManagedEpisode episode ) {
 		if (episode.getSubtitlesPath() != null) {
 			BackLogProcessor.getInstance().schedule( new DeleteTask( episode.getSubtitlesPath(), false ), false );
-			episode.setSubtitlesPath( null );
-			
 			TVShowManager.getInstance().saveEpisode( episode );
 		}
+		episode.setSubtitlesPath( null );
+		episode.setSubtitled( false );
 		findSubtitle( episode );
 	}
 

@@ -14,10 +14,6 @@ public class FindSubtitleEpisodeTask extends DownloadableTask {
 	public ManagedEpisode getEpisode() {
 		return (ManagedEpisode)downloadable;
 	}
-	
-	public void setEpisode(ManagedEpisode episode) {
-		this.downloadable = episode;
-	}
 
 	@Override
 	public String toString() {
