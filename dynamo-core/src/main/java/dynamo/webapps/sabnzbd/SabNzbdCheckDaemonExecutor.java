@@ -23,6 +23,7 @@ import dynamo.model.result.SearchResultType;
 public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonTask> {
 
 	private SearchResultDAO searchResultDAO;
+	private static SabNzbd sab = SabNzbd.getInstance();
 
 	public SabNzbdCheckDaemonExecutor(SabNzbdCheckDaemonTask task, SearchResultDAO searchResultDAO) {
 		super(task);
@@ -32,8 +33,19 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 	@Override
 	public void execute() throws Exception {
 
+		SabNzbdResponse queueStatus = sab.getQueueStatus();
+		for (SabNzbdResponseSlot slot : queueStatus.getQueue().getSlots()) {
+			if ("Paused".equals (slot.getStatus() ) && slot.getFilename().startsWith("ENCRYPTED / ")) {
+				sab.delete( slot.getNzo_id() );
+				SearchResult result = searchResultDAO.findSearchResultByClientId( slot.getNzo_id() );
+				if (result != null) {
+					DownloadableManager.getInstance().redownload(result.getDownloadableId());
+				}
+			}
+		}
+
 		List<SearchResult> results = searchResultDAO.getActiveSearchResults( SearchResultType.NZB );
-		SABHistoryResponse response = SabNzbd.getInstance().getHistory();
+		SABHistoryResponse response = sab.getHistory();
 		for (SabNzbdResponseSlot slot : response.getSlots()) {
 			
 			boolean failed = StringUtils.equals(slot.getStatus(), "Failed");
@@ -44,7 +56,7 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 			}
 			
 			if (failed) {
-				SabNzbd.getInstance().deleteFromHistory( slot.getNzo_id() );
+				sab.deleteFromHistory( slot.getNzo_id() );
 			}
 			
 			for (SearchResult searchResult : results) {
@@ -92,7 +104,7 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 									ErrorManager.getInstance().reportThrowable(task, e);
 								}
 							} else {
-								SabNzbd.getInstance().deleteFromHistory( slot.getNzo_id() );
+								sab.deleteFromHistory( slot.getNzo_id() );
 								DownloadableManager.getInstance().redownload( downloadable );
 							}
 						}

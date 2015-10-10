@@ -20,6 +20,9 @@ public interface SABNzbdService {
 	@GET("/sabnzbd/api?mode=qstatus&output=json")
 	public SabNzbdResponse getQueueStatus(@Query("apikey") String apiKey);
 
+	@GET("/sabnzbd/api?mode=queue&output=json")
+	public SabNzbdResponse getQueue(@Query("apikey") String apiKey);
+
 	@GET("/sabnzbd/api?mode=queue&name=delete")
 	public String delete(@Query("value") String id, @Query("apikey") String apiKey);
 

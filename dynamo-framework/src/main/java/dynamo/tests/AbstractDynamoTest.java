@@ -17,7 +17,7 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 
 public abstract class AbstractDynamoTest {
 	
-	protected static ResourceBundle privateData;
+	protected static ResourceBundle privateData = ResourceBundle.getBundle("private-data-do-not-commit");
 
 	@BeforeClass
 	public static void init() {
@@ -28,10 +28,6 @@ public abstract class AbstractDynamoTest {
 		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}		
-		try {
-			privateData = ResourceBundle.getBundle("private-data-do-not-commit");
-		} catch (Exception e) {
-		}
 		ConfigurationManager.mockConfiguration("test", "test");
 		LocalImageCache.getInstance().setCacheTempFolder(Paths.get("temp"));
 	}

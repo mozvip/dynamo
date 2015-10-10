@@ -51,9 +51,9 @@ public interface SearchResultDAO {
 	@SqlUpdate("UPDATE SEARCHRESULT SET CLIENTID = :clientId WHERE URL = :url")
 	public void updateClientId(@Bind("url") String searchResultURL, @Bind("clientId") String clientId);
 
-	@SqlQuery("SELECT SEARCHRESULTFILE.*, SEARCHRESULT.* FROM SEARCHRESULTFILE INNER JOIN SEARCHRESULT ON SEARCHRESULTFILE.RESULT_URL=SEARCHRESULT.URL WHERE SEARCHRESULTFILE.NAME=:name AND SEARCHRESULT.CLIENTID=:clientId")
-	@Mapper(SearchResultFileMapper.class)	
-	public SearchResultFile findFileByNameAndClientId(@Bind("name") String name, @Bind("clientId") String clientId);
+	@SqlQuery("SELECT SEARCHRESULT.*, DOWNLOADABLE.* FROM SEARCHRESULT INNER JOIN DOWNLOADABLE ON SEARCHRESULT.DOWNLOADABLE_ID = DOWNLOADABLE.ID WHERE SEARCHRESULT.CLIENTID=:clientId")
+	@Mapper(SearchResultMapper.class)	
+	public SearchResult findSearchResultByClientId(@Bind("clientId") String clientId);
 
 	@SqlUpdate("UPDATE SEARCHRESULT SET CLIENTID = NULL WHERE CLIENTID = :clientId")
 	public void freeClientId(@Bind("clientId") String clientId);

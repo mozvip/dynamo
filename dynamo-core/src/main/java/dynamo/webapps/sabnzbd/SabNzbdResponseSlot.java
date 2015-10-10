@@ -5,6 +5,16 @@ public class SabNzbdResponseSlot {
 	private String nzo_id;
 	private String storage;
 	private String nzb_name;
+	private String filename;
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
 	private String status;
 
 	public String getNzo_id() {
@@ -38,6 +48,5 @@ public class SabNzbdResponseSlot {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-		
 
 }

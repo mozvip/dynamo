@@ -7,6 +7,8 @@ public class SabNzbdResponse {
 	private SABHistoryResponse history;
 	private boolean status;
 	private List<String> nzo_ids;
+	private List<Job> jobs;
+	private Queue queue;
 
 	public boolean isStatus() {
 		return status;
@@ -26,5 +28,21 @@ public class SabNzbdResponse {
 	}
 	public void setHistory(SABHistoryResponse history) {
 		this.history = history;
+	}
+	
+	public List<Job> getJobs() {
+		return jobs;
+	}
+
+	public void setJobs(List<Job> jobs) {
+		this.jobs = jobs;
+	}
+	
+	public Queue getQueue() {
+		return queue;
+	}
+	
+	public void setQueue(Queue queue) {
+		this.queue = queue;
 	}
 }

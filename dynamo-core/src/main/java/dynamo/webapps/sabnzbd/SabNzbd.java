@@ -90,4 +90,16 @@ public class SabNzbd implements Reconfigurable, Enableable {
 		service.delete(clientId, apiKey);
 	}
 
+	public SabNzbdResponse getQueueStatus() {
+		return service.getQueueStatus(apiKey);
+	}
+
+	public SabNzbdResponse getQueue() {
+		return service.getQueue(apiKey);
+	}
+
+	public void delete(String nzo_id) {
+		service.delete(nzo_id, apiKey);
+	}
+
 }
