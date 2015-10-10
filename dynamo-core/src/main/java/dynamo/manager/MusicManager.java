@@ -46,6 +46,9 @@ import hclient.HTTPClient;
 
 public class MusicManager implements Reconfigurable {
 
+	public final static String VARIOUS_ARTISTS = "Various Artists";
+	public final static String ORIGINAL_SOUNDTRACK = "Original Soundtrack";
+
 	@Configurable( category="Music", name="Enable Music", bold=true )
 	private boolean enabled;
 
@@ -66,9 +69,6 @@ public class MusicManager implements Reconfigurable {
 	
 	@Configurable( category="Music", name="Music Album Suggesters", required="#{MusicManager.enabled}", disabled="#{!MusicManager.enabled}", contentsClass=MusicAlbumSuggester.class, ordered=false )
 	private Collection<MusicAlbumSuggester> suggesters;
-	
-	public final static String VARIOUS_ARTISTS = "Various Artists";
-	public final static String ORIGINAL_SOUNDTRACK = "Original Soundtrack";
 
 	public boolean isEnabled() {
 		return enabled;
