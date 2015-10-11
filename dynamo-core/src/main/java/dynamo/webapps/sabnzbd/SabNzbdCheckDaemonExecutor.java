@@ -33,13 +33,15 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 	@Override
 	public void execute() throws Exception {
 
-		SabNzbdResponse queueStatus = sab.getQueueStatus();
-		for (SabNzbdResponseSlot slot : queueStatus.getQueue().getSlots()) {
-			if ("Paused".equals (slot.getStatus() ) && slot.getFilename().startsWith("ENCRYPTED / ")) {
-				sab.delete( slot.getNzo_id() );
-				SearchResult result = searchResultDAO.findSearchResultByClientId( slot.getNzo_id() );
-				if (result != null) {
-					DownloadableManager.getInstance().redownload(result.getDownloadableId());
+		SabNzbdResponse queue = sab.getQueue();
+		if (queue.getQueue() != null) {
+			for (SabNzbdResponseSlot slot : queue.getQueue().getSlots()) {
+				if ("Paused".equals (slot.getStatus() ) && slot.getFilename().startsWith("ENCRYPTED / ")) {
+					sab.delete( slot.getNzo_id() );
+					SearchResult result = searchResultDAO.findSearchResultByClientId( slot.getNzo_id() );
+					if (result != null) {
+						DownloadableManager.getInstance().redownload(result.getDownloadableId());
+					}
 				}
 			}
 		}

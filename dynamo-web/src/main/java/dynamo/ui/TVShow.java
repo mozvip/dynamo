@@ -176,12 +176,10 @@ public class TVShow extends DynamoManagedBean {
 	public void toogleAutoDownload() throws IOException {
 		managedSeries.setAutoDownload( ! managedSeries.isAutoDownload() );
 		TVShowManager.getInstance().saveSeries( managedSeries );
-		ErrorManager.getInstance().reportInfo("Show saved successfully");
 	}
 
 	public String save() throws IOException {
 		TVShowManager.getInstance().saveSeries( managedSeries );
-		ErrorManager.getInstance().reportInfo("Show saved successfully");
 		return "tvshows";
 	}
 

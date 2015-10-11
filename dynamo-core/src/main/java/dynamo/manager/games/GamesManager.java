@@ -140,11 +140,13 @@ public class GamesManager implements Reconfigurable {
 		
 		if (imageURL == null) {
 			WebResource resource = findImage( title, platform );
-			imageURL = resource.getUrl();
-			imageReferer = resource.getReferer();
+			if (resource != null) {
+				imageURL = resource.getUrl();
+				imageReferer = resource.getReferer();
+			}
 		}
 
-		return LocalImageCache.getInstance().download("games", imageId, imageURL, imageReferer);
+		return imageURL != null ? LocalImageCache.getInstance().download("games", imageId, imageURL, imageReferer) : null;
 	}
 	
 	public VideoGame findByTheGamesDbId( long theGamesDbId ) {

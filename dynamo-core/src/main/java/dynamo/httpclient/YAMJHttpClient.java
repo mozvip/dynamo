@@ -133,7 +133,7 @@ public class YAMJHttpClient implements CommonHttpClient {
 	@Override
 	public String requestContent(String uri, Charset charset)
 			throws IOException {
-		return client.get(uri, HTTPClient.REFRESH_ONE_DAY).getStringContents( charset );
+		return client.get(uri).getStringContents( charset );
 	}
 
 	@Override
