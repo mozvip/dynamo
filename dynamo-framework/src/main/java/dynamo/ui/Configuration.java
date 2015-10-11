@@ -15,6 +15,7 @@ import dynamo.core.configuration.items.AbstractConfigurationItem;
 import dynamo.core.configuration.items.ConfigurationItemRow;
 import dynamo.core.configuration.items.ImplementationListConfigurationItem;
 import dynamo.core.configuration.items.ListConfigurationItem;
+import dynamo.core.manager.ConfigAnnotationManager;
 import dynamo.core.manager.ConfigurationManager;
 
 @ManagedBean
@@ -31,7 +32,7 @@ public class Configuration extends DynamoManagedBean {
 
 			categories = new ArrayList<ConfigurationCategory>();
 	
-			for (AbstractConfigurationItem item : ConfigurationManager.getInstance().getItems()) {
+			for (AbstractConfigurationItem item : ConfigAnnotationManager.getInstance().getItems()) {
 				
 				String categoryName = item.getCategory();
 
@@ -60,7 +61,7 @@ public class Configuration extends DynamoManagedBean {
 	}
 
 	public void addItem( String configKey ) {
-		ListConfigurationItem item = (ListConfigurationItem) ConfigurationManager.getInstance().getConfigurationItem( configKey  );
+		ListConfigurationItem item = (ListConfigurationItem) ConfigAnnotationManager.getInstance().getConfigurationItem( configKey  );
 		try {
 			item.add();
 		} catch (InstantiationException | IllegalAccessException e) {
@@ -73,7 +74,7 @@ public class Configuration extends DynamoManagedBean {
 		String configKey = getParameter("key");
 		int index = getIntegerParameter("index");
 
-		ListConfigurationItem item = (ListConfigurationItem) ConfigurationManager.getInstance().getConfigurationItem( configKey );
+		ListConfigurationItem item = (ListConfigurationItem) ConfigAnnotationManager.getInstance().getConfigurationItem( configKey );
 		Collection<ConfigurationItemRow> list = item.getList();
 
 		for (Iterator<ConfigurationItemRow> iterator = list.iterator(); iterator.hasNext();) {
@@ -92,7 +93,7 @@ public class Configuration extends DynamoManagedBean {
 	}
 	
 	public Object getConfig( String key ) throws ClassNotFoundException {
-		AbstractConfigurationItem item = ConfigurationManager.getInstance().getConfigurationItem(key);
+		AbstractConfigurationItem item = ConfigAnnotationManager.getInstance().getConfigurationItem(key);
 		return item.getValue();
 	}
 

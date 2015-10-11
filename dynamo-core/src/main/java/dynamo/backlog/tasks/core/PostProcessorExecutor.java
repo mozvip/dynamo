@@ -22,7 +22,6 @@ import dynamo.core.FolderIdentifier;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DownloadableFactory;
-import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.core.model.TaskExecutor;
@@ -80,15 +79,6 @@ public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> i
 	private VideoGameDAO videoGameDAO;
 	private TVShowDAO tvShowDAO;
 	private DownloadableDAO downloadableDAO;
-	
-	private static Set<FolderIdentifier> folderIdentifiers;
-	static {
-		try {
-			folderIdentifiers = new DynamoObjectFactory<>("dynamo", FolderIdentifier.class).getInstances();
-		} catch (Exception e) {
-			ErrorManager.getInstance().reportThrowable(e);
-		}		
-	}
 
 	public PostProcessorExecutor(PostProcessFolderTask item, SearchResultDAO searchResultDAO, VideoGameDAO videoGameDAO, TVShowDAO tvShowDAO, DownloadableDAO downloadableDAO) {
 		super(item);
@@ -178,7 +168,8 @@ public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> i
 		Set<Path> identifiedFolders = new HashSet<Path>();
 		Set<Path> visitedFolders = new HashSet<Path>();
 		
-		if (folderIdentifiers != null ) {
+		Set<FolderIdentifier> folderIdentifiers = FolderIdentifierManager.getInstance().getFolderIdentifiers();
+		if (folderIdentifiers != null && folderIdentifiers.size() > 0) {
 			for (Path path: unknownFiles ) {
 				Path folder = path.getParent();
 				if (visitedFolders.contains(folder)) {

@@ -1,7 +1,6 @@
 package dynamo.core;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.nio.file.Path;
@@ -9,7 +8,6 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -22,8 +20,6 @@ import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.model.DaemonTask;
-import dynamo.core.model.InitTask;
 import dynamo.manager.LocalImageCache;
 import io.undertow.servlet.api.ServletInfo;
 import liquibase.Liquibase;
@@ -35,7 +31,6 @@ public abstract class DynamoApplication implements Reconfigurable {
 	
 	private DynamoServer server = null;
 	private static DynamoApplication instance = null;
-	private Set<DaemonTask> daemons;
 	private Path rootFolder = null;
 	private String ipAddress;
 
@@ -65,7 +60,7 @@ public abstract class DynamoApplication implements Reconfigurable {
 		}
 	}
 
-	public DynamoApplication() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ServletException, IOException {
+	public DynamoApplication() throws Exception {
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 
@@ -80,20 +75,13 @@ public abstract class DynamoApplication implements Reconfigurable {
 			BackLogProcessor.getInstance().start();
 		}
 
-		Set<InitTask> initTasks = new DynamoObjectFactory<>(getBasePackageName(), InitTask.class).getInstances();
-		for (InitTask initTask : initTasks) {
-			BackLogProcessor.getInstance().schedule( initTask, false );
-		}
-
-		daemons = new DynamoObjectFactory<>(getBasePackageName(), DaemonTask.class).getInstances();
-		for (DaemonTask daemonTask : daemons) {
-			BackLogProcessor.getInstance().schedule( daemonTask, false );
-		}
-		
 		server = DynamoObjectFactory.getInstance(DynamoServer.class);
-		server.start( getApplicationName(), getCustomServletsInfo() );
 
 		DynamoApplication.instance = this;
+	}
+	
+	public void init() throws Exception {
+		ConfigurationManager.getInstance().configureApplication();
 	}
 
 	protected void determineIPAdress() {
@@ -125,10 +113,6 @@ public abstract class DynamoApplication implements Reconfigurable {
 		}
 	}
 	
-	public Set<DaemonTask> getDaemons() {
-		return daemons;
-	}
-	
 	public static DynamoApplication getInstance() {
 		return instance;
 	}
@@ -141,10 +125,9 @@ public abstract class DynamoApplication implements Reconfigurable {
 	@Override
 	public void reconfigure() {
 		try {
-			ConfigurationManager.getInstance().configureInstance( server );
 			server.start( getApplicationName(), getCustomServletsInfo() );
 		} catch (InstantiationException | IllegalAccessException
-				| ServletException | IOException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException e) {
+				| ServletException | IOException | IllegalArgumentException e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}
 	}

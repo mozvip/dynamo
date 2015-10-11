@@ -15,6 +15,7 @@ import core.WebResource;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
+import dynamo.core.manager.ConfigValueManager;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.finders.core.GameFinder;
@@ -84,12 +85,12 @@ public class GamesManager implements Reconfigurable {
 	}
 	
 	public void setPlatformFolder( GamePlatform platform, Path folder ) throws JsonGenerationException, JsonMappingException, IOException {
-		ConfigurationManager.getInstance().setConfigString( getFolderConfigKey(platform), folder.toAbsolutePath().toString() );
-		ConfigurationManager.getInstance().persistConfiguration();
+		ConfigValueManager.getInstance().setConfigString( getFolderConfigKey(platform), folder.toAbsolutePath().toString() );
+		ConfigValueManager.getInstance().persistConfiguration();
 	}
 
 	public Path getFolder(GamePlatform platform) {
-		String pathValue = ConfigurationManager.getInstance().getConfigString( getFolderConfigKey(platform) );
+		String pathValue = ConfigValueManager.getInstance().getConfigString( getFolderConfigKey(platform) );
 		return pathValue != null ? Paths.get( pathValue ) : null;
 	}
 

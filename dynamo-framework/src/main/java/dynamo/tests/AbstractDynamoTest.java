@@ -2,11 +2,13 @@ package dynamo.tests;
 
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.util.Enumeration;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.junit.BeforeClass;
 
+import dynamo.core.manager.ConfigValueManager;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
@@ -31,10 +33,15 @@ public abstract class AbstractDynamoTest {
 		}
 		try {
 			privateData = ResourceBundle.getBundle("private-data-do-not-commit");
+			Enumeration<String> keys = privateData.getKeys();
+			while (keys.hasMoreElements()) {
+				String key = keys.nextElement();
+				ConfigValueManager.mockConfiguration(key, privateData.getString(key));
+			}
 		} catch (MissingResourceException e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}
-		ConfigurationManager.mockConfiguration("test", "test");
+		ConfigValueManager.mockConfiguration("test", "test");
 		LocalImageCache.getInstance().setCacheTempFolder(Paths.get("temp"));
 	}
 

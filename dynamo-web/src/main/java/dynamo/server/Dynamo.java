@@ -1,11 +1,7 @@
 package dynamo.server;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.servlet.ServletException;
 
 import dynamo.core.DynamoApplication;
 import dynamo.ui.servlets.DeleteDownloadableServlet;
@@ -17,8 +13,7 @@ import io.undertow.servlet.api.ServletInfo;
 
 public class Dynamo extends DynamoApplication {
 
-	public Dynamo() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			ServletException, IOException {
+	public Dynamo() throws Exception {
 		super();
 	}
 
@@ -39,7 +34,7 @@ public class Dynamo extends DynamoApplication {
 	}
 
 	public static void main(String[] args) throws Exception {
-		new Dynamo();
+		new Dynamo().init();
 	}
 
 }

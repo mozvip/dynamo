@@ -95,12 +95,16 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		WebDocument document = client.getDocument( searchURL, baseURL + "/", HTTPClient.REFRESH_ONE_HOUR );
+
 		int currentPage = 0;
 		while (document != null) {
 			Elements rows = document.jsoup( "table.results tbody tr" );
 			for (Element row : rows) {
 	
-				Element link = row.select("a[href*=t411.io/torrents]").first();
+				Element link = row.select("td:gt(0) a[href*=/torrents/]").first();
+				if (link == null) {
+					continue;
+				}
 	
 				String href = link.attr("abs:href");
 				String title = link.attr("title");
@@ -285,23 +289,28 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 			break;
 		}
 
-		String searchURL = String.format( baseURL + "/torrents/search/?search=%s&cat=624&submit=Recherche&subcat=%d&order=added&type=desc" + term, search, subcat );
+		String searchURL = String.format( "%s/torrents/search/?search=%s&cat=624&submit=Recherche&subcat=%d&order=added&type=desc" + term, baseURL, search, subcat );
 
 		return extractResults( searchURL, 1 );
 	}
 	
 	public List<DownloadSuggestion> extractSuggestions( String startingURL, int pagesToRetrieve, boolean retrieveImages ) throws IOException, URISyntaxException {
 		String currentURL = startingURL;
-		
+
 		List<DownloadSuggestion> suggestions = new ArrayList<>();
-		
+
 		WebDocument document = client.getDocument( currentURL, HTTPClient.REFRESH_ONE_HOUR );
+
 		int currentPage = 0;
 		while (document != null && currentPage < pagesToRetrieve) {
+			
 			Elements rows = document.jsoup( "table.results tbody tr" );
 			for (Element row : rows) {
 	
-				Element link = row.select("a[href*=t411.io/torrents]").first();
+				Element link = row.select( "td:gt(0) a[href*=/torrents/]").first();
+				if (link == null) {
+					continue;
+				}
 	
 				String href = link.attr("abs:href");
 				String title = link.attr("title");
@@ -333,6 +342,9 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 			}
 			
 			Element nextLink = getLinkToNextPage(document);
+			if (nextLink == null) {
+				break;
+			}
 			currentURL = nextLink.absUrl("href");
 			document = nextLink != null ? client.getDocument(currentURL, HTTPClient.REFRESH_ONE_HOUR ) : null;
 			currentPage ++;

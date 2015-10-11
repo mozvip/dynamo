@@ -194,6 +194,12 @@ public class MovieManager implements Reconfigurable {
 	private Set<String> imdbIds = new HashSet<>();
 	
 	private MovieManager() {
+		try {
+			api = new TheMovieDbApi("5a1a77e2eba8984804586122754f969f", new YAMJHttpClient( HTTPClient.getInstance() ));
+		} catch (MovieDbException e) {
+			ErrorManager.getInstance().reportThrowable(e);
+		}
+		
 		List<Movie> allMovies = getAllMovies();
 		for (Movie movie : allMovies) {
 			if (movie.getImdbID() != null) {
@@ -209,12 +215,6 @@ public class MovieManager implements Reconfigurable {
 			} catch (IOException e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
-		}
-		
-		try {
-			api = new TheMovieDbApi("5a1a77e2eba8984804586122754f969f", new YAMJHttpClient( HTTPClient.getInstance() ));
-		} catch (MovieDbException e) {
-			ErrorManager.getInstance().reportThrowable(e);
 		}
 		
 	}

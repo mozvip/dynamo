@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 
+import dynamo.core.manager.ConfigValueManager;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.tests.AbstractDynamoTest;
 
@@ -14,7 +15,7 @@ public class VideoManagerTest extends AbstractDynamoTest {
 	
 	@Before
 	public void initTest() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
-		ConfigurationManager.mockConfiguration("VideoManager.mediaInfoBinaryPath", "d:/apps/mediainfo/mediainfo.exe");
+		ConfigValueManager.mockConfiguration("VideoManager.mediaInfoBinaryPath", "d:/apps/mediainfo/mediainfo.exe");
 		ConfigurationManager.getInstance().configureInstance( VideoManager.getInstance() );
 	}
 

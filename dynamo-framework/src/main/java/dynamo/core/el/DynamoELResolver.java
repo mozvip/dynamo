@@ -17,6 +17,7 @@ import javax.el.PropertyNotWritableException;
 import org.apache.commons.lang3.StringUtils;
 
 import dynamo.core.configuration.items.AbstractConfigurationItem;
+import dynamo.core.manager.ConfigAnnotationManager;
 import dynamo.core.manager.ConfigurationManager;
 
 public class DynamoELResolver extends ELResolver {
@@ -39,7 +40,7 @@ public class DynamoELResolver extends ELResolver {
 		Map<String, AbstractConfigurationItem> values = new HashMap<String, AbstractConfigurationItem>();
 
 		if (base == null) {
-			List<AbstractConfigurationItem> items = ConfigurationManager.getInstance().getItems();
+			List<AbstractConfigurationItem> items = ConfigAnnotationManager.getInstance().getItems();
 			for (AbstractConfigurationItem item : items) {
 				if ( item.getPrefix().equals( property )) {
 					String name = item.getKey().substring( item.getKey().indexOf('.') + 1);

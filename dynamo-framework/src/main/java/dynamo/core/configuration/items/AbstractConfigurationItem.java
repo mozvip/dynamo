@@ -8,7 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import dynamo.core.configuration.Configurable;
 import dynamo.core.el.DynamoELContext;
-import dynamo.core.manager.ConfigurationManager;
+import dynamo.core.manager.ConfigValueManager;
+import dynamo.core.manager.LabelsManager;
 
 public abstract class AbstractConfigurationItem {
 
@@ -54,13 +55,13 @@ public abstract class AbstractConfigurationItem {
 		this.configuredClass = configuredClass;
 
 		if (StringUtils.isEmpty( this.label )) {
-			this.label = ConfigurationManager.getInstance().getLabel( this.key );
+			this.label = LabelsManager.getLabel( this.key );
 		}
 		if ( field != null ) {
 			this.type = field.getType();
 		}
 
-		setStringValue( ConfigurationManager.getInstance().getConfigString(key, defaultValue) );
+		setStringValue( ConfigValueManager.getInstance().getConfigString(key, defaultValue) );
 	}
 
 	public String getKey() {

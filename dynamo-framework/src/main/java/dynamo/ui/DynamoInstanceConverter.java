@@ -1,7 +1,5 @@
 package dynamo.ui;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -17,7 +15,7 @@ public class DynamoInstanceConverter implements Converter {
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		try {
 			return DynamoObjectFactory.getInstance( Class.forName(value));
-		} catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
+		} catch (Exception e) {
 			throw new ConverterException(e);
 		}
 	}

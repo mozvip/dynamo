@@ -1,7 +1,6 @@
 package dynamo.core.configuration.items;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -69,7 +68,7 @@ public class ImplementationListConfigurationItem<E> extends ListConfigurationIte
 				if (allPossibleValues == null) {
 					try {
 						allPossibleValues = new DynamoObjectFactory<E>("dynamo", contentsClass).getInstances();
-					} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					} catch (Exception e) {
 						ErrorManager.getInstance().reportThrowable( e );
 					}
 				}

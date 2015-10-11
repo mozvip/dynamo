@@ -10,6 +10,7 @@ import dynamo.core.SubtitlesFinder;
 import dynamo.core.VideoDetails;
 import dynamo.core.VideoQuality;
 import dynamo.core.VideoSource;
+import dynamo.core.manager.ConfigValueManager;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.tests.AbstractDynamoTest;
 
@@ -24,8 +25,8 @@ public abstract class AbstractSubtitleFinderTestCase extends AbstractDynamoTest 
 	@Before
 	public void initInstance() throws Exception {
 		webSite = getTVShowsSubsWebSiteClass().newInstance();
-		ConfigurationManager.mockConfiguration( getTVShowsSubsWebSiteClass().getSimpleName() + ".enabled", Boolean.TRUE);
-		ConfigurationManager.mockConfiguration( "SubTitleDownloader.enabled", Boolean.TRUE);
+		ConfigValueManager.mockConfiguration( getTVShowsSubsWebSiteClass().getSimpleName() + ".enabled", Boolean.TRUE);
+		ConfigValueManager.mockConfiguration( "SubTitleDownloader.enabled", Boolean.TRUE);
 		mockSpecificConfig();
 		ConfigurationManager.getInstance().configureInstance( webSite );
 	}

@@ -24,17 +24,49 @@ import java.util.jar.JarFile;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
 import core.RegExp;
+import dynamo.core.Enableable;
+import dynamo.core.configuration.Reconfigurable;
 
 public class DynamoObjectFactory<T> {
-	
+
 	private static Map<String, Set<String>> classNamesForPackage = new HashMap<>();
-    private static Map<Class<?>, Object> instancesMap = new HashMap<>();
 
     private Class<T> interfaceToImplement = null;
 	private String packageName;
 	private String nameRegExp = null;
 	
+	private static final String NO_INSTANCE_MARKER = "NO_INSTANCE";
+	
+	private static LoadingCache<Class<?>, Object> instancesCache = CacheBuilder.newBuilder().
+			build(new CacheLoader<Class<?>, Object>() {
+				public Object load(Class<?> klass) throws Exception {
+					Object instance = null;
+	    			try {
+	    				Method singletonGetInstance = klass.getMethod("getInstance");
+	    				if (Modifier.isStatic(singletonGetInstance.getModifiers())) {
+	    					instance = singletonGetInstance.invoke( null );
+	    				}
+	    			} catch (NoSuchMethodException | SecurityException e) {
+	    			}
+	    			
+	    			if (instance == null) {
+	    				try {
+							instance = klass.newInstance();
+						} catch (java.lang.InstantiationException e) {
+		    				instance = NO_INSTANCE_MARKER;
+						}
+	    			}
+	    			
+	    			return instance;
+
+				}
+			});
+
 	public DynamoObjectFactory( String packageName, String nameRegExp ) {
 		this.interfaceToImplement = null;
 		this.packageName = packageName;
@@ -231,38 +263,28 @@ public class DynamoObjectFactory<T> {
         return classes;
     }
 
-    public static <T> T getInstance( Class<T> klass ) throws ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
-    	
-		T instance = null;
-		synchronized (klass) {
-			if (instancesMap.containsKey( klass )) {
-				instance = (T) instancesMap.get( klass );
-			} else {
-    			try {
-    				Method singletonGetInstance = klass.getMethod("getInstance");
-    				if (Modifier.isStatic(singletonGetInstance.getModifiers())) {
-    					instance = (T) singletonGetInstance.invoke( null );
-    				}
-    			} catch (NoSuchMethodException | SecurityException e) {
-    			}
-    			
-    			if (instance == null) {
-    				try {
-						instance = klass.newInstance();
-					} catch (java.lang.InstantiationException e) {
-					}
-    			}
-    			if (instance != null) {
-					ConfigurationManager.getInstance().configureInstance( instance );
-					instancesMap.put( klass, instance );
-    			}
-			}
+    public static <T> T getInstance( Class<T> klass ) throws Exception {
+		Object object = instancesCache.get( klass );
+		if (object instanceof String && object.equals( NO_INSTANCE_MARKER )) {
+			return null;
 		}
-
-		return instance;
+		return (T) object;
     }
    
-    public Set<T> getInstances() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public static <T> T getInstanceAndConfigure( Class<T> klass ) throws Exception {
+		T instance = getInstance(klass);
+		if (instance != null) {
+			ConfigurationManager.getInstance().configureInstance(instance);
+			if (instance instanceof Reconfigurable) {
+				if (!(instance instanceof Enableable) || ((Enableable) instance).isEnabled()) {
+					((Reconfigurable)instance).reconfigure();
+				}
+			}
+		}
+		return instance;
+    }
+
+    public Set<T> getInstances() throws Exception {
 		Set<Class<? extends T>> classes = getMatchingClasses( false, false );
 		Set<T> instances = new HashSet<T>( classes.size() ); 
 		for (Class<? extends T> klass : classes) {

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
-import dynamo.core.manager.ConfigurationManager;
+import dynamo.core.manager.ConfigValueManager;
 import dynamo.model.result.SearchResult;
 import dynamo.providers.KATProvider;
 
@@ -15,8 +15,8 @@ public class FinderManagerTest {
 	
 	@BeforeClass
 	public static void init() {
-		ConfigurationManager.mockConfiguration("MovieManager.minimumSizeFor1080", 5000);
-		ConfigurationManager.mockConfiguration("MovieManager.minimumSizeFor1080", 3000);
+		ConfigValueManager.mockConfiguration("MovieManager.minimumSizeFor1080", 5000);
+		ConfigValueManager.mockConfiguration("MovieManager.minimumSizeFor1080", 3000);
 	}
 
 	@Test

@@ -1,6 +1,5 @@
 package dynamo.subtitles;
 
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -51,7 +50,7 @@ public class SubTitleDownloader implements Reconfigurable {
 	public void reconfigure() {
 		try {
 			finders = new DynamoObjectFactory<SubtitlesFinder>("dynamo", SubtitlesFinder.class).getInstances();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}
 	}

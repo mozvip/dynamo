@@ -74,13 +74,13 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 	@Override
 	public void reconfigure() {
 		if (isEnabled()) {
-			synchronized ( this ) {
+			synchronized (this) {
 				ready = false;
 				try {
 					configureProvider();
 				} catch (Exception e) {
-					ErrorManager.getInstance().reportThrowable( e );
-					setEnabled( false );
+					ErrorManager.getInstance().reportThrowable(e);
+					setEnabled(false);
 				}
 				ready = true;
 			}

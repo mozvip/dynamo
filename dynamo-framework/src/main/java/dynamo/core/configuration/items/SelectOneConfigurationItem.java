@@ -34,9 +34,7 @@ public class SelectOneConfigurationItem extends AbstractConfigurationItem {
 		}
 		try {
 			return (Collection) eval( DynamoObjectFactory.getInstance( getConfiguredClass() ), allowedValuesExpression, Collection.class );
-		} catch (ClassNotFoundException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException
-				| InstantiationException e) {
+		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable(e);
 		}
 		return null;

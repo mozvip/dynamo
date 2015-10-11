@@ -6,18 +6,20 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import dynamo.core.Language;
+import dynamo.core.manager.ConfigValueManager;
+import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.model.result.SearchResult;
 import dynamo.providers.KATProvider;
 
 
 public class KATTorrentFinderTest {
 	
-	static KATProvider finder = new KATProvider();
+	static KATProvider finder;
 	
 	@BeforeClass
-	public static void init() {
-		finder.setEnabled( true );
-		finder.reconfigure();
+	public static void initTest() throws Exception {
+		ConfigValueManager.mockConfiguration("KATProvider.enabled", true);
+		finder = (KATProvider) DynamoObjectFactory.getInstance( KATProvider.class );
 	}
 
 	@Test
