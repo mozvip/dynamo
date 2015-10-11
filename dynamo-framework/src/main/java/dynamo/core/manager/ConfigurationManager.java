@@ -238,6 +238,8 @@ public class ConfigurationManager {
 	}
 
 	public void configureApplication() throws Exception {
+		
+		// first pass : set attribute values
 		for (Class klass : ConfigAnnotationManager.getInstance().getConfiguredClasses()) {
 			Object instance = null;
 			try {
@@ -250,14 +252,25 @@ public class ConfigurationManager {
 			if ( instance != null ) {
 				LOGGER.debug("Configuring instance of class {}", klass.getCanonicalName());
 				configureInstance( instance );
-				if (instance instanceof Reconfigurable) {
-					if (!(instance instanceof Enableable) || ((Enableable) instance).isEnabled()) {
-						((Reconfigurable)instance).reconfigure();
-					}
-				}
 			}
 		}
 		
+		// second pass : reconfigure
+		for (Class klass : ConfigAnnotationManager.getInstance().getConfiguredClasses()) {
+			Object instance = null;
+			try {
+				instance = DynamoObjectFactory.getInstance(klass);
+			} catch (IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}
+			if (instance instanceof Reconfigurable) {
+				if (!(instance instanceof Enableable) || ((Enableable) instance).isEnabled()) {
+					((Reconfigurable)instance).reconfigure();
+				}
+			}
+		}
+
 		Set<InitTask> initTasks = new DynamoObjectFactory<>(DYNAMO_PACKAGE_PREFIX, InitTask.class).getInstances();
 		for (InitTask initTask : initTasks) {
 			if ( initTask.isEnabled() ) {

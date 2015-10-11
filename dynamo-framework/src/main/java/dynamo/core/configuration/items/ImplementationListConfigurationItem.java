@@ -18,6 +18,12 @@ public class ImplementationListConfigurationItem<E> extends ListConfigurationIte
 	public ImplementationListConfigurationItem( String key, Configurable configurable, Field field, Class configuredClass, boolean orderable ) {
 		super( key, configurable, field, configuredClass, orderable );		
 		this.contentsClass = configurable.contentsClass();
+
+		try {
+			allPossibleValues = new DynamoObjectFactory<E>("dynamo", contentsClass).getInstances();
+		} catch (Exception e) {
+			ErrorManager.getInstance().reportThrowable( e );
+		}
 	}
 
 	private E newProvider = null;
@@ -49,7 +55,7 @@ public class ImplementationListConfigurationItem<E> extends ListConfigurationIte
 			} else {
 				String[] classNames = value.split(";");
 				for (String className : classNames) {
-					for (E provider : getAllowedValues()) {
+					for (E provider : allPossibleValues) {
 						if ( provider.getClass().getName().equals( className) ) {
 							list.add( new ConfigurationItemRow(list.size(), provider) );
 							break;
@@ -63,17 +69,6 @@ public class ImplementationListConfigurationItem<E> extends ListConfigurationIte
 	}
 
 	public List<E> getAllowedValues() {
-		if (allPossibleValues == null) {
-			synchronized ( this ) {
-				if (allPossibleValues == null) {
-					try {
-						allPossibleValues = new DynamoObjectFactory<E>("dynamo", contentsClass).getInstances();
-					} catch (Exception e) {
-						ErrorManager.getInstance().reportThrowable( e );
-					}
-				}
-			}
-		}
 		List<E> allowedValues = new ArrayList<E>();
 		for (E object : allPossibleValues) {
 			if (!(object instanceof Enableable) || ((Enableable)object).isEnabled()) {

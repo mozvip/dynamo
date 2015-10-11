@@ -46,7 +46,7 @@ public class ListConfigurationItem extends AbstractConfigurationItem {
 			throws ClassNotFoundException {
 		list = createList();
 
-		if (value != null) {
+		if (StringUtils.isNotBlank( value )) {
 			String[] values = value.split(";");
 			for (String string : values) {
 				
