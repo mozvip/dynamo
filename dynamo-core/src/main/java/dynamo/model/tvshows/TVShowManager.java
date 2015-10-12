@@ -323,9 +323,17 @@ public class TVShowManager implements Reconfigurable {
 				managedSeries, managedSeries.getId(), managedSeries.getName(), managedSeries.getOriginalLanguage(), managedSeries.getMetaDataLanguage(), managedSeries.getAudioLanguage(), managedSeries.getSubtitleLanguage(),  managedSeries.getFolder(),
 				managedSeries.getWordsBlackList(), managedSeries.getAka(), managedSeries.getQualities() );
 		
+		if (!Files.exists( managedSeries.getFolder() )) {
+			try {
+				Files.createDirectories( managedSeries.getFolder() );
+			} catch (IOException e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}
+		}
+
 		// remvove tasks to obtain subtitles if applicable
-		if (managedSeries.getSubtitleLanguage() == null) {
-			// remove subtitles
+		if (managedSeries.getSubtitleLanguage() == null && Files.exists( managedSeries.getFolder() )) {
+			// remove existing subtitles
 			for ( Path subtitle : Files.newDirectoryStream( managedSeries.getFolder(), SubtitlesFileFilter.getInstance() )) {
 				if (Files.isRegularFile(subtitle)) {
 					BackLogProcessor.getInstance().schedule( new DeleteTask(subtitle, false), false );
@@ -335,14 +343,6 @@ public class TVShowManager implements Reconfigurable {
 		}
 
 		RefreshTVShowTask task = new RefreshTVShowTask( managedSeries.getId() );
-		
-		if (!Files.exists( managedSeries.getFolder() )) {
-			try {
-				Files.createDirectories( managedSeries.getFolder() );
-			} catch (IOException e) {
-				ErrorManager.getInstance().reportThrowable( e );
-			}
-		}
 
 		BackLogProcessor.getInstance().runNow( task, false );
 
