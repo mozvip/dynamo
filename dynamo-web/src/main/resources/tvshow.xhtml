@@ -20,11 +20,15 @@
 			</f:metadata>
 			
 			<div class="row">
-			
 				<div class="col-md-4">
-					<a href="http://www.imdb.com/title/#{tvshow.managedSeries.imdbId}/" target="_blank" style="text-decoration: none; color: white;">
+					<ui:fragment rendered="#{empty tvshow.managedSeries.imdbId}">
 						<h:graphicImage value="#{tvshow.managedSeries.poster}" styleClass="img-responsive img-thumbnail" style="width: 100%;"></h:graphicImage>
-					</a>
+					</ui:fragment>
+					<ui:fragment  rendered="#{not empty tvshow.managedSeries.imdbId}">>
+						<a href="http://www.imdb.com/title/#{tvshow.managedSeries.imdbId}/" target="_blank" style="text-decoration: none; color: white;">
+							<h:graphicImage value="#{tvshow.managedSeries.poster}" styleClass="img-responsive img-thumbnail" style="width: 100%;"></h:graphicImage>
+						</a>
+					</ui:fragment>
 				</div>
 				 
 				<div class="col-md-8">
