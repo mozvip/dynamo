@@ -6,14 +6,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.google.common.base.Optional;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.omertron.thetvdbapi.TheTVDBApi;
 import com.omertron.thetvdbapi.model.Episode;
 import com.omertron.thetvdbapi.model.Series;
@@ -252,7 +247,6 @@ public class TVShowManager implements Reconfigurable {
 			Language originalLanguage = Language.getByShortName( series.getLanguage() );
 
 			managed = new ManagedSeries( series.getId(), series.getSeriesName(), series.getImdbId(), null, banner, poster, series.getNetwork(), folder, originalLanguage, metaLang, audioLang, subsLang, ended, 0, 0, false, false, aka, qualities, null );
-			managedSeriesCache.put(series.getId(), Optional.fromNullable(managed));
 		}
 
 		saveSeries( managed );
@@ -268,26 +262,8 @@ public class TVShowManager implements Reconfigurable {
 		return tvShowDAO.getUnrecognizedFolders();
 	}
 
-	LoadingCache<String, Optional<ManagedSeries>> managedSeriesCache = CacheBuilder.newBuilder()
-		       .maximumSize(500)
-		       .build(
-		           new CacheLoader<String, Optional<ManagedSeries>>() {
-		        	 @Override
-		             public Optional<ManagedSeries> load(String id) {
-		               return Optional.fromNullable(tvShowDAO.findTVShow(id));
-		             }
-		           });		
-
 	public ManagedSeries getManagedSeries(String id) {
-		try {
-			Optional<ManagedSeries> cachedSeries = managedSeriesCache.get( id );
-			if (cachedSeries.isPresent()) {
-				return cachedSeries.get();
-			}
-		} catch (ExecutionException e) {
-			ErrorManager.getInstance().reportThrowable( e );
-		}
-		return null;
+		return tvShowDAO.findTVShow(id);
 	}
 
 	public void identifyFolder( Path path, String id, String language, Language audioLang, Language subsLang ) throws IOException {
@@ -320,7 +296,7 @@ public class TVShowManager implements Reconfigurable {
 	public void saveSeries( ManagedSeries managedSeries ) throws IOException {
 
 		tvShowDAO.saveTVShow(
-				managedSeries, managedSeries.getId(), managedSeries.getName(), managedSeries.getOriginalLanguage(), managedSeries.getMetaDataLanguage(), managedSeries.getAudioLanguage(), managedSeries.getSubtitleLanguage(),  managedSeries.getFolder(),
+				managedSeries, managedSeries.getOriginalLanguage(), managedSeries.getMetaDataLanguage(), managedSeries.getAudioLanguage(), managedSeries.getSubtitleLanguage(),  managedSeries.getFolder(),
 				managedSeries.getWordsBlackList(), managedSeries.getAka(), managedSeries.getQualities() );
 		
 		if (!Files.exists( managedSeries.getFolder() )) {
