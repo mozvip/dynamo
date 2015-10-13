@@ -311,7 +311,7 @@
         <addUniqueConstraint columnNames="SEASON_ID,EPISODENUMBER" constraintName="UNIQUE_SEASON_ID_EPISODENUMBER" deferrable="false" disabled="false" initiallyDeferred="false" tableName="MANAGEDEPISODE"/>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-50">
-        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="ANDROIDAPPLICATION" constraintName="FK_ANDROIDAPPLICATION_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="ANDROIDAPPLICATION" constraintName="FK_ANDROIDAPPLICATION_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-51">
         <addForeignKeyConstraint baseColumnNames="DOWNLOADABLE_ID" baseTableName="HISTORYITEM" constraintName="FK_HISTORYITEM_DOWNLOADABLE_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
@@ -323,10 +323,10 @@
         <addForeignKeyConstraint baseColumnNames="MAGAZINE_SEARCHNAME" baseTableName="MAGAZINEISSUE" constraintName="FK_MAGAZINEISSUE_MAGAZINE_SEARCHNAME" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="SEARCHNAME" referencedTableName="MAGAZINE"/>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-57">
-        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="MANAGEDEPISODE" constraintName="FK_MANAGEDEPISODE_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="MANAGEDEPISODE" constraintName="FK_MANAGEDEPISODE_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-58">
-        <addForeignKeyConstraint baseColumnNames="SEASON_ID" baseTableName="MANAGEDEPISODE" constraintName="FK_MANAGEDEPISODE_SEASON_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+        <addForeignKeyConstraint baseColumnNames="SEASON_ID" baseTableName="MANAGEDEPISODE" constraintName="FK_MANAGEDEPISODE_SEASON_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-63">
         <addForeignKeyConstraint baseColumnNames="ID" baseTableName="MOVIE" constraintName="FK_MOVIE_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
@@ -347,7 +347,7 @@
         <addForeignKeyConstraint baseColumnNames="DOWNLOADABLE_ID" baseTableName="SEARCHRESULT" constraintName="FK_SEARCHRESULT_DOWNLOADABLE_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-70">
-        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="TVSHOWSEASON" constraintName="FK_TVSHOWSEASON_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="TVSHOWSEASON" constraintName="FK_TVSHOWSEASON_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-71">
         <addForeignKeyConstraint baseColumnNames="SERIES_ID" baseTableName="TVSHOWSEASON" constraintName="FK_TVSHOWSEASON_SERIES_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="MANAGEDSERIES"/>
@@ -547,12 +547,6 @@
 			</column>
 		</addColumn>
 	</changeSet>
-	
-	<changeSet author="mozvip" id="32">
-		<dropForeignKeyConstraint baseTableName="MANAGEDEPISODE" constraintName="FK_MANAGEDEPISODE_SEASON_ID"/>
-        <addForeignKeyConstraint baseColumnNames="SEASON_ID" baseTableName="MANAGEDEPISODE" constraintName="FK_MANAGEDEPISODE_SEASON_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
-    </changeSet>
-    
     <changeSet author="mozvip" id="33">
     	<addColumn tableName="MAGAZINE">
     		<column name="CATEGORY" type="VARCHAR(512)" />
