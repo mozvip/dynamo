@@ -1,84 +1,93 @@
 package dynamo.core.manager;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.concurrent.ExecutionException;
 
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
 import dynamo.jdbi.core.DAO;
 
 public class DAOManager {
-	
-	private final static Logger LOGGER = LoggerFactory.getLogger( DAOManager.class );
-	
-	protected static Map<String, JdbcConnectionPool> connectionPools = new HashMap<>();
-	protected static Map<String, DBI> dbiInstances = new HashMap<>();
 
-	protected static Map<Class<?>, Object> daoInstances = new HashMap<>();
+	private static final String DATABASE_URL_PATTERN = "jdbc:h2:./%s;MVCC=TRUE;LOCK_TIMEOUT=10000";
+	private final static Logger LOGGER = LoggerFactory.getLogger(DAOManager.class);
 
 	static class SingletonHolder {
-		private SingletonHolder() {}
+		private SingletonHolder() {
+		}
+
 		static DAOManager instance = new DAOManager();
 	}
-	
-	public JdbcConnectionPool getDatasource( String databaseId ) {
-		return connectionPools.get(databaseId);
-	}
-	
-	public DBI getDBIInstance(String database) {
-		return dbiInstances.get( database );
+
+	protected String getJdbcUrl(String databaseId) {
+		return String.format(DATABASE_URL_PATTERN, databaseId);
 	}
 
-	private DAOManager() {
-		
-		Collection<Class<?>> daoInterfaces = new DynamoObjectFactory(ConfigurationManager.DYNAMO_PACKAGE_PREFIX, ".*DAO").getMatchingClasses(false, true);
+	LoadingCache<String, JdbcConnectionPool> connectionPools = CacheBuilder.newBuilder().build(new CacheLoader<String, JdbcConnectionPool>() {
+		public JdbcConnectionPool load(String databaseId) {
+			return JdbcConnectionPool.create(getJdbcUrl(databaseId), "dynamo", "dynamo");
+		}
 
-		for (Class<?> daoInterface : daoInterfaces) {
-			
-			if (!daoInterface.isInterface()) {
-				continue;
+	});
+
+	LoadingCache<String, DBI> dbiInstances = CacheBuilder.newBuilder().build(new CacheLoader<String, DBI>() {
+		public DBI load(String databaseId) throws ExecutionException {
+			return new DBI(connectionPools.get(databaseId));
+		}
+	});
+	
+	LoadingCache<Class<?>, Object> daoInstances = CacheBuilder.newBuilder().build(new CacheLoader<Class<?>, Object>() {
+		public Object load(Class<?> daoInterface) throws ExecutionException {
+			DAO daoAnnotation = daoInterface.getAnnotation(DAO.class);
+			String databaseId = daoAnnotation.databaseId();
+			try {
+				DBI dbi = dbiInstances.get(databaseId);
+				return dbi.onDemand(daoInterface);
+			} catch (ExecutionException e) {
+				ErrorManager.getInstance().reportThrowable( e );
 			}
-			
-			DAO daoAnnotation = daoInterface.getAnnotation( DAO.class );
-			if (daoAnnotation == null) {
-				LOGGER.warn( String.format("%s has several characteristics of a DAO interface, but it isn't annotated with @DAO", daoInterface.getName()));
-			} else {
-				String databaseId = daoAnnotation.databaseId();
-				JdbcConnectionPool connectionPool = null;
-				
-				DBI dbi = null;
-				if ( connectionPools.containsKey(databaseId )) {
-					connectionPool = connectionPools.get(databaseId);
-					dbi = dbiInstances.get( databaseId );
-				} else {
-					connectionPool = JdbcConnectionPool.create( String.format("jdbc:h2:./%s;MVCC=TRUE;LOCK_TIMEOUT=10000", databaseId), "dynamo", "dynamo" );
-					connectionPools.put( databaseId, connectionPool );
-					dbi = new DBI( connectionPool );
-					dbiInstances.put( databaseId, dbi );
-				}
-				daoInstances.put(daoInterface, dbi.onDemand(daoInterface));	
-			}
+			return null;
+		}
+	});
+
+	public Connection getSingleConnection(String databaseId) {
+		try {
+			Class.forName("org.h2.Driver");
+			return (DriverManager.getConnection( getJdbcUrl(databaseId), "dynamo", "dynamo"));
+		} catch (ClassNotFoundException | SQLException e) {
+			ErrorManager.getInstance().reportThrowable( e );
+			return null;
 		}
 	}
 
 	public static DAOManager getInstance() {
 		return SingletonHolder.instance;
-	}	
+	}
 
 	public <E> E getDAO(Class<E> daoKlass) {
-		return (E) daoInstances.get( daoKlass );
+		try {
+			return (E) daoInstances.get(daoKlass);
+		} catch (ExecutionException e) {
+			ErrorManager.getInstance().reportThrowable( e );
+		}
+		return null;
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
-		for (JdbcConnectionPool connectionPool : connectionPools.values()) {
+		for (JdbcConnectionPool connectionPool : connectionPools.asMap().values()) {
 			connectionPool.dispose();
 		}
 		super.finalize();
 	}
-	
+
 }

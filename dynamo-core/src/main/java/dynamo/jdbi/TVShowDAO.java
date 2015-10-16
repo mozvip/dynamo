@@ -1,6 +1,7 @@
 package dynamo.jdbi;
 
 import java.nio.file.Path;
+import java.util.Date;
 import java.util.List;
 
 import org.skife.jdbi.v2.sqlobject.Bind;
@@ -118,10 +119,22 @@ public interface TVShowDAO {
 	public TVShowSeason findSeason(@Bind("seasonId") long seasonId);
 
 	@SqlUpdate("MERGE INTO MANAGEDEPISODE ("
-			+ "ID, EPISODENAME, EPISODENUMBER, FIRSTAIRED, QUALITY, RELEASEGROUP, SOURCE, SUBTITLED, SUBTITLESPATH, TVDBID, WATCHED, SEASON_ID) "
+			+ "ID, EPISODENAME, EPISODENUMBER, FIRSTAIRED, QUALITY, RELEASEGROUP, SOURCE, SUBTITLED, SUBTITLESPATH, WATCHED, SEASON_ID) "
 			+ "KEY(SEASON_ID, EPISODENUMBER) VALUES ("
-			+ ":episode.id, :episode.episodeName, :episode.episodeNumber, :episode.firstAired, :videoQuality, :episode.releaseGroup, :videoSource, :episode.subtitled, :subtitlesPath, :episode.tvdbId, :episode.watched, :episode.seasonId)")
-	public void saveEpisode(@BindBean("episode") ManagedEpisode episode, @BindEnum("videoQuality") VideoQuality videoQuality, @BindEnum("videoSource") VideoSource videoSource, @BindPath("subtitlesPath") Path subtitlesPath );
+			+ ":episodeId, :episodeName, :episodeNumber, :firstAired, :videoQuality, :releaseGroup, :videoSource, :subtitled, :subtitlesPath, :watched, :seasonId)")
+	public void saveEpisode(
+			@Bind("episodeId") long episodeId,
+			@Bind("episodeName") String episodeName,
+			@Bind("episodeNumber")int episodeNumber,
+			@Bind("firstAired") Date firstAired,
+			@BindEnum("videoQuality") VideoQuality videoQuality,
+			@Bind("releaseGroup") String releaseGroup,
+			@BindEnum("videoSource") VideoSource videoSource,
+			@Bind("subtitled") boolean subtitled,
+			@BindPath("subtitlesPath") Path subtitlesPath,
+			@Bind("watched") boolean watched,
+			@Bind("seasonId") long seasonId
+			);
 
 	@SqlUpdate("UPDATE MANAGEDEPISODE SET WATCHED = true WHERE ID = :episodeId")
 	public void setWatched(@Bind("episodeId") long episodeId);

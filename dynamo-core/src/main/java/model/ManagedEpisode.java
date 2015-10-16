@@ -15,8 +15,6 @@ public class ManagedEpisode extends Downloadable implements Video {
 
 	private Path subtitlesPath;
 
-	private String tvdbId;
-
 	private VideoQuality quality;
 	private VideoSource source;
 	private String releaseGroup;
@@ -37,7 +35,7 @@ public class ManagedEpisode extends Downloadable implements Video {
 	
 	private String seriesName;
 
-	public ManagedEpisode(Long id, Path path, DownloadableStatus status, String seriesName, Path subtitlesPath, String tvdbId,
+	public ManagedEpisode(Long id, Path path, DownloadableStatus status, String seriesName, Path subtitlesPath,
 			VideoQuality quality, VideoSource source,
 			String releaseGroup, String seriesId, long seasonId, int seasonNumber,
 			int episodeNumber, Integer absoluteNumber, String episodeName,
@@ -47,7 +45,6 @@ public class ManagedEpisode extends Downloadable implements Video {
 		
 		this.seriesName = seriesName;
 		this.subtitlesPath = subtitlesPath;
-		this.tvdbId = tvdbId;
 		this.quality = quality;
 		this.source = source;
 		this.releaseGroup = releaseGroup;
@@ -100,10 +97,6 @@ public class ManagedEpisode extends Downloadable implements Video {
 
 	public void setEpisodeNumber(int episodeNumber) {
 		this.episodeNumber = episodeNumber;
-	}
-
-	public String getTvdbId() {
-		return tvdbId;
 	}
 
 	public Date getFirstAired() {

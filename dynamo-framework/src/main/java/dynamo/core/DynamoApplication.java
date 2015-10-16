@@ -3,14 +3,17 @@ package dynamo.core;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.ServletException;
 
+import org.h2.jdbcx.JdbcConnectionPool;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import core.RegExp;
@@ -25,6 +28,7 @@ import io.undertow.servlet.api.ServletInfo;
 import liquibase.Liquibase;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.ValidationFailedException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
 public abstract class DynamoApplication implements Reconfigurable {
@@ -38,23 +42,30 @@ public abstract class DynamoApplication implements Reconfigurable {
 		return ipAddress;
 	}
 	
-	public String getAppSpeficicDatabaseName() {
+	public String getAppSpecificDatabaseName() {
 		return "dynamo";
 	}
 
 	private void upgradeDatabases() {
-		try (Connection conn = DAOManager.getInstance().getDatasource("core").getConnection()) {
+		upgradeDatabase("core");
+		upgradeDatabase( getAppSpecificDatabaseName() );
+	}
+
+	protected void upgradeDatabase( String databaseId ) {
+		try (Connection conn = DAOManager.getInstance().getSingleConnection(databaseId)) {
 			DatabaseConnection connection = new JdbcConnection( conn );
-			Liquibase liquibase = new Liquibase("databases/core.xml", new ClassLoaderResourceAccessor( getClass().getClassLoader()), connection );
+			Liquibase liquibase = new Liquibase( String.format("databases/%s.xml", databaseId ), new ClassLoaderResourceAccessor( getClass().getClassLoader()), connection );
 			liquibase.update( "" );
-		} catch (Exception e) {
-			ErrorManager.getInstance().reportThrowable( e );
-		}
-		
-		try (Connection conn = DAOManager.getInstance().getDatasource( getAppSpeficicDatabaseName() ).getConnection()) {
-			DatabaseConnection connection = new JdbcConnection( conn );
-			Liquibase liquibase = new Liquibase( String.format("databases/%s.xml", getAppSpeficicDatabaseName()), new ClassLoaderResourceAccessor( getClass().getClassLoader()), connection );
-			liquibase.update( "" );
+		} catch (ValidationFailedException e) {
+			// database has been modified outside of Liquibase, assume it needs to be recreated
+			Path databaseFile = Paths.get( String.format("%s.mv.db", databaseId));
+			Path databaseFileBackup = Paths.get( String.format("%s.%2$tm%2$te.bak", databaseFile.getFileName().toString(), Calendar.getInstance()));
+			try {
+				Files.move( databaseFile, databaseFileBackup );
+				upgradeDatabase( databaseId );
+			} catch (IOException eMove) {
+				ErrorManager.getInstance().reportThrowable( eMove );
+			}
 		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}

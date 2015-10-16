@@ -107,7 +107,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 
 			if (existingEpisode == null) {
 			
-				existingEpisode = new ManagedEpisode( DownloadableManager.getInstance().createDownloadable( ManagedEpisode.class, null, null, newStatusForEpisode ), null, newStatusForEpisode, series.getName(), null, episode.getId(), null, null, null, episode.getSeriesId(), seasonId, episode.getSeasonNumber(), episode.getEpisodeNumber(), null, episode.getEpisodeName(), firstAiredDate, false, false );
+				existingEpisode = new ManagedEpisode( DownloadableManager.getInstance().createDownloadable( ManagedEpisode.class, null, null, newStatusForEpisode ), null, newStatusForEpisode, series.getName(), null, null, null, null, episode.getSeriesId(), seasonId, episode.getSeasonNumber(), episode.getEpisodeNumber(), null, episode.getEpisodeName(), firstAiredDate, false, false );
 			
 			} else if ( existingEpisode.getStatus() == DownloadableStatus.FUTURE && newStatusForEpisode != DownloadableStatus.FUTURE) {
 				
@@ -131,7 +131,8 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 				existingEpisode.setAbsoluteNumber( Integer.parseInt( episode.getAbsoluteNumber() ) );
 			}
 
-			tvShowDAO.saveEpisode( existingEpisode, existingEpisode.getQuality(), existingEpisode.getSource(), existingEpisode.getSubtitlesPath() );
+			tvShowDAO.saveEpisode( existingEpisode.getId(), existingEpisode.getEpisodeName(), existingEpisode.getEpisodeNumber(), existingEpisode.getFirstAired(), existingEpisode.getQuality(), existingEpisode.getReleaseGroup(),  
+				 	existingEpisode.getSource(), existingEpisode.isSubtitled(),  existingEpisode.getSubtitlesPath(), existingEpisode.isWatched(), existingEpisode.getSeasonId() );
 		}
 		
 		if ( ( series.getBanner() == null && tvDbSeries.getBanner() != null ) || LocalImageCache.getInstance().missFile( series.getBanner() ) ) {
@@ -147,7 +148,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 				series.getWordsBlackList(), series.getAka(), TVShowManager.getInstance().getTvShowQualities() );
 
 		if (Files.exists( series.getFolder() )) {
-			queue( new ScanTVShowTask( series ));
+			queue( new ScanTVShowTask( series ), false );
 		}
 	}
 	

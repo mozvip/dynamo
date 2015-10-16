@@ -299,7 +299,7 @@ public class TVShowManager implements Reconfigurable {
 				managedSeries, managedSeries.getOriginalLanguage(), managedSeries.getMetaDataLanguage(), managedSeries.getAudioLanguage(), managedSeries.getSubtitleLanguage(),  managedSeries.getFolder(),
 				managedSeries.getWordsBlackList(), managedSeries.getAka(), managedSeries.getQualities() );
 		
-		if (!Files.exists( managedSeries.getFolder() )) {
+		if (!Files.isDirectory( managedSeries.getFolder() )) {
 			try {
 				Files.createDirectories( managedSeries.getFolder() );
 			} catch (IOException e) {
@@ -308,7 +308,7 @@ public class TVShowManager implements Reconfigurable {
 		}
 
 		// remvove tasks to obtain subtitles if applicable
-		if (managedSeries.getSubtitleLanguage() == null && Files.exists( managedSeries.getFolder() )) {
+		if (managedSeries.getSubtitleLanguage() == null) {
 			// remove existing subtitles
 			for ( Path subtitle : Files.newDirectoryStream( managedSeries.getFolder(), SubtitlesFileFilter.getInstance() )) {
 				if (Files.isRegularFile(subtitle)) {
@@ -413,7 +413,8 @@ public class TVShowManager implements Reconfigurable {
 	}
 
 	public void saveEpisode(ManagedEpisode episode) {
-		tvShowDAO.saveEpisode( episode, episode.getQuality(), episode.getSource(), episode.getSubtitlesPath() );
+		tvShowDAO.saveEpisode( episode.getId(), episode.getEpisodeName(), episode.getEpisodeNumber(), episode.getFirstAired(), episode.getQuality(), episode.getReleaseGroup(),  
+			 	episode.getSource(), episode.isSubtitled(),  episode.getSubtitlesPath(), episode.isWatched(), episode.getSeasonId() );
 	}
 
 	public List<UnrecognizedFile> getUnrecognizedFiles( String seriesId ) {

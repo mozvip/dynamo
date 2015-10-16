@@ -126,10 +126,6 @@ public class ManagedSeries implements Serializable {
 		return folder;
 	}
 
-	public void setFolder(Path folder) {
-		this.folder = folder;
-	}
-
 	public String getBanner() {
 		return banner;
 	}

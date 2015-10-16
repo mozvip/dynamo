@@ -11,6 +11,7 @@ import javax.faces.model.SelectItem;
 
 import com.omertron.thetvdbapi.model.Series;
 
+import core.FileNameUtils;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.model.tvshows.TVShowManager;
@@ -121,8 +122,7 @@ public class TVShows extends DynamoManagedBean {
 	}
 	
 	public String newShow( String seriesName, String id, String language ) throws IOException {
-		
-		Path targetFolder = newShowFolder.resolve( seriesName.replace(':', '-') );
+		Path targetFolder = newShowFolder.resolve( FileNameUtils.sanitizeFileName( seriesName ) );
 		TVShowManager.getInstance().identifyFolder( targetFolder, id, language, audioLanguage, subtitlesLanguage );
 		series = null;
 		unrecognizedFolders = null;

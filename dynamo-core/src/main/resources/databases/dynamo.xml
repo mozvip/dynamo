@@ -5,7 +5,6 @@
             <column name="ID" type="INT(10)">
                 <constraints nullable="false"/>
             </column>
-            <column name="GOOGLEID" type="VARCHAR(2147483647)"/>
             <column name="ICONURL" type="VARCHAR(2147483647)"/>
             <column name="NAME" type="VARCHAR(2147483647)"/>
             <column name="VERSION" type="VARCHAR(2147483647)"/>
@@ -90,7 +89,6 @@
             <column name="SOURCE" type="VARCHAR(100)"/>
             <column name="SUBTITLED" type="BOOLEAN(1)"/>
             <column name="SUBTITLESPATH" type="VARCHAR(2147483647)"/>
-            <column name="TVDBID" type="VARCHAR(2147483647)"/>
             <column name="WATCHED" type="BOOLEAN(1)"/>
         </createTable>
     </changeSet>
@@ -294,9 +292,6 @@
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-41">
         <addPrimaryKey columnNames="PATH" constraintName="CONSTRAINT_DA" tableName="UNRECOGNIZEDFOLDER"/>
-    </changeSet>
-    <changeSet author="mozvip" id="1406620788324-45">
-        <addUniqueConstraint columnNames="TVDBID" constraintName="UNIQUE_TVDBID" deferrable="false" disabled="false" initiallyDeferred="false" tableName="MANAGEDEPISODE"/>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-46">
         <addUniqueConstraint columnNames="NAME" constraintName="CONSTRAINT_D" deferrable="false" disabled="false" initiallyDeferred="false" tableName="MANAGEDSERIES"/>
