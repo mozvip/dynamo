@@ -53,7 +53,7 @@
 					</div>
 					<div class="buttons">
 						<ui:fragment rendered="#{issue.status == 'SUGGESTED'}">
-							<a href="#" class="btn btn-sm btn-default" onclick="want('#{issue.id}');" title="Want Suggestion">
+							<a class="btn btn-sm btn-default" onclick="want('#{issue.id}');" title="Want Suggestion">
 								<i class="fa fa-heart"></i>
 							</a>
 						</ui:fragment>
@@ -66,12 +66,11 @@
 							<f:ajax execute="@this" render="@none" listener="#{kiosk.redownload(issue.id)}" />
 							<i class="fa fa-refresh"></i>
 						</h:commandLink>
-						<h:commandLink styleClass="btn btn-sm btn-default" action="#{fileList.search}" title="Show Files" rendered="#{issue.status == 'DOWNLOADED'}">
-							<f:setPropertyActionListener value="#{issue.id}" target="#{fileList.downloadableId}" />
-							<f:ajax onevent="showFiles" render=":showFilesForm" />
-							<i class="fa fa-list"></i>
-						</h:commandLink>
-						
+						<ui:fragment rendered="#{movie.status == 'DOWNLOADED'}">
+							<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#fileList" data-downloadable="${issue.id}" title="Show magazine files">
+								<i class="fa fa-list"></i>
+							</a>
+						</ui:fragment>
 					</div>
 				</div>
 			</ui:repeat>

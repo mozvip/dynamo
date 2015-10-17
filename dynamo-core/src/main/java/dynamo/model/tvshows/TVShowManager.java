@@ -45,6 +45,7 @@ import model.UnrecognizedFile;
 import model.UnrecognizedFolder;
 import model.backlog.NewTVShowFolderTask;
 import model.backlog.RefreshTVShowTask;
+import model.backlog.ScanTVShowTask;
 
 
 public class TVShowManager implements Reconfigurable {
@@ -401,6 +402,9 @@ public class TVShowManager implements Reconfigurable {
 					BackLogProcessor.getInstance().schedule( new NewTVShowFolderTask( path ), false );
 				}
 			}
+		} else {
+			BackLogProcessor.getInstance().unschedule( ScanTVShowTask.class );
+			BackLogProcessor.getInstance().unschedule( NewTVShowFolderTask.class );
 		}
 	}
 

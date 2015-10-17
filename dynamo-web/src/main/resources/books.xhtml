@@ -89,11 +89,11 @@
 							<f:ajax execute="@this" render="@none" listener="#{bookKiosk.redownload(book.id)}" />
 							<i class="fa fa-refresh"></i>
 						</h:commandLink>
-						<h:commandLink styleClass="btn btn-sm btn-default" action="#{fileList.search}" title="Show Files" rendered="#{book.status == 'DOWNLOADED'}">
-							<f:setPropertyActionListener value="#{book.id}" target="#{fileList.downloadableId}" />
-							<f:ajax onevent="showFiles" render=":showFilesForm" />
-							<i class="fa fa-list"></i>
-						</h:commandLink>
+						<ui:fragment rendered="#{movie.status == 'DOWNLOADED'}">
+							<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#fileList" data-downloadable="${book.id}" title="Show book files">
+								<i class="fa fa-list"></i>
+							</a>
+						</ui:fragment>						
 					</div>
 				</div>
 			</ui:repeat>
