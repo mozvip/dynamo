@@ -23,6 +23,7 @@ import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.jdbi.MovieDAO;
+import dynamo.manager.DownloadableManager;
 import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.subtitles.FindMovieSubtitleTask;
@@ -133,6 +134,8 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 			long downloadableId = downloadableDAO.createDownloadable( Movie.class, moviePath, null, DownloadableStatus.DOWNLOADED );
 			movie = new Movie(
 					downloadableId, DownloadableStatus.DOWNLOADED, moviePath, null, null, p.getFileName().toString(), null, false, null, null, null, null, null, null, null, -1, null, null, -1, -1, false );
+
+			DownloadableManager.getInstance().addFile(downloadableId, p, 0);
 
 			MovieInfo movieInfo = VideoNameParser.getMovieInfo( p );
 			if ( movieInfo != null ) {

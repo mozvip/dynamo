@@ -45,18 +45,8 @@ public class DeleteShowExecutor extends TaskExecutor<DeleteShowTask> {
 			Files.walkFileTree(series.getFolder(), new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-					BackLogProcessor.getInstance().schedule(new DeleteTask(file, true));
+					BackLogProcessor.getInstance().schedule(new DeleteTask(file, true), false);
 					return FileVisitResult.CONTINUE;
-				}
-
-				@Override
-				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-					if (exc == null) {
-						BackLogProcessor.getInstance().schedule(new DeleteTask(dir, false));
-						return FileVisitResult.CONTINUE;
-					} else {
-						throw exc;
-					}
 				}
 			});
 		}

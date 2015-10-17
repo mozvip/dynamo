@@ -59,7 +59,7 @@ public abstract class DynamoApplication implements Reconfigurable {
 		} catch (ValidationFailedException e) {
 			// database has been modified outside of Liquibase, assume it needs to be recreated
 			Path databaseFile = Paths.get( String.format("%s.mv.db", databaseId));
-			Path databaseFileBackup = Paths.get( String.format("%s.%2$tm%2$te.bak", databaseFile.getFileName().toString(), Calendar.getInstance()));
+			Path databaseFileBackup = Paths.get( String.format("%s.%2$tY%2$tm%2$te.bak", databaseFile.getFileName().toString(), Calendar.getInstance()));
 			try {
 				Files.move( databaseFile, databaseFileBackup );
 				upgradeDatabase( databaseId );

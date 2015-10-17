@@ -63,7 +63,7 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 				
 				if (files == null || files.isEmpty()) {
 					if (Files.isRegularFile( downloadable.getPath() )) {
-						DownloadableManager.getInstance().addFile(downloadInfo.getId(), downloadable.getPath(), Files.size(downloadable.getPath()), 0);
+						DownloadableManager.getInstance().addFile(downloadInfo.getId(), downloadable.getPath(), 0);
 					} else if (Files.isDirectory( downloadable.getPath() )) {
 						
 					}

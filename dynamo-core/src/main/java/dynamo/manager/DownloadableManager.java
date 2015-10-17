@@ -184,24 +184,22 @@ public class DownloadableManager {
 					try {
 						if (fileName.contains("-sample") || fileName.startsWith("sample-") || Files.size(newFile) < (50*1024*1024)) {
 							BackLogProcessor.getInstance().schedule( new DeleteTask( newFile, false ));	// FIXME : should have been done earlier, by the post processor ?
+						} else {
+							downloadableDAO.updatePath( id, newFile );
+							
+							if (downloadable instanceof ManagedEpisode) {
+								ManagedSeries series = TVShowManager.getInstance().getManagedSeries(((ManagedEpisode) downloadable).getSeriesId());
+								if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, series.getSubtitleLanguage() )) {
+									tvShowDAO.setSubtitled( id, ((ManagedEpisode) downloadable).getSubtitlesPath() );
+								}
+							} else if (downloadable instanceof Movie) {
+								if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, MovieManager.getInstance().getSubtitlesLanguage() )) {
+									movieDAO.setSubtitled( id, ((Movie) downloadable).getSubtitlesPath() );
+								}
+							}
 						}
 					} catch (IOException e) {
 						ErrorManager.getInstance().reportThrowable(task, e);
-					}
-				}
-
-				if ( VideoFileFilter.getInstance().accept( newFile ) ) {
-					downloadableDAO.updatePath( id, newFile );
-					
-					if (downloadable instanceof ManagedEpisode) {
-						ManagedSeries series = TVShowManager.getInstance().getManagedSeries(((ManagedEpisode) downloadable).getSeriesId());
-						if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, series.getSubtitleLanguage() )) {
-							tvShowDAO.setSubtitled( id, ((ManagedEpisode) downloadable).getSubtitlesPath() );
-						}
-					} else if (downloadable instanceof Movie) {
-						if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, MovieManager.getInstance().getSubtitlesLanguage() )) {
-							movieDAO.setSubtitled( id, ((Movie) downloadable).getSubtitlesPath() );
-						}
 					}
 					
 				} else if (SubtitlesFileFilter.getInstance().accept( newFile )) {
@@ -381,13 +379,13 @@ public class DownloadableManager {
 		downloadableDAO.addFile( downloadableId, file, size, index );
 	}
 
+	public void addFile( long downloadableId, Path file, int index ) throws IOException {
+		long size = Files.size( file );
+		downloadableDAO.addFile( downloadableId, file, size, index );
+	}
+
 	public List<DownloadableFile> getAllFiles(long downloadableId) {
 		return downloadableDAO.getAllFiles( downloadableId );
-	}
-	
-	public void delete( Path path ) {
-		downloadableDAO.deleteFile( path );
-		BackLogProcessor.getInstance().schedule( new DeleteTask(path, true), false );
 	}
 
 	public void clearBlackList() {

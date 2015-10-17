@@ -55,7 +55,8 @@ public class LocalImageCache {
 	
 	public Path resolveLocal( String name ) {
 		// remove the /data/ prefix
-		return cacheTempFolder.resolve( name.substring( "/data/".length() ) ).toAbsolutePath();
+		String relativeName = name.substring( "/data/".length() );
+		return cacheTempFolder.resolve( relativeName ).normalize().toAbsolutePath();
 	}
 
 	public String download( String prefix, String nameWithoutExtension, String url, String referer, boolean async, boolean overwrite ) {

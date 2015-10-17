@@ -17,11 +17,11 @@
 		<ui:include src="fragment-movie-search.xhtml" />
 	
 		<style>
-			.movieThumb {
+			.itemThumb {
 				height: 280px;
 				border: none;
 			}
-			.movieCaption {
+			.itemCaption {
 				font-size: 12px;
 				font-weight: bold;
 				width: 100%;
@@ -84,12 +84,12 @@
 							</a>
 						</h:panelGroup>
 					</div>
-					<div class="thumbnail movieThumb">
+					<div class="thumbnail itemThumb">
 						<a href="http://www.imdb.com/title/#{movie.imdbID}" class="poster" title="#{movie.path}"
 							target="_blank">
 							<img class="img-responsive" data-src="#{movie.coverImage}" width="145" height="220" alt="#{movie.name}" />
 						</a>
-						<div class="caption movieCaption">
+						<div class="caption itemCaption">
 							<span>#{movie.name} (#{movie.year})</span>
 							<i class="fa fa-star" />
 							<h:outputText value="#{movie.rating}" />

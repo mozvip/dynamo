@@ -5,7 +5,7 @@ import dynamo.core.model.AbstractDynamoQueue;
 public class ScanFileSystemQueue extends AbstractDynamoQueue {
 
 	public ScanFileSystemQueue() {
-		super(1);
+		super(2);
 	}
 
 	@Override

@@ -14,11 +14,13 @@
        	</ui:define>
 
 		<ui:define name="content">
-		
+
+			<ui:include src="fragment-filesDialog.xhtml" />
+
 			<f:metadata>
 				<f:viewParam name="id" value="#{tvshow.id}" />
 			</f:metadata>
-			
+
 			<div class="row">
 				<div class="col-md-4">
 					<ui:fragment rendered="#{empty tvshow.managedSeries.imdbId}">

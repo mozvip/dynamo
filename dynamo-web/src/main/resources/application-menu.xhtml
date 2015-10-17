@@ -37,10 +37,13 @@
 		data-toggle="dropdown"><i class="fa fa-film"></i>&nbsp;Movies<span
 			class="caret"></span></a>
 		<ul class="dropdown-menu" role="menu">
-			<li><h:link outcome="movies-collection">
+			<ui:fragment rendered="#{movies.collectionContents.totalCount > 0}">
+			<li>
+				<h:link outcome="movies-collection">
 					<i class="fa fa-file-video-o" />&nbsp;Collection <span
 						class="badge">#{movies.collectionContents.totalCount}</span>
 				</h:link></li>
+			</ui:fragment>
 			<li><h:link outcome="movies-wanted">
 					<i class="fa fa-heart" />&nbsp;Wanted
 											</h:link></li>

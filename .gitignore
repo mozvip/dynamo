@@ -27,3 +27,4 @@ dynamo-tests/src/test/resources/private-data-do-not-commit.properties
 dynamo-tests/cookies.json
 dynamo-tests/dynamo.trace.db
 dynamo-tests/httpclient-cache.trace.db
+dynamo-web/dynamo.mv.db.*.bak

@@ -11,16 +11,24 @@
 
 	<ui:define name="content">
 	
+		<ui:include src="fragment-filesDialog.xhtml" />
+	
 		<style>
-			.caption {
+			.itemThumb {
+				height: 160px;
+				border: none;
+			}
+			.itemCaption {
 				font-size: 12px;
 				font-weight: bold;
 				width: 100%;
 				text-align: center;
 			}
-			.albumThumb {
-				height: 225px; margin: 0px; border: none;
-			}
+			
+			.buttons {
+				position: absolute; right: 10px;
+			}		
+
 			.albumName {
 				overflow: hidden;
 				white-space: nowrap;
@@ -37,9 +45,7 @@
 				overflow: hidden;
 				white-space: nowrap;
 			}
-			.buttons {
-				position: absolute; right: 32px; top: 10px; width: 20px;
-			}
+
 			.albumCover {
 				width: 160px;
 				height: 160px;
@@ -58,8 +64,37 @@
 		<h:form id="downloadableList">
 			<ui:include src="/components/pager.xhtml" />
 			<ui:repeat var="album" value="#{pager.items}">
-				<div class="album col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{album.id}">
-					<div class="thumbnail albumThumb" id="#{album.searchString}">
+				<div class="col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{album.id}">
+					<div class="buttons btn-group-vertical" role="group">
+						<ui:fragment title="Want Suggestion" rendered="#{album.status == 'SUGGESTED'}">
+							<a href="#" class="btn btn-success btn-sm" onclick="want('#{album.id}');">
+								<i class="fa fa-download"></i>
+							</a>
+						</ui:fragment>
+						<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{album.status == 'SNATCHED' or album.status == 'DOWNLOADED'}" title="Redownload" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(album.album)} ?'));">
+							<f:ajax render="@none" listener="#{music.redownload}" execute="@this" />
+							<f:param name="id" value="#{album.id}" />
+							<i class="fa fa-refresh" />
+						</h:commandLink>
+						<ui:fragment rendered="#{album.status == 'DOWNLOADED'}">
+							<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#fileList" data-downloadable="${album.id}" title="Show Music Album files">
+								<i class="fa fa-list"></i>
+							</a>
+						</ui:fragment>
+						<h:commandLink title="Blacklist Artist" styleClass="btn btn-danger btn-sm" action="#{music.blackListArtist}" rendered="#{album.status == 'SUGGESTED'}"
+							onclick="return confirm('Are you sure you want to blacklist #{movies.fixName(album.artistName)} ?');">
+							<f:ajax render="@none" execute="@this" onevent="removeThumbnail"/>
+							<f:param name="id" value="#{album.id}" />
+							<i class="fa fa-trash-o"></i>
+						</h:commandLink>
+						<h:commandLink title="Delete Album" styleClass="btn btn-danger btn-sm" action="#{music.deleteAlbum}" rendered="#{album.status != 'SUGGESTED'}"
+							onclick="return confirm('Are you sure you want to delete #{movies.fixName(album.album)} ?');">
+							<f:ajax render="@none" execute="@this" onevent="removeThumbnail"/>
+							<f:param name="id" value="#{album.id}" />
+							<i class="fa fa-trash-o"></i>
+						</h:commandLink>
+					</div>
+					<div class="thumbnail itemThumb" id="#{album.searchString}">
 						<ui:fragment rendered="#{album.status == 'DOWNLOADED'}">
 							<a href="#{album.relativeLink}">
 								<img class="img-responsive albumCover" data-src="#{album.urlEncodedCoverImage}" alt="#{album.album}" />
@@ -68,34 +103,10 @@
 						<ui:fragment rendered="#{album.status != 'DOWNLOADED'}">
 							<img class="img-responsive albumCover" data-src="#{album.urlEncodedCoverImage}" alt="#{album.album}" />
 						</ui:fragment>
-						<div class="caption">
+						<div class="itemCaption">
 							<span class="albumName">#{album.album}</span>
 							<span class="artistName">#{album.artistName}</span>
 							<span class="albumGenre">#{album.genre}</span>
-						</div>
-						<div class="buttons">
-							<ui:fragment title="Want Suggestion" rendered="#{album.status == 'SUGGESTED'}">
-								<a href="#" class="btn btn-success btn-sm" onclick="want('#{album.id}');">
-									<i class="fa fa-download"></i>
-								</a>
-							</ui:fragment>
-							<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{album.status == 'SNATCHED' or album.status == 'DOWNLOADED'}" title="Redownload" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(album.album)} ?'));">
-								<f:ajax render="@none" listener="#{music.redownload}" execute="@this" />
-								<f:param name="id" value="#{album.id}" />
-								<i class="fa fa-refresh" />
-							</h:commandLink>
-							<h:commandLink title="Blacklist Artist" styleClass="btn btn-danger btn-sm" action="#{music.blackListArtist}" rendered="#{album.status == 'SUGGESTED'}"
-								onclick="return confirm('Are you sure you want to blacklist #{movies.fixName(album.artistName)} ?');">
-								<f:ajax render="@none" execute="@this" onevent="removeThumbnail"/>
-								<f:param name="id" value="#{album.id}" />
-								<i class="fa fa-trash-o"></i>
-							</h:commandLink>
-							<h:commandLink title="Delete Album" styleClass="btn btn-danger btn-sm" action="#{music.deleteAlbum}" rendered="#{album.status != 'SUGGESTED'}"
-								onclick="return confirm('Are you sure you want to delete #{movies.fixName(album.album)} ?');">
-								<f:ajax render="@none" execute="@this" onevent="removeThumbnail"/>
-								<f:param name="id" value="#{album.id}" />
-								<i class="fa fa-trash-o"></i>
-							</h:commandLink>
 						</div>
 					</div>
 				</div>
