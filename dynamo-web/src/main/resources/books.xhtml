@@ -89,7 +89,7 @@
 							<f:ajax execute="@this" render="@none" listener="#{bookKiosk.redownload(book.id)}" />
 							<i class="fa fa-refresh"></i>
 						</h:commandLink>
-						<ui:fragment rendered="#{movie.status == 'DOWNLOADED'}">
+						<ui:fragment rendered="#{book.status == 'DOWNLOADED'}">
 							<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#fileList" data-downloadable="${book.id}" title="Show book files">
 								<i class="fa fa-list"></i>
 							</a>

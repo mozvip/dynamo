@@ -66,7 +66,7 @@
 							<f:ajax execute="@this" render="@none" listener="#{kiosk.redownload(issue.id)}" />
 							<i class="fa fa-refresh"></i>
 						</h:commandLink>
-						<ui:fragment rendered="#{movie.status == 'DOWNLOADED'}">
+						<ui:fragment rendered="#{issue.status == 'DOWNLOADED'}">
 							<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#fileList" data-downloadable="${issue.id}" title="Show magazine files">
 								<i class="fa fa-list"></i>
 							</a>
