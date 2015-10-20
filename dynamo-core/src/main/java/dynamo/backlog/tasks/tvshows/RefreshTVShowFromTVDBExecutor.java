@@ -144,7 +144,9 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 		}
 		
 		tvShowDAO.saveTVShow(
-				series, series.getMetaDataLanguage(), series.getOriginalLanguage(), series.getAudioLanguage(), series.getSubtitleLanguage(), series.getFolder(),
+				series,
+				series.getId(), series.getName(), series.getImdbId(),
+				series.getMetaDataLanguage(), series.getOriginalLanguage(), series.getAudioLanguage(), series.getSubtitleLanguage(), series.getFolder(),
 				series.getWordsBlackList(), series.getAka(), TVShowManager.getInstance().getTvShowQualities() );
 
 		if (Files.exists( series.getFolder() )) {

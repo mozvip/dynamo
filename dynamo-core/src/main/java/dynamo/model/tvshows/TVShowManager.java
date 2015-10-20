@@ -297,7 +297,8 @@ public class TVShowManager implements Reconfigurable {
 	public void saveSeries( ManagedSeries managedSeries ) throws IOException {
 
 		tvShowDAO.saveTVShow(
-				managedSeries, managedSeries.getOriginalLanguage(), managedSeries.getMetaDataLanguage(), managedSeries.getAudioLanguage(), managedSeries.getSubtitleLanguage(),  managedSeries.getFolder(),
+				managedSeries, managedSeries.getId(), managedSeries.getName(), managedSeries.getImdbId(),
+				managedSeries.getOriginalLanguage(), managedSeries.getMetaDataLanguage(), managedSeries.getAudioLanguage(), managedSeries.getSubtitleLanguage(),  managedSeries.getFolder(),
 				managedSeries.getWordsBlackList(), managedSeries.getAka(), managedSeries.getQualities() );
 		
 		if (!Files.isDirectory( managedSeries.getFolder() )) {
@@ -319,7 +320,7 @@ public class TVShowManager implements Reconfigurable {
 			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "this.episode.seriesId == '%s'", managedSeries.getId() ) );
 		}
 
-		RefreshTVShowTask task = new RefreshTVShowTask( managedSeries.getId() );
+		RefreshTVShowTask task = new RefreshTVShowTask( managedSeries );
 
 		BackLogProcessor.getInstance().runNow( task, false );
 
@@ -429,10 +430,10 @@ public class TVShowManager implements Reconfigurable {
 		return tvShowDAO.findSeasons( seriesId );
 	}
 
-	public List<ManagedEpisode> findEpisodes(String seriesId) {
-		List<ManagedEpisode> episodes = tvShowDAO.findEpisodesForTVShow(seriesId);
+	public List<ManagedEpisode> findEpisodes( ManagedSeries series ) {
+		List<ManagedEpisode> episodes = tvShowDAO.findEpisodesForTVShow( series.getId() );
 		if (episodes == null) {
-			BackLogProcessor.getInstance().schedule( new RefreshTVShowTask( seriesId ) );
+			BackLogProcessor.getInstance().schedule( new RefreshTVShowTask( series ) );
 		}
 		return episodes;
 	}

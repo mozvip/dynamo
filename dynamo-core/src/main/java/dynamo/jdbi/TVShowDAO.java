@@ -56,7 +56,7 @@ public interface TVShowDAO {
 			+ "(ID, NAME, IMDBID, LASTUPDATEDDATE, BANNER, POSTER, NETWORK, FOLDER, ORIGINAL_LANGUAGE, METADATALANGUAGE, AUDIOLANGUAGE, SUBTITLELANGUAGE, ENDED, DOWNLOADED, MISSING, USEABSOLUTENUMBERING, AUTODOWNLOAD, BLACKLIST, AKA, QUALITIES) VALUES"
 			+ "(:id, :name, :imdbId, CURRENT_TIMESTAMP(), :banner, :poster, :network, :folder, :originalLanguage, :metaDataLanguage, :audioLanguage, :subtitleLanguage, :ended, :downloaded, :missing, :useAbsoluteNumbering, :autoDownload, :blackList, :aka, :qualities )")
 	public void saveTVShow(
-			@BindBean ManagedSeries managedSeries,
+			@BindBean ManagedSeries managedSeries, @Bind("id") String id, @Bind("name") String name, @Bind("imdbId") String imdbId,
 			@BindEnum("metaDataLanguage") Language metaDataLanguage, @BindEnum("originalLanguage") Language originalLanguage, @BindEnum("audioLanguage") Language audioLanguage, @BindEnum("subtitleLanguage") Language subtitleLanguage,
 			@BindPath("folder") Path folder, @BindStringList("blackList") List<String> blackList, @BindStringList("aka") List<String> aka, @BindStringList("qualities") List<VideoQuality> qualities);
 

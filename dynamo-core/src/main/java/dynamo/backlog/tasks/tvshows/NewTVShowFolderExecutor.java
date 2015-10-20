@@ -15,7 +15,6 @@ import dynamo.jdbi.TVShowDAO;
 import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.tvshows.TVShowManager;
-import liquibase.sqlgenerator.core.GetViewDefinitionGeneratorMSSQL;
 import model.ManagedEpisode;
 import model.ManagedSeries;
 import model.backlog.NewTVShowFolderTask;
@@ -82,7 +81,7 @@ public class NewTVShowFolderExecutor extends AbstractNewFolderExecutor<NewTVShow
 			}
 
 			if (mustRefresh) {
-				RefreshTVShowTask task = new RefreshTVShowTask( managed.getId() );
+				RefreshTVShowTask task = new RefreshTVShowTask( managed );
 				task.setMinDate( nextRefreshDate );
 				queue( task, false );
 			}

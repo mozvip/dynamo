@@ -30,7 +30,7 @@ public class FileListService {
 	@DELETE
 	public void delete(@QueryParam("path") String pathStr) {
 		java.nio.file.Path path = Paths.get( pathStr );
-		BackLogProcessor.getInstance().schedule( new DeleteFileTask(path));
+		BackLogProcessor.getInstance().schedule( new DeleteFileTask(path), false );
 	}
 
 }

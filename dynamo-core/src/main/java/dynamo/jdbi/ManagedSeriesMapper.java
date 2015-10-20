@@ -27,8 +27,8 @@ public class ManagedSeriesMapper implements ResultSetMapper<ManagedSeries> {
 		
 		String subtitleLanguage = r.getString("SUBTITLELANGUAGE");
 	
-		ManagedSeries m = new ManagedSeries(r.getString("id"),
-				r.getString("name"), r.getString("IMDBID"),
+		ManagedSeries m = new ManagedSeries(r.getString("ID"),
+				r.getString("NAME"), r.getString("IMDBID"),
 				r.getDate("LASTUPDATEDDATE"),
 				r.getString("BANNER"), r.getString("POSTER"),
 				r.getString("NETWORK"), Paths.get(r.getString("FOLDER")),

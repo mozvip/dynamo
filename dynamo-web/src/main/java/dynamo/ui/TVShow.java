@@ -103,7 +103,7 @@ public class TVShow extends DynamoManagedBean {
 	public List<ManagedEpisode> getEpisodes( int season ) {
 		if (episodeMap == null) {
 			episodeMap = new ConcurrentHashMap<>();
-			List<ManagedEpisode> episodes = TVShowManager.getInstance().findEpisodes( getId() );
+			List<ManagedEpisode> episodes = TVShowManager.getInstance().findEpisodes( managedSeries );
 			for (ManagedEpisode managedEpisode : episodes) {
 				int seasonNumber = managedEpisode.getSeasonNumber();
 				if (!episodeMap.containsKey( seasonNumber )) {
@@ -172,7 +172,7 @@ public class TVShow extends DynamoManagedBean {
 	
 	public String deleteShow() {
 		runNow( new DeleteShowTask(managedSeries, true), true );
-		return "tvshows";
+		return "tvshows?faces-redirect=true";
 	}
 	
 	public void toogleAutoDownload() throws IOException {
@@ -181,7 +181,7 @@ public class TVShow extends DynamoManagedBean {
 
 	public String save() throws IOException {
 		TVShowManager.getInstance().saveSeries( managedSeries );
-		return "tvshows";
+		return "tvshows?faces-redirect=true";
 	}
 
 	public void deleteFiles( int seasonNumber ) throws IOException {
