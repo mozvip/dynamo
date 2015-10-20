@@ -2,12 +2,14 @@ package dynamo.ui;
 
 import java.awt.Desktop;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.faces.bean.ManagedBean;
@@ -21,13 +23,13 @@ import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.backlog.tasks.tvshows.DeleteShowTask;
 import dynamo.core.VideoQuality;
-import dynamo.core.manager.ErrorManager;
 import dynamo.core.tasks.InvokeMethodTask;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import dynamo.model.tvshows.TVShowManager;
 import dynamo.model.tvshows.TVShowSeason;
+import dynamo.video.VideoManager;
 import model.ManagedEpisode;
 import model.ManagedSeries;
 import model.UnrecognizedFile;
@@ -326,7 +328,10 @@ public class TVShow extends DynamoManagedBean {
 	}
 	
 	public void play( ManagedEpisode episode ) throws IOException  {
-		Desktop.getDesktop().open( episode.getPath().toFile() );
+		Optional<Path> episodeVideoPath = VideoManager.getInstance().getMainVideoFile( episode.getId() );
+		if (episodeVideoPath.isPresent()) {
+			Desktop.getDesktop().open( episodeVideoPath.get().toFile() );
+		}		
 	}
 
 	public void redownload( ManagedEpisode episode ) throws NoSuchMethodException, SecurityException {

@@ -2,11 +2,10 @@ package dynamo.backlog.tasks.movies;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.MovieDAO;
@@ -16,8 +15,6 @@ import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
 
 public class MovieCleanupExecutor extends TaskExecutor<MovieCleanupTask> implements ReportProgress {
-	
-	private Set<String> imdbIds = new HashSet<String>();
 	
 	int totalItems, itemsDone;
 	
@@ -51,13 +48,14 @@ public class MovieCleanupExecutor extends TaskExecutor<MovieCleanupTask> impleme
 		List<Path> movieFolders = MovieManager.getInstance().getFolders();
 
 		for (Movie movie : allDownloadedMovies) {
-			Path moviePath = movie.getPath();
 			
-			if (moviePath == null || Files.isDirectory(moviePath)) {
+			List<DownloadableFile> files = DownloadableManager.getInstance().getAllFiles( movie.getId() );
+			if (files == null || files.size() == 0) {
 				downloadableDAO.delete( movie.getId() );
-				continue;
 			}
 			
+			Path moviePath = files.get(0).getFilePath();	// FIXME
+
 			Path folder = null;
 			for (Path movieFolderPath : movieFolders) {
 				if (moviePath.startsWith( movieFolderPath )) {
@@ -67,7 +65,7 @@ public class MovieCleanupExecutor extends TaskExecutor<MovieCleanupTask> impleme
 			}
 			
 			if (folder == null) {
-				// this movie is not in any of ours movie folders
+				// this movie is not in any of our movies folders
 				downloadableDAO.delete( movie.getId() );
 				continue;
 			}
@@ -77,13 +75,8 @@ public class MovieCleanupExecutor extends TaskExecutor<MovieCleanupTask> impleme
 				continue;
 			}
 			
-			if (moviePath != null && Files.exists( moviePath )) {
-				if ( movie.getImdbID() != null ) {
-					imdbIds.add( movie.getImdbID() );
-				}
-				if (task.isRename()) {
-					queue(new RenameMovieFileTask( movie ), false);
-				}
+			if (Files.exists( moviePath ) && task.isRename()) {
+				queue(new RenameMovieFileTask( movie ), false);
 			}
 			
 			itemsDone ++;

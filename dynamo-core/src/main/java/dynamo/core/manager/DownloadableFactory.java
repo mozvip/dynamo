@@ -28,9 +28,14 @@ public class DownloadableFactory {
 	private DownloadableFactory() {
 	}
 	
-	public synchronized Downloadable createInstance( long downloadableId ) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, IllegalArgumentException {
+	public synchronized Downloadable createInstance( long downloadableId ) {
 		DownloadInfo downloadInfo = DownloadableManager.getInstance().find( downloadableId );
-		return createInstance(downloadableId, downloadInfo.getDownloadableClass());
+		try {
+			return createInstance(downloadableId, downloadInfo.getDownloadableClass());
+		} catch (ClassNotFoundException | InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
+			ErrorManager.getInstance().reportThrowable( e );
+		}
+		return null;
 	}
 	
 	public synchronized Downloadable createInstance( long downloadableId, Class<? extends Downloadable> klass ) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, IllegalArgumentException {

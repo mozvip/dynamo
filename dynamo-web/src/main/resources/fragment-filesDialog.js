@@ -32,10 +32,20 @@ $('#fileList').on(
 					function(data) {
 						var table = $("#fileListTable tbody");
 						$.each(data, function(idx, row) {
-							table.append("<tr><td></td><td>" + row.filePath
+							table.append("<tr><td><a class='btn btn-sm btn-danger deleteButton' data-path=\"" + row.filePath + "\"><i class='fa fa-trash'></i></a></td><td>" + row.filePath
 									+ "</td><td>"
 									+ humanFileSize(row.size, false)
 									+ "</td></tr>");
+						});
+						$('.deleteButton').click( function() {
+							var path = $(this).data('path');
+							if (confirm("Are you sure you want to delete " + path + " ?")) {
+								$.ajax({
+									url : "../services/file-list?path=" + path,
+									method: "DELETE"
+								});
+								$(this).closest("tr").remove();
+							}
 						});
 					});
 

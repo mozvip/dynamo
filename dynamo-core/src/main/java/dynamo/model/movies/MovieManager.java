@@ -532,5 +532,4 @@ public class MovieManager implements Reconfigurable {
 		}
 	}
 
-
 }

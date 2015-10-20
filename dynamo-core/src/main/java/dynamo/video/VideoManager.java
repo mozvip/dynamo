@@ -5,17 +5,22 @@ import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import core.WebDocument;
+import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
+import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.video.VideoDAO;
 import dynamo.core.model.video.VideoMetaData;
+import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
 
 public class VideoManager {
@@ -112,5 +117,16 @@ public class VideoManager {
 		}
 		return metaData;
 	}
+	
+	public Optional<Path> getMainVideoFile( long downloadableId ) {
+		List<DownloadableFile> files = DownloadableManager.getInstance().getAllFiles( downloadableId );
+		for (DownloadableFile downloadableFile : files) {
+			if (VideoFileFilter.getInstance().accept( downloadableFile.getFilePath() )) {
+				return Optional.of( downloadableFile.getFilePath());
+			}
+		}
+		return Optional.empty();
+	}
+	
 
 }

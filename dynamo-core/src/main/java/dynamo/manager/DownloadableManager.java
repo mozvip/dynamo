@@ -300,10 +300,6 @@ public class DownloadableManager {
 		downloadableDAO.delete(id);
 	}
 
-	public void deleteFile( Path path ) {
-		downloadableDAO.deleteFile( path );
-	}
-
 	public void redownload(Downloadable downloadable) {
 		// blacklist search result
 		searchResultDAO.blacklist(downloadable.getId());

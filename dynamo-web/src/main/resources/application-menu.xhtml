@@ -33,27 +33,29 @@
 		</ul></li>
 </h:panelGroup>
 <h:panelGroup rendered="#{dynamoConfiguration.moviesEnabled}">
-	<li class="dropdown"><a href="#" class="dropdown-toggle"
-		data-toggle="dropdown"><i class="fa fa-film"></i>&nbsp;Movies<span
-			class="caret"></span></a>
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-film"></i>&nbsp;Movies<span class="caret"></span></a>
 		<ul class="dropdown-menu" role="menu">
 			<ui:fragment rendered="#{movies.collectionContents.totalCount > 0}">
-			<li>
-				<h:link outcome="movies-collection">
-					<i class="fa fa-file-video-o" />&nbsp;Collection <span
-						class="badge">#{movies.collectionContents.totalCount}</span>
-				</h:link></li>
+				<li><h:link outcome="movies-collection">
+						<i class="fa fa-file-video-o" />&nbsp;Collection <span class="badge">#{movies.collectionContents.totalCount}</span>
+					</h:link></li>
 			</ui:fragment>
-			<li><h:link outcome="movies-wanted">
-					<i class="fa fa-heart" />&nbsp;Wanted
+			<ui:fragment rendered="#{movies.wantedContents.totalCount > 0}">
+				<li><h:link outcome="movies-wanted">
+						<i class="fa fa-heart" />&nbsp;Wanted
 											</h:link></li>
-			<li><h:link outcome="movies-suggestions">
+			</ui:fragment>
+			<ui:fragment rendered="#{movies.suggestionContents.totalCount > 0}">
+				<li><h:link outcome="movies-suggestions">
 												Suggestions <span class="badge">#{movies.suggestionContents.totalCount}</span>
-				</h:link></li>
+					</h:link></li>
+			</ui:fragment>
 			<li><h:link outcome="movies-manual-add">
 					<i class="fa fa-plus" />&nbsp;Add new manually
 											</h:link></li>
-		</ul></li>
+		</ul>
+	</li>
 </h:panelGroup>
 <h:panelGroup rendered="#{dynamoConfiguration.musicEnabled}">
 

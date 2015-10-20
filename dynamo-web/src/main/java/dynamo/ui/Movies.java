@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -19,6 +20,7 @@ import dynamo.core.VideoQuality;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
+import dynamo.video.VideoManager;
 
 @ManagedBean
 @ViewScoped
@@ -192,7 +194,10 @@ public class Movies extends DynamoManagedBean {
 	}
 	
 	public void play( Movie movie ) throws IOException {
-		Desktop.getDesktop().open( movie.getPath().toFile() );
+		Optional<Path> moviePath = VideoManager.getInstance().getMainVideoFile( movie.getId() );
+		if (moviePath.isPresent()) {
+			Desktop.getDesktop().open( moviePath.get().toFile() );
+		}
 	}
 	
 	public void wantSuggestion() {

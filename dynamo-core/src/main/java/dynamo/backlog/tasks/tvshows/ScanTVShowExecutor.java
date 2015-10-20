@@ -9,6 +9,7 @@ import java.util.List;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
+import dynamo.backlog.tasks.files.DeleteFileTask;
 import dynamo.core.ReleaseGroup;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.core.model.DownloadableFile;
@@ -131,7 +132,7 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 						if (Files.exists( downloadableFile.getFilePath())) {
 							atLeastOneFileFound = true;	// IMPROVE : make sure the video file is found
 						} else {
-							DownloadableManager.getInstance().deleteFile( downloadableFile.getFilePath()  );		
+							BackLogProcessor.getInstance().schedule( new DeleteFileTask( downloadableFile.getFilePath() ));
 						}
 					}
 				}
