@@ -81,10 +81,8 @@ public abstract class AbstractNewFolderExecutor<T extends NewFolderTask> extends
 				thisLevelFolders.add( currentPath );
 			}
 		}
-		if (thisLevelFolders.size() > 1) {
+		if (thisLevelFolders.size() > 0) {
 			return thisLevelFolders;
-		} else if (thisLevelFolders.size() == 1) {
-			return getTopLevelPathList( thisLevelFolders.get( 0 ) );
 		} else {
 			// empty
 			return null;

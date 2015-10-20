@@ -3,6 +3,7 @@ package dynamo.backlog.tasks.core;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -50,7 +51,8 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 
 		totalItems = downloadeds.size();
 
-		for (DownloadInfo downloadInfo : downloadeds) {
+		for (Iterator<DownloadInfo> iterator = downloadeds.iterator(); iterator.hasNext(); itemsDone++) {
+			DownloadInfo downloadInfo = iterator.next();
 			Downloadable downloadable = DownloadableFactory.getInstance().createInstance(downloadInfo.getId(), downloadInfo.getDownloadableClass());
 			if (downloadable == null) {
 				DownloadableManager.getInstance().delete( downloadInfo.getId() );
@@ -129,8 +131,6 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 					queue( new DeleteDownloadableTask(downloadable), false );
 				}
 			}
-
-			itemsDone ++;
 		}
 	}
 

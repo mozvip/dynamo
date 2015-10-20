@@ -19,4 +19,8 @@ public class DeleteFileTask extends Task {
 		return path;
 	}
 
+	@Override
+	public String toString() {
+		return String.format( "Deleting %s", path.toAbsolutePath().toString() );
+	}	
 }

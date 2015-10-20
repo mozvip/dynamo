@@ -47,12 +47,13 @@
 						</h:panelGroup>
 
 						<h:panelGroup rendered="#{!tvshow.managedSeries.ended}">
-							<div class="form-group">
-							  <div class="col-lg-offset-4 col-lg-8">
-								<h:commandButton value="#{tvshow.managedSeries.autoDownload?'Disable Auto Download':'Enable Auto Download'}" type="button" class="btn btn-default #{tvshow.managedSeries.autoDownload?'active':''}">
-									<f:ajax render="@form" listener="#{tvshow.toogleAutoDownload}" />
-								</h:commandButton>							  
-							  </div>
+							<div class="checkbox">
+								<label>
+								  	<h:selectBooleanCheckbox value="#{tvshow.managedSeries.autoDownload}">
+								  		<f:ajax render="@form" listener="#{tvshow.toogleAutoDownload}" />
+								  	</h:selectBooleanCheckbox>
+								  	Auto Download Episodes
+								</label>
 							</div>
 						</h:panelGroup>
 						

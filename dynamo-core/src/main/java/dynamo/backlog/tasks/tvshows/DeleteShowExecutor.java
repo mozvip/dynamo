@@ -41,14 +41,16 @@ public class DeleteShowExecutor extends TaskExecutor<DeleteShowTask> {
 
 		tvShowDAO.deleteTVShow(series.getId());
 
-		if (Files.isDirectory(series.getFolder())) {
-			Files.walkFileTree(series.getFolder(), new SimpleFileVisitor<Path>() {
-				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-					BackLogProcessor.getInstance().schedule(new DeleteTask(file, true), false);
-					return FileVisitResult.CONTINUE;
-				}
-			});
+		if ( task.isDeleteFiles()) {
+			if (Files.isDirectory(series.getFolder())) {
+				Files.walkFileTree(series.getFolder(), new SimpleFileVisitor<Path>() {
+					@Override
+					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+						BackLogProcessor.getInstance().schedule(new DeleteTask(file, true), false);
+						return FileVisitResult.CONTINUE;
+					}
+				});
+			}
 		}
 	}
 

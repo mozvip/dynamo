@@ -171,12 +171,11 @@ public class TVShow extends DynamoManagedBean {
 	}
 	
 	public String deleteShow() {
-		runNow( new DeleteShowTask(managedSeries), true );
+		runNow( new DeleteShowTask(managedSeries, true), true );
 		return "tvshows";
 	}
 	
 	public void toogleAutoDownload() throws IOException {
-		managedSeries.setAutoDownload( ! managedSeries.isAutoDownload() );
 		TVShowManager.getInstance().saveSeries( managedSeries );
 	}
 
