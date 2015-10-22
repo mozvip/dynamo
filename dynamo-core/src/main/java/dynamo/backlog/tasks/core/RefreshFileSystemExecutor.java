@@ -17,7 +17,6 @@ import dynamo.manager.DownloadableManager;
 import dynamo.manager.MusicManager;
 import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
-import dynamo.model.ebooks.EBook;
 import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
 import dynamo.model.music.MusicAlbum;
@@ -109,26 +108,28 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 			}
 			
 			if (downloadInfo.getPath() == null || Files.notExists(downloadInfo.getPath())) {
+				
+				if (files != null && files.size() > 0) {
+					DownloadableManager.getInstance().updatePath( downloadInfo.getId(), files.get(0).getFilePath() );
+				} else {
 					
-				if (downloadable instanceof ManagedEpisode) {
-					queue(new ScanTVShowTask(((ManagedEpisode) downloadable).getSeries()));
-				} else if (downloadable instanceof MusicAlbum) {
-					List<MusicFile> musicFiles = MusicManager.getInstance().findMusicFiles(downloadInfo.getId());
-					if (!musicFiles.isEmpty()) {
-						for (MusicFile musicFile : musicFiles) {
-							if (Files.notExists(musicFile.getPath())) {
-								queue(new DeleteMusicFileTask(musicFile), false);
+					if (downloadable instanceof ManagedEpisode) {
+						queue(new ScanTVShowTask(((ManagedEpisode) downloadable).getSeries()));
+					} else if (downloadable instanceof MusicAlbum) {
+						List<MusicFile> musicFiles = MusicManager.getInstance().findMusicFiles(downloadInfo.getId());
+						if (!musicFiles.isEmpty()) {
+							for (MusicFile musicFile : musicFiles) {
+								if (Files.notExists(musicFile.getPath())) {
+									queue(new DeleteMusicFileTask(musicFile), false);
+								}
 							}
+						} else {
+							queue( new DeleteDownloadableTask(downloadable));
 						}
 					} else {
-						queue( new DeleteDownloadableTask(downloadable));
+						// was deleted manually
+						queue( new DeleteDownloadableTask(downloadable), false );
 					}
-				} else if (downloadable instanceof EBook) {
-					// ebook becomes suggested
-					DownloadableManager.getInstance().suggest(downloadable);
-				} else {
-					// was deleted manually
-					queue( new DeleteDownloadableTask(downloadable), false );
 				}
 			}
 		}

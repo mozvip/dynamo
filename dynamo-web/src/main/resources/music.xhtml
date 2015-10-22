@@ -64,10 +64,10 @@
 		<h:form id="downloadableList">
 			<ui:include src="/components/pager.xhtml" />
 			<ui:repeat var="album" value="#{pager.items}">
-				<div class="col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{album.id}">
+				<div class="album col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{album.id}">
 					<div class="buttons btn-group-vertical" role="group">
 						<ui:fragment title="Want Suggestion" rendered="#{album.status == 'SUGGESTED'}">
-							<a href="#" class="btn btn-success btn-sm" onclick="want('#{album.id}');">
+							<a class="btn btn-success btn-sm" onclick="want('#{album.id}');">
 								<i class="fa fa-download"></i>
 							</a>
 						</ui:fragment>
