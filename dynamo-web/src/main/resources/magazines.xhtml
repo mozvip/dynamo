@@ -32,10 +32,10 @@
 				position: absolute; right: 32px; top: 10px; width: 20px;
 			}
 		</style>
-
-		<h:form styleClass="form-inline">
-			<ui:include src="magazines-criteria.xhtml" />
-			
+		
+		<ui:include src="magazines-criteria.xhtml" />
+		
+		<h:form id="listForm">
 			<ui:include src="/components/pager.xhtml" />
 
 			<ui:repeat var="issue" value="#{pager.items}">

@@ -20,6 +20,7 @@ public class Kiosk extends DynamoManagedBean {
 
 	private Language language = MagazineManager.getInstance().getDefaultLanguage();
 	private String filter;
+	private boolean includeAdult;
 
 	public Language getLanguage() {
 		return language;
@@ -35,6 +36,14 @@ public class Kiosk extends DynamoManagedBean {
 
 	public void setFilter(String filter) {
 		this.filter = filter;
+	}
+	
+	public boolean isIncludeAdult() {
+		return includeAdult;
+	}
+	
+	public void setIncludeAdult(boolean includeAdult) {
+		this.includeAdult = includeAdult;
 	}
 
 	private MagazineIssuePager kioskContents = null;
