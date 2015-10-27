@@ -50,7 +50,7 @@
 							<div class="checkbox">
 								<label>
 								  	<h:selectBooleanCheckbox value="#{tvshow.managedSeries.autoDownload}">
-								  		<f:ajax render="@none" listener="#{tvshow.quickSave}" />
+								  		<f:ajax render="@none" execute="@this" listener="#{tvshow.quickSave}" />
 								  	</h:selectBooleanCheckbox>
 								  	Auto Download Episodes
 								</label>
@@ -66,7 +66,7 @@
 							<div class="col-lg-8">
 								<h:selectManyListbox id="qualities" value="#{tvshow.managedSeries.qualities}" required="true" converter="VideoQualityConverter" styleClass="form-control">
 									<f:selectItems value="#{tvshows.allQualities}" />
-									<f:ajax render="@none" listener="#{tvshow.quickSave}" />
+									<f:ajax render="@none" execute="@this" listener="#{tvshow.quickSave}" />
 								</h:selectManyListbox>
 							</div>
 						</div>
@@ -75,7 +75,7 @@
 							<div class="col-lg-8">
 								<h:selectOneMenu id="originalLanguage" value="#{tvshow.managedSeries.originalLanguage}" required="true" styleClass="form-control">
 									<f:selectItems value="#{listOfValues.languages}" />
-									<f:ajax render="@none" listener="#{tvshow.quickSave}" />
+									<f:ajax render="@none" execute="@this" listener="#{tvshow.quickSave}" />
 								</h:selectOneMenu>
 							</div>
 						</div>
@@ -84,7 +84,7 @@
 							<div class="col-lg-8">
 								<h:selectOneMenu id="metaDataLanguage" value="#{tvshow.managedSeries.metaDataLanguage}" required="true" styleClass="form-control">
 									<f:selectItems value="#{listOfValues.languages}" />
-									<f:ajax render="@none" listener="#{tvshow.quickSave}" />
+									<f:ajax render="@none" execute="@this" listener="#{tvshow.quickSave}" />
 								</h:selectOneMenu>
 							</div>
 						</div>
@@ -94,7 +94,7 @@
 								<h:selectOneMenu value="#{tvshow.managedSeries.audioLanguage}" styleClass="form-control">
 									<f:selectItem  itemValue="" itemLabel="Original" />
 									<f:selectItems value="#{listOfValues.languages}" />
-									<f:ajax render="@none" listener="#{tvshow.quickSave}" />
+									<f:ajax render="@none" execute="@this" listener="#{tvshow.quickSave}" />
 								</h:selectOneMenu>
 							</div>
 						</div>
@@ -104,7 +104,7 @@
 								<h:selectOneMenu value="#{tvshow.managedSeries.subtitleLanguage}" styleClass="form-control">
 									<f:selectItem  itemValue="" itemLabel="None" />
 									<f:selectItems value="#{listOfValues.languages}" />
-									<f:ajax render="@none" listener="#{tvshow.quickSave}" />
+									<f:ajax render="@none" execute="@this" listener="#{tvshow.quickSave}" />
 								</h:selectOneMenu>
 							</div>
 						</div>
@@ -125,7 +125,7 @@
 							<h:outputLabel styleClass="col-lg-4 control-label" value="Alternate names" />
 							<div class="col-lg-8">
 								<h:inputText value="#{tvshow.managedSeries.alternateNames}" styleClass="form-control" p:placeholder="Use ; to separate names">
-									<f:ajax render="@none" listener="#{tvshow.quickSave}" />
+									<f:ajax render="@none" execute="@this" listener="#{tvshow.quickSave}" />
 								</h:inputText>
 							</div>
 						</div>
@@ -133,7 +133,7 @@
 							<h:outputLabel styleClass="col-lg-4 control-label" value="Words Black List" />
 							<div class="col-lg-8">
 								<h:inputText value="#{tvshow.managedSeries.blackList}" styleClass="form-control" p:placeholder="Use ; to separate words">
-									<f:ajax render="@none" listener="#{tvshow.quickSave}" />								
+									<f:ajax render="@none" execute="@this" listener="#{tvshow.quickSave}" />								
 								</h:inputText>
 							</div>
 						</div>

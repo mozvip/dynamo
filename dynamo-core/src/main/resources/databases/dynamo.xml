@@ -105,12 +105,9 @@
             <column name="SUBTITLELANGUAGE" type="VARCHAR(50)"/>
             <column name="AUTODOWNLOAD" type="BOOLEAN(1)"/>
             <column name="BANNER" type="VARCHAR(2147483647)"/>
-            <column name="DOWNLOADED" type="INT(10)"/>
             <column name="ENDED" type="BOOLEAN(1)"/>
             <column name="FOLDER" type="VARCHAR(2147483647)"/>
             <column name="IMDBID" type="VARCHAR(2147483647)"/>
-            <column name="LASTUPDATEDDATE" type="TIMESTAMP"/>
-            <column name="MISSING" type="INT(10)"/>
             <column name="NETWORK" type="VARCHAR(2147483647)"/>
             <column name="POSTER" type="VARCHAR(2147483647)"/>
             <column name="USEABSOLUTENUMBERING" type="BOOLEAN(1)"/>

@@ -143,11 +143,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 			series.setPoster( LocalImageCache.getInstance().download( "posters", tvDbSeries.getSeriesName(), tvDbSeries.getPoster(), null ) );
 		}
 		
-		tvShowDAO.saveTVShow(
-				series,
-				series.getId(), series.getName(), series.getImdbId(),
-				series.getMetaDataLanguage(), series.getOriginalLanguage(), series.getAudioLanguage(), series.getSubtitleLanguage(), series.getFolder(),
-				series.getWordsBlackList(), series.getAka(), TVShowManager.getInstance().getTvShowQualities() );
+		TVShowManager.getInstance().saveTVShow( series );
 
 		if (Files.exists( series.getFolder() )) {
 			queue( new ScanTVShowTask( series ), false );

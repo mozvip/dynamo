@@ -235,8 +235,6 @@ public class TVShowManager implements Reconfigurable {
 			
 			boolean ended = StringUtils.equalsIgnoreCase( series.getStatus(), "Ended" );
 			
-			List<VideoQuality> qualities = new ArrayList<>(tvShowQualities);
-			
 			List<String> aka = new ArrayList<>();
 			
 			aka.add ( series.getSeriesName() );
@@ -247,7 +245,8 @@ public class TVShowManager implements Reconfigurable {
 			
 			Language originalLanguage = Language.getByShortName( series.getLanguage() );
 
-			managed = new ManagedSeries( series.getId(), series.getSeriesName(), series.getImdbId(), null, banner, poster, series.getNetwork(), folder, originalLanguage, metaLang, audioLang, subsLang, ended, 0, 0, false, false, aka, qualities, null );
+			managed = new ManagedSeries(
+					series.getId(), series.getSeriesName(), series.getImdbId(), banner, poster, series.getNetwork(), folder, originalLanguage, metaLang, audioLang, subsLang, ended, false, false, aka, tvShowQualities, null );
 		}
 
 		saveSeries( managed );
@@ -294,36 +293,40 @@ public class TVShowManager implements Reconfigurable {
 		return api.getEpisode(seriesId, seasonNbr, episodeNbr, language.getShortName());
 	}
 	
-	public void saveSeries( ManagedSeries managedSeries ) throws IOException {
+	public void saveSeries( ManagedSeries series ) throws IOException {
 
-		tvShowDAO.saveTVShow(
-				managedSeries, managedSeries.getId(), managedSeries.getName(), managedSeries.getImdbId(),
-				managedSeries.getOriginalLanguage(), managedSeries.getMetaDataLanguage(), managedSeries.getAudioLanguage(), managedSeries.getSubtitleLanguage(),  managedSeries.getFolder(),
-				managedSeries.getWordsBlackList(), managedSeries.getAka(), managedSeries.getQualities() );
+		saveTVShow(series);
 		
-		if (!Files.isDirectory( managedSeries.getFolder() )) {
+		if (!Files.isDirectory( series.getFolder() )) {
 			try {
-				Files.createDirectories( managedSeries.getFolder() );
+				Files.createDirectories( series.getFolder() );
 			} catch (IOException e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
 		}
 
 		// remvove tasks to obtain subtitles if applicable
-		if (managedSeries.getSubtitleLanguage() == null) {
+		if (series.getSubtitleLanguage() == null) {
 			// remove existing subtitles
-			for ( Path subtitle : Files.newDirectoryStream( managedSeries.getFolder(), SubtitlesFileFilter.getInstance() )) {
+			for ( Path subtitle : Files.newDirectoryStream( series.getFolder(), SubtitlesFileFilter.getInstance() )) {
 				if (Files.isRegularFile(subtitle)) {
 					BackLogProcessor.getInstance().schedule( new DeleteTask(subtitle, false), false );
 				}
 			}
-			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "this.episode.seriesId == '%s'", managedSeries.getId() ) );
+			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "this.episode.seriesId == '%s'", series.getId() ) );
 		}
 
-		RefreshTVShowTask task = new RefreshTVShowTask( managedSeries );
+		RefreshTVShowTask task = new RefreshTVShowTask( series );
 
 		BackLogProcessor.getInstance().runNow( task, false );
 
+	}
+
+	public void saveTVShow(ManagedSeries series) {
+		tvShowDAO.saveTVShow(
+				series.getId(), series.getName(), series.getImdbId(), series.getBanner(), series.getPoster(), series.getNetwork(), series.getFolder(),
+				series.getOriginalLanguage(), series.getMetaDataLanguage(), series.getAudioLanguage(), series.getSubtitleLanguage(), series.isEnded(), series.isUseAbsoluteNumbering(), series.isAutoDownload(),
+				series.getWordsBlackList(), series.getAka(), series.getQualities() );
 	}
 
 	public void assignEpisodes( Path path, List<ManagedEpisode> episodes ) {

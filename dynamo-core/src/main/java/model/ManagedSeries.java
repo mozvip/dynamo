@@ -3,7 +3,6 @@ package model;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +21,6 @@ public class ManagedSeries implements Serializable {
 
 	private String name;
 	private String imdbId;
-	private Date lastUpdatedDate;
 	private String banner;
 	private String poster;
 	private String network;
@@ -34,8 +32,6 @@ public class ManagedSeries implements Serializable {
 	private Language subtitleLanguage;
 
 	private boolean ended;
-	private int downloaded;
-	private int missing;
 	private boolean useAbsoluteNumbering = false;
 	private boolean autoDownload = true;
 
@@ -43,14 +39,13 @@ public class ManagedSeries implements Serializable {
 	private List<String> wordsBlackList;
 	private List<VideoQuality> qualities;
 
-	public ManagedSeries(String id, String name, String imdbId, Date lastUpdatedDate, String banner, String poster, String network, Path folder,
-			Language originalLanguage, Language metaDataLanguage, Language audioLanguage, Language subtitleLanguage, boolean ended, int downloaded, int missing,
+	public ManagedSeries(String id, String name, String imdbId, String banner, String poster, String network, Path folder,
+			Language originalLanguage, Language metaDataLanguage, Language audioLanguage, Language subtitleLanguage, boolean ended,
 			boolean useAbsoluteNumbering, boolean autoDownload, List<String> aka, List<VideoQuality> qualities, List<String> wordsBlackList) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.imdbId = imdbId;
-		this.lastUpdatedDate = lastUpdatedDate;
 		this.banner = banner;
 		this.poster = poster;
 		this.network = network;
@@ -60,8 +55,6 @@ public class ManagedSeries implements Serializable {
 		this.audioLanguage = audioLanguage;
 		this.subtitleLanguage = subtitleLanguage;
 		this.ended = ended;
-		this.downloaded = downloaded;
-		this.missing = missing;
 		this.useAbsoluteNumbering = useAbsoluteNumbering;
 		this.autoDownload = autoDownload;
 
@@ -142,22 +135,6 @@ public class ManagedSeries implements Serializable {
 		this.poster = poster;
 	}
 
-	public int getDownloaded() {
-		return downloaded;
-	}
-
-	public void setDownloaded(int downloaded) {
-		this.downloaded = downloaded;
-	}
-
-	public int getMissing() {
-		return missing;
-	}
-
-	public void setMissing(int missing) {
-		this.missing = missing;
-	}
-
 	public boolean isAutoDownload() {
 		return autoDownload;
 	}
@@ -232,10 +209,6 @@ public class ManagedSeries implements Serializable {
 
 	public void setUseAbsoluteNumbering(boolean useAbsoluteNumbering) {
 		this.useAbsoluteNumbering = useAbsoluteNumbering;
-	}
-
-	public Date getLastUpdatedDate() {
-		return lastUpdatedDate;
 	}
 
 	@Override

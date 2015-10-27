@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
@@ -53,12 +52,26 @@ public interface TVShowDAO {
 	public ManagedSeries findTVShowByImdbId(@Bind("imdbId") String imdbId);
 
 	@SqlUpdate("MERGE INTO MANAGEDSERIES"
-			+ "(ID, NAME, IMDBID, LASTUPDATEDDATE, BANNER, POSTER, NETWORK, FOLDER, ORIGINAL_LANGUAGE, METADATALANGUAGE, AUDIOLANGUAGE, SUBTITLELANGUAGE, ENDED, DOWNLOADED, MISSING, USEABSOLUTENUMBERING, AUTODOWNLOAD, BLACKLIST, AKA, QUALITIES) VALUES"
-			+ "(:id, :name, :imdbId, CURRENT_TIMESTAMP(), :banner, :poster, :network, :folder, :originalLanguage, :metaDataLanguage, :audioLanguage, :subtitleLanguage, :ended, :downloaded, :missing, :useAbsoluteNumbering, :autoDownload, :blackList, :aka, :qualities )")
+			+ "(ID, NAME, IMDBID, BANNER, POSTER, NETWORK, FOLDER, ORIGINAL_LANGUAGE, METADATALANGUAGE, AUDIOLANGUAGE, SUBTITLELANGUAGE, ENDED, USEABSOLUTENUMBERING, AUTODOWNLOAD, BLACKLIST, AKA, QUALITIES) VALUES"
+			+ "(:id, :name, :imdbId, :banner, :poster, :network, :folder, :originalLanguage, :metaDataLanguage, :audioLanguage, :subtitleLanguage, :ended, :useAbsoluteNumbering, :autoDownload, :blackList, :aka, :qualities )")
 	public void saveTVShow(
-			@BindBean ManagedSeries managedSeries, @Bind("id") String id, @Bind("name") String name, @Bind("imdbId") String imdbId,
-			@BindEnum("metaDataLanguage") Language metaDataLanguage, @BindEnum("originalLanguage") Language originalLanguage, @BindEnum("audioLanguage") Language audioLanguage, @BindEnum("subtitleLanguage") Language subtitleLanguage,
-			@BindPath("folder") Path folder, @BindStringList("blackList") List<String> blackList, @BindStringList("aka") List<String> aka, @BindStringList("qualities") List<VideoQuality> qualities);
+			@Bind("id") String id,
+			@Bind("name") String name,
+			@Bind("imdbId") String imdbId,
+			@Bind("banner") String banner,
+			@Bind("poster") String poster,
+			@Bind("network") String network,
+			@BindPath("folder") Path folder,
+			@BindEnum("originalLanguage") Language originalLanguage,
+			@BindEnum("metaDataLanguage") Language metaDataLanguage,
+			@BindEnum("audioLanguage") Language audioLanguage,
+			@BindEnum("subtitleLanguage") Language subtitleLanguage,
+			@Bind("ended") boolean ended,
+			@Bind("useAbsoluteNumbering") boolean useAbsoluteNumbering,
+			@Bind("autoDownload") boolean autoDownload,
+			@BindStringList("blackList") List<String> blackList,
+			@BindStringList("aka") List<String> aka,
+			@BindStringList("qualities") List<VideoQuality> qualities);
 
 	@SqlQuery("SELECT * FROM UNRECOGNIZEDFOLDER ORDER BY PATH")
 	@Mapper(UnrecognizedFolderMapper.class)
