@@ -21,8 +21,8 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 
 	private boolean ready = false;
 	
-	private final static String megsExpression = "\\s*([\\d\\.,]+)\\D+[Mm][OoBb]?\\s*.*";
-	private final static String gigsExpression = "\\s*([\\d\\.,]+)\\D+[Gg][OoBb]?\\s*.*";
+	private final static String megsExpression = "\\s*([\\d\\.,]+)\\D*[Mm][OoBb]?\\s*.*";
+	private final static String gigsExpression = "\\s*([\\d\\.,]+)\\D*[Gg][OoBb]?\\s*.*";
 
 	@Configurable(category="Providers")
 	private boolean enabled;
@@ -62,10 +62,10 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 	
 	protected float parseSize(String sizeExpression) {
 		if (RegExpMatcher.matches(sizeExpression, megsExpression)) {
-			return Float.parseFloat( RegExpMatcher.groups(sizeExpression, megsExpression).get(0).replaceAll(",", "") );				
+			return Float.parseFloat( RegExpMatcher.groups(sizeExpression, megsExpression).get(0).replaceAll(",", ".") );				
 		}
 		if (RegExpMatcher.matches(sizeExpression, gigsExpression)) {
-			return Float.parseFloat( RegExpMatcher.groups(sizeExpression, gigsExpression).get(0).replaceAll(",", "") ) * 1024;				
+			return Float.parseFloat( RegExpMatcher.groups(sizeExpression, gigsExpression).get(0).replaceAll(",", ".") ) * 1024;				
 		}
 		return 0;
 	}
