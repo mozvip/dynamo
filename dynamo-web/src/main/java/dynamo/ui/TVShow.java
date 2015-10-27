@@ -175,7 +175,7 @@ public class TVShow extends DynamoManagedBean {
 		return "tvshows?faces-redirect=true";
 	}
 	
-	public void toogleAutoDownload() throws IOException {
+	public void quickSave() throws IOException {
 		TVShowManager.getInstance().saveSeries( managedSeries );
 	}
 
