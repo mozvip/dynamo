@@ -1,4 +1,4 @@
-package dynamo.finders;
+package dynamo.providers;
 
 import java.util.List;
 
@@ -9,10 +9,9 @@ import dynamo.core.Language;
 import dynamo.core.manager.ConfigValueManager;
 import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.model.result.SearchResult;
-import dynamo.providers.KATProvider;
 
 
-public class KATTorrentFinderTest {
+public class KATTorrentFinderTest extends AbstractProviderTest {
 	
 	static KATProvider finder;
 	
@@ -25,7 +24,7 @@ public class KATTorrentFinderTest {
 	@Test
 	public void testFindDownloadsForEpisode() throws Exception {
 		
-		List<SearchResult> results = finder.findDownloadsForEpisode("Game of Thrones", Language.EN, 3, 4);
+		List<SearchResult> results = finder.findDownloadsForEpisode("Game of Thrones", createMockedSeries("Game of Thrones", Language.EN), 3, 4);
 		for (SearchResult searchResult : results) {
 			finder.download( searchResult.getUrl(), searchResult.getReferer() );
 			System.out.println( searchResult );

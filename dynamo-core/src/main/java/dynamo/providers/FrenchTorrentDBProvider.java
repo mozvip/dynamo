@@ -32,6 +32,7 @@ import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
 import hclient.SimpleResponse;
+import model.ManagedSeries;
 
 public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, GameFinder, MusicAlbumFinder, SeasonFinder {
 
@@ -75,15 +76,15 @@ public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProv
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
-		String additionalFilters = getTVShowFilters(audioLanguage);
+	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series, int seasonNumber, int episodeNumber) throws Exception {
+		String additionalFilters = getTVShowFilters(series.getAudioLanguage());
 		return extractResults(String.format("%s/?name=%s+S%02dE%02d&exact=1%s&section=TORRENTS&group=series", BASE_URL, plus(seriesName), seasonNumber,
 				episodeNumber, additionalFilters));
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
-		String additionalFilters = getTVShowFilters(audioLanguage);
+	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series, int absoluteEpisodeNumber) throws Exception {
+		String additionalFilters = getTVShowFilters(series.getAudioLanguage());
 		return extractResults(String.format("%s/?name=%s+%d&exact=1%s&section=TORRENTS&group=series", BASE_URL, plus(seriesName), absoluteEpisodeNumber,
 				additionalFilters));
 	}

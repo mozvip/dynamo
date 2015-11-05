@@ -1,4 +1,4 @@
-package dynamo.finders;
+package dynamo.providers;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

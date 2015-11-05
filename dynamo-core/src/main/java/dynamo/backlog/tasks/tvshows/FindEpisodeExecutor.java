@@ -55,9 +55,9 @@ public class FindEpisodeExecutor extends FindDownloadableExecutor<ManagedEpisode
 			try {
 				List<SearchResult> results = null;
 				if (series.isUseAbsoluteNumbering()) {
-					results = episodeFinder.findDownloadsForEpisode( aka, audioLanguage, episode.getAbsoluteNumber() );
+					results = episodeFinder.findDownloadsForEpisode( aka, series, episode.getAbsoluteNumber() );
 				} else {
-					results = episodeFinder.findDownloadsForEpisode( aka, audioLanguage, episode.getSeasonNumber(), episode.getEpisodeNumber() );	
+					results = episodeFinder.findDownloadsForEpisode( aka, series, episode.getSeasonNumber(), episode.getEpisodeNumber() );	
 				}
 				if ( results != null ) {
 					allResults.addAll( results );

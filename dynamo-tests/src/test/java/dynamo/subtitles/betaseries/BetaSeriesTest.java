@@ -12,8 +12,6 @@ public class BetaSeriesTest extends AbstractSubtitleFinderTestCase {
 	@BeforeClass
 	public static void config() {
 		ConfigValueManager.mockConfiguration("BetaSeries.enabled", "true");
-		ConfigValueManager.mockConfiguration("BetaSeries.login", privateData.getString("BetaSeries.login"));
-		ConfigValueManager.mockConfiguration("BetaSeries.password", privateData.getString("BetaSeries.password"));
 	}
 
 	@Override

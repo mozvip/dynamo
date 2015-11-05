@@ -24,6 +24,7 @@ import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
+import model.ManagedSeries;
 
 public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicAlbumFinder, SeasonFinder, MovieProvider, MagazineProvider, GameFinder {
 
@@ -54,7 +55,7 @@ public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicA
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage
+	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series
 			, int seasonNumber, int episodeNumber) throws Exception {
 		String searchParams = String.format("%s S%02dE%02d seeds:1", seriesName, seasonNumber, episodeNumber);
 		return findDownloadsForURL( searchParams );
@@ -105,7 +106,7 @@ public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicA
 
 	@Override
 	public List<SearchResult> findDownloadsForEpisode(String seriesName,
-			Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
+			ManagedSeries series, int absoluteEpisodeNumber) throws Exception {
 
 		String searchParams = String.format("%s %d seeds:1", seriesName, absoluteEpisodeNumber);
 		return findDownloadsForURL( searchParams );

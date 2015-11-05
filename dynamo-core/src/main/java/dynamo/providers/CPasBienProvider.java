@@ -29,6 +29,7 @@ import dynamo.parsers.MovieInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.suggesters.movies.MovieSuggester;
 import hclient.HTTPClient;
+import model.ManagedSeries;
 
 public class CPasBienProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, SeasonFinder, MagazineProvider, MovieSuggester {
 
@@ -67,7 +68,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
+	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series, int seasonNumber, int episodeNumber) throws Exception {
 		return extractResults( String.format("%s S%02dE%02d", seriesName, seasonNumber, episodeNumber), ".*/series/.*" );
 	}
 
@@ -102,7 +103,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 
 	@Override
 	public List<SearchResult> findDownloadsForEpisode(String seriesName,
-			Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
+			ManagedSeries series, int absoluteEpisodeNumber) throws Exception {
 		return extractResults( String.format("%s %d", seriesName, absoluteEpisodeNumber), ".*/series/.*" );
 	}
 

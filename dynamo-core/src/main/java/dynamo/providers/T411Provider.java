@@ -45,6 +45,7 @@ import dynamo.suggesters.movies.MovieSuggester;
 import dynamo.utils.images.CoverImageFinder;
 import dynamo.webapps.googleimages.GoogleImages;
 import hclient.HTTPClient;
+import model.ManagedSeries;
 
 public class T411Provider extends DownloadFinder implements BookFinder, EpisodeFinder, SeasonFinder, MusicAlbumFinder, MovieProvider, MagazineProvider, GameFinder, KioskIssuesSuggester, BookSuggester, MovieSuggester {
 
@@ -162,13 +163,13 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode( String seriesName, Language audioLanguage, int seasonNumber, int episodeNumber ) throws Exception {
+	public List<SearchResult> findDownloadsForEpisode( String seriesName, ManagedSeries series, int seasonNumber, int episodeNumber ) throws Exception {
 
 		String searchParams = String.format("%s S%02dE%02d", seriesName, seasonNumber, episodeNumber);
 
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		results.addAll( searchVideo( searchParams, audioLanguage, 433, null ) );
-		results.addAll( searchVideo( searchParams, audioLanguage, 637, null ) );
+		results.addAll( searchVideo( searchParams, series.getAudioLanguage(), 433, null ) );
+		results.addAll( searchVideo( searchParams, series.getAudioLanguage(), 637, null ) );
 		return results;
 	}
 
@@ -231,12 +232,12 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 
 	@Override
 	public List<SearchResult> findDownloadsForEpisode(String seriesName,
-			Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
+			ManagedSeries series, int absoluteEpisodeNumber) throws Exception {
 		String searchParams = String.format("%s %d", seriesName, absoluteEpisodeNumber);
 
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		results.addAll( searchVideo( searchParams, audioLanguage, 433, null ) );
-		results.addAll( searchVideo( searchParams, audioLanguage, 637, null ) );
+		results.addAll( searchVideo( searchParams, series.getAudioLanguage(), 433, null ) );
+		results.addAll( searchVideo( searchParams, series.getAudioLanguage(), 637, null ) );
 			return results;
 		}
 

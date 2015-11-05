@@ -1,4 +1,4 @@
-package dynamo.finders;
+package dynamo.providers;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import dynamo.tests.AbstractDynamoTest;
 import junit.framework.Assert;
 
 
-public class T411ProviderTest extends AbstractDynamoTest {
+public class T411ProviderTest extends AbstractProviderTest {
 	
 	static T411Provider finder;
 	
@@ -28,7 +28,7 @@ public class T411ProviderTest extends AbstractDynamoTest {
 
 	@Test
 	public void testFindDownloadsForEpisode() throws Exception {
-		List<SearchResult> results = finder.findDownloadsForEpisode("Game of Thrones", Language.EN, 3, 4);
+		List<SearchResult> results = finder.findDownloadsForEpisode("Game of Thrones", createMockedSeries("Game of Thrones", Language.EN), 3, 4);
 		Assert.assertNotNull( results );
 		for (SearchResult searchResult : results) {
 			System.out.println( searchResult );

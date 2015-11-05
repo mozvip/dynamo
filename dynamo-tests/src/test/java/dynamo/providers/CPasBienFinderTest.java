@@ -1,4 +1,4 @@
-package dynamo.finders;
+package dynamo.providers;
 
 import static org.junit.Assert.fail;
 
@@ -9,17 +9,16 @@ import org.junit.Test;
 import dynamo.core.Language;
 import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
-import dynamo.providers.CPasBienProvider;
 
 
-public class CPasBienFinderTest {
+public class CPasBienFinderTest extends AbstractProviderTest {
 	
 	CPasBienProvider finder = new CPasBienProvider();
 
 	@Test
 	public void testFindDownloadsForEpisode() {
 		try {
-			List<SearchResult> results = finder.findDownloadsForEpisode("Game of Thrones", Language.EN, 3, 4);
+			List<SearchResult> results = finder.findDownloadsForEpisode("Game of Thrones", createMockedSeries("Game of Thrones", Language.EN), 3, 4);
 			for (SearchResult searchResult : results) {
 				System.out.println( searchResult );
 			}
