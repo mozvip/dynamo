@@ -339,7 +339,7 @@ public class TVShowManager implements Reconfigurable {
 	public void ignoreOrDeleteEpisode( ManagedEpisode episode ) {
 		downloadableDAO.updateStatus( episode.getId(), DownloadableStatus.IGNORED );
 	
-		BackLogProcessor.getInstance().unschedule( FindSeasonTask.class, String.format("this.season.series.id == %s and this.season.season == %d", episode.getSeriesId(), episode.getSeasonNumber()) );
+		BackLogProcessor.getInstance().unschedule( FindSeasonTask.class, String.format("this.downloadable.series.id == %s and this.downloadable.season == %d", episode.getSeriesId(), episode.getSeasonNumber()) );
 
 		String episodeExpression = String.format("this.episode.id == %d", episode.getId());
 		BackLogProcessor.getInstance().unschedule( FindEpisodeTask.class, episodeExpression );
