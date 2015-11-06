@@ -35,6 +35,8 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	
+	public abstract boolean needsLanguageInSearchString();
 
 	protected HTTPClient client = HTTPClient.getInstance();
 

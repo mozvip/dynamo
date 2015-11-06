@@ -106,4 +106,9 @@ public class TorrentProjectSE extends DownloadFinder implements MagazineProvider
 		return extractResults( client.getDocument(String.format("%s/?s=%s+%s&filter=%s", BASE_URL, plus(videoGame.getName()), additionalParams, filter), HTTPClient.REFRESH_ONE_DAY));
 	}
 
+	@Override
+	public boolean needsLanguageInSearchString() {
+		return true;
+	}
+
 }

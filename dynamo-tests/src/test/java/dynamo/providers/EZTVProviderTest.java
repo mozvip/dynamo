@@ -25,19 +25,19 @@ public class EZTVProviderTest extends AbstractProviderTest {
 
 	@Test
 	public void test1() throws Exception {
-		List<SearchResult> results = provider.findDownloadsForEpisode("Mr Robot", createMockedSeries("Mr Robot", Language.EN), 1, 5);
+		List<SearchResult> results = provider.findDownloadsForEpisode("Mr Robot", Language.EN, 1, 5);
 		Assert.assertTrue( results != null && results.size() > 0);
 	}
 
 	@Test
 	public void test2() throws Exception {
-		List<SearchResult> results = provider.findDownloadsForEpisode("Games of Thrones", createMockedSeries("Game of Thrones", Language.EN), 1, 5);
+		List<SearchResult> results = provider.findDownloadsForEpisode("Games of Thrones", Language.EN, 1, 5);
 		Assert.assertTrue( results != null && results.size() > 0);
 	}
 
 	@Test
 	public void test3() throws Exception {
-		List<SearchResult> results = provider.findDownloadsForEpisode("Dexter", createMockedSeries("Dexter", Language.EN), 7, 5);
+		List<SearchResult> results = provider.findDownloadsForEpisode("Dexter", Language.EN, 7, 5);
 		Assert.assertTrue( results != null && results.size() > 0);
 	}
 

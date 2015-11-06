@@ -57,5 +57,10 @@ public class BTDigg extends DownloadFinder implements MagazineProvider {
 	public String getLabel() {
 		return "BTDigg.org";
 	}
+	
+	@Override
+	public boolean needsLanguageInSearchString() {
+		return false;
+	}
 
 }

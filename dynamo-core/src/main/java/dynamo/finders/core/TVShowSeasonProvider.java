@@ -5,7 +5,7 @@ import java.util.List;
 import dynamo.core.Language;
 import dynamo.model.result.SearchResult;
 
-public interface SeasonFinder {
+public interface TVShowSeasonProvider {
 
 	List<SearchResult> findDownloadsForSeason( String aka, Language audioLanguage, int seasonNumber ) throws Exception;
 

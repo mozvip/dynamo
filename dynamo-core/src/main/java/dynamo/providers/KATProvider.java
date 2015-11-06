@@ -15,7 +15,7 @@ import dynamo.core.VideoQuality;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
-import dynamo.finders.core.SeasonFinder;
+import dynamo.finders.core.TVShowSeasonProvider;
 import dynamo.finders.music.MusicAlbumFinder;
 import dynamo.finders.music.MusicAlbumSearchException;
 import dynamo.magazines.MagazineProvider;
@@ -24,9 +24,8 @@ import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
-import model.ManagedSeries;
 
-public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicAlbumFinder, SeasonFinder, MovieProvider, MagazineProvider, GameFinder {
+public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicAlbumFinder, TVShowSeasonProvider, MovieProvider, MagazineProvider, GameFinder {
 
 	private static final String BASE_URL = "https://kat.cr";
 	
@@ -55,19 +54,10 @@ public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicA
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series
-			, int seasonNumber, int episodeNumber) throws Exception {
+	public List<SearchResult> findDownloadsForEpisode(String searchString, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
 		List<SearchResult> results = new ArrayList<>();
-		if (series.getOriginalLanguage() != null && series.getAudioLanguage() != null && series.getAudioLanguage() != series.getOriginalLanguage()) {
-			for (String lang : series.getAudioLanguage().getFullNames()) {
-				String searchParams = String.format("%s %s S%02dE%02d seeds:1", seriesName, lang, seasonNumber, episodeNumber);
-				results.addAll(  findDownloadsForURL( searchParams ) );
-			}
-		} else {
-			String searchParams = String.format("%s S%02dE%02d seeds:1", seriesName, seasonNumber, episodeNumber);
-			results.addAll(  findDownloadsForURL( searchParams ) );
-		}
-		
+		String searchParams = String.format("%s S%02dE%02d seeds:1", searchString, seasonNumber, episodeNumber);
+		results.addAll(  findDownloadsForURL( searchParams ) );
 		return results;
 	}
 
@@ -83,12 +73,13 @@ public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicA
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForSeason(String seriesName, Language audioLanguage, int seasonNumber) throws Exception {
+	public List<SearchResult> findDownloadsForSeason(String searchString, Language audioLanguage, int seasonNumber) throws Exception {
+		//TODO: improve ( found some with S%02d )
 		String searchParams = null;
 		if ( audioLanguage != null ) {
-			searchParams = String.format("%s Season %d %s seeds:1", seriesName, seasonNumber, audioLanguage.getShortName());
+			searchParams = String.format("%s Season %d %s seeds:1", searchString, seasonNumber, audioLanguage.getShortName());
 		} else  {
-			searchParams = String.format("%s Season %d seeds:1", seriesName, seasonNumber);
+			searchParams = String.format("%s Season %d seeds:1", searchString, seasonNumber);
 		}
 		return findDownloadsForURL( searchParams );
 	}
@@ -114,10 +105,8 @@ public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicA
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName,
-			ManagedSeries series, int absoluteEpisodeNumber) throws Exception {
-
-		String searchParams = String.format("%s %d seeds:1", seriesName, absoluteEpisodeNumber);
+	public List<SearchResult> findDownloadsForEpisode(String searchString, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
+		String searchParams = String.format("%s %d seeds:1", searchString, absoluteEpisodeNumber);
 		return findDownloadsForURL( searchParams );
 	}
 
@@ -133,4 +122,8 @@ public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicA
 		return findDownloadsForURL( searchParams );
 	}
 
+	@Override
+	public boolean needsLanguageInSearchString() {
+		return true;
+	}
 }

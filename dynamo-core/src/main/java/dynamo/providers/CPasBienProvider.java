@@ -17,7 +17,7 @@ import dynamo.core.VideoQuality;
 import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.MovieProvider;
-import dynamo.finders.core.SeasonFinder;
+import dynamo.finders.core.TVShowSeasonProvider;
 import dynamo.finders.music.MusicAlbumFinder;
 import dynamo.finders.music.MusicAlbumSearchException;
 import dynamo.magazines.MagazineProvider;
@@ -29,9 +29,8 @@ import dynamo.parsers.MovieInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.suggesters.movies.MovieSuggester;
 import hclient.HTTPClient;
-import model.ManagedSeries;
 
-public class CPasBienProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, SeasonFinder, MagazineProvider, MovieSuggester {
+public class CPasBienProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, TVShowSeasonProvider, MagazineProvider, MovieSuggester {
 
 	private static final String BASE_URL = "http://www.cpasbien.pw";
 	
@@ -68,7 +67,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series, int seasonNumber, int episodeNumber) throws Exception {
+	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
 		return extractResults( String.format("%s S%02dE%02d", seriesName, seasonNumber, episodeNumber), ".*/series/.*" );
 	}
 
@@ -102,9 +101,8 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName,
-			ManagedSeries series, int absoluteEpisodeNumber) throws Exception {
-		return extractResults( String.format("%s %d", seriesName, absoluteEpisodeNumber), ".*/series/.*" );
+	public List<SearchResult> findDownloadsForEpisode(String searchString, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
+		return extractResults( String.format("%s %d", searchString, absoluteEpisodeNumber), ".*/series/.*" );
 	}
 
 	@Override
@@ -145,6 +143,11 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 			currentPage ++;
 			currentDocument = client.getDocument( String.format("%s/recherche/1080p/%d/page-%d", BASE_URL, year, currentPage), HTTPClient.REFRESH_ONE_DAY);
 		}
+	}
+	
+	@Override
+	public boolean needsLanguageInSearchString() {
+		return false;
 	}
 
 }

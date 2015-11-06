@@ -22,7 +22,7 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
-import dynamo.finders.core.SeasonFinder;
+import dynamo.finders.core.TVShowSeasonProvider;
 import dynamo.finders.music.MusicAlbumFinder;
 import dynamo.finders.music.MusicAlbumSearchException;
 import dynamo.model.games.GamePlatform;
@@ -32,9 +32,8 @@ import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
 import hclient.SimpleResponse;
-import model.ManagedSeries;
 
-public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, GameFinder, MusicAlbumFinder, SeasonFinder {
+public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, GameFinder, MusicAlbumFinder, TVShowSeasonProvider {
 
 	private static final String BASE_URL = "http://www.frenchtorrentdb.com";
 	@Configurable(category = "Providers", name = "FrenchTorrentDB Login", disabled = "#{!FrenchTorrentDBProvider.enabled}", required = "#{FrenchTorrentDBProvider.enabled}")
@@ -76,16 +75,16 @@ public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProv
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series, int seasonNumber, int episodeNumber) throws Exception {
-		String additionalFilters = getTVShowFilters(series.getAudioLanguage());
-		return extractResults(String.format("%s/?name=%s+S%02dE%02d&exact=1%s&section=TORRENTS&group=series", BASE_URL, plus(seriesName), seasonNumber,
+	public List<SearchResult> findDownloadsForEpisode(String searchString, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
+		String additionalFilters = getTVShowFilters(audioLanguage);
+		return extractResults(String.format("%s/?name=%s+S%02dE%02d&exact=1%s&section=TORRENTS&group=series", BASE_URL, plus(searchString), seasonNumber,
 				episodeNumber, additionalFilters));
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series, int absoluteEpisodeNumber) throws Exception {
-		String additionalFilters = getTVShowFilters(series.getAudioLanguage());
-		return extractResults(String.format("%s/?name=%s+%d&exact=1%s&section=TORRENTS&group=series", BASE_URL, plus(seriesName), absoluteEpisodeNumber,
+	public List<SearchResult> findDownloadsForEpisode(String searchString, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
+		String additionalFilters = getTVShowFilters(audioLanguage);
+		return extractResults(String.format("%s/?name=%s+%d&exact=1%s&section=TORRENTS&group=series", BASE_URL, plus(searchString), absoluteEpisodeNumber,
 				additionalFilters));
 	}
 
@@ -212,6 +211,11 @@ public class FrenchTorrentDBProvider extends DownloadFinder implements MovieProv
 			results.add(new SearchResult(this, SearchResultType.TORRENT, title, torrentURL, torrentPageURL, parseSize(size), false));
 		}
 		return results;
+	}
+	
+	@Override
+	public boolean needsLanguageInSearchString() {
+		return true;
 	}
 
 //	@Override

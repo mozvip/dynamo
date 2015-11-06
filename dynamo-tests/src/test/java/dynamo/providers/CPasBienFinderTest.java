@@ -18,7 +18,7 @@ public class CPasBienFinderTest extends AbstractProviderTest {
 	@Test
 	public void testFindDownloadsForEpisode() {
 		try {
-			List<SearchResult> results = finder.findDownloadsForEpisode("Game of Thrones", createMockedSeries("Game of Thrones", Language.EN), 3, 4);
+			List<SearchResult> results = finder.findDownloadsForEpisode("Game of Thrones", Language.EN, 3, 4);
 			for (SearchResult searchResult : results) {
 				System.out.println( searchResult );
 			}

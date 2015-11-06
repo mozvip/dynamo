@@ -10,8 +10,6 @@ import dynamo.core.manager.ConfigValueManager;
 import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
-import dynamo.providers.T411Provider;
-import dynamo.tests.AbstractDynamoTest;
 import junit.framework.Assert;
 
 
@@ -28,7 +26,7 @@ public class T411ProviderTest extends AbstractProviderTest {
 
 	@Test
 	public void testFindDownloadsForEpisode() throws Exception {
-		List<SearchResult> results = finder.findDownloadsForEpisode("Game of Thrones", createMockedSeries("Game of Thrones", Language.EN), 3, 4);
+		List<SearchResult> results = finder.findDownloadsForEpisode("Game of Thrones", Language.EN, 3, 4);
 		Assert.assertNotNull( results );
 		for (SearchResult searchResult : results) {
 			System.out.println( searchResult );

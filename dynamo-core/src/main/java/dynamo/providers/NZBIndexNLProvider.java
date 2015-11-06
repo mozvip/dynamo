@@ -28,7 +28,6 @@ import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
-import model.ManagedSeries;
 
 public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, MagazineProvider, GameFinder {
 
@@ -86,39 +85,17 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series, int seasonNumber, int episodeNumber) throws Exception {
+	public List<SearchResult> findDownloadsForEpisode(String searchString, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
 		int minimumSize = 100;
-
-		List<SearchResult> results = new ArrayList<>();
-		if (series.getOriginalLanguage() != null && series.getAudioLanguage() != null && series.getAudioLanguage() != series.getOriginalLanguage()) {
-			for (String lang : series.getAudioLanguage().getFullNames()) {
-				String searchURL = String.format( "%s/search/?q=%s+%s+S%02dE%02d" + SEARCH_SUFFIX, BASE_URL, plus(seriesName), lang, seasonNumber, episodeNumber, minimumSize );
-				results.addAll( extractResults( searchURL ) );
-			}
-		} else {
-			String searchURL = String.format( "%s/search/?q=%s+S%02dE%02d" + SEARCH_SUFFIX, BASE_URL, plus(seriesName), seasonNumber, episodeNumber, minimumSize );
-			results.addAll(  extractResults( searchURL ) );
-		}
-		
-		return results;
+		String searchURL = String.format( "%s/search/?q=%s+S%02dE%02d" + SEARCH_SUFFIX, BASE_URL, plus(searchString), seasonNumber, episodeNumber, minimumSize );
+		return extractResults( searchURL );
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series, int absoluteEpisodeNumber) throws Exception {
+	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
 		int minimumSize = 100;
-
-		List<SearchResult> results = new ArrayList<>();
-		if (series.getOriginalLanguage() != null && series.getAudioLanguage() != null && series.getAudioLanguage() != series.getOriginalLanguage()) {
-			for (String lang : series.getAudioLanguage().getFullNames()) {
-				String searchURL = String.format( "%s/search/?q=%s+%s+%d" + SEARCH_SUFFIX, BASE_URL, plus(seriesName), lang, absoluteEpisodeNumber, minimumSize );
-				results.addAll( extractResults( searchURL ) );
-			}
-		} else {
-			String searchURL = String.format( "%s/search/?q=%s+%d" + SEARCH_SUFFIX, BASE_URL, plus(seriesName), absoluteEpisodeNumber, minimumSize );
-			results.addAll(  extractResults( searchURL ) );
-		}
-
-		return results;
+		String searchURL = String.format( "%s/search/?q=%s+%d" + SEARCH_SUFFIX, BASE_URL, plus(seriesName), absoluteEpisodeNumber, minimumSize );
+		return extractResults( searchURL );
 	}
 
 	@Override
@@ -170,6 +147,11 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 		searchURL = searchURL + String.format( "&minage=&sort=agedesc&minsize=%d&maxsize=&dq=&poster=&nfo=&hidespam=1&more=1", minSizeInMbs );
 
 		return extractResults( searchURL );
+	}
+
+	@Override
+	public boolean needsLanguageInSearchString() {
+		return true;
 	}
 
 }

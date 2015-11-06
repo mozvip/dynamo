@@ -59,4 +59,9 @@ public class BinNewzFranceProvider extends DownloadFinder implements MagazinePro
 		}
 	}
 
+	@Override
+	public boolean needsLanguageInSearchString() {
+		return false;
+	}
+
 }

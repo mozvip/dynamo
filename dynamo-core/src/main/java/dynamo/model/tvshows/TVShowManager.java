@@ -26,7 +26,7 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.core.model.DownloadableFile;
 import dynamo.finders.core.EpisodeFinder;
-import dynamo.finders.core.SeasonFinder;
+import dynamo.finders.core.TVShowSeasonProvider;
 import dynamo.httpclient.YAMJHttpClient;
 import dynamo.jdbi.TVShowDAO;
 import dynamo.manager.DownloadableManager;
@@ -79,8 +79,8 @@ public class TVShowManager implements Reconfigurable {
 	@Configurable(category="TV Shows", name="TV Shows Episode Providers", required="#{TVShowManager.enabled}", disabled="#{!TVShowManager.enabled}", contentsClass=EpisodeFinder.class, ordered=true )
 	private List<EpisodeFinder> tvshowEpisodeProviders;
 
-	@Configurable(category="TV Shows", name="TV Shows Full Season Providers", required="#{TVShowManager.enabled}", disabled="#{!TVShowManager.enabled}", contentsClass=SeasonFinder.class, ordered=true )
-	private List<SeasonFinder> tvShowSeasonProviders;
+	@Configurable(category="TV Shows", name="TV Shows Full Season Providers", required="#{TVShowManager.enabled}", disabled="#{!TVShowManager.enabled}", contentsClass=TVShowSeasonProvider.class, ordered=true )
+	private List<TVShowSeasonProvider> tvShowSeasonProviders;
 
 	@Configurable(category="TV Shows", name="Season folder pattern", required="#{TVShowManager.enabled}", disabled="#{!TVShowManager.enabled}", defaultValue="Season %02d" )
 	private String seasonFolderPattern;
@@ -146,11 +146,11 @@ public class TVShowManager implements Reconfigurable {
 		this.tvshowEpisodeProviders = tvshowEpisodeProviders;
 	}
 
-	public List<SeasonFinder> getTvShowSeasonProviders() {
+	public List<TVShowSeasonProvider> getTvShowSeasonProviders() {
 		return tvShowSeasonProviders;
 	}
 
-	public void setTvShowSeasonProviders(List<SeasonFinder> tvShowSeasonProviders) {
+	public void setTvShowSeasonProviders(List<TVShowSeasonProvider> tvShowSeasonProviders) {
 		this.tvShowSeasonProviders = tvShowSeasonProviders;
 	}
 

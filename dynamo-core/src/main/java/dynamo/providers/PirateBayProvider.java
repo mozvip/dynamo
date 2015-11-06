@@ -130,4 +130,9 @@ public class PirateBayProvider extends DownloadFinder implements MovieProvider, 
 		return extractResults(searchURL);
 	}
 
+	@Override
+	public boolean needsLanguageInSearchString() {
+		return true;
+	}
+
 }

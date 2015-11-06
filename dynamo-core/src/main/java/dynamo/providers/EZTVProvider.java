@@ -15,7 +15,6 @@ import dynamo.core.configuration.Configurable;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
-import model.ManagedSeries;
 
 public class EZTVProvider extends DownloadFinder implements EpisodeFinder {
 	
@@ -65,13 +64,18 @@ public class EZTVProvider extends DownloadFinder implements EpisodeFinder {
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series, int seasonNumber, int episodeNumber) throws Exception {
+	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
 		return search( String.format("%s s%02de%02d", seriesName, seasonNumber, episodeNumber));
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series, int absoluteEpisodeNumber) throws Exception {
+	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
 		return search( String.format("%s %d", seriesName, absoluteEpisodeNumber));
+	}
+	
+	@Override
+	public boolean needsLanguageInSearchString() {
+		return true;
 	}
 
 }

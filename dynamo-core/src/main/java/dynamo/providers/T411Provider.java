@@ -22,7 +22,7 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
-import dynamo.finders.core.SeasonFinder;
+import dynamo.finders.core.TVShowSeasonProvider;
 import dynamo.finders.music.MusicAlbumFinder;
 import dynamo.finders.music.MusicAlbumSearchException;
 import dynamo.magazines.KioskIssuesSuggester;
@@ -45,9 +45,8 @@ import dynamo.suggesters.movies.MovieSuggester;
 import dynamo.utils.images.CoverImageFinder;
 import dynamo.webapps.googleimages.GoogleImages;
 import hclient.HTTPClient;
-import model.ManagedSeries;
 
-public class T411Provider extends DownloadFinder implements BookFinder, EpisodeFinder, SeasonFinder, MusicAlbumFinder, MovieProvider, MagazineProvider, GameFinder, KioskIssuesSuggester, BookSuggester, MovieSuggester {
+public class T411Provider extends DownloadFinder implements BookFinder, EpisodeFinder, TVShowSeasonProvider, MusicAlbumFinder, MovieProvider, MagazineProvider, GameFinder, KioskIssuesSuggester, BookSuggester, MovieSuggester {
 
 	@Configurable(category="Providers", name="T411 Login", disabled="#{!T411Provider.enabled}", required="#{T411Provider.enabled}")
 	private String login;
@@ -163,13 +162,13 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode( String seriesName, ManagedSeries series, int seasonNumber, int episodeNumber ) throws Exception {
+	public List<SearchResult> findDownloadsForEpisode( String searchString, Language audioLanguage, int seasonNumber, int episodeNumber ) throws Exception {
 
-		String searchParams = String.format("%s S%02dE%02d", seriesName, seasonNumber, episodeNumber);
+		String searchParams = String.format("%s S%02dE%02d", searchString, seasonNumber, episodeNumber);
 
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		results.addAll( searchVideo( searchParams, series.getAudioLanguage(), 433, null ) );
-		results.addAll( searchVideo( searchParams, series.getAudioLanguage(), 637, null ) );
+		results.addAll( searchVideo( searchParams, audioLanguage, 433, null ) );
+		results.addAll( searchVideo( searchParams, audioLanguage, 637, null ) );
 		return results;
 	}
 
@@ -231,13 +230,12 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName,
-			ManagedSeries series, int absoluteEpisodeNumber) throws Exception {
-		String searchParams = String.format("%s %d", seriesName, absoluteEpisodeNumber);
+	public List<SearchResult> findDownloadsForEpisode(String searchString, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
+		String searchParams = String.format("%s %d", searchString, absoluteEpisodeNumber);
 
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		results.addAll( searchVideo( searchParams, series.getAudioLanguage(), 433, null ) );
-		results.addAll( searchVideo( searchParams, series.getAudioLanguage(), 637, null ) );
+		results.addAll( searchVideo( searchParams, audioLanguage, 433, null ) );
+		results.addAll( searchVideo( searchParams, audioLanguage, 637, null ) );
 			return results;
 		}
 
@@ -437,6 +435,11 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 				Movie movie = MovieManager.getInstance().suggestByName( movieName, Integer.parseInt( groups[1] ), null, Language.FR);
 			}
 		}
+	}
+
+	@Override
+	public boolean needsLanguageInSearchString() {
+		return false;
 	}
 
 }

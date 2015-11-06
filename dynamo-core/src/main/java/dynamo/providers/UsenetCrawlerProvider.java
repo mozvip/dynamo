@@ -95,4 +95,9 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 		return "Usenet Crawler";
 	}
 
+	@Override
+	public boolean needsLanguageInSearchString() {
+		return true;
+	}
+
 }
