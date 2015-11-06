@@ -57,9 +57,18 @@ public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicA
 	@Override
 	public List<SearchResult> findDownloadsForEpisode(String seriesName, ManagedSeries series
 			, int seasonNumber, int episodeNumber) throws Exception {
-		String searchParams = String.format("%s S%02dE%02d seeds:1", seriesName, seasonNumber, episodeNumber);
-		return findDownloadsForURL( searchParams );
-
+		List<SearchResult> results = new ArrayList<>();
+		if (series.getOriginalLanguage() != null && series.getAudioLanguage() != null && series.getAudioLanguage() != series.getOriginalLanguage()) {
+			for (String lang : series.getAudioLanguage().getFullNames()) {
+				String searchParams = String.format("%s %s S%02dE%02d seeds:1", seriesName, lang, seasonNumber, episodeNumber);
+				results.addAll(  findDownloadsForURL( searchParams ) );
+			}
+		} else {
+			String searchParams = String.format("%s S%02dE%02d seeds:1", seriesName, seasonNumber, episodeNumber);
+			results.addAll(  findDownloadsForURL( searchParams ) );
+		}
+		
+		return results;
 	}
 
 	@Override
