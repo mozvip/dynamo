@@ -49,16 +49,15 @@ public class BetaSeries extends SubtitlesFinder {
 	@Override
 	public void customInit() throws Exception {
 		client.post(
-				"https://www.betaseries.com/apps/login.php",
-				null,
-				"login="+login, "pass="+password, "submit=Identification"
+				"https://www.betaseries.com/apps/login.php", "http://www.betaseries.com/introduction",
+				"login="+login, "pass="+password
 		);
 	}
 
 	public Element getEpisodeElement( String seriesName, int season, int episode ) throws Exception {
 
-		WebDocument searchResults = client.getDocument( String.format( "http://www.betaseries.com/ajax/header/search.php?q=%s", URLEncoder.encode( seriesName, "UTF-8" )), HTTPClient.REFRESH_ONE_DAY );
-		List<Node> nodes = searchResults.evaluateXPath("/root/item/type[contains(text(),'planning')]/../url/text()");
+		WebDocument searchResults = client.getDocument( String.format( "http://www.betaseries.com/ajax/header/search.php?q=%s", URLEncoder.encode( seriesName, "UTF-8" )),  HTTPClient.REFRESH_ONE_DAY );
+		List<Node> nodes = searchResults.evaluateXPath("/root/item/type[contains(text(),'serie')]/../url/text()");
 		for (Node node : nodes) {
 			String url = "http://www.betaseries.com/ajax/episodes/season.php?url=" + node.getTextContent() + "&saison=" + season;
 			WebDocument document = client.getDocument( url, HTTPClient.REFRESH_ONE_HOUR );

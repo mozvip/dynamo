@@ -21,7 +21,7 @@ import hclient.SimpleResponse;
 
 public class Addic7ed extends SubtitlesFinder {
 
-	private Map<String, String> shows = new HashMap<String, String>();
+	private Map<String, String> shows = new HashMap<>();
 
 	@Override
 	public FinderQuality getQuality() {
