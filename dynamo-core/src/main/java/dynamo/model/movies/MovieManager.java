@@ -482,7 +482,7 @@ public class MovieManager implements Reconfigurable {
 		return createMovieFromMovieDB( api.getMovieInfoImdb(imdbId, language.getShortName()), language, defaultImage, DownloadableStatus.SUGGESTED );
 	}
 
-	public Movie suggestByName( String name, int year, WebResource defaultImage, Language language ) throws MovieDbException, IOException, URISyntaxException, ParseException {
+	public Movie suggestByName( String name, int year, WebResource defaultImage, Language language, boolean maybeUnreleased ) throws MovieDbException, IOException, URISyntaxException, ParseException {
 		TmdbResultsList<MovieDb> movieResults = MovieManager.getInstance().search( name, year, language);
 		if (movieResults.getTotalResults() > 0) {
 
@@ -493,14 +493,13 @@ public class MovieManager implements Reconfigurable {
 				if ( !nameEquals( movieDb.getTitle(), name ) ) {
 					continue;
 				}
-				if (StringUtils.isNotBlank(movieDb.getReleaseDate())) {
+				if (maybeUnreleased && StringUtils.isNotBlank(movieDb.getReleaseDate())) {
 					Date releaseDate = new SimpleDateFormat("yyyy-MM-dd").parse(movieDb.getReleaseDate());
 					if (releaseDate.after( now )) {
 						continue;
 					}
-					selectedMovie = movieDb;
-					break;
 				}
+				selectedMovie = movieDb;
 			}
 			if (selectedMovie == null) {
 				return null;

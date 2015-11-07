@@ -70,6 +70,9 @@ public class MusicManager implements Reconfigurable {
 	@Configurable( category="Music", name="Music Album Suggesters", required="#{MusicManager.enabled}", disabled="#{!MusicManager.enabled}", contentsClass=MusicAlbumSuggester.class, ordered=false )
 	private Collection<MusicAlbumSuggester> suggesters;
 
+	private MusicDAO musicDAO = DAOManager.getInstance().getDAO( MusicDAO.class );
+	private DownloadableDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableDAO.class );
+
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -125,9 +128,6 @@ public class MusicManager implements Reconfigurable {
 	public void setSuggesters(Collection<MusicAlbumSuggester> suggesters) {
 		this.suggesters = suggesters;
 	}
-	
-	private MusicDAO musicDAO = DAOManager.getInstance().getDAO( MusicDAO.class );
-	private DownloadableDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableDAO.class );
 
 	private MusicManager() {
 	}

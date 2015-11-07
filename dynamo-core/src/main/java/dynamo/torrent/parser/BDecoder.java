@@ -150,15 +150,12 @@ public class BDecoder {
                 }
             } catch (Exception e) {
 
-                if (!recovery_mode) {
+                if (e instanceof IOException) {
 
-                    if (e instanceof IOException) {
-
-                        throw ((IOException) e);
-                    }
-
-                    throw (new IOException(e.toString()));
+                    throw ((IOException) e);
                 }
+
+                throw (new IOException(e.toString()));
             }
 
             //return the map
@@ -186,13 +183,11 @@ public class BDecoder {
                             "BDecoder: invalid input data, 'e' missing from end of list"));
                 }
             } catch (Exception e) {
-                if (!recovery_mode) {
-                    if (e instanceof IOException) {
-                        throw ((IOException) e);
-                    }
-
-                    throw (new IOException(e.toString()));
+                if (e instanceof IOException) {
+                    throw ((IOException) e);
                 }
+
+                throw (new IOException(e.toString()));
             }
 
             //return the list
@@ -290,12 +285,6 @@ public class BDecoder {
         }
 
         return tempArray;
-    }
-
-    public void
-            setRecoveryMode(
-                    boolean r) {
-        recovery_mode = r;
     }
 
 }

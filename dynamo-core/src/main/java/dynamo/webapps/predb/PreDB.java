@@ -68,7 +68,7 @@ public class PreDB implements MovieSuggester {
 					String title = element.select("h2 a").text();
 					MovieInfo movieInfo = VideoNameParser.getMovieInfo( title );
 					if (movieInfo != null ) {
-						MovieManager.getInstance().suggestByName(movieInfo.getName(), movieInfo.getYear(), null, Language.EN);
+						MovieManager.getInstance().suggestByName(movieInfo.getName(), movieInfo.getYear(), null, Language.EN, false);
 					}
 				}
 			}
