@@ -51,7 +51,7 @@ public class FindAlbumExecutor extends FindDownloadableExecutor {
 		}
 		
 		if ( StringUtils.containsIgnoreCase( result.getTitle(), "MP3") || StringUtils.containsIgnoreCase( result.getTitle(), "CBR") ||StringUtils.containsIgnoreCase( result.getTitle(), "320kbps") || StringUtils.containsIgnoreCase( result.getTitle(), "256kbps") || StringUtils.containsIgnoreCase( result.getTitle(), "192kbps") ) {
-			if (musicAlbum.getQuality() == MusicQuality.COMPRESSED) {
+			if (musicAlbum.getQuality() == null || musicAlbum.getQuality() == MusicQuality.COMPRESSED) {
 				score += 5;
 			} else {
 				score = -1;

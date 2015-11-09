@@ -263,7 +263,7 @@ public class MusicManager implements Reconfigurable {
 	
 	public void suggest( String artistName, String albumName, String genre, String imageURL, String referer) throws MalformedURLException, ExecutionException {
 		String image = LocalImageCache.getInstance().download("albums", String.format("%s-%s",  artistName, albumName), imageURL, referer);
-		getAlbum(artistName, albumName, genre, image, DownloadableStatus.SUGGESTED, null, null, true);
+		getAlbum(artistName, albumName, genre, image, DownloadableStatus.SUGGESTED, null, musicQuality, true);
 	}
 
 	public synchronized MusicAlbum getAlbum( String artistName, String albumName, String genre, String image, DownloadableStatus status, Path path, MusicQuality quality, boolean createIfMissing ) throws ExecutionException {
@@ -472,27 +472,7 @@ public class MusicManager implements Reconfigurable {
 		}
 	}
 
-	public void newMusicFile( Path p, String albumName, String artistName, String songTitle, String songArtist, int track, int year, String image, boolean keepExisting ) throws IOException, ExecutionException {
-
-		if (songTitle != null ) {
-			songTitle = StringUtils.capitalize( songTitle );
-		}
-
-		// FIXME : compressed is hardcoded, parent path may not be right
-		
-		String artist = artistName;
-		boolean modifiedTags = false;
-		if (StringUtils.isEmpty(artist) && songArtist != null) {
-			artist = songArtist;
-			// modifiedTags = true;
-		}
-
-		Path destinationPath = keepExisting ? p.getParent() : MusicManager.getInstance().getPath( artist, albumName );
-		// FIXME : get genre ?
-		MusicAlbum musicAlbum = getAlbum( artist, albumName, null, image, DownloadableStatus.DOWNLOADED, destinationPath, MusicQuality.COMPRESSED, true );
-
-		long size = Files.size(p);
-
+	public void newMusicFile( Path p, MusicAlbum musicAlbum, String songTitle, String songArtist, int track, int year, boolean keepExisting ) throws IOException, ExecutionException {
 		Path targetPath = p;
 		if (!keepExisting) {
 			// we are allowed to move this file to its final destination // FIXME: handle Disc %d parent folders
@@ -502,7 +482,10 @@ public class MusicManager implements Reconfigurable {
 			}
 		}
 
-		musicDAO.createMusicFile( targetPath, musicAlbum.getId(), songTitle, songArtist, track, year, size, modifiedTags );
+		if (songTitle != null ) {
+			songTitle = StringUtils.capitalize( songTitle );
+		}
+		musicDAO.createMusicFile( targetPath, musicAlbum.getId(), songTitle, songArtist, track, year, Files.size(p), false );
 	}
 
 	public MusicArtist findArtist(String name) {

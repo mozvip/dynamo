@@ -9,6 +9,7 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.flac.FlacTag;
 import org.jaudiotagger.tag.images.Artwork;
 
 import core.RegExp;
@@ -17,6 +18,9 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.TaskExecutor;
 import dynamo.manager.LocalImageCache;
 import dynamo.manager.MusicManager;
+import dynamo.model.DownloadableStatus;
+import dynamo.model.music.MusicAlbum;
+import dynamo.model.music.MusicQuality;
 import dynamo.webapps.acoustid.AcoustId;
 
 public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
@@ -43,8 +47,8 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 
 		if (audioTag != null) {
 
-			String albumArtistTag = audioTag.getFirst(FieldKey.ALBUM_ARTIST);
-			String albumTag = audioTag.getFirst(FieldKey.ALBUM);
+			String artistName = audioTag.getFirst(FieldKey.ALBUM_ARTIST);
+			String albumName = audioTag.getFirst(FieldKey.ALBUM);
 			String songTitle = audioTag.getFirst(FieldKey.TITLE);
 			String songArtist = audioTag.getFirst(FieldKey.ARTIST);
 			String yearStr = audioTag.getFirst(FieldKey.YEAR);
@@ -59,21 +63,24 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 				track = Integer.parseInt( trackStr );
 			}
 			
-			if (StringUtils.isBlank( albumTag)) {
-				albumTag = "<Unknown>";
+			if (StringUtils.isBlank( albumName)) {
+				albumName = "<Unknown>";
 			}
 
-			String targetImage = String.format("albums/%s.jpg", MusicManager.getSearchString(albumArtistTag, albumTag));
-
-			String image = null;
-			if (Files.exists( folder.resolve("folder.jpg") )) {
-				image = LocalImageCache.getInstance().download( targetImage, Files.readAllBytes( folder.resolve("folder.jpg") ) );
-			} else {
-				Artwork artwork = audioTag.getFirstArtwork();
-				if ( artwork != null ) {
-					// FIXME: .jpg is hardcoded
-					image = LocalImageCache.getInstance().download( targetImage, artwork.getBinaryData() );
-					// FIXME : save to folder.jpg ?
+			String targetCoverImage = String.format("albums/%s.jpg", MusicManager.getSearchString(artistName, albumName));
+			Path folderImage = folder.resolve("folder.jpg");
+			String localImage = null;
+			if (!LocalImageCache.getInstance().exists(targetCoverImage)) {
+				if (Files.exists( folderImage )) {
+					localImage = LocalImageCache.getInstance().download( targetCoverImage, Files.readAllBytes( folderImage ) );
+				} else {
+					Artwork artwork = audioTag.getFirstArtwork();
+					if ( artwork != null ) {
+						// FIXME: .jpg is hardcoded
+						localImage = LocalImageCache.getInstance().download( targetCoverImage, artwork.getBinaryData() );
+						// save to folder.jpg
+						Files.write( folderImage, artwork.getBinaryData() );
+					}
 				}
 			}
 			
@@ -81,13 +88,18 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 				songArtist = audioTag.getFirst(FieldKey.ORIGINAL_ARTIST);
 			}
 			
-			if ( task.getMusicAlbum() != null) {
-				albumArtistTag = task.getMusicAlbum().getArtistName();
-				albumTag = task.getMusicAlbum().getAlbum();
+			MusicAlbum musicAlbum = task.getMusicAlbum();
+			if (musicAlbum != null) {
+				artistName = musicAlbum.getArtistName();
+				albumName = musicAlbum.getAlbum();
+			} else {
+				musicAlbum = MusicManager.getInstance().getAlbum(
+						artistName, albumName, null, localImage, DownloadableStatus.DOWNLOADED,
+						MusicManager.getInstance().getPath( artistName, albumName ), audioTag instanceof FlacTag ? MusicQuality.LOSSLESS : MusicQuality.COMPRESSED, true);
 			}
 
 			try {
-				MusicManager.getInstance().newMusicFile( musicFilePath, albumTag, albumArtistTag, songTitle, songArtist, track, year, image, task.isKeepSourceFile() );
+				MusicManager.getInstance().newMusicFile( musicFilePath, musicAlbum, songTitle, songArtist, track, year, task.isKeepSourceFile() );
 			} catch (Exception e) {
 				ErrorManager.getInstance().reportThrowable( task, String.format("Error while trying to import %s : %s", musicFilePath.toString(), e.getClass().getName()), e);
 			}

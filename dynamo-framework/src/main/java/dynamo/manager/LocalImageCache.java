@@ -53,6 +53,10 @@ public class LocalImageCache {
 		return cacheTempFolder.resolve( name ).toAbsolutePath();
 	}
 	
+	public boolean exists( String relativeName ) {
+		return Files.exists( resolveLocal( relativeName ) );
+	}
+	
 	public Path resolveLocal( String name ) {
 		// remove the /data/ prefix
 		String relativeName = name.substring( "/data/".length() );
@@ -105,10 +109,10 @@ public class LocalImageCache {
 	}
 
 	public String download(String identifier, byte[] imageData) throws IOException {
-		Path localFile = cacheTempFolder.resolve( identifier ).toAbsolutePath();
+		Path localFile = cacheTempFolder.resolve( identifier ).normalize().toAbsolutePath();
 		if (!Files.exists( localFile )) {
 			Files.createDirectories( localFile.getParent() );
-			try (OutputStream o = Files.newOutputStream( localFile, StandardOpenOption.CREATE_NEW )) {
+			try (OutputStream o = Files.newOutputStream( localFile, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING )) {
 				IOUtils.write( imageData, o );
 			}
 		}
