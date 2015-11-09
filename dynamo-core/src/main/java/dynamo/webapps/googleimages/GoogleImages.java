@@ -3,6 +3,7 @@ package dynamo.webapps.googleimages;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -12,6 +13,7 @@ import core.WebDocument;
 import core.WebResource;
 import dynamo.core.manager.ErrorManager;
 import hclient.HTTPClient;
+import hclient.SimpleResponse;
 
 public class GoogleImages {
 	
@@ -24,7 +26,8 @@ public class GoogleImages {
 		String referer = String.format("http://www.google.com/search?q=%s&tbm=isch&tbs=isz:m", googleSearchString);
 		WebDocument document;
 		try {
-			document = HTTPClient.getInstance().getDocument( referer, HTTPClient.REFRESH_ONE_WEEK);
+			HTTPClient client = HTTPClient.getInstance();
+			document = client.getDocument( referer, HTTPClient.REFRESH_ONE_WEEK);
 			if (document == null) {
 				return null;
 			}
@@ -32,10 +35,7 @@ public class GoogleImages {
 			for (Element element : images) {
 				String href = element.select("a.rg_l[href*=imgurl]").first().attr("href");
 				String imageURL = RegExp.extract(href, ".*imgurl=([^\\&]*).*");
-				
-				while (imageURL.contains("%")) {
-					imageURL = URLEncodedUtils.parse(imageURL, Charset.defaultCharset()).get(0).getName();
-				}
+
 
 				String imageRefURL = RegExp.extract(href, ".*imgrefurl=([^\\&]*).*");
 				
@@ -53,7 +53,10 @@ public class GoogleImages {
 					continue;
 				}
 				
-				return new WebResource( imageURL, imageRefURL );
+				SimpleResponse simpleResponse = client.get(imageURL, imageRefURL, HTTPClient.REFRESH_ONE_HOUR);
+				if (StringUtils.startsWith( simpleResponse.getContentType(), "image/")) {
+					return new WebResource( imageURL, imageRefURL );
+				}
 			}
 		} catch (IOException e) {
 			ErrorManager.getInstance().reportThrowable(e);

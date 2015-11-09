@@ -57,7 +57,7 @@ public abstract class Downloadable {
 		if (coverImage == null) {
 			return null;
 		}
-		String url = coverImage;
+		String url = "/data/" + coverImage;
 		url = url.replaceAll("\\+", "%2B");
 		url = url.replaceAll("\\#", "%23");
 		return url;

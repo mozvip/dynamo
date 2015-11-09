@@ -41,7 +41,7 @@ public abstract class AbstractDynamoTest {
 			ErrorManager.getInstance().reportThrowable( e );
 		}
 		ConfigValueManager.mockConfiguration("test", "test");
-		LocalImageCache.getInstance().setCacheTempFolder(Paths.get("temp"));
+		LocalImageCache.getInstance().init(Paths.get("temp"));
 	}
 
 }

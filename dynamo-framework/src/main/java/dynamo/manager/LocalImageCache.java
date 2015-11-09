@@ -19,10 +19,6 @@ import hclient.HTTPClient;
 public class LocalImageCache {
 	
 	private Path cacheTempFolder;
-	
-	public void setCacheTempFolder(Path cacheTempFolder) {
-		this.cacheTempFolder = cacheTempFolder;
-	}
 
 	public Path getCacheTempFolder() {
 		return cacheTempFolder;
@@ -40,7 +36,7 @@ public class LocalImageCache {
 	}
 	
 	public void init( Path absolutePath ) {
-		setCacheTempFolder(absolutePath);
+		cacheTempFolder = absolutePath.normalize().toAbsolutePath();
 	}
 	
 	public String getLocalURL( URL imageURL ) {
@@ -53,14 +49,11 @@ public class LocalImageCache {
 		return cacheTempFolder.resolve( name ).toAbsolutePath();
 	}
 	
-	public boolean exists( String relativeName ) {
-		return Files.exists( resolveLocal( relativeName ) );
-	}
-	
 	public Path resolveLocal( String name ) {
-		// remove the /data/ prefix
-		String relativeName = name.substring( "/data/".length() );
-		return cacheTempFolder.resolve( relativeName ).normalize().toAbsolutePath();
+		while(name.startsWith("/")) {
+			name = name.substring(1);
+		}
+		return cacheTempFolder.resolve( name ).toAbsolutePath();
 	}
 
 	public String download( String prefix, String nameWithoutExtension, String url, String referer, boolean async, boolean overwrite ) {
@@ -83,45 +76,34 @@ public class LocalImageCache {
 				if (async) {
 					BackLogProcessor.getInstance().schedule( new HTTPDownloadTask( url, referer, localFile ), false );
 				} else {
-					HTTPClient.getInstance().downloadToFile(url, referer, localFile, 0);
+					String contentType = HTTPClient.getInstance().downloadToFile(url, referer, localFile, 0);
 				}
 			}
 		} catch (InvalidPathException | IOException e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}
-		return String.format( "/data/%s/%s%s", prefix, nameWithoutExtension, extension );
+		return String.format( "%s/%s%s", prefix, nameWithoutExtension, extension );
 	}
 	
-	public String download( String prefix, String fileName, String url, String referer ) {
-		return download(prefix, fileName, url, referer, true);
+	public String download( String prefix, String fileNameWithoutExtension, String url, String referer ) {
+		return download(prefix, fileNameWithoutExtension, url, referer, true, false);
 	}
 
-	public String download( String prefix, String fileName, String url, String referer, boolean async ) {
-		return download(prefix, fileName, url, referer, async, false );
-	}
-
-	public boolean missFile(String file) {
-		if (file.startsWith("/")) {
-			file = file.substring( 1 );
+	public boolean missFile(String relativeFileName) {
+		if (relativeFileName.startsWith("/")) {
+			relativeFileName = relativeFileName.substring( 1 );
 		}
-		Path localFile = cacheTempFolder.getParent().resolve( file ).toAbsolutePath();
-		return !Files.isReadable( localFile );
+		return !Files.exists( cacheTempFolder.resolve( relativeFileName ) );
 	}
 
-	public String download(String identifier, byte[] imageData) throws IOException {
-		Path localFile = cacheTempFolder.resolve( identifier ).normalize().toAbsolutePath();
+	public void download(String relativeFileName, byte[] imageData) throws IOException {
+		Path localFile = cacheTempFolder.resolve( relativeFileName ).normalize().toAbsolutePath();
 		if (!Files.exists( localFile )) {
 			Files.createDirectories( localFile.getParent() );
 			try (OutputStream o = Files.newOutputStream( localFile, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING )) {
 				IOUtils.write( imageData, o );
 			}
 		}
-		return String.format( "/data/%s", identifier );
-	}
-
-	public String download(String identifier, Path sourcePath) throws IOException {
-		byte[] imageData = Files.readAllBytes( sourcePath );
-		return download( identifier, imageData );
 	}
 
 }

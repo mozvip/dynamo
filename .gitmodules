@@ -1,3 +1,6 @@
 [submodule "hclient"]
 	path = hclient
 	url = https://github.com/mozvip/hclient
+[submodule "jaudiotagger"]
+	path = jaudiotagger
+	url = https://bitbucket.org/ijabz/jaudiotagger.git

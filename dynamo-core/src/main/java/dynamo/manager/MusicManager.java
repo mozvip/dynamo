@@ -241,7 +241,7 @@ public class MusicManager implements Reconfigurable {
 				artistName = RegExp.filter(artistName, regexp);	
 			}
 			artistName = artistName.toUpperCase().trim();
-			artistName = RegExp.filter(artistName, "THE\\s(.*)");
+			artistName = RegExp.filter(artistName, "THE\\s+(.*)");
 			artistName = RegExp.filter(artistName, "(.*),\\s*THE");
 		}
 		
@@ -262,7 +262,7 @@ public class MusicManager implements Reconfigurable {
 	}
 	
 	public void suggest( String artistName, String albumName, String genre, String imageURL, String referer) throws MalformedURLException, ExecutionException {
-		String image = LocalImageCache.getInstance().download("albums", String.format("%s-%s",  artistName, albumName), imageURL, referer);
+		String image = LocalImageCache.getInstance().download("albums", MusicManager.getSearchString(artistName, albumName), imageURL, referer);
 		getAlbum(artistName, albumName, genre, image, DownloadableStatus.SUGGESTED, null, musicQuality, true);
 	}
 
@@ -275,9 +275,6 @@ public class MusicManager implements Reconfigurable {
 		}
 		
 		MusicArtist artist = getArtist( artistName, true );
-		if (artist != null && artist.isBlackListed()) {
-			return null;
-		}
 
 		// clean album name
 		albumName = getAlbumName( albumName );
@@ -483,9 +480,10 @@ public class MusicManager implements Reconfigurable {
 		}
 
 		if (songTitle != null ) {
-			songTitle = StringUtils.capitalize( songTitle );
+			songTitle = StringUtils.capitalize( songTitle ).trim();
 		}
 		musicDAO.createMusicFile( targetPath, musicAlbum.getId(), songTitle, songArtist, track, year, Files.size(p), false );
+		DownloadableManager.getInstance().addFile( musicAlbum.getId(), p, track );
 	}
 
 	public MusicArtist findArtist(String name) {

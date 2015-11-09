@@ -25,7 +25,7 @@ public class FindMusicAlbumImageExecutor extends TaskExecutor<FindMusicAlbumImag
 		
 		MusicAlbum album = task.getAlbum();
 		
-		String albumId = String.format("%s-%s", album.getArtistName(), album.getAlbum());
+		String albumId = album.getSearchString();
 		
 		if (album.getAllMusicURL() != null) {
 			

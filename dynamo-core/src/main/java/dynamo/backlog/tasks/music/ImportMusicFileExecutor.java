@@ -24,6 +24,8 @@ import dynamo.model.music.MusicQuality;
 import dynamo.webapps.acoustid.AcoustId;
 
 public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
+	
+	protected String[] intermediateFolders = new String[] {"Disc 1", "CD 1", "CD1", "Disc 2", "CD 2", "CD2"};
 
 	public ImportMusicFileExecutor(ImportMusicFileTask task) {
 		super(task);
@@ -63,21 +65,23 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 				track = Integer.parseInt( trackStr );
 			}
 			
+			if (StringUtils.isBlank( artistName)) {
+				artistName = "<Unknown Artist>";
+			}
 			if (StringUtils.isBlank( albumName)) {
 				albumName = "<Unknown>";
 			}
 
-			String targetCoverImage = String.format("albums/%s.jpg", MusicManager.getSearchString(artistName, albumName));
+			String localImage = String.format("albums/%s.jpg", MusicManager.getSearchString(artistName, albumName));
 			Path folderImage = folder.resolve("folder.jpg");
-			String localImage = null;
-			if (!LocalImageCache.getInstance().exists(targetCoverImage)) {
+			if (LocalImageCache.getInstance().missFile(localImage)) {
 				if (Files.exists( folderImage )) {
-					localImage = LocalImageCache.getInstance().download( targetCoverImage, Files.readAllBytes( folderImage ) );
+					LocalImageCache.getInstance().download( localImage, Files.readAllBytes( folderImage ) );
 				} else {
 					Artwork artwork = audioTag.getFirstArtwork();
 					if ( artwork != null ) {
 						// FIXME: .jpg is hardcoded
-						localImage = LocalImageCache.getInstance().download( targetCoverImage, artwork.getBinaryData() );
+						LocalImageCache.getInstance().download( localImage, artwork.getBinaryData() );
 						// save to folder.jpg
 						Files.write( folderImage, artwork.getBinaryData() );
 					}
@@ -93,9 +97,30 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 				artistName = musicAlbum.getArtistName();
 				albumName = musicAlbum.getAlbum();
 			} else {
+				
+				Path albumFolder = folder;
+				
+				boolean importInPlace = false;
+				for (Path configuredFolder : MusicManager.getInstance().getFolders()) {
+					if (albumFolder.startsWith(configuredFolder)) {
+						importInPlace = true;
+						break;
+					}
+				}
+				
+				if (importInPlace) {
+					for (String folderName : intermediateFolders) {
+						if (albumFolder.getFileName().toString().equalsIgnoreCase(folderName)) {
+							albumFolder = albumFolder.getParent();
+						}
+					}
+				} else {
+					albumFolder = MusicManager.getInstance().getPath(artistName, albumName);
+				}
+				
 				musicAlbum = MusicManager.getInstance().getAlbum(
 						artistName, albumName, null, localImage, DownloadableStatus.DOWNLOADED,
-						MusicManager.getInstance().getPath( artistName, albumName ), audioTag instanceof FlacTag ? MusicQuality.LOSSLESS : MusicQuality.COMPRESSED, true);
+						albumFolder, audioTag instanceof FlacTag ? MusicQuality.LOSSLESS : MusicQuality.COMPRESSED, true);
 			}
 
 			try {

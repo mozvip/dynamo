@@ -30,7 +30,7 @@ public class ExternalDataServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String uri = request.getRequestURI();
 		uri = URLDecoder.decode(uri, "UTF-8");
-		Path path = LocalImageCache.getInstance().resolveLocal( uri );
+		Path path = LocalImageCache.getInstance().resolveLocal( uri.substring("/data/".length()) );
 		if (!Files.isReadable( path )) {
 			response.sendError( 404 );
 		} else {

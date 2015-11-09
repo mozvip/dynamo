@@ -5,6 +5,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
+	<module>jaudiotagger</module>
   	<module>dynamo-core</module>
   	<module>dynamo-subtitles</module>
     <module>dynamo-web</module>
