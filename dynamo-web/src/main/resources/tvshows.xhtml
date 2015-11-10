@@ -18,19 +18,44 @@
 
 		<ui:define name="content">
 		
-			<h:dataTable value="#{tvshows.series}" var="show" cellpadding="0" width="100%" styleClass="table">
-				<h:column>
-					<h3 class="hidden-sm hidden-xs">
-						#{show.name}
-					</h3>
-				</h:column>						
-				<h:column>
-					<h:link outcome="tvshow">
-						<h:graphicImage value="/data/#{show.banner}" styleClass="img-responsive" />
-						<f:param name="id" value="#{show.id}" />
-					</h:link>
-				</h:column>
-			</h:dataTable>
+			<style>
+				.thumbnail {
+					border: none;
+				}			
+				.buttons {
+					position: absolute; right: 32px; top: 10px; width: 20px;
+				}
+			</style>
+		
+			<h:form>
+				<ui:repeat var="tvshow" value="#{tvshows.series}">
+					<div id="#{tvshow.id}" class="col-lg-2 col-md-2 col-sm-3 col-xs-6">
+						<div class="thumbnail">
+							<h:link outcome="tvshow">
+								<img src="/data/#{tvshow.poster}" class="img-responsive" />
+								<f:param name="id" value="#{tvshow.id}" />
+							</h:link>
+							<div class="caption">
+								#{tvshow.name}
+							</div>
+						</div>
+						<h:panelGroup id="buttons" class="buttons">
+							<ui:fragment rendered="#{!tvshow.autoDownload}">
+								<h:commandLink styleClass="btn btn-sm btn-default" title="Enable auto-download of new episodes">
+									<f:ajax listener="#{tvshows.toggleAutoDownload(tvshow)}" render="buttons" />
+									<i class="fa fa-heart-o"></i>
+								</h:commandLink>
+							</ui:fragment>
+							<ui:fragment rendered="#{tvshow.autoDownload}">
+								<h:commandLink styleClass="btn btn-sm btn-default" title="Disable auto-download of new episodes">
+									<f:ajax listener="#{tvshows.toggleAutoDownload(tvshow)}" render="buttons" />
+									<i class="fa fa-heart"></i>
+								</h:commandLink>
+							</ui:fragment>
+						</h:panelGroup>					
+					</div>
+				</ui:repeat>
+			</h:form>
 
 		</ui:define>
 

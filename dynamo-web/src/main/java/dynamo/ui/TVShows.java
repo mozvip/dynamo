@@ -14,6 +14,7 @@ import com.omertron.thetvdbapi.model.Series;
 import core.FileNameUtils;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
+import dynamo.core.manager.ErrorManager;
 import dynamo.model.tvshows.TVShowManager;
 import dynamo.subtitles.SubTitleDownloader;
 import model.ManagedSeries;
@@ -113,12 +114,18 @@ public class TVShows extends DynamoManagedBean {
 		this.searchString = searchString;
 	}
 	
-	public String selectShow( String id, String language ) throws IOException {
-		TVShowManager.getInstance().identifyFolder( searchPath, id, language, TVShowManager.getInstance().getAudioLanguage(), TVShowManager.getInstance().getSubtitlesLanguage() );
-		series = null;
-		unrecognizedFolders = null;
+	public String selectShow( String id, String language ) {
+		try {
+			TVShowManager.getInstance().identifyFolder( searchPath, id, language, TVShowManager.getInstance().getAudioLanguage(), TVShowManager.getInstance().getSubtitlesLanguage() );
+			series = null;
+			unrecognizedFolders = null;
+			
+			return "tvshow?faces-redirect=true&id=" + id;
+		} catch (IOException e) {
+			ErrorManager.getInstance().reportThrowable( e );
+		}
 		
-		return "tvshow?faces-redirect=true&id=" + id;
+		return null;
 	}
 	
 	public String newShow( String seriesName, String id, String language ) throws IOException {
@@ -184,4 +191,12 @@ public class TVShows extends DynamoManagedBean {
 		this.audioLanguage = audioLanguage;
 	}
 
+	public void toggleAutoDownload( ManagedSeries tvShow ) {
+		tvShow.setAutoDownload( ! tvShow.isAutoDownload() );
+		try {
+			TVShowManager.getInstance().saveSeries( tvShow );
+		} catch (IOException e) {
+			ErrorManager.getInstance().reportThrowable(e);
+		}
+	}
 }
