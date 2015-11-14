@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -293,7 +294,7 @@ public class TVShowManager implements Reconfigurable {
 		return api.getEpisode(seriesId, seasonNbr, episodeNbr, language.getShortName());
 	}
 	
-	public void saveSeries( ManagedSeries series ) throws IOException {
+	public void saveSeries( ManagedSeries series ) {
 
 		saveTVShow(series);
 		
@@ -308,10 +309,14 @@ public class TVShowManager implements Reconfigurable {
 		// remvove tasks to obtain subtitles if applicable
 		if (series.getSubtitleLanguage() == null) {
 			// remove existing subtitles
-			for ( Path subtitle : Files.newDirectoryStream( series.getFolder(), SubtitlesFileFilter.getInstance() )) {
-				if (Files.isRegularFile(subtitle)) {
-					BackLogProcessor.getInstance().schedule( new DeleteTask(subtitle, false), false );
+			try {
+				for ( Path subtitle : Files.newDirectoryStream( series.getFolder(), SubtitlesFileFilter.getInstance() )) {
+					if (Files.isRegularFile(subtitle)) {
+						BackLogProcessor.getInstance().schedule( new DeleteTask(subtitle, false), false );
+					}
 				}
+			} catch (IOException e) {
+				ErrorManager.getInstance().reportThrowable(e);
 			}
 			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "this.episode.seriesId == '%s'", series.getId() ) );
 		}
@@ -359,7 +364,7 @@ public class TVShowManager implements Reconfigurable {
 
 		String filename = null;
 		Path folder = null;
-		List<DownloadableFile> allFiles = DownloadableManager.getInstance().getAllFiles( videoDownloadable.getId() );
+		List<DownloadableFile> allFiles = DownloadableManager.getInstance().getAllFiles( videoDownloadable.getId() ).collect( Collectors.toList() );
 		for (DownloadableFile downloadableFile : allFiles) {
 			if (VideoFileFilter.getInstance().accept( downloadableFile.getFilePath())) {
 				filename = downloadableFile.getFilePath().getFileName().toString();

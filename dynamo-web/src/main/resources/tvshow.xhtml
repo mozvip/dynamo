@@ -178,7 +178,7 @@
 					</div>
 					
 					<div class="tab-pane" id="unrecognizedfiles">
-						<h:form id="unrecognizedfilesForm">
+						<h:form>
 							<h:dataTable value="#{tvshow.unrecognizedFiles}" var="file" styleClass="table">
 								<h:column>
 									<h:commandLink styleClass="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this file ?');" action="#{tvshow.deleteFile(file)}">
@@ -192,15 +192,15 @@
 								</h:column>
 								<h:column rendered="#{!tvshow.managedSeries.useAbsoluteNumbering}">
 									<f:facet name="header">Season</f:facet>
-									<h:selectOneMenu value="#{tvshow.selectedSeasonForFile[file]}" id="seasonSelect" styleClass="form-control" converter="javax.faces.Integer">
+									<h:selectOneMenu value="#{tvshow.selectedSeasonForFile[file.id]}" styleClass="form-control">
 										<f:ajax render="episodeSelect" />
 										<f:selectItems value="#{tvshow.availableSeasons}" />
 									</h:selectOneMenu>
 								</h:column>
 								<h:column>
 									<f:facet name="header">Episodes</f:facet>
-									<h:selectManyMenu id="episodeSelect" value="#{tvshow.selectedEpisodesForFile[file]}" styleClass="form-control" converter="javax.faces.Integer">
-										<f:selectItems value="#{tvshow.getAvailableEpisodes(file, tvshow.selectedSeasonForFile[file])}" />
+									<h:selectManyMenu id="episodeSelect" value="#{tvshow.selectedEpisodesForFile[file.id]}" styleClass="form-control">
+										<f:selectItems value="#{tvshow.getAvailableEpisodes(file, tvshow.selectedSeasonForFile[file.id])}" />
 										<f:ajax execute="@form" render="@form" />
 									</h:selectManyMenu>
 								</h:column>
@@ -208,6 +208,7 @@
 									<h:commandLink styleClass="btn btn-default">
 										<i class="fa fa-save" />
 										<f:ajax execute="@form" render="@form" listener="#{tvshow.assignEpisodes(file)}"/>
+										
 									</h:commandLink>
 								</h:column>
 							</h:dataTable>

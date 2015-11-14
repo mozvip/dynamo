@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import core.RegExp;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
@@ -43,7 +44,7 @@ public class RenameMovieFileExecutor extends TaskExecutor< RenameMovieFileTask >
 		newFileName = newFileName.replace(':', '-');
 		newFileName = newFileName.replace("?", "");
 
-		List<DownloadableFile> allFiles = DownloadableManager.getInstance().getAllFiles( movie.getId() );
+		List<DownloadableFile> allFiles = DownloadableManager.getInstance().getAllFiles( movie.getId() ).collect( Collectors.toList() );
 		for (DownloadableFile downloadableFile : allFiles) {
 			
 			boolean videoFile = VideoFileFilter.getInstance().accept( downloadableFile.getFilePath() );

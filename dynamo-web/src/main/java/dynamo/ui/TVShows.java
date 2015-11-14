@@ -193,10 +193,6 @@ public class TVShows extends DynamoManagedBean {
 
 	public void toggleAutoDownload( ManagedSeries tvShow ) {
 		tvShow.setAutoDownload( ! tvShow.isAutoDownload() );
-		try {
-			TVShowManager.getInstance().saveSeries( tvShow );
-		} catch (IOException e) {
-			ErrorManager.getInstance().reportThrowable(e);
-		}
+		TVShowManager.getInstance().saveSeries( tvShow );
 	}
 }

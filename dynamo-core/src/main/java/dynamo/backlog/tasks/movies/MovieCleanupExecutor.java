@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 import dynamo.core.model.DownloadableDAO;
-import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.MovieDAO;
@@ -13,6 +12,7 @@ import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
+import dynamo.video.VideoManager;
 
 public class MovieCleanupExecutor extends TaskExecutor<MovieCleanupTask> implements ReportProgress {
 	
@@ -49,12 +49,11 @@ public class MovieCleanupExecutor extends TaskExecutor<MovieCleanupTask> impleme
 
 		for (Movie movie : allDownloadedMovies) {
 			
-			List<DownloadableFile> files = DownloadableManager.getInstance().getAllFiles( movie.getId() );
-			if (files == null || files.size() == 0) {
+			if (DownloadableManager.getInstance().getAllFiles( movie.getId() ).count() == 0) {
 				downloadableDAO.delete( movie.getId() );
 			}
 			
-			Path moviePath = files.get(0).getFilePath();	// FIXME
+			Path moviePath = VideoManager.getInstance().getMainVideoFile( movie.getId() ).get();
 
 			Path folder = null;
 			for (Path movieFolderPath : movieFolders) {

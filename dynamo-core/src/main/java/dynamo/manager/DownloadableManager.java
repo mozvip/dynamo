@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.AudioFileFilter;
@@ -304,12 +305,7 @@ public class DownloadableManager {
 		// blacklist search result
 		searchResultDAO.blacklist(downloadable.getId());
 		// delete all corresponding files
-		
-		List<DownloadableFile> allFiles = getAllFiles(downloadable.getId());
-		for (DownloadableFile file : allFiles) {
-			BackLogProcessor.getInstance().schedule( new DeleteTask(file.getFilePath(), true), false );
-		}
-		
+		getAllFiles(downloadable.getId()).forEach( downloadedFile -> BackLogProcessor.getInstance().schedule( new DeleteTask(downloadedFile.getFilePath(), true), false ));
 		want(downloadable);
 	}
 
@@ -380,8 +376,8 @@ public class DownloadableManager {
 		downloadableDAO.addFile( downloadableId, file, size, index );
 	}
 
-	public List<DownloadableFile> getAllFiles(long downloadableId) {
-		return downloadableDAO.getAllFiles( downloadableId );
+	public Stream<DownloadableFile> getAllFiles(long downloadableId) {
+		return downloadableDAO.getAllFiles( downloadableId ).stream();
 	}
 
 	public void clearBlackList() {

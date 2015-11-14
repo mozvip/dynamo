@@ -3,10 +3,8 @@ package dynamo.ui;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +21,7 @@ import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.backlog.tasks.tvshows.DeleteShowTask;
 import dynamo.core.VideoQuality;
+import dynamo.core.manager.ErrorManager;
 import dynamo.core.tasks.InvokeMethodTask;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
@@ -75,9 +74,9 @@ public class TVShow extends DynamoManagedBean {
 	}
 
 	public List<SelectItem> getAvailableSeasons() {
-		List<SelectItem> seasonItems = new ArrayList<SelectItem>();
+		List<SelectItem> seasonItems = new ArrayList<>();
 		for (TVShowSeason season : getSeasons()) {
-			seasonItems.add( new SelectItem(season.getSeason(), "" + season.getSeason() ));
+			seasonItems.add( new SelectItem(season.getSeason(), Integer.toString(season.getSeason())) );
 		}
 		return seasonItems;
 	}
@@ -115,7 +114,7 @@ public class TVShow extends DynamoManagedBean {
 		return episodeMap.get(season);
 	}
 	
-	public String getRowClasses( int season) throws ParseException {
+	public String getRowClasses( int season) {
 		List<String> classes = new ArrayList<>();
 		List<ManagedEpisode> episodes = getEpisodes( season );
 		if (episodes != null) {
@@ -139,9 +138,10 @@ public class TVShow extends DynamoManagedBean {
 	}
 
 	public List<SelectItem> getAvailableEpisodes( UnrecognizedFile forFile, int seasonNumber ) {
-		List<ManagedEpisode> availableEpisodes = new ArrayList<ManagedEpisode>();
+		List<ManagedEpisode> availableEpisodes = new ArrayList<>();
 
-		for (ManagedEpisode episode : getEpisodes( seasonNumber )) {
+		List<ManagedEpisode> episodes = getEpisodes( seasonNumber );
+		for (ManagedEpisode episode : episodes) {
 			if ( !DownloadableStatus.DOWNLOADED.equals( episode.getStatus() )) {
 				availableEpisodes.add( episode );
 			}
@@ -149,21 +149,16 @@ public class TVShow extends DynamoManagedBean {
 		
 		for (UnrecognizedFile file : getUnrecognizedFiles()) {
 			if (!forFile.equals(file) && selectedSeasonForFile.get(file) == seasonNumber) {
-				int[] episodeNumbers = selectedEpisodesForFile.get(file);
+				Integer[] episodeNumbers = selectedEpisodesForFile.get(file.getId());
 				if (episodeNumbers != null) {
 					for (int episodeNumber : episodeNumbers) {
-						for (Iterator<ManagedEpisode> iterator = availableEpisodes.iterator(); iterator.hasNext();) {
-							ManagedEpisode episode = iterator.next();
-							if (episode.getEpisodeNumber() == episodeNumber) {
-								iterator.remove();
-							}
-						}
+						availableEpisodes.removeIf(episode -> episode.getEpisodeNumber() == episodeNumber);
 					}
 				}
 			}
 		}
 		
-		List<SelectItem> episodeItems = new ArrayList<SelectItem>();
+		List<SelectItem> episodeItems = new ArrayList<>();
 		for (ManagedEpisode episode : availableEpisodes) {
 			episodeItems.add( new SelectItem( episode.getEpisodeNumber(), String.format("%02d - %s", episode.getEpisodeNumber(), episode.getEpisodeName()) ));
 		}
@@ -175,16 +170,16 @@ public class TVShow extends DynamoManagedBean {
 		return "tvshows?faces-redirect=true";
 	}
 	
-	public void quickSave() throws IOException {
+	public void quickSave() {
 		TVShowManager.getInstance().saveSeries( managedSeries );
 	}
 
-	public String save() throws IOException {
+	public String save() {
 		TVShowManager.getInstance().saveSeries( managedSeries );
 		return "tvshows?faces-redirect=true";
 	}
 
-	public void deleteFiles( int seasonNumber ) throws IOException {
+	public void deleteFiles( int seasonNumber ) {
 		for (ManagedEpisode episode : getEpisodes( seasonNumber )) {
 			if ( isSelected( episode )) {
 				queue( new DeleteDownloadableTask( episode ), false );
@@ -252,9 +247,9 @@ public class TVShow extends DynamoManagedBean {
 			selectedSeasonForFile.clear();
 			for (UnrecognizedFile file : unrecognizedFiles) {
 				if (managedSeries.isUseAbsoluteNumbering()) {
-					selectedSeasonForFile.put(file, 1);
+					selectedSeasonForFile.put(file.getId(), 1);
 				} else {
-					selectedSeasonForFile.put(file, getSeasons().size());
+					selectedSeasonForFile.put(file.getId(), getSeasons().size());
 				}
 			}
 		}
@@ -268,26 +263,26 @@ public class TVShow extends DynamoManagedBean {
 	public void deleteFile( UnrecognizedFile file ) {
 		unrecognizedFiles.remove( file );
 		TVShowManager.getInstance().deleteUnrecognizedFile( file.getPath() );
-		queue( new DeleteTask( file.getPath(), true ));
+		queue( new DeleteTask( file.getPath(), false ));
 	}
 	
-	private Map<UnrecognizedFile, int[]> selectedEpisodesForFile = new HashMap<>();
+	private Map<Long, Integer[]> selectedEpisodesForFile = new HashMap<>();
 
-	public Map<UnrecognizedFile, int[]> getSelectedEpisodesForFile() {
+	public Map<Long, Integer[]> getSelectedEpisodesForFile() {
 		return selectedEpisodesForFile;
 	}
 	
-	public void setSelectedEpisodesForFile( Map<UnrecognizedFile, int[]> selectedEpisodesForFile) {
+	public void setSelectedEpisodesForFile( Map<Long, Integer[]> selectedEpisodesForFile) {
 		this.selectedEpisodesForFile = selectedEpisodesForFile;
 	}
 	
-	private Map<UnrecognizedFile, Integer> selectedSeasonForFile = new HashMap<UnrecognizedFile, Integer>();
+	private Map<Long, Integer> selectedSeasonForFile = new HashMap<Long, Integer>();
 	
-	public Map<UnrecognizedFile, Integer> getSelectedSeasonForFile() {
+	public Map<Long, Integer> getSelectedSeasonForFile() {
 		return selectedSeasonForFile;
 	}
 
-	public void setSelectedSeasonForFile(Map<UnrecognizedFile, Integer> selectedSeasonForFile) {
+	public void setSelectedSeasonForFile(Map<Long, Integer> selectedSeasonForFile) {
 		this.selectedSeasonForFile = selectedSeasonForFile;
 	}
 
@@ -303,9 +298,10 @@ public class TVShow extends DynamoManagedBean {
 
 	public void assignEpisodes(UnrecognizedFile file ) {
 		List<ManagedEpisode> assignedEpisodes = new ArrayList<>();
-		if (selectedEpisodesForFile.get( file ) != null) {
-			for (int index : selectedEpisodesForFile.get( file )) {
-				for (ManagedEpisode managedEpisode : getEpisodes( selectedSeasonForFile.get(file) )) {
+		Integer[] selectedEpisodes = selectedEpisodesForFile.get( file.getId() );
+		if (selectedEpisodes != null) {
+			for (int index : selectedEpisodes) {
+				for (ManagedEpisode managedEpisode : getEpisodes( selectedSeasonForFile.get(file.getId()) )) {
 					if (managedEpisode.getEpisodeNumber() == index) {
 						assignedEpisodes.add( managedEpisode );
 					}
@@ -326,14 +322,18 @@ public class TVShow extends DynamoManagedBean {
 		runNow( new FindSubtitleEpisodeTask( episode ), false );
 	}
 	
-	public void play( ManagedEpisode episode ) throws IOException  {
+	public void play( ManagedEpisode episode ) {
 		Optional<Path> episodeVideoPath = VideoManager.getInstance().getMainVideoFile( episode.getId() );
 		if (episodeVideoPath.isPresent()) {
-			Desktop.getDesktop().open( episodeVideoPath.get().toFile() );
+			try {
+				Desktop.getDesktop().open( episodeVideoPath.get().toFile() );
+			} catch (IOException e) {
+				ErrorManager.getInstance().reportThrowable(e);
+			}
 		}		
 	}
 
-	public void redownload( ManagedEpisode episode ) throws NoSuchMethodException, SecurityException {
+	public void redownload( ManagedEpisode episode ) {
 
 		if (episode.getPath() != null) {
 			BackLogProcessor.getInstance().schedule( new DeleteTask( episode.getPath(), false ), false );
@@ -349,7 +349,11 @@ public class TVShow extends DynamoManagedBean {
 		episode.setWanted(); 
 		
 		
-		BackLogProcessor.getInstance().schedule( new InvokeMethodTask( TVShowManager.getInstance(), "redownload", String.format("Redownload episode %s", episode.toString()), episode ), false );
+		try {
+			BackLogProcessor.getInstance().schedule( new InvokeMethodTask( TVShowManager.getInstance(), "redownload", String.format("Redownload episode %s", episode.toString()), episode ), false );
+		} catch (NoSuchMethodException | SecurityException e) {
+			ErrorManager.getInstance().reportThrowable(e);
+		}
 	}
 	
 	public void redownloadSubtitles( ManagedEpisode episode ) {

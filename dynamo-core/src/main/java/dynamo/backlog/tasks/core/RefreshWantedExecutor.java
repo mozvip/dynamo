@@ -64,14 +64,8 @@ public class RefreshWantedExecutor extends TaskExecutor<RefreshWantedTask> {
 		for (ManagedEpisode managedEpisode : episodes) {
 			boolean wholeSeasonWanted = false;
 			if (!checkedSeasonIds.contains( managedEpisode.getSeasonId())) {
-				wholeSeasonWanted = true;
 				List<ManagedEpisode> episodesForSeason = TVShowManager.getInstance().findEpisodesForSeason( managedEpisode.getSeasonId() );
-				for (ManagedEpisode managedEpisode2 : episodesForSeason) {
-					if (managedEpisode2.getStatus() != DownloadableStatus.WANTED) {
-						wholeSeasonWanted = false;
-						break;
-					}
-				}
+				wholeSeasonWanted = episodesForSeason.stream().allMatch( episode -> episode.getStatus() == DownloadableStatus.WANTED );
 			}
 			
 			checkedSeasonIds.add( managedEpisode.getSeasonId() );

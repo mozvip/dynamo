@@ -5,7 +5,6 @@ import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
 
 import org.jsoup.nodes.Element;
@@ -119,13 +118,11 @@ public class VideoManager {
 	}
 	
 	public Optional<Path> getMainVideoFile( long downloadableId ) {
-		List<DownloadableFile> files = DownloadableManager.getInstance().getAllFiles( downloadableId );
-		for (DownloadableFile downloadableFile : files) {
-			if (VideoFileFilter.getInstance().accept( downloadableFile.getFilePath() )) {
-				return Optional.of( downloadableFile.getFilePath());
-			}
-		}
-		return Optional.empty();
+		Optional<DownloadableFile> optionalFile = DownloadableManager.getInstance()
+				.getAllFiles( downloadableId )
+				.filter( file -> VideoFileFilter.getInstance().accept( file.getFilePath() ))
+				.findFirst();
+		return optionalFile.isPresent() ? Optional.of( optionalFile.get().getFilePath() ) : Optional.empty();
 	}
 	
 

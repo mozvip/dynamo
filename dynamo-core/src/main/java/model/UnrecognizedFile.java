@@ -32,5 +32,15 @@ public class UnrecognizedFile implements Serializable {
 		return seriesId;
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		return id == ((UnrecognizedFile)other).getId();
+	}
+	
+	@Override
+	public int hashCode() {
+		return Long.toString( id ).hashCode();
+	}
+	
 
 }

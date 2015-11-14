@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
@@ -58,12 +60,16 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 				TVShowEpisodeInfo episodeInfo = VideoNameParser.getTVShowEpisodeInfo(series, p);
 				if ( episodeInfo == null ) {
 					
-					for (ManagedEpisode episode : existingEpisodes) {
-						if ( downloadableFile != null && downloadableFile.getDownloadableId() == episode.getId()) {
-							seasonNumber = episode.getSeasonNumber();
-							episodes.add( episode.getEpisodeNumber() );
+					if ( downloadableFile != null) {
+						Optional<ManagedEpisode> optEpisode = existingEpisodes.stream()
+								.filter( episode -> downloadableFile.getDownloadableId() == episode.getId() )
+								.findFirst();
+						if (optEpisode.isPresent()) {
+							seasonNumber = optEpisode.get().getSeasonNumber();
+							episodes.add( optEpisode.get().getEpisodeNumber() );
 						}
 					}
+					
 					if (episodes.size() == 0) {
 						tvShowDAO.createUnrecognizedFile(p, task.getSeries().getId() );
 						continue;
@@ -125,14 +131,14 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 		for ( ManagedEpisode managedEpisode : managedEpisodes ) {
 			if (managedEpisode.isDownloaded()) {
 				
-				List<DownloadableFile> episodeFiles = DownloadableManager.getInstance().getAllFiles( managedEpisode.getId() );
+				List<Path> episodePaths = DownloadableManager.getInstance().getAllFiles( managedEpisode.getId() ).map( downloadedFile -> downloadedFile.getFilePath() ).collect( Collectors.toList() );
 				boolean atLeastOneFileFound = false;
-				if (episodeFiles != null) {
-					for (DownloadableFile downloadableFile : episodeFiles) {
-						if (Files.exists( downloadableFile.getFilePath())) {
+				if (episodePaths != null && !episodePaths.isEmpty()) {
+					for (Path path : episodePaths) {
+						if (Files.exists( path)) {
 							atLeastOneFileFound = true;	// IMPROVE : make sure the video file is found
 						} else {
-							BackLogProcessor.getInstance().schedule( new DeleteFileTask( downloadableFile.getFilePath() ));
+							BackLogProcessor.getInstance().schedule( new DeleteFileTask( path ));
 						}
 					}
 				}

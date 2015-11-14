@@ -3,6 +3,7 @@ package dynamo.core.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
@@ -48,33 +49,22 @@ public abstract class AbstractDynamoQueue {
 	}
 	
 	public void cancel(Task task) {
-		synchronized (this) {
-			for (Iterator<TaskExecutor<Task>> iterator = submittedExecutors.iterator(); iterator.hasNext();) {
-				TaskExecutor<Task> executor = iterator.next();
-				if (executor.getTask().equals( task ) && (!executor.isDone())) {
-					executor.cancel();
-					iterator.remove();
-					return;
-				}
+		Optional<TaskExecutor<Task>> executorToCancel =
+				submittedExecutors.stream()
+				.filter( executor -> executor.getTask().equals( task ) )
+				.findFirst();
+		if (executorToCancel.isPresent()) {
+			TaskExecutor<Task> executor = executorToCancel.get();
+			submittedExecutors.remove( executor );
+			if (!executor.isDone()) {
+				executor.cancel();
 			}
 		}
 	}
 	
 	public List<TaskExecutor<Task>> getBackLog() {
-		List<TaskExecutor<Task>> executors = new ArrayList<>();
-		synchronized (this) {
-			// clean done tasks
-			for (Iterator<TaskExecutor<Task>> iterator = submittedExecutors.iterator(); iterator.hasNext();) {
-				TaskExecutor<Task> executor = iterator.next();
-				if (executor != null && !executor.isDone()) {
-					executors.add( executor );
-				} else {
-					// clean done tasks
-					iterator.remove();
-				}
-			}
-		}
-		return executors;
+		submittedExecutors.removeIf(executor -> executor == null || executor.isDone());
+		return submittedExecutors;
 	}
 
 	public List<Task> getTaskBackLog() {

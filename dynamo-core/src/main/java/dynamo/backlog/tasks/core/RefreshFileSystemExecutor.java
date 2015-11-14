@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.music.DeleteMusicFileTask;
@@ -58,7 +59,7 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 				continue;
 			}
 			
-			List<DownloadableFile> files = DownloadableManager.getInstance().getAllFiles( downloadInfo.getId() );
+			List<DownloadableFile> files = DownloadableManager.getInstance().getAllFiles( downloadInfo.getId() ).collect( Collectors.toList() );
 
 			if (downloadInfo.getPath() != null) {
 				
