@@ -14,13 +14,13 @@
 	<ui:define name="content">
 		<h:form id="runningTasksForm">
 			<ui:repeat var="queue" value="#{backlog.queues}">
-				<h:panelGroup rendered="#{not empty queue.backLog}">
+				<h:panelGroup rendered="#{queue.backLogSize > 0}">
 					<h2>#{queue.queueName}</h2>
 					<h:dataTable styleClass="table table-condensed"
 						value="#{queue.backLog}" var="executor" rows="20"
 						rowClasses="#{backlog.getRowClasses(queue)}">
 						<f:facet name="header">
-							<span class="badge">#{queue.backLog.size()}</span>
+							<span class="badge">#{queue.backLogSize}</span>
 						</f:facet>
 						<h:column>
 							<h:commandLink styleClass="btn btn-default"

@@ -1,7 +1,6 @@
 package dynamo.core.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
@@ -67,6 +66,10 @@ public abstract class AbstractDynamoQueue {
 	public Stream<TaskExecutor<Task>> getBackLog() {
 		return submittedExecutors.stream()
 				.filter( executor -> executor != null && !executor.isDone() );
+	}
+	
+	public long getBackLogSize() {
+		return getBackLog().count();
 	}
 
 	public List<Task> getTaskBackLog() {
