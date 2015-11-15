@@ -9,6 +9,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
@@ -62,18 +64,15 @@ public abstract class AbstractDynamoQueue {
 		}
 	}
 	
-	public List<TaskExecutor<Task>> getBackLog() {
-		submittedExecutors.removeIf(executor -> executor == null || executor.isDone());
-		return submittedExecutors;
+	public Stream<TaskExecutor<Task>> getBackLog() {
+		return submittedExecutors.stream()
+				.filter( executor -> executor != null && !executor.isDone() );
 	}
 
 	public List<Task> getTaskBackLog() {
-		List<Task> itemsBacklog = new ArrayList<Task>();
-		List<TaskExecutor<Task>> executors = getBackLog();
-		for (TaskExecutor<Task> taskExecutor : executors) {
-			itemsBacklog.add( taskExecutor.getTask() );
-		}
-		return itemsBacklog;
+		return getBackLog()
+				.map( executor -> executor.getTask() )
+				.collect( Collectors.toList() );
 	}
 
 
@@ -95,6 +94,7 @@ public abstract class AbstractDynamoQueue {
 			Class<? extends TaskExecutor<?>> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
 			if (backLogTaskClass != null) {
 				if (!getTaskBackLog().contains( task )) {
+					submittedExecutors.removeIf( executor -> executor == null || executor.isDone());
 					TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
 					submittedExecutors.add ( executor );
 					futures.add( (FutureTask<?>) pool.submit( executor ) );

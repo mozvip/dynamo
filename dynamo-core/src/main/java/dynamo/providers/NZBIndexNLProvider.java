@@ -64,7 +64,7 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 		
 			String title = element.select("label").text();
 			String nzbURL = element.select("a[href*=/download/]").get(0).absUrl("href");
-			String size = element.select("td.nowrap div").get(0).text();
+			String size = element.select("td.nowrap div").get(0).text().replace(",", "");
 			
 			SearchResult result = new SearchResult(this, SearchResultType.NZB, title, nzbURL, searchURL, parseSize(size), false );
 			results.add( result );
