@@ -377,7 +377,8 @@ public class DownloadableManager {
 	}
 
 	public Stream<DownloadableFile> getAllFiles(long downloadableId) {
-		return downloadableDAO.getAllFiles( downloadableId ).stream();
+		List<DownloadableFile> files = downloadableDAO.getAllFiles( downloadableId );
+		return files.stream();
 	}
 
 	public void clearBlackList() {

@@ -17,6 +17,7 @@ import com.omertron.thetvdbapi.model.Series;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
+import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
@@ -342,14 +343,8 @@ public class TVShowManager implements Reconfigurable {
 	}
 	
 	public void ignoreOrDeleteEpisode( ManagedEpisode episode ) {
-		downloadableDAO.updateStatus( episode.getId(), DownloadableStatus.IGNORED );
-	
-		BackLogProcessor.getInstance().unschedule( FindSeasonTask.class, String.format("this.downloadable.series.id == %s and this.downloadable.season == %d", episode.getSeriesId(), episode.getSeasonNumber()) );
-
-		String episodeExpression = String.format("this.episode.id == %d", episode.getId());
-		BackLogProcessor.getInstance().unschedule( FindEpisodeTask.class, episodeExpression );
-		BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, episodeExpression );
-		
+		episode.setIgnored();
+		BackLogProcessor.getInstance().schedule( new DeleteDownloadableTask( episode ), false );		
 	}
 	
 	public boolean isAlreadySubtitled( Downloadable videoDownloadable, Language subtitlesLanguage ) {
@@ -428,6 +423,7 @@ public class TVShowManager implements Reconfigurable {
 	public void saveEpisode(ManagedEpisode episode) {
 		tvShowDAO.saveEpisode( episode.getId(), episode.getEpisodeName(), episode.getEpisodeNumber(), episode.getFirstAired(), episode.getQuality(), episode.getReleaseGroup(),  
 			 	episode.getSource(), episode.isSubtitled(),  episode.getSubtitlesPath(), episode.isWatched(), episode.getSeasonId() );
+		downloadableDAO.updatePath(episode.getId(), episode.getPath());
 	}
 
 	public List<UnrecognizedFile> getUnrecognizedFiles( String seriesId ) {

@@ -15,10 +15,13 @@ import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.Video;
+import dynamo.model.backlog.find.FindSeasonTask;
 import dynamo.model.games.VideoGame;
 import dynamo.model.movies.Movie;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.result.SearchResult;
+import dynamo.model.tvshows.TVShowManager;
+import model.ManagedEpisode;
 
 public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableTask> implements LogSuccess {
 	
@@ -34,29 +37,17 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 	@Override
 	public void execute() throws Exception {
 		Downloadable downloadable = task.getDownloadable();	
-		if (downloadable.getPath() != null) {
-
-			boolean canDeletePath = true;
-			if ( downloadable instanceof MusicAlbum ) {
-				// FIXME
-				List<DownloadInfo> otherDownloads = downloadableDAO.findDownloadedByPath( downloadable.getPath() );
-				canDeletePath = (otherDownloads.size() == 1);
-			}
-
-			if (canDeletePath) {
-				List<DownloadableFile> allFiles = downloadableDAO.getAllFiles(downloadable.getId());
-				for (DownloadableFile downloadableFile : allFiles) {
-					queue( new DeleteTask( downloadableFile.getFilePath(), true ), false );
-				}
-			}
-			downloadableDAO.nullifyPath( downloadable.getId() );
+		boolean canDeletePath = true;
+		if ( downloadable instanceof MusicAlbum && downloadable.getPath() != null ) {
+			// FIXME
+			List<DownloadInfo> otherDownloads = downloadableDAO.findDownloadedByPath( downloadable.getPath() );
+			canDeletePath = (otherDownloads.size() == 1);
 		}
-		// FIXME
-		if ( downloadable instanceof Video ) {
-			Video subtitled = (Video) downloadable;
-			if (subtitled.getSubtitlesPath() != null) {
-				queue( new DeleteTask( subtitled.getSubtitlesPath(), true ), false );
-				((Video) downloadable).setSubtitlesPath( null );
+
+		if (canDeletePath) {
+			List<DownloadableFile> allFiles = downloadableDAO.getAllFiles(downloadable.getId());
+			for (DownloadableFile downloadableFile : allFiles) {
+				queue( new DeleteTask( downloadableFile.getFilePath(), true ), false );
 			}
 		}
 
@@ -71,10 +62,33 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 		}
 		BackLogProcessor.getInstance().unschedule( String.format( "this.downloadable.id == %d", downloadable.getId() ) );
 
+		// FIXME: create sub classes for the different downloadable types
+		if ( downloadable instanceof Video ) {
+			Video subtitled = (Video) downloadable;
+			if (subtitled.getSubtitlesPath() != null) {
+				queue( new DeleteTask( subtitled.getSubtitlesPath(), true ), false );
+				((Video) downloadable).setSubtitlesPath( null );
+			}
+
+			if (downloadable instanceof ManagedEpisode) {
+				ManagedEpisode episode = (ManagedEpisode) downloadable;
+				
+				episode.setReleaseGroup( null );
+				episode.setSource( null );
+				episode.setQuality( null );
+				episode.setSubtitled( false );
+				episode.setIgnored();
+				
+				TVShowManager.getInstance().saveEpisode(episode);
+				
+				BackLogProcessor.getInstance().unschedule( FindSeasonTask.class, String.format("this.downloadable.series.id == %s and this.downloadable.season == %d", episode.getSeriesId(), episode.getSeasonNumber()) );
+			}
+		}
+
 		if (downloadable instanceof Movie || downloadable instanceof VideoGame) {
 			downloadableDAO.delete( downloadable.getId() );
 		} else {
-			downloadableDAO.updateStatus( downloadable.getId(), DownloadableStatus.IGNORED );
+			downloadableDAO.nullifyPath( downloadable.getId() );
 		}
 	}
 

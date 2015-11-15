@@ -77,10 +77,12 @@ public abstract class Downloadable {
 	
 	public void setIgnored() {
 		status = DownloadableStatus.IGNORED;
+		path = null;
 	}
 
 	public void setWanted() {
 		status = DownloadableStatus.WANTED;
+		path = null;
 	}	
 
 	@Override

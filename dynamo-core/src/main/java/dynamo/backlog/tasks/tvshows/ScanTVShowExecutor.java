@@ -143,16 +143,7 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 					}
 				}
 				if (!atLeastOneFileFound) {
-					
-					// reset episode to 'ignored'
-					
-					managedEpisode.setReleaseGroup( null );
-					managedEpisode.setSource( null );
-					managedEpisode.setQuality( null );
-					managedEpisode.setSubtitled( false );
-					managedEpisode.setIgnored();
-
-					TVShowManager.getInstance().saveEpisode( managedEpisode );
+					TVShowManager.getInstance().ignoreOrDeleteEpisode( managedEpisode );
 				}
 			}
 		}
