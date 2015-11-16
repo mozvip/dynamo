@@ -11,7 +11,7 @@ import dynamo.core.EventManager;
 import dynamo.core.manager.ErrorManager;
 import hclient.HTTPClient;
 
-public abstract class TaskExecutor<T extends Task> extends Thread {
+public abstract class TaskExecutor<T extends Task> implements Runnable {
 
 	protected final static Logger LOGGER = LoggerFactory.getLogger( TaskExecutor.class );
 
@@ -158,6 +158,14 @@ public abstract class TaskExecutor<T extends Task> extends Thread {
 	
 	public boolean isFailed() {
 		return failed;
+	}
+	
+	public boolean isCancelled() {
+		return cancelled;
+	}
+	
+	public boolean isFinished() {
+		return isDone() || isFailed() || isCancelled();
 	}
 
 	public Date getNextDate( int minutes ) {

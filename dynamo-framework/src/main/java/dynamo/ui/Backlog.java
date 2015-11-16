@@ -3,7 +3,6 @@ package dynamo.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.faces.bean.ManagedBean;
 
@@ -13,6 +12,7 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.core.model.AbstractDynamoQueue;
 import dynamo.core.model.CancellableTask;
 import dynamo.core.model.Task;
+import dynamo.core.model.TaskExecutor;
 
 @ManagedBean(name="backlog")
 public class Backlog extends DynamoManagedBean {
@@ -39,7 +39,16 @@ public class Backlog extends DynamoManagedBean {
 	}
 
 	public String getRowClasses( AbstractDynamoQueue queue ) {
-		List<String> classes = queue.getBackLog().map( executor -> executor.isRunning() ? "success" : "").collect(Collectors.toList());
+		List<String> classes = new ArrayList<>();
+		for (TaskExecutor<Task> executor : queue.getBackLog()) {
+			if (executor.isRunning()) {
+				classes.add("success");
+			} else if (executor.isFinished()) {
+				classes.add("hidden");
+			} else {
+				classes.add("");
+			}
+		}
 		return StringUtils.join(classes, ",");
 	}
 	

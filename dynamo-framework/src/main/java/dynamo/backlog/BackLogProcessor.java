@@ -114,6 +114,10 @@ public class BackLogProcessor extends Thread {
 				if (shutdownRequested) {
 					break;
 				}
+				
+				for (AbstractDynamoQueue queue : queues.values()) {
+					queue.refresh();
+				}
 
 				Date now = new Date();
 
@@ -132,7 +136,7 @@ public class BackLogProcessor extends Thread {
 						break;
 					}
 				}
-								
+				
 				if (currentItem == null) {
 					Thread.sleep( 1000 );
 					continue;

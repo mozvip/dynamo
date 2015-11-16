@@ -9,7 +9,6 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
@@ -45,10 +44,6 @@ public abstract class AbstractDynamoQueue {
 		}
 	}
 	
-	public List<TaskExecutor<Task>> getSubmittedExecutors() {
-		return submittedExecutors;
-	}
-	
 	public void cancel(Task task) {
 		Optional<TaskExecutor<Task>> executorToCancel =
 				submittedExecutors.stream()
@@ -56,28 +51,21 @@ public abstract class AbstractDynamoQueue {
 				.findFirst();
 		if (executorToCancel.isPresent()) {
 			TaskExecutor<Task> executor = executorToCancel.get();
-			submittedExecutors.remove( executor );
-			if (!executor.isDone()) {
+			if (!executor.isFinished()) {
 				executor.cancel();
 			}
 		}
 	}
 	
-	public Stream<TaskExecutor<Task>> getBackLog() {
-		return submittedExecutors.stream()
-				.filter( executor -> executor != null && !executor.isDone() );
-	}
-	
-	public long getBackLogSize() {
-		return getBackLog().count();
+	public List<TaskExecutor<Task>> getBackLog() {
+		return submittedExecutors;
 	}
 
 	public List<Task> getTaskBackLog() {
-		return getBackLog()
+		return submittedExecutors.stream()
 				.map( executor -> executor.getTask() )
 				.collect( Collectors.toList() );
 	}
-
 
 	public BlockingQueue<Runnable> getQueue() {
 		return pool.getQueue();
@@ -89,15 +77,15 @@ public abstract class AbstractDynamoQueue {
 	
 	public List<FutureTask<?>> futures = new ArrayList<FutureTask<?>>();
 
-	public synchronized boolean executeTask( Task task ) throws NoSuchMethodException, SecurityException, ClassNotFoundException {
+	public boolean executeTask( Task task ) throws NoSuchMethodException, SecurityException, ClassNotFoundException {
 		synchronized (this) {
-			if (getTaskBackLog().contains( task )) {
+			List<Task> taskList = getTaskBackLog();
+			if (taskList.contains( task )) {
 				return true;
 			}
 			Class<? extends TaskExecutor<?>> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
 			if (backLogTaskClass != null) {
-				if (!getTaskBackLog().contains( task )) {
-					submittedExecutors.removeIf( executor -> executor == null || executor.isDone());
+				if (!taskList.contains( task )) {
 					TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
 					submittedExecutors.add ( executor );
 					futures.add( (FutureTask<?>) pool.submit( executor ) );
@@ -112,6 +100,12 @@ public abstract class AbstractDynamoQueue {
 
 	public void shutdownNow() {
 		pool.shutdownNow();
+	}
+
+	public void refresh() {
+		synchronized (this) {
+			submittedExecutors.removeIf( executor -> executor == null || executor.isFinished() );		
+		}
 	}
 
 }
