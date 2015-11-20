@@ -2,11 +2,15 @@ package dynamo.backlog.tasks.torrent;
 
 import java.nio.file.Path;
 
+import dynamo.backlog.queues.HTTPDownloadQueue;
+import dynamo.backlog.tasks.tvshows.ScanFileSystemQueue;
+import dynamo.core.DynamoTask;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.model.Task;
 import dynamo.model.Downloadable;
 import dynamo.model.result.SearchResult;
 
+@DynamoTask(queueClass=HTTPDownloadQueue.class)
 @ClassDescription(label="Download Torrents Method")
 public class DownloadTorrentTask extends Task {
 	

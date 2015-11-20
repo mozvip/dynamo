@@ -64,7 +64,7 @@ public class PreDB implements MovieSuggester {
 				if (imdbLink != null) {
 					String imdbURL = imdbLink.absUrl("href");
 					imdbId = RegExp.extract( imdbURL, "http://www.imdb.com/title/(\\w+).*");
-					MovieManager.getInstance().createByImdbID( imdbId, null, Language.EN, DownloadableStatus.SUGGESTED );
+					MovieManager.getInstance().createByImdbID( imdbId, null, Language.EN, DownloadableStatus.SUGGESTED, false );
 				} else {
 					String title = element.select("h2 a").text();
 					MovieInfo movieInfo = VideoNameParser.getMovieInfo( title );

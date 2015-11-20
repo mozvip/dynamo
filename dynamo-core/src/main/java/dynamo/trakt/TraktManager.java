@@ -116,7 +116,7 @@ public class TraktManager implements Reconfigurable, MovieSuggester, Enableable 
 	public void suggestMovies() throws Exception {
 		List<TraktWatchListEntry> watchList = service.moviesWatchList( username );
 		for (TraktWatchListEntry watchListEntry : watchList) {
-			MovieManager.getInstance().createByImdbID( watchListEntry.getMovie().getIds().get("imdb"), null, Language.EN, DownloadableStatus.SUGGESTED );
+			MovieManager.getInstance().createByImdbID( watchListEntry.getMovie().getIds().get("imdb"), null, Language.EN, DownloadableStatus.SUGGESTED, false );
 		}
 	}
 	

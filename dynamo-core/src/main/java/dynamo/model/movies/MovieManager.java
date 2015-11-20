@@ -251,7 +251,7 @@ public class MovieManager implements Reconfigurable {
 		}
 	}
 
-	public Movie createMovieFromMovieDB( MovieDb movieDb, Language language, WebResource defaultImage, DownloadableStatus status ) throws MovieDbException, MalformedURLException {
+	public Movie createMovieFromMovieDB( MovieDb movieDb, Language language, WebResource defaultImage, DownloadableStatus status, boolean watched ) throws MovieDbException, MalformedURLException {
 		Movie movie = movieDAO.findByMovieDbId( movieDb.getId() );
 		if (movie == null) {
 			if (movieDb.getImdbID() == null) {
@@ -285,7 +285,7 @@ public class MovieManager implements Reconfigurable {
 				}
 			}
 
-			movie = new Movie( downloadableId, status, null, coverImage, null, movieDb.getTitle(), null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, movieDb.getVoteAverage(), year, false );
+			movie = new Movie( downloadableId, status, null, coverImage, null, movieDb.getTitle(), null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, movieDb.getVoteAverage(), year, watched );
 		}
 		associate( movie, movieDb );
 		save( movie );
@@ -321,7 +321,7 @@ public class MovieManager implements Reconfigurable {
 	
 	public Movie wantMovie( MovieDb movieDb, VideoQuality wantedQuality, Language wantedAudioLanguage, Language wantedSubtitlesLanguage ) throws IOException, MovieDbException {
 
-		Movie movie = createMovieFromMovieDB( movieDb, getMetaDataLanguage(), null, DownloadableStatus.WANTED );
+		Movie movie = createMovieFromMovieDB( movieDb, getMetaDataLanguage(), null, DownloadableStatus.WANTED, false );
 
 		movie.setWantedAudioLanguage(wantedAudioLanguage);
 		movie.setWantedSubtitlesLanguage(wantedSubtitlesLanguage);
@@ -437,7 +437,7 @@ public class MovieManager implements Reconfigurable {
 		);
 	}
 
-	public Movie createByImdbID(String imdbId, WebResource defaultImage, Language language, DownloadableStatus status) throws MovieDbException, ParseException, IOException, URISyntaxException {
+	public Movie createByImdbID(String imdbId, WebResource defaultImage, Language language, DownloadableStatus status, boolean watched) throws MovieDbException, ParseException, IOException, URISyntaxException {
 		IMDBTitle imdbTitle = IMDBWatchListSuggester.extractIMDBTitle(imdbId);
 		
 		Movie movie = movieDAO.findByImdbId( imdbId );
@@ -463,7 +463,7 @@ public class MovieManager implements Reconfigurable {
 			if ( imdbTitle.getRating() > 0 && imdbTitle.getRating() <= getMinimumSuggestionRating() ) {
 				return null;
 			}
-			return createMovieFromMovieDB( api.getMovieInfoImdb(imdbId, language.getShortName()), language, defaultImage, status );
+			return createMovieFromMovieDB( api.getMovieInfoImdb(imdbId, language.getShortName()), language, defaultImage, status, watched );
 		}
 	}
 
@@ -493,7 +493,7 @@ public class MovieManager implements Reconfigurable {
 			if (selectedMovie.getImdbID() != null) {
 				Movie movie = movieDAO.findByImdbId( selectedMovie.getImdbID() );
 				if (movie == null) {
-					movie = createByImdbID( selectedMovie.getImdbID(), defaultImage, language, DownloadableStatus.SUGGESTED );
+					movie = createByImdbID( selectedMovie.getImdbID(), defaultImage, language, DownloadableStatus.SUGGESTED, false );
 				}
 				return movie;
 			} else {

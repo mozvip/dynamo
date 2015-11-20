@@ -2,11 +2,14 @@ package dynamo.backlog.tasks.nzb;
 
 import java.nio.file.Path;
 
+import dynamo.backlog.queues.HTTPDownloadQueue;
+import dynamo.core.DynamoTask;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.model.Task;
 import dynamo.model.Downloadable;
 import dynamo.model.result.SearchResult;
 
+@DynamoTask(queueClass=HTTPDownloadQueue.class)
 @ClassDescription(label="Download NZB Method")
 public class DownloadNZBTask extends Task {
 

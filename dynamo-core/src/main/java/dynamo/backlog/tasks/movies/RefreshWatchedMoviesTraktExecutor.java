@@ -2,6 +2,7 @@ package dynamo.backlog.tasks.movies;
 
 import java.util.List;
 
+import dynamo.core.Language;
 import dynamo.core.model.TaskExecutor;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.movies.MovieManager;
@@ -24,7 +25,7 @@ public class RefreshWatchedMoviesTraktExecutor extends TaskExecutor<RefreshWatch
 			for (TraktWatchedEntry watched : watchedMovies) {
 				String imdbId = watched.getMovie().getIds().get("imdb");
 				
-				MovieManager.getInstance().createByImdbID( imdbId, null, null, DownloadableStatus.IGNORED );
+				MovieManager.getInstance().createByImdbID( imdbId, null, Language.EN, DownloadableStatus.IGNORED, true );
 			}
 		}
 	}

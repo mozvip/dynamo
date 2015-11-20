@@ -31,7 +31,7 @@ public class TraktMovieSuggester implements MovieSuggester, Enableable {
 		List<TraktMovie> recommandations = TraktManager.getInstance().getMovieRecommandations();
 		for (TraktMovie recommendation : recommandations) {
 			try {
-				MovieManager.getInstance().createByImdbID( recommendation.getIds().get("imdb"), null, Language.EN, DownloadableStatus.SUGGESTED );
+				MovieManager.getInstance().createByImdbID( recommendation.getIds().get("imdb"), null, Language.EN, DownloadableStatus.SUGGESTED, false );
 			} catch (MovieDbException | ParseException e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
