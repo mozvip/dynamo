@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 import core.RegExp;
 import core.WebDocument;
 import dynamo.core.Language;
+import dynamo.model.DownloadableStatus;
 import dynamo.model.movies.MovieManager;
 import dynamo.parsers.MovieInfo;
 import dynamo.parsers.VideoNameParser;
@@ -63,7 +64,7 @@ public class PreDB implements MovieSuggester {
 				if (imdbLink != null) {
 					String imdbURL = imdbLink.absUrl("href");
 					imdbId = RegExp.extract( imdbURL, "http://www.imdb.com/title/(\\w+).*");
-					MovieManager.getInstance().suggestByImdbID( imdbId, null, Language.EN );
+					MovieManager.getInstance().createByImdbID( imdbId, null, Language.EN, DownloadableStatus.SUGGESTED );
 				} else {
 					String title = element.select("h2 a").text();
 					MovieInfo movieInfo = VideoNameParser.getMovieInfo( title );

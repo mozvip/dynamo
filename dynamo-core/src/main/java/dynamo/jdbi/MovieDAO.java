@@ -23,6 +23,10 @@ public interface MovieDAO {
 	@Mapper(MovieMapper.class)
 	Movie findByMovieDbId(@Bind("movieDbId") int movieDbId);
 
+	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE IMDBID = :imdbId")
+	@Mapper(MovieMapper.class)
+	Movie findByImdbId(@Bind("imdbId") String imdbId);
+
 	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE MOVIE.ID = :movieId")
 	@Mapper(MovieMapper.class)
 	Movie find(@Bind("movieId") long movieId);

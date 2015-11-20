@@ -43,8 +43,6 @@ import dynamo.parsers.MovieInfo;
 import dynamo.suggesters.RefreshMovieSuggestionTask;
 import dynamo.suggesters.movies.IMDBTitle;
 import dynamo.suggesters.movies.IMDBWatchListSuggester;
-import dynamo.trakt.TraktManager;
-import dynamo.trakt.TraktWatchedEntry;
 import hclient.HTTPClient;
 
 public class MovieManager implements Reconfigurable {
@@ -191,32 +189,12 @@ public class MovieManager implements Reconfigurable {
 		return SingletonHolder.instance;
 	}
 	
-	private Set<String> imdbIds = new HashSet<>();
-	
 	private MovieManager() {
 		try {
 			api = new TheMovieDbApi("5a1a77e2eba8984804586122754f969f", new YAMJHttpClient( HTTPClient.getInstance() ));
 		} catch (MovieDbException e) {
 			ErrorManager.getInstance().reportThrowable(e);
 		}
-		
-		List<Movie> allMovies = getAllMovies();
-		for (Movie movie : allMovies) {
-			if (movie.getImdbID() != null) {
-				imdbIds.add( movie.getImdbID() );
-			}
-		}
-		if (hideWatched && TraktManager.getInstance().isEnabled()) {
-			try {
-				List<TraktWatchedEntry> watchedMovies = TraktManager.getInstance().getMoviesWatched();
-				for (TraktWatchedEntry watchedEntry : watchedMovies) {
-					imdbIds.add( watchedEntry.getMovie().getIds().get("imdb") );
-				}
-			} catch (IOException e) {
-				ErrorManager.getInstance().reportThrowable( e );
-			}
-		}
-		
 	}
 	
 	public TmdbResultsList<MovieDb> search( String name, int year, Language language ) throws MovieDbException {
@@ -459,27 +437,34 @@ public class MovieManager implements Reconfigurable {
 		);
 	}
 
-	public Movie suggestByImdbID(String imdbId, WebResource defaultImage, Language language) throws MovieDbException, ParseException, IOException, URISyntaxException {
-		if (imdbIds.contains( imdbId )) {
-			return null;
-		}
+	public Movie createByImdbID(String imdbId, WebResource defaultImage, Language language, DownloadableStatus status) throws MovieDbException, ParseException, IOException, URISyntaxException {
 		IMDBTitle imdbTitle = IMDBWatchListSuggester.extractIMDBTitle(imdbId);
-		if (imdbTitle == null || imdbTitle.isTvSeries() ) {
-			return null;
+		
+		Movie movie = movieDAO.findByImdbId( imdbId );
+		if (movie != null) {
+			
+			if (movie.getStatus() != status && movie.getStatus() != DownloadableStatus.DOWNLOADED && movie.getStatus() != DownloadableStatus.WANTED && movie.getStatus() != DownloadableStatus.SNATCHED) {
+				DownloadableManager.getInstance().updateStatus( movie.getId(), status);
+			}
+
+			return movie;
+
+		} else {
+		
+			if (imdbTitle == null || imdbTitle.isTvSeries() ) {
+				return null;
+			}
+			if (imdbTitle.getGenres() != null && imdbTitle.getGenres().contains("Short")) {
+				return null;
+			}
+			if ( !imdbTitle.isReleased() ) {
+				return null;
+			}
+			if ( imdbTitle.getRating() > 0 && imdbTitle.getRating() <= getMinimumSuggestionRating() ) {
+				return null;
+			}
+			return createMovieFromMovieDB( api.getMovieInfoImdb(imdbId, language.getShortName()), language, defaultImage, status );
 		}
-		if (imdbTitle.getGenres() != null && imdbTitle.getGenres().contains("Short")) {
-			return null;
-		}
-		if ( !imdbTitle.isReleased() ) {
-			return null;
-		}
-		if ( imdbTitle.getRating() > 0 && imdbTitle.getRating() <= getMinimumSuggestionRating() ) {
-			return null;
-		}
-		synchronized( this ) {
-			imdbIds.add( imdbId );
-		}
-		return createMovieFromMovieDB( api.getMovieInfoImdb(imdbId, language.getShortName()), language, defaultImage, DownloadableStatus.SUGGESTED );
 	}
 
 	public Movie suggestByName( String name, int year, WebResource defaultImage, Language language, boolean maybeUnreleased ) throws MovieDbException, IOException, URISyntaxException, ParseException {
@@ -506,7 +491,11 @@ public class MovieManager implements Reconfigurable {
 			}
 			selectedMovie = getMovieInfo( selectedMovie.getId() );
 			if (selectedMovie.getImdbID() != null) {
-				return suggestByImdbID( selectedMovie.getImdbID(), defaultImage, language );
+				Movie movie = movieDAO.findByImdbId( selectedMovie.getImdbID() );
+				if (movie == null) {
+					movie = createByImdbID( selectedMovie.getImdbID(), defaultImage, language, DownloadableStatus.SUGGESTED );
+				}
+				return movie;
 			} else {
 				ErrorManager.getInstance().reportWarning(String.format("IMDB match not found for %s (%d)", name, year));
 			}
