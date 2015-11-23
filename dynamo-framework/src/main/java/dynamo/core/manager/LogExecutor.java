@@ -15,8 +15,8 @@ public class LogExecutor extends TaskExecutor<LogTask> {
 	@Override
 	public void execute() throws Exception {
 		long logItemId = logDAO.create( task.getMessage(), task.getSeverity(), task.getTask() != null ? task.getTask().toString() : null);
-		if (task.getT() != null) {
-			logDAO.insertStackTrace( task.getT().getStackTrace(), logItemId );
+		if (task.getStackTrace() != null) {
+			logDAO.insertStackTrace( task.getStackTrace(), logItemId );
 		}
 	}
 
