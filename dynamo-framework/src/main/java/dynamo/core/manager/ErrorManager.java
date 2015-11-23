@@ -41,7 +41,7 @@ public class ErrorManager {
 	}
 	
 	public void logThrowable( String messageToLog, Task task, Throwable t ) {
-		BackLogProcessor.getInstance().schedule( new LogTask(messageToLog, LogItemSeverity.ERROR, task, t), false);
+		BackLogProcessor.getInstance().schedule( new LogTask(messageToLog, LogItemSeverity.ERROR, task, t, null), false);
 	}
 
 	public void reportThrowable( Task task, String message, Throwable t ) {
@@ -61,7 +61,7 @@ public class ErrorManager {
 	}
 	
 	public void reportWarning( Task task, String message, boolean logOnly ) {
-		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.WARNING, task, null), false);
+		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.WARNING, task, null, Thread.currentThread().getStackTrace()), false);
 		if (!logOnly) {
 			EventManager.getInstance().reportWarning(message);
 		}
@@ -76,7 +76,7 @@ public class ErrorManager {
 	}
 
 	public void reportError( Task task, String message ) {
-		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.ERROR, task, null), false);
+		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.ERROR, task, null, Thread.currentThread().getStackTrace()), false);
 		EventManager.getInstance().reportError(message);
 	}
 
@@ -97,12 +97,12 @@ public class ErrorManager {
 	}
 	
 	public void reportInfo( Task task, String message ) {
-		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.INFO, task, null), false);
+		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.INFO, task, null, Thread.currentThread().getStackTrace()), false);
 		EventManager.getInstance().reportInfo(message);
 	}
 	
 	public void reportDebug( Task task, String message ) {
-		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.DEBUG, task, null), false);
+		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.DEBUG, task, null, Thread.currentThread().getStackTrace()), false);
 	}
 
 	public List<StackTraceElement> getStackTrace(long id) {

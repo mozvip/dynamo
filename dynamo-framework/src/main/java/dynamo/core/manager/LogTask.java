@@ -12,13 +12,19 @@ public class LogTask extends Task implements NoLogging {
 	private LogItemSeverity severity;
 	private Task task;
 	private Throwable t;
+	private StackTraceElement[] stackTrace;
 
-	public LogTask(String message, LogItemSeverity severity, Task task, Throwable t) {
+	public LogTask(String message, LogItemSeverity severity, Task task, Throwable t, StackTraceElement[] stackTrace) {
 		super();
 		this.message = message;
 		this.severity = severity;
 		this.task = task;
 		this.t = t;
+		if (t != null) {
+			stackTrace = t.getStackTrace();
+		} else {
+			this.stackTrace = stackTrace;
+		}
 	}
 
 	public String getMessage() {
@@ -29,6 +35,10 @@ public class LogTask extends Task implements NoLogging {
 	}
 	public Task getTask() {
 		return task;
+	}
+	
+	public StackTraceElement[] getStackTrace() {
+		return stackTrace;
 	}
 	
 	public Throwable getT() {
