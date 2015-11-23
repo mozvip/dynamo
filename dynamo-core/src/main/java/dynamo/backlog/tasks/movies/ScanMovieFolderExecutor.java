@@ -5,6 +5,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -126,14 +127,44 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 			}
 
 		} else {
+			try {
+				movie = handleNewMovie(p);
+			} catch (MovieDbException | ParseException e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}
+		}
+
+		if (!movie.isSubtitled() && subtitlesLanguage != null) {
+			queue( new FindMovieSubtitleTask( movie, subtitlesLanguage ), false );
+		}
+
+		imdbIds.add( movie.getImdbID() );		
+	}
+
+	protected Movie handleNewMovie( Path movieFile ) throws IOException, InterruptedException, MovieDbException, ParseException {
+
+		Movie movie = null;
+		MovieInfo movieInfo = VideoNameParser.getMovieInfo( movieFile );
+		MovieDb movieDb = null;
+		if (movieInfo != null) {
+			movieDb = MovieManager.getInstance().searchByName( movieInfo.getName(), movieInfo.getYear(), null, false);
+			if (movieDb != null) {
+				if (movieDb.getImdbID() != null) {
+					movie = MovieManager.getInstance().findByImdbId( movieDb.getImdbID() );
+				}
+			}
+		}
+		if (movie != null) {
+			if (movie.getStatus() != DownloadableStatus.DOWNLOADED) {
+				DownloadableManager.getInstance().updateStatus( movie, DownloadableStatus.DOWNLOADED);
+			}
+		} else {
+			// create new movie
+			String movieName = movieDb != null ? movieDb.getTitle() : movieFile.getFileName().toString();
 			
-			long downloadableId = downloadableDAO.createDownloadable( Movie.class, p, null, DownloadableStatus.DOWNLOADED );
+			long id = downloadableDAO.createDownloadable( Movie.class, movieFile, null, DownloadableStatus.DOWNLOADED );
 			movie = new Movie(
-					downloadableId, DownloadableStatus.DOWNLOADED, p, null, null, p.getFileName().toString(), null, false, null, null, null, null, null, null, null, -1, null, null, -1, -1, false );
-
-			DownloadableManager.getInstance().addFile(downloadableId, p, 0);
-
-			MovieInfo movieInfo = VideoNameParser.getMovieInfo( p );
+					id, DownloadableStatus.DOWNLOADED, null, null, movieName, null, false, null, null, null, null, null, null, null, -1, null, null, -1, -1, false );
 			if ( movieInfo != null ) {
 				try {
 					MovieManager.getInstance().setMovieInfo( movie, movieInfo );
@@ -141,24 +172,20 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 					ErrorManager.getInstance().reportThrowable( e );
 				}
 			}
-			
-			if (movie.getImdbID() != null) {
-				IMDBTitle imdbInfo = IMDBWatchListSuggester.extractIMDBTitle( movie.getImdbID() );
-				if (imdbInfo != null) {
-					movie.setRating( imdbInfo.getRating() );
-					movie.setYear( imdbInfo.getYear() );
-				}
+		}
+		DownloadableManager.getInstance().addFile(movie.getId(), movieFile, 0);
+
+		if (movie.getRating() <= 0 || movie.getYear() <=0 && movie.getImdbID() != null ) {
+			IMDBTitle imdbInfo = IMDBWatchListSuggester.extractIMDBTitle( movie.getImdbID() );
+			if (imdbInfo != null) {
+				movie.setRating( imdbInfo.getRating() );
+				movie.setYear( imdbInfo.getYear() );
 			}
-
-			MovieManager.getInstance().save( movie );
-			VideoManager.getInstance().getMetaData( movie, p );
 		}
 
-		if (!movie.isSubtitled() && subtitlesLanguage != null) {
-			queue( new FindMovieSubtitleTask( movie, subtitlesLanguage ), false );
-		}
-		
-		imdbIds.add( movie.getImdbID() );		
+		MovieManager.getInstance().save( movie );
+		VideoManager.getInstance().getMetaData( movie, movieFile );
+		return movie;
 	}
 
 	@Override

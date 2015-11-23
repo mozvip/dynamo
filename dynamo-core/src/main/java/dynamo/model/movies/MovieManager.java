@@ -285,7 +285,7 @@ public class MovieManager implements Reconfigurable {
 				}
 			}
 
-			movie = new Movie( downloadableId, status, null, coverImage, null, movieDb.getTitle(), null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, movieDb.getVoteAverage(), year, watched );
+			movie = new Movie( downloadableId, status, coverImage, null, movieDb.getTitle(), null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, movieDb.getVoteAverage(), year, watched );
 		}
 		associate( movie, movieDb );
 		save( movie );
@@ -444,7 +444,7 @@ public class MovieManager implements Reconfigurable {
 		if (movie != null) {
 			
 			if (movie.getStatus() != status && movie.getStatus() != DownloadableStatus.DOWNLOADED && movie.getStatus() != DownloadableStatus.WANTED && movie.getStatus() != DownloadableStatus.SNATCHED) {
-				DownloadableManager.getInstance().updateStatus( movie.getId(), status);
+				DownloadableManager.getInstance().updateStatus( movie, status);
 			}
 
 			return movie;
@@ -466,14 +466,12 @@ public class MovieManager implements Reconfigurable {
 			return createMovieFromMovieDB( api.getMovieInfoImdb(imdbId, language.getShortName()), language, defaultImage, status, watched );
 		}
 	}
-
-	public Movie suggestByName( String name, int year, WebResource defaultImage, Language language, boolean maybeUnreleased ) throws MovieDbException, IOException, URISyntaxException, ParseException {
-		TmdbResultsList<MovieDb> movieResults = MovieManager.getInstance().search( name, year, language);
+	
+	public MovieDb searchByName( String name, int year, Language language, boolean maybeUnreleased ) throws MovieDbException, ParseException {
+		MovieDb selectedMovie = null;
+		TmdbResultsList<MovieDb> movieResults = search( name, year, language);
 		if (movieResults.getTotalResults() > 0) {
-
 			Date now = new Date();
-			MovieDb selectedMovie = null;
-
 			for (MovieDb movieDb : movieResults.getResults()) {
 				if ( !nameEquals( movieDb.getTitle(), name ) ) {
 					continue;
@@ -490,15 +488,24 @@ public class MovieManager implements Reconfigurable {
 				return null;
 			}
 			selectedMovie = getMovieInfo( selectedMovie.getId() );
-			if (selectedMovie.getImdbID() != null) {
-				Movie movie = movieDAO.findByImdbId( selectedMovie.getImdbID() );
-				if (movie == null) {
-					movie = createByImdbID( selectedMovie.getImdbID(), defaultImage, language, DownloadableStatus.SUGGESTED, false );
-				}
-				return movie;
-			} else {
-				ErrorManager.getInstance().reportWarning(String.format("IMDB match not found for %s (%d)", name, year));
+		}
+		return selectedMovie;
+	}
+	
+	public Movie findByImdbId( String imdbId ) {
+		return movieDAO.findByImdbId( imdbId );
+	}
+
+	public Movie createByName( String name, int year, WebResource defaultImage, Language language, boolean maybeUnreleased ) throws MovieDbException, IOException, URISyntaxException, ParseException {
+		MovieDb movieDb = searchByName( name, year, language, maybeUnreleased);
+		if (movieDb.getImdbID() != null) {
+			Movie movie = findByImdbId( movieDb.getImdbID() );
+			if (movie == null) {
+				movie = createByImdbID( movieDb.getImdbID(), defaultImage, language, DownloadableStatus.SUGGESTED, false );
 			}
+			return movie;
+		} else {
+			ErrorManager.getInstance().reportWarning(String.format("IMDB match not found for %s (%d)", name, year));
 		}
 		return null;
 	}

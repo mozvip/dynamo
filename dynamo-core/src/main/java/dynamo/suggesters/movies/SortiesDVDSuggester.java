@@ -32,7 +32,7 @@ public class SortiesDVDSuggester implements MovieSuggester {
 				Elements links = row.select("header>h2>a");
 				if (links != null && !links.isEmpty()) {
 					String title = links.first().text();
-					MovieManager.getInstance().suggestByName(title, -1, image, Language.FR, false);
+					MovieManager.getInstance().createByName(title, -1, image, Language.FR, false);
 				}
 			}
 		}

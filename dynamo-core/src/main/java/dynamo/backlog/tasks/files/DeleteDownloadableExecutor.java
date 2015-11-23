@@ -53,12 +53,7 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 
 		// unschedule any associated tasks
 		if (downloadable.getStatus()== DownloadableStatus.SNATCHED) {
-			List<SearchResult> searchResults = searchResultDAO.getSearchResults( task.getDownloadable().getId() );
-			for (SearchResult searchResult : searchResults) {
-				if (!searchResult.isBlackListed() && StringUtils.isNotEmpty( searchResult.getClientId() )) {
-					DownloadableManager.getInstance().cancelDownload( downloadable, searchResult );
-				}
-			}
+			DownloadableManager.getInstance().cancelDownload( downloadable );
 		}
 		BackLogProcessor.getInstance().unschedule( String.format( "this.downloadable.id == %d", downloadable.getId() ) );
 

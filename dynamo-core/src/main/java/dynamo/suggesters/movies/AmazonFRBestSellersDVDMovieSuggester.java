@@ -43,7 +43,7 @@ public class AmazonFRBestSellersDVDMovieSuggester extends AmazonRSSSuggester imp
 			
 			WebResource image = new WebResource( imageURL.toString(), rssURL.toString() );
 			
-			Movie movie = MovieManager.getInstance().suggestByName(title, 0, image, Language.FR, false);
+			Movie movie = MovieManager.getInstance().createByName(title, 0, image, Language.FR, false);
 			if (movie == null) {
 				ErrorManager.getInstance().reportWarning(String.format("Unable to parse movie name %s", title), true);
 			}

@@ -37,14 +37,14 @@ public class Movie extends Downloadable implements Video {
 	
 	private boolean watched;
 
-	public Movie( Long id, DownloadableStatus status, Path path, String coverImage, String aka, String name, Path subtitlesPath, boolean subtitled,
+	public Movie( Long id, DownloadableStatus status, String coverImage, String aka, String name, Path subtitlesPath, boolean subtitled,
 			VideoQuality wantedQuality, Language wantedAudioLanguage,
 			Language wantedSubtitlesLanguage, Language originalLanguage,
 			VideoQuality quality, VideoSource source,
 			String releaseGroup, int movieDbId,
 			String imdbID, String traktUrl, float rating, int year,
 			boolean watched) {
-		super( id, status, path, coverImage, aka, null );
+		super( id, status, null, coverImage, aka, null );
 		this.name = name;
 		this.subtitlesPath = subtitlesPath;
 		this.subtitled = subtitled;

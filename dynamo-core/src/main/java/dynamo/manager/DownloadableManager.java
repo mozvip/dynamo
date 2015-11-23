@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.AudioFileFilter;
 import dynamo.backlog.tasks.core.CancelDownloadTask;
@@ -114,8 +116,11 @@ public class DownloadableManager {
 		BackLogProcessor.getInstance().schedule( findDownloadableFactory.newInstance( downloadable ), true );
 	}
 	
-	public int updateStatus( long downloadableId, DownloadableStatus newStatus ) {
-		return downloadableDAO.updateStatus(downloadableId, newStatus);
+	public int updateStatus( Downloadable downloadable, DownloadableStatus newStatus ) {
+		if (downloadable.getStatus() == DownloadableStatus.SNATCHED && newStatus == DownloadableStatus.DOWNLOADED) {
+			DownloadableManager.getInstance().cancelDownload(downloadable);
+		}
+		return downloadableDAO.updateStatus(downloadable.getId(), newStatus);
 	}
 
 	public long createDownloadable(Class<?> klass, Path path, String coverImage, DownloadableStatus status) {
@@ -127,7 +132,7 @@ public class DownloadableManager {
 	}
 	
 	public void logStatusChange( Downloadable downloadable, DownloadableStatus newStatus, String comment ) {
-		if (updateStatus( downloadable.getId(), newStatus ) == 1) {
+		if (updateStatus( downloadable, newStatus ) == 1) {
 			if (downloadable != null) {
 				if (comment != null) {
 					historyDAO.insert( comment, newStatus, downloadable.getId() );
@@ -328,9 +333,14 @@ public class DownloadableManager {
 		DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SUGGESTED );
 		BackLogProcessor.getInstance().unschedule( String.format( "this.downloadable.id == %d", downloadable.getId() ) );
 	}
-
-	public void cancelDownload( Downloadable downloadable, SearchResult searchResult ) {
-		BackLogProcessor.getInstance().schedule( new CancelDownloadTask( downloadable, searchResult ));
+	
+	public void cancelDownload( Downloadable downloadable ) {
+		List<SearchResult> searchResults = searchResultDAO.getSearchResults( downloadable.getId() );
+		for (SearchResult searchResult : searchResults) {
+			if (!searchResult.isBlackListed() && StringUtils.isNotEmpty( searchResult.getClientId() )) {
+				BackLogProcessor.getInstance().schedule( new CancelDownloadTask( downloadable, searchResult ));
+			}
+		}
 	}
 
 	public List<DownloadInfo> findDownloaded() {

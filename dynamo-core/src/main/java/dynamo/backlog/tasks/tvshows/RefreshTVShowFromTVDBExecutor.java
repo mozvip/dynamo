@@ -114,12 +114,12 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 				if (newStatusForEpisode == DownloadableStatus.WANTED) {
 					DownloadableManager.getInstance().want( existingEpisode );
 				} else {
-					DownloadableManager.getInstance().updateStatus ( existingEpisode.getId(), newStatusForEpisode );
+					DownloadableManager.getInstance().updateStatus ( existingEpisode, newStatusForEpisode );
 				}
 				
 			} else if ( existingEpisode.getStatus() == DownloadableStatus.IGNORED && newStatusForEpisode == DownloadableStatus.FUTURE ) {
 				
-				DownloadableManager.getInstance().updateStatus ( existingEpisode.getId(), newStatusForEpisode );
+				DownloadableManager.getInstance().updateStatus ( existingEpisode, newStatusForEpisode );
 			
 			}
 

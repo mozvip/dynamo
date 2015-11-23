@@ -68,7 +68,7 @@ public class ITunesCharts implements MusicAlbumSuggester, MovieSuggester {
 				year = Integer.parseInt( groups[1]);
 			}
 
-			MovieManager.getInstance().suggestByName(movieName, year, new WebResource(imageURL, referer), Language.EN, false);
+			MovieManager.getInstance().createByName(movieName, year, new WebResource(imageURL, referer), Language.EN, false);
 		}
 	}
 	

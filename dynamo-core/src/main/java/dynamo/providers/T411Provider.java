@@ -432,7 +432,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 			if (groups != null) {
 				String movieName =  groups[0].trim();
 				movieName = movieName.replaceAll("\\.", " ").trim();
-				Movie movie = MovieManager.getInstance().suggestByName( movieName, Integer.parseInt( groups[1] ), null, Language.FR, false);
+				Movie movie = MovieManager.getInstance().createByName( movieName, Integer.parseInt( groups[1] ), null, Language.FR, false);
 				if (movie != null) {
 					// TODO: store search result
 				}

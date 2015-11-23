@@ -288,7 +288,7 @@ public class MusicManager implements Reconfigurable {
 		
 		if (album != null) {
 			if ( status == DownloadableStatus.DOWNLOADED && album.getStatus() != status) {
-				DownloadableManager.getInstance().updateStatus(album.getId(), status);
+				DownloadableManager.getInstance().updateStatus(album, status);
 			}
 		}
 
