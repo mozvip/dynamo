@@ -52,7 +52,7 @@
 					</p>
 					<p>
 						<h:panelGroup id="logDetail">
-							<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{(!logItem.extended) and logItem.severity == 'ERROR'}">
+							<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{!logItem.extended}">
 								<i class="fa fa-plus"/>
 								<f:setPropertyActionListener target="#{logItem.extended}" value="true" />
 								<f:ajax render="logDetail" />
