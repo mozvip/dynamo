@@ -21,7 +21,7 @@ public class LogTask extends Task implements NoLogging {
 		this.task = task;
 		this.t = t;
 		if (t != null) {
-			stackTrace = t.getStackTrace();
+			this.stackTrace = t.getStackTrace();
 		} else {
 			this.stackTrace = stackTrace;
 		}

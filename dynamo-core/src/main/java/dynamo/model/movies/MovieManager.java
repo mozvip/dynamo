@@ -498,7 +498,7 @@ public class MovieManager implements Reconfigurable {
 
 	public Movie createByName( String name, int year, WebResource defaultImage, Language language, boolean maybeUnreleased ) throws MovieDbException, IOException, URISyntaxException, ParseException {
 		MovieDb movieDb = searchByName( name, year, language, maybeUnreleased);
-		if (movieDb.getImdbID() != null) {
+		if (movieDb != null && movieDb.getImdbID() != null) {
 			Movie movie = findByImdbId( movieDb.getImdbID() );
 			if (movie == null) {
 				movie = createByImdbID( movieDb.getImdbID(), defaultImage, language, DownloadableStatus.SUGGESTED, false );
