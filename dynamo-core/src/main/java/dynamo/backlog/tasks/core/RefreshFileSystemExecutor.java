@@ -82,7 +82,7 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 				if (!paths.isEmpty()) {
 					boolean found = false;
 					for (Path directory : paths) {
-						if (downloadable.getPath().startsWith( directory )) {
+						if (downloadable.getPath() != null && downloadable.getPath().startsWith( directory )) {
 							found = true;
 							break;
 						}
