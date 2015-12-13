@@ -144,12 +144,6 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 	}
 	
 	public void rescheduleTask( T taskToReschedule ) {
-		if (taskToReschedule instanceof DaemonTask ) {
-			DaemonTask task = ((DaemonTask)taskToReschedule);
-			task.setMinDate( getNextDate( task.getMinutesFrequency() ));
-			queue( task, false );
-		}
-		
 	}
 
 	public boolean isDone() {

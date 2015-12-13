@@ -1,6 +1,7 @@
 package dynamo.backlog;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -25,6 +26,7 @@ import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.AbstractDynamoQueue;
 import dynamo.core.model.CancellableTask;
+import dynamo.core.model.DaemonTask;
 import dynamo.core.model.DynamoDefaultQueue;
 import dynamo.core.model.Task;
 import dynamo.core.model.TaskExecutor;
@@ -142,7 +144,14 @@ public class BackLogProcessor extends Thread {
 					continue;
 				}
 				
-				items.remove( currentItem );
+				if (!(currentItem instanceof DaemonTask)) {
+					items.remove( currentItem );
+				} else {
+					DaemonTask daemon = (DaemonTask) currentItem;
+					Calendar calendar = Calendar.getInstance();
+					calendar.add( Calendar.MINUTE, daemon.getMinutesFrequency() );
+					daemon.setMinDate( calendar.getTime() );
+				}
 
 				AbstractDynamoQueue queue = getQueueForTaskClass( currentItem.getClass() );
 				if (!queue.executeTask( currentItem )) {
