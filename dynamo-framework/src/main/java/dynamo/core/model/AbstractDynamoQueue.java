@@ -66,6 +66,11 @@ public abstract class AbstractDynamoQueue {
 				.map( executor -> executor.getTask() )
 				.collect( Collectors.toList() );
 	}
+	
+	public boolean isExecuting( Task task ) {
+		return submittedExecutors.stream()
+				.anyMatch( executor -> executor.getTask().equals( task ));
+	}
 
 	public BlockingQueue<Runnable> getQueue() {
 		return pool.getQueue();
@@ -79,14 +84,10 @@ public abstract class AbstractDynamoQueue {
 
 	public boolean executeTask( Task task ) throws NoSuchMethodException, SecurityException, ClassNotFoundException {
 		synchronized (this) {
-			List<Task> taskList = getTaskBackLog();
-			if (taskList.contains( task )) {
-				return true;
-			}
 			Class<? extends TaskExecutor<?>> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
 			if (backLogTaskClass != null) {
-				if (!taskList.contains( task )) {
-					TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
+				TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
+				if (!isExecuting(task)) {
 					submittedExecutors.add ( executor );
 					futures.add( (FutureTask<?>) pool.submit( executor ) );
 				}

@@ -175,20 +175,20 @@ public class BackLogProcessor extends Thread {
 		schedule( item, true );
 	}
 
-	public void schedule( Task item, boolean reportQueued ) {
-		if (item instanceof Enableable && !((Enableable) item).isEnabled()) {
+	public void schedule( Task task, boolean reportQueued ) {
+		if (task instanceof Enableable && !((Enableable) task).isEnabled()) {
 			return;
 		}
-		if (!items.contains( item )) {
+		if (!items.contains( task )) {
 			for (AbstractDynamoQueue queue : getQueues().values()) {
-				if (queue.getTaskBackLog().contains(item)) {
+				if (queue.isExecuting(task)) {
 					// already scheduled in queue
 					return;
 				}
 			}
-			items.add( item );
+			items.add( task );
 			if (reportQueued) {
-				EventManager.getInstance().reportInfo( String.format("%s has been queued", item.toString()));
+				EventManager.getInstance().reportInfo( String.format("%s has been queued", task.toString()));
 			}
 		}
 	}
