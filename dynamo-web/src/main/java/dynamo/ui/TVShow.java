@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
@@ -55,6 +56,7 @@ public class TVShow extends DynamoManagedBean {
 	public void setId(String id) {
 		this.id = id;
 		this.managedSeries = TVShowManager.getInstance().getManagedSeries( id );
+		getUnrecognizedFiles();
 	}
 
 	public Map<Long, Boolean> getSelection() {
@@ -147,12 +149,14 @@ public class TVShow extends DynamoManagedBean {
 			}
 		}
 		
-		for (UnrecognizedFile file : getUnrecognizedFiles()) {
-			if (!forFile.equals(file) && selectedSeasonForFile.get(file) == seasonNumber) {
-				Integer[] episodeNumbers = selectedEpisodesForFile.get(file.getId());
-				if (episodeNumbers != null) {
-					for (int episodeNumber : episodeNumbers) {
-						availableEpisodes.removeIf(episode -> episode.getEpisodeNumber() == episodeNumber);
+		if (unrecognizedFiles != null) {
+			for (UnrecognizedFile file : unrecognizedFiles) {
+				if (!forFile.equals(file) && selectedSeasonForFile.get(file) == seasonNumber) {
+					Integer[] episodeNumbers = selectedEpisodesForFile.get(file.getId());
+					if (episodeNumbers != null) {
+						for (int episodeNumber : episodeNumbers) {
+							availableEpisodes.removeIf(episode -> episode.getEpisodeNumber() == episodeNumber);
+						}
 					}
 				}
 			}
