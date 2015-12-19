@@ -21,6 +21,7 @@ import com.google.common.cache.LoadingCache;
 import dynamo.core.DynamoTask;
 import dynamo.core.Enableable;
 import dynamo.core.EventManager;
+import dynamo.core.LogQueuing;
 import dynamo.core.el.DynamoELContext;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
@@ -35,7 +36,7 @@ public class BackLogProcessor extends Thread {
 
 	private boolean shutdownRequested = false;
 	protected Map<String, AbstractDynamoQueue> queues = new ConcurrentHashMap<String, AbstractDynamoQueue>();
-	private BlockingQueue<Task> items = new LinkedBlockingQueue<Task>();
+	private BlockingQueue<Task> tasks = new LinkedBlockingQueue<Task>();
 	private Set<Class> blackListedTasks = new HashSet<>();
 
 	LoadingCache<Class<? extends Task>, Class<? extends AbstractDynamoQueue>> queueClassCache = CacheBuilder.newBuilder().maximumSize(1000)
@@ -67,8 +68,8 @@ public class BackLogProcessor extends Thread {
 		return queues;
 	}
 
-	public Collection<Task> getItems() {
-		return items;
+	public Collection<Task> getTasks() {
+		return tasks;
 	}
 	
 	private DynamoTask getAnnotation( Class<? extends Task> taskClass ) {
@@ -124,7 +125,7 @@ public class BackLogProcessor extends Thread {
 				Date now = new Date();
 
 				Task currentItem = null;
-				for (Task item : items) {
+				for (Task item : tasks) {
 					
 					if (blackListedTasks.contains( item.getClass() )) {
 						continue;
@@ -145,7 +146,7 @@ public class BackLogProcessor extends Thread {
 				}
 				
 				if (!(currentItem instanceof DaemonTask)) {
-					items.remove( currentItem );
+					tasks.remove( currentItem );
 				} else {
 					DaemonTask daemon = (DaemonTask) currentItem;
 					Calendar calendar = Calendar.getInstance();
@@ -179,14 +180,19 @@ public class BackLogProcessor extends Thread {
 		if (task instanceof Enableable && !((Enableable) task).isEnabled()) {
 			return;
 		}
-		if (!items.contains( task )) {
+		if (!tasks.contains( task )) {
 			for (AbstractDynamoQueue queue : getQueues().values()) {
 				if (queue.isExecuting(task)) {
 					// already scheduled in queue
 					return;
 				}
 			}
-			items.add( task );
+			
+			if (task instanceof LogQueuing) {
+				ErrorManager.getInstance().reportDebug(task, String.format("%s was queued"));
+			}
+			
+			tasks.add( task );
 			if (reportQueued) {
 				EventManager.getInstance().reportInfo( String.format("%s has been queued", task.toString()));
 			}
@@ -245,7 +251,7 @@ public class BackLogProcessor extends Thread {
 				cancelMatchingTasks(queue, null, expressionToVerify);
 			}
 		}
-		for (Task task : items) {
+		for (Task task : tasks) {
 			if (match( task, taskClass, expressionToVerify)) {
 				unschedule(task);
 			}
@@ -261,7 +267,7 @@ public class BackLogProcessor extends Thread {
 	}
 
 	private void unschedule(Task task) {
-		items.remove( task );
+		tasks.remove( task );
 		AbstractDynamoQueue queue = getQueueForTaskClass(task.getClass());
 		if (queue != null) {
 			queue.cancel( task );

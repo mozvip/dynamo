@@ -27,7 +27,7 @@ public class Backlog extends DynamoManagedBean {
 	}
 	
 	public Collection<Task> getItems() {
-		return BackLogProcessor.getInstance().getItems();
+		return BackLogProcessor.getInstance().getTasks();
 	}
 	
 	public void runNow( Task item ) {
