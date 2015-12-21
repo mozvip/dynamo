@@ -1,9 +1,10 @@
 package dynamo.backlog.tasks.tvshows;
 
+import dynamo.core.LogQueuing;
 import dynamo.core.model.Task;
 import model.ManagedSeries;
 
-public class DeleteShowTask extends Task {
+public class DeleteShowTask extends Task implements LogQueuing {
 	
 	private ManagedSeries series;
 	private boolean deleteFiles = false;

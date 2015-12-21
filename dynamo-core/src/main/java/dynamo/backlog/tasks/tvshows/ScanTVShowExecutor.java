@@ -130,19 +130,20 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 		List<ManagedEpisode> managedEpisodes = tvShowDAO.findEpisodesForTVShow( task.getSeries().getId() );
 		for ( ManagedEpisode managedEpisode : managedEpisodes ) {
 			if (managedEpisode.isDownloaded()) {
-				
 				List<Path> episodePaths = DownloadableManager.getInstance().getAllFiles( managedEpisode.getId() ).map( downloadedFile -> downloadedFile.getFilePath() ).collect( Collectors.toList() );
-				boolean atLeastOneFileFound = false;
+				boolean videoFileFound = false;
 				if (episodePaths != null && !episodePaths.isEmpty()) {
 					for (Path path : episodePaths) {
 						if (Files.exists( path)) {
-							atLeastOneFileFound = true;	// IMPROVE : make sure the video file is found
+							if (VideoFileFilter.getInstance().accept(path)) {
+								videoFileFound = true;
+							}
 						} else {
 							BackLogProcessor.getInstance().schedule( new DeleteFileTask( path ));
 						}
 					}
 				}
-				if (!atLeastOneFileFound) {
+				if (!videoFileFound) {
 					TVShowManager.getInstance().ignoreOrDeleteEpisode( managedEpisode );
 				}
 			}

@@ -6,7 +6,7 @@ public class RemoveOrphansTask extends InitTask {
 	
 	@Override
 	public String toString() {
-		return "Remove oprhans from DB";
+		return "Remove orphans from DB";
 	}
 
 }

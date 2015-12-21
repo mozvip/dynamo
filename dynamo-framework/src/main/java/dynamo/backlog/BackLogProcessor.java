@@ -189,7 +189,7 @@ public class BackLogProcessor extends Thread {
 			}
 			
 			if (task instanceof LogQueuing) {
-				ErrorManager.getInstance().reportDebug(task, String.format("%s was queued"));
+				ErrorManager.getInstance().reportDebug(task, String.format("%s was queued", task.toString()));
 			}
 			
 			tasks.add( task );

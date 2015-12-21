@@ -34,11 +34,6 @@ public class DeleteShowExecutor extends TaskExecutor<DeleteShowTask> {
 		BackLogProcessor.getInstance().unschedule(RefreshTVShowTask.class, String.format("this.series.id == %s", series.getId()));
 		BackLogProcessor.getInstance().unschedule(ScanTVShowTask.class, String.format("this.series.id == %s", series.getId()));
 
-		List<ManagedEpisode> episodes = tvShowDAO.findEpisodesForTVShow(series.getId());
-		for (ManagedEpisode episode : episodes) {
-			TVShowManager.getInstance().ignoreOrDeleteEpisode(episode);
-		}
-
 		tvShowDAO.deleteTVShow(series.getId());
 
 		if ( task.isDeleteFiles()) {

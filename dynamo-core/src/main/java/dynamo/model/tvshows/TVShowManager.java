@@ -36,8 +36,6 @@ import dynamo.manager.LocalImageCache;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.Video;
-import dynamo.model.backlog.find.FindEpisodeTask;
-import dynamo.model.backlog.find.FindSeasonTask;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import hclient.HTTPClient;
 import hclient.RegExpMatcher;
