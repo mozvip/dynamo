@@ -190,7 +190,7 @@ public class ManagedEpisode extends Downloadable implements Video {
 	}
 	
 	@Override
-	public Path getDestinationFolder() {
+	public Path determineDestinationFolder() {
 		return getSeries().getFolder().resolve( String.format(TVShowManager.getInstance().getSeasonFolderPattern(), getSeasonNumber()) );
 	}
 

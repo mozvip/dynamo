@@ -96,7 +96,7 @@ public class MusicAlbum extends Downloadable {
 	}
 
 	@Override
-	public Path getDestinationFolder() {
+	public Path determineDestinationFolder() {
 		if ( getPath() != null ) {
 			return getPath();
 		} else {

@@ -14,6 +14,7 @@ import dynamo.core.VideoSource;
 import dynamo.jdbi.core.BindEnum;
 import dynamo.jdbi.core.BindPath;
 import dynamo.jdbi.core.DAO;
+import dynamo.model.DownloadableStatus;
 import dynamo.model.movies.Movie;
 
 @DAO(databaseId="dynamo")
@@ -31,7 +32,11 @@ public interface MovieDAO {
 	@Mapper(MovieMapper.class)
 	Movie find(@Bind("movieId") long movieId);
 
-	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = 'DOWNLOADED' AND DOWNLOADABLE.PATH IS NOT NULL ORDER BY MOVIE.NAME")
+	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = :status ORDER BY MOVIE.NAME")
+	@Mapper(MovieMapper.class)
+	List<Movie> findByStatus( @BindEnum("status") DownloadableStatus status );
+
+	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = 'DOWNLOADED' ORDER BY MOVIE.NAME")
 	@Mapper(MovieMapper.class)
 	List<Movie> findDownloaded();
 

@@ -41,7 +41,7 @@ public class Book extends Downloadable implements EBook {
 	}
 
 	@Override
-	public Path getDestinationFolder() {
+	public Path determineDestinationFolder() {
 		return FileUtils.getFolderWithMostUsableSpace(BookManager.getInstance().getFolders());
 	}
 	

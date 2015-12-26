@@ -75,7 +75,7 @@ public abstract class AbstractDynamoQueue {
 	public boolean isExecuting( Task task ) {
 		synchronized (submittedExecutors) {
 			return submittedExecutors.stream()
-					.anyMatch( executor -> executor.getTask().equals( task ));
+					.anyMatch( executor -> executor.getTask().equals( task ) && !executor.isFinished());
 		}
 	}
 

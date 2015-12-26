@@ -90,7 +90,7 @@ public class MagazineIssue extends Downloadable implements EBook {
 	}
 	
 	@Override
-	public Path getDestinationFolder() {
+	public Path determineDestinationFolder() {
 		return getMagazine().getPath();
 	}
 

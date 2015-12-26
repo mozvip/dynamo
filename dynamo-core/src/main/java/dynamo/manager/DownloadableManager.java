@@ -249,7 +249,7 @@ public class DownloadableManager {
 		
 		boolean filesFound = true;
 		
-		Path destinationFolder = downloadable.getDestinationFolder();
+		Path destinationFolder = downloadable.determineDestinationFolder();
 		Files.createDirectories( destinationFolder );
 
 		int fileIndex = 0;

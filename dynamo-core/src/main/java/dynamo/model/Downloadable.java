@@ -53,6 +53,10 @@ public abstract class Downloadable {
 		return coverImage;
 	}
 	
+	public void setCoverImage(String coverImage) {
+		this.coverImage = coverImage;
+	}
+	
 	public String getUrlEncodedCoverImage() {
 		if (coverImage == null) {
 			return null;
@@ -69,7 +73,7 @@ public abstract class Downloadable {
 
 	public abstract String getRelativeLink();
 	
-	public abstract Path getDestinationFolder();
+	public abstract Path determineDestinationFolder();
 	
 	public boolean isDownloaded() {
 		return status == DownloadableStatus.DOWNLOADED;

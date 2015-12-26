@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
@@ -151,7 +150,8 @@ public class TVShow extends DynamoManagedBean {
 		
 		if (unrecognizedFiles != null) {
 			for (UnrecognizedFile file : unrecognizedFiles) {
-				if (!forFile.equals(file) && selectedSeasonForFile.get(file) == seasonNumber) {
+				Integer season = selectedSeasonForFile.get(file);
+				if (season != null && !forFile.equals(file) && season == seasonNumber) {
 					Integer[] episodeNumbers = selectedEpisodesForFile.get(file.getId());
 					if (episodeNumbers != null) {
 						for (int episodeNumber : episodeNumbers) {

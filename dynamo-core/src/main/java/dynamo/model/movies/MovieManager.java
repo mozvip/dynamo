@@ -221,10 +221,11 @@ public class MovieManager implements Reconfigurable {
 		this.defaultQuality = defaultQuality;
 	}
 	
-	public void associate( long movieId, MovieDb movieDb) throws MovieDbException {
+	public Movie associate( long movieId, MovieDb movieDb) throws MovieDbException {
 		Movie movie = movieDAO.find(movieId);
 		associate(movie, movieDb);
 		save( movie );
+		return movie;
 	}
 
 	public void associate( Movie movie, MovieDb movieDb ) throws MovieDbException {	
@@ -247,6 +248,7 @@ public class MovieManager implements Reconfigurable {
 			coverImage = "/downloaded-movie-unknown.jpg";
 		}
 		if ( movie.getCoverImage() == null || !movie.getCoverImage().equals( coverImage )) {
+			movie.setCoverImage( coverImage );
 			DownloadableManager.getInstance().updateCoverImage( movie.getId(), coverImage);
 		}
 	}
@@ -413,11 +415,14 @@ public class MovieManager implements Reconfigurable {
 	public List<Movie> getMovieCollection() {
 		return movieDAO.findDownloaded();
 	}
-
+	
 	public List<Movie> getWantedMovies() {
 		return movieDAO.findWanted();
 	}
 	
+	public List<Movie> findByStatus( DownloadableStatus status ) {
+		return movieDAO.findByStatus( status );
+	}
 
 	public Movie deleteMovie( long movieId ) {
 		Movie movie = movieDAO.find( movieId );

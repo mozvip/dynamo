@@ -47,7 +47,7 @@ public class VideoGame extends Downloadable {
 	}
 
 	@Override
-	public Path getDestinationFolder() {
+	public Path determineDestinationFolder() {
 		return GamesManager.getInstance().getFolder( getPlatform() ).resolve( FileNameUtils.sanitizeFileName( getName() ) );
 	}
 

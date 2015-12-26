@@ -216,7 +216,7 @@ public class Movie extends Downloadable implements Video {
 	}
 	
 	@Override
-	public Path getDestinationFolder() {
+	public Path determineDestinationFolder() {
 		return FileUtils.getFolderWithMostUsableSpace(MovieManager.getInstance().getFolders());
 	}
 	

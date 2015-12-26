@@ -25,7 +25,7 @@ $('#fileList').on(
 			$("#fileListTable tbody").empty();
 
 			$.ajax({
-				url : "../services/file-list?downloadableId=" + downloadableId,
+				url : "../services/file-list/" + downloadableId,
 				dataType : "json",
 				context : document.body
 			}).done(
