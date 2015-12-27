@@ -27,10 +27,11 @@ public class EBookW implements KioskIssuesSuggester {
 				throw new KioskIssuesSuggesterException( e );
 			}
 			Elements titles = document.jsoup("#dle-content .title");
-			for (Element element : titles) {
-				String title = element.select("a").first().text();
+			Elements shortNewsList = document.jsoup("#dle-content .shortnews");
+			for (int iTitle=0; iTitle<titles.size(); iTitle++) {
+				String title = titles.get( iTitle ).select("a").first().text();
 				
-				Element shortNews = element.nextElementSibling().nextElementSibling();
+				Element shortNews = shortNewsList.get(iTitle);
 				String coverImage = shortNews.select("img").first().absUrl("src");
 
 				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, null, -1.0f, toString(), null, false));

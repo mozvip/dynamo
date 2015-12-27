@@ -60,8 +60,8 @@ public interface MovieDAO {
 			@Bind("subtitled") boolean subtitled, @BindPath("subtitlesPath") Path subtitlesPath, @Bind("trakURL") String trakURL, @BindEnum("wantedAudioLanguage") Language wantedAudioLanguage,
 			@BindEnum("wantedSubtitlesLanguage") Language wantedSubtitlesLanguage, @BindEnum("wantedQuality") VideoQuality wantedQuality, @Bind("watched") boolean watched	);
 
-	@SqlUpdate("UPDATE MOVIE SET SUBTITLED = true, SUBTITLESPATH=:path WHERE ID = :movieId")
-	public void setSubtitled(@Bind("movieId") long movieId, @BindPath("path") Path path);
+	@SqlUpdate("UPDATE MOVIE SET SUBTITLED = true, SUBTITLESPATH=:subTitlesPath WHERE ID = :movieId")
+	public void setSubtitled(@Bind("movieId") long movieId, @BindPath("subTitlesPath") Path subTitlesPath);
 
 	@SqlUpdate("DELETE FROM MOVIE WHERE MOVIE.IMDBID=:imdbId AND (SELECT DOWNLOADABLE.STATUS FROM DOWNLOADABLE WHERE DOWNLOADABLE.ID = MOVIE.ID ) ='SUGGESTED'")
 	void deleteIfSuggested(@Bind("imdbId") String imdbId);

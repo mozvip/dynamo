@@ -264,7 +264,11 @@ public class MovieManager implements Reconfigurable {
 			if (movieDb.getPosterPath() != null) {
 				coverImage = LocalImageCache.getInstance().download( "movies", movieDb.getImdbID(), getImageURL( movieDb.getPosterPath()), null );	
 			} else {
-				coverImage = LocalImageCache.getInstance().download( "movies", movieDb.getImdbID(), defaultImage.getUrl(), defaultImage.getReferer() );
+				if (defaultImage != null) {
+					coverImage = LocalImageCache.getInstance().download( "movies", movieDb.getImdbID(), defaultImage.getUrl(), defaultImage.getReferer() );
+				} else {
+					coverImage = "/downloaded-movie-unknown.jpg";
+				}
 			}
 			long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, null, coverImage, status );
 

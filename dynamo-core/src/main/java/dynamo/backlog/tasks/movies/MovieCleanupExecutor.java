@@ -2,7 +2,10 @@ package dynamo.backlog.tasks.movies;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import dynamo.core.model.DownloadableDAO;
 import dynamo.core.model.ReportProgress;
@@ -46,39 +49,50 @@ public class MovieCleanupExecutor extends TaskExecutor<MovieCleanupTask> impleme
 		totalItems = allDownloadedMovies.size();
 
 		List<Path> movieFolders = MovieManager.getInstance().getFolders();
+		
+		Set<Path> existingFolders = new HashSet<>();
+		
+		itemsDone = -1;
 
 		for (Movie movie : allDownloadedMovies) {
 			
-			if (DownloadableManager.getInstance().getAllFiles( movie.getId() ).count() == 0) {
-				downloadableDAO.delete( movie.getId() );
-			}
-			
-			Path moviePath = VideoManager.getInstance().getMainVideoFile( movie.getId() ).get();
-
-			Path folder = null;
-			for (Path movieFolderPath : movieFolders) {
-				if (moviePath.startsWith( movieFolderPath )) {
-					folder = movieFolderPath;
-					break;
-				}
-			}
-			
-			if (folder == null) {
-				// this movie is not in any of our movies folders
-				downloadableDAO.delete( movie.getId() );
-				continue;
-			}
-
-			if (!Files.exists(folder)) {
-				// folder is unreachable (maybe just for now)
-				continue;
-			}
-			
-			if (Files.exists( moviePath ) && task.isRename()) {
-				queue(new RenameMovieFileTask( movie ), false);
-			}
-			
 			itemsDone ++;
+			
+			Optional<Path> mainVideoFile = VideoManager.getInstance().getMainVideoFile( movie.getId() );
+			if (mainVideoFile.isPresent()) {
+				Path moviePath = mainVideoFile.get();
+	
+				Path folder = null;
+				for (Path movieFolderPath : movieFolders) {
+					if (moviePath.startsWith( movieFolderPath )) {
+						folder = movieFolderPath;
+						break;
+					}
+				}
+				
+				if (folder == null) {
+					// this movie is not in any of our movies folders
+					downloadableDAO.delete( movie.getId() );
+					continue;
+				}
+	
+				if (!existingFolders.contains( folder )) {
+					if (!Files.exists(folder)) {
+						// folder is unreachable (maybe just for now)
+						continue;
+					} else {
+						existingFolders.add( folder );
+					}
+				}
+				
+				if (Files.exists( moviePath ) && task.isRename()) {
+					queue(new RenameMovieFileTask( movie ), false);
+				}
+			} else {
+
+				downloadableDAO.delete( movie.getId() );
+				
+			}
 		}
 	}
 
