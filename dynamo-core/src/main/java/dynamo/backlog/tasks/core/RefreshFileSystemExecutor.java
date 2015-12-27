@@ -16,8 +16,10 @@ import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.MusicManager;
+import dynamo.manager.games.GamesManager;
 import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
+import dynamo.model.games.VideoGame;
 import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
 import dynamo.model.music.MusicAlbum;
@@ -78,11 +80,14 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 				if ( downloadable instanceof Movie) {
 					paths.addAll( MovieManager.getInstance().getFolders() );
 				}
+				if ( downloadable instanceof VideoGame) {
+
+				}
 				
 				if (!paths.isEmpty()) {
 					boolean found = false;
 					for (Path directory : paths) {
-						if (downloadable.getPath() != null && downloadable.getPath().startsWith( directory )) {
+						if (downloadInfo.getPath().startsWith( directory )) {
 							found = true;
 							break;
 						}

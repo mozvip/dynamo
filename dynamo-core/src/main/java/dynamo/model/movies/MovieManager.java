@@ -514,7 +514,7 @@ public class MovieManager implements Reconfigurable {
 			}
 			return movie;
 		} else {
-			ErrorManager.getInstance().reportWarning(String.format("IMDB match not found for %s (%d)", name, year));
+			ErrorManager.getInstance().reportWarning(String.format("MovieDB match not found for %s (%d)", name, year));
 		}
 		return null;
 	}

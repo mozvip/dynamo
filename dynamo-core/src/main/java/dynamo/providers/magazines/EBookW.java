@@ -26,15 +26,15 @@ public class EBookW implements KioskIssuesSuggester {
 			} catch (IOException e) {
 				throw new KioskIssuesSuggesterException( e );
 			}
-			Elements titles = document.jsoup("#dle-content .title");
 			Elements shortNewsList = document.jsoup("#dle-content .shortnews");
-			for (int iTitle=0; iTitle<titles.size(); iTitle++) {
-				String title = titles.get( iTitle ).select("a").first().text();
-				
-				Element shortNews = shortNewsList.get(iTitle);
-				String coverImage = shortNews.select("img").first().absUrl("src");
-
-				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, null, -1.0f, toString(), null, false));
+			for (Element shortNews : shortNewsList) {
+				Elements imageElement = shortNews.select("img");
+				if (imageElement != null && imageElement.size() > 0) {
+					String coverImage = imageElement.first().absUrl("src");
+					String title = shortNews.select("strong").text();
+	
+					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, null, -1.0f, toString(), null, false));
+				}
 			}
 		}
 	}

@@ -81,7 +81,7 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 		}
 
 		if (downloadable instanceof Movie || downloadable instanceof VideoGame) {
-			downloadableDAO.delete( downloadable.getId() );
+			DownloadableManager.getInstance().delete( downloadable.getId() );
 		} else {
 			downloadableDAO.nullifyPath( downloadable.getId() );
 		}

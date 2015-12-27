@@ -80,7 +80,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 
 			if ( movie.getImdbID() != null && imdbIds.contains( movie.getImdbID()) ) {
 				// duplicate
-				downloadableDAO.delete( movie.getId() );
+				DownloadableManager.getInstance().delete( movie.getId() );
 			} else {
 				
 				VideoManager.getInstance().getMetaData( movie, p );

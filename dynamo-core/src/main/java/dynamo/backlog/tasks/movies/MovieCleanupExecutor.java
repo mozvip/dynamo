@@ -72,7 +72,7 @@ public class MovieCleanupExecutor extends TaskExecutor<MovieCleanupTask> impleme
 				
 				if (folder == null) {
 					// this movie is not in any of our movies folders
-					downloadableDAO.delete( movie.getId() );
+					DownloadableManager.getInstance().delete( movie.getId() );
 					continue;
 				}
 	
