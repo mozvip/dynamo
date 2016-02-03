@@ -34,8 +34,8 @@ public interface VideoGameDAO {
 	@Mapper(VideoGameMapper.class)
 	public List<VideoGame> findAll( @BindEnum("status1") DownloadableStatus status1, @BindEnum("status2") DownloadableStatus status2 );
 
-	@SqlUpdate("MERGE INTO VIDEOGAME(ID, NAME, PLATFORM, THEGAMESDB_ID) VALUES (:id, :name, :platform, :theGamesDBId)")
-	void save(@Bind("id") long id, @Bind("name") String name, @BindEnum("platform") GamePlatform platform, @Bind("theGamesDBId") Long theGamesDBId);
+	@SqlUpdate("MERGE INTO VIDEOGAME(ID, PLATFORM, THEGAMESDB_ID) VALUES (:id, :platform, :theGamesDBId)")
+	void save(@Bind("id") long id, @BindEnum("platform") GamePlatform platform, @Bind("theGamesDBId") Long theGamesDBId);
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID WHERE VIDEOGAME.THEGAMESDB_ID = :theGamesDbId")
 	@Mapper(VideoGameMapper.class)

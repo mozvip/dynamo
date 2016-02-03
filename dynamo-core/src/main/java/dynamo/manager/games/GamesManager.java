@@ -16,7 +16,6 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.ConfigValueManager;
-import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.finders.core.GameFinder;
 import dynamo.manager.DownloadableManager;
@@ -159,7 +158,7 @@ public class GamesManager implements Reconfigurable {
 		String image = getLocalImage(theGamesDbId, title, newGamePlatform );
 		long videoGameId = DownloadableManager.getInstance().createDownloadable(VideoGame.class, title, folder, image, status );
 		VideoGame game = new VideoGame(videoGameId, status, folder, image, title, newGamePlatform, theGamesDbId );
-		videoGameDAO.save( videoGameId, title, game.getPlatform(), game.getTheGamesDbId() );
+		videoGameDAO.save( videoGameId, game.getPlatform(), game.getTheGamesDbId() );
 		
 		return game;
 	}
@@ -186,8 +185,7 @@ public class GamesManager implements Reconfigurable {
 		String image = getLocalImage( game.getId(), game.getGameTitle(), newGamePlatform );
 		DownloadableManager.getInstance().updateCoverImage( videoGameId, image );
 		
-		videoGameDAO.save( videoGameId, game.getGameTitle(), newGamePlatform, game.getId() );
-
+		videoGameDAO.save( videoGameId, newGamePlatform, game.getId() );
 	}
 
 	public void want(long theGamesDbId) {
