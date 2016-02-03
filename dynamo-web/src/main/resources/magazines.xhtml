@@ -43,13 +43,13 @@
 					<div class="thumbnail magazineThumb">
 						<ui:fragment rendered="#{issue.status == 'DOWNLOADED'}">					
 							<a href="/download?id=#{issue.id}" target="_blank">
-								<img class="magazineCover" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.rawName}" title="#{issue.rawName}" />
+								<img class="magazineCover" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{issue.status != 'DOWNLOADED'}">					
-							<img class="magazineCover" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.rawName}" title="#{issue.rawName}" />
+							<img class="magazineCover" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
 						</ui:fragment>
-						<div class="caption magazineCaption">#{issue.rawName}</div>
+						<div class="caption magazineCaption">#{issue.name}</div>
 					</div>
 					<div class="buttons">
 						<ui:fragment rendered="#{issue.status == 'SUGGESTED'}">
@@ -58,11 +58,11 @@
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{issue.status != 'SUGGESTED'}">
-							<a class="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(issue.rawName)} ?')) { deleteDownloadable('#{issue.id}'); };" title="Delete Issue">
+							<a class="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(issue.name)} ?')) { deleteDownloadable('#{issue.id}'); };" title="Delete Issue">
 								<i class="fa fa-trash-o"></i>
 							</a>
 						</ui:fragment>
-						<h:commandLink styleClass="btn btn-sm btn-default" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(issue.rawName)} ?'));" rendered="#{issue.status == 'SNATCHED' or issue.status == 'DOWNLOADED'}">
+						<h:commandLink styleClass="btn btn-sm btn-default" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(issue.name)} ?'));" rendered="#{issue.status == 'SNATCHED' or issue.status == 'DOWNLOADED'}">
 							<f:ajax execute="@this" render="@none" listener="#{kiosk.redownload(issue.id)}" />
 							<i class="fa fa-refresh"></i>
 						</h:commandLink>

@@ -71,7 +71,7 @@
 								<i class="fa fa-download"></i>
 							</a>
 						</ui:fragment>
-						<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{album.status == 'SNATCHED' or album.status == 'DOWNLOADED'}" title="Redownload" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(album.album)} ?'));">
+						<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{album.status == 'SNATCHED' or album.status == 'DOWNLOADED'}" title="Redownload" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(album.name)} ?'));">
 							<f:ajax render="@none" listener="#{music.redownload}" execute="@this" />
 							<f:param name="id" value="#{album.id}" />
 							<i class="fa fa-refresh" />
@@ -88,7 +88,7 @@
 							<i class="fa fa-trash-o"></i>
 						</h:commandLink>
 						<h:commandLink title="Delete Album" styleClass="btn btn-danger btn-sm" action="#{music.deleteAlbum}" rendered="#{album.status != 'SUGGESTED'}"
-							onclick="return confirm('Are you sure you want to delete #{movies.fixName(album.album)} ?');">
+							onclick="return confirm('Are you sure you want to delete #{movies.fixName(album.name)} ?');">
 							<f:ajax render="@none" execute="@this" onevent="removeThumbnail"/>
 							<f:param name="id" value="#{album.id}" />
 							<i class="fa fa-trash-o"></i>
@@ -97,14 +97,14 @@
 					<div class="thumbnail itemThumb" id="#{album.searchString}">
 						<ui:fragment rendered="#{album.status == 'DOWNLOADED'}">
 							<a href="#{album.relativeLink}">
-								<img class="img-responsive albumCover" data-src="#{album.urlEncodedCoverImage}" alt="#{album.album}" />
+								<img class="img-responsive albumCover" data-src="#{album.urlEncodedCoverImage}" alt="#{album.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{album.status != 'DOWNLOADED'}">
-							<img class="img-responsive albumCover" data-src="#{album.urlEncodedCoverImage}" alt="#{album.album}" />
+							<img class="img-responsive albumCover" data-src="#{album.urlEncodedCoverImage}" alt="#{album.name}" />
 						</ui:fragment>
 						<div class="itemCaption">
-							<span class="albumName">#{album.album}</span>
+							<span class="albumName">#{album.name}</span>
 							<span class="artistName">#{album.artistName}</span>
 							<span class="albumGenre">#{album.genre}</span>
 						</div>

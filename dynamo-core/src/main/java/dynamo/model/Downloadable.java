@@ -19,6 +19,7 @@ public abstract class Downloadable {
 
 	public Downloadable(Long id, String name, DownloadableStatus status, Path path, String coverImage, String aka, Date creationDate) {
 		this.id = id;
+		this.name = name;
 		this.status = status;
 		this.path = path;
 		this.coverImage = coverImage;

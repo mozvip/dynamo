@@ -22,7 +22,7 @@ public class MagazineIssueMapper implements ResultSetMapper<MagazineIssue> {
 				r.getString("AKA"),
 				r.getString("MAGAZINE_SEARCHNAME"),
 				MapperUtils.getEnum(r, "LANGUAGE", Language.class),
-				r.getString("RAWNAME"),
+				r.getString("NAME"),
 				r.getDate("ISSUEDATE"),
 				r.getInt("YEAR"),
 				r.getInt("ISSUE"),

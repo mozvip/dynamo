@@ -24,7 +24,7 @@ public class MusicAlbum extends Downloadable {
 		this.allMusicURL = allMusicURL;
 		this.quality = quality;
 		
-		this.searchString = MusicManager.getSearchString( artistName, getName() );
+		this.searchString = MusicManager.getSearchString( artistName, albumName );
 	}
 
 	public String getSearchString() {

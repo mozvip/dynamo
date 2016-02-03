@@ -161,17 +161,6 @@ public class MagazineManager implements Reconfigurable {
 	public Magazine findOrCreateMagazine(String magazineName, Language language) {
 		return findOrCreateMagazine(magazineName, language, FileUtils.getFolderWithMostUsableSpace(getFolders()));
 	}
-
-	public void saveIssue(MagazineIssue issue) {
-		magazineDAO.saveIssue(
-				issue.getId(),
-				issue.getIssue(),
-				issue.getIssueDate(),
-				issue.getYear(),
-				issue.isSpecial(),
-				issue.getLanguage(),
-				issue.getMagazineSearchName());
-	}
 	
 	public MagazineIssue createIssue( Magazine magazine, String rawIssueName, String coverImage ) {
 		MagazineIssueInfo info = MagazineNameParser.getIssueInfo( rawIssueName );

@@ -125,13 +125,13 @@ public interface MusicDAO {
 	@SqlQuery("SELECT COUNT(*) FROM MUSICALBUM INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS='DOWNLOADED' AND UPPER(ARTIST_NAME) LIKE :artistsSearchFilter")
 	int getDownloadedAlbumsCount(@BindContains("artistsSearchFilter") String artistsSearchFilter);
 
-	@SqlQuery("SELECT COUNT(*) FROM MUSICFILE INNER JOIN MUSICALBUM ON MUSICALBUM.ID = MUSICFILE.ALBUM_ID WHERE UPPER(ARTIST_NAME) LIKE :artistsSearchFilter AND UPPER(ALBUM) LIKE :albumNameFilter")
+	@SqlQuery("SELECT COUNT(*) FROM MUSICFILE INNER JOIN MUSICALBUM ON MUSICALBUM.ID = MUSICFILE.ALBUM_ID INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE UPPER(ARTIST_NAME) LIKE :artistsSearchFilter AND UPPER(NAME) LIKE :albumNameFilter")
 	int getMusicFilesCount(@BindContains("artistsSearchFilter") String artistsSearchFilter, @BindContains("albumNameFilter") String albumNameFilter );
 
 	@SqlQuery("SELECT COUNT(*) FROM MUSICFILE WHERE MUSICFILE.ALBUM_ID = :albumId")
 	int getMusicFilesCount(@Bind("albumId") long albumId );
 
-	@SqlQuery("SELECT MUSICFILE.* FROM MUSICFILE INNER JOIN MUSICALBUM ON MUSICALBUM.ID = MUSICFILE.ALBUM_ID WHERE UPPER(ARTIST_NAME) LIKE :artistsSearchFilter AND UPPER(MUSICALBUM.NAME) LIKE :albumNameFilter ORDER BY NAME LIMIT :limit OFFSET :start")
+	@SqlQuery("SELECT MUSICFILE.* FROM MUSICFILE INNER JOIN MUSICALBUM ON MUSICALBUM.ID = MUSICFILE.ALBUM_ID INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE UPPER(ARTIST_NAME) LIKE :artistsSearchFilter AND UPPER(NAME) LIKE :albumNameFilter ORDER BY NAME LIMIT :limit OFFSET :start")
 	@Mapper(MusicFileMapper.class)
 	List<MusicFile> getMusicFiles(@BindContains("artistsSearchFilter") String artistsSearchFilter, @BindContains("albumNameFilter") String albumNameFilter, @Bind("start") int start, @Bind("limit") int limit );
 

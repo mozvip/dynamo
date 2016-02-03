@@ -24,7 +24,7 @@ public class MusicAlbumMapper implements ResultSetMapper<MusicAlbum> {
 				r.getString("COVER_IMAGE"),
 				r.getString("AKA"),
 				r.getString("ARTIST_NAME"),
-				r.getString("ALBUM"),
+				r.getString("NAME"),
 				r.getString("GENRE"),
 				MapperUtils.getEnum(r, "QUALITY", MusicQuality.class), r.getString("ALLMUSICURL"));
 	}

@@ -440,7 +440,7 @@ public class MovieManager implements Reconfigurable {
 
 	public void save(long downloadableId, Movie movie) {
 		movieDAO.save(
-				downloadableId, movie.getImdbID(), movie.getMovieDbId(), movie.getName(), movie.getYear(), movie.getOriginalLanguage(),
+				downloadableId, movie.getImdbID(), movie.getMovieDbId(), movie.getYear(), movie.getOriginalLanguage(),
 				movie.getQuality(), movie.getRating(), movie.getReleaseGroup(), movie.getSource(), movie.isSubtitled(), movie.getSubtitlesPath(),
 				movie.getTraktUrl(), movie.getWantedAudioLanguage(), movie.getWantedSubtitlesLanguage(), movie.getQuality(), movie.isWatched()
 		);

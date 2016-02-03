@@ -32,30 +32,30 @@ public interface MovieDAO {
 	@Mapper(MovieMapper.class)
 	Movie find(@Bind("movieId") long movieId);
 
-	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = :status ORDER BY MOVIE.NAME")
+	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = :status ORDER BY NAME")
 	@Mapper(MovieMapper.class)
 	List<Movie> findByStatus( @BindEnum("status") DownloadableStatus status );
 
-	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = 'DOWNLOADED' ORDER BY MOVIE.NAME")
+	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = 'DOWNLOADED' ORDER BY NAME")
 	@Mapper(MovieMapper.class)
 	List<Movie> findDownloaded();
 
-	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = 'SUGGESTED' ORDER BY MOVIE.NAME")
+	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = 'SUGGESTED' ORDER BY NAME")
 	@Mapper(MovieMapper.class)
 	List<Movie> findSuggested();
 
-	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS IN('WANTED','SNATCHED') ORDER BY MOVIE.NAME")
+	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS IN('WANTED','SNATCHED') ORDER BY NAME")
 	@Mapper(MovieMapper.class)
 	List<Movie> findWanted();
 
-	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID ORDER BY MOVIE.NAME")
+	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID ORDER BY NAME")
 	@Mapper(MovieMapper.class)
 	List<Movie> find();
 
 	@SqlUpdate("MERGE INTO MOVIE("
-			+ "ID, IMDBID, MOVIEDBID, NAME, YEAR, ORIGINALLANGUAGE, QUALITY, RATING, RELEASEGROUP, SOURCE, SUBTITLED, SUBTITLESPATH, TRAKTURL, WANTEDAUDIOLANGUAGE, WANTEDSUBTITLESLANGUAGE, WANTEDQUALITY, WATCHED) VALUES("
-			+ ":moviedId, :imdbId, :movieDbId, :name, :year, :originalLanguage, :quality, :rating, :releasegroup, :videoSource, :subtitled, :subtitlesPath, :trakURL, :wantedAudioLanguage, :wantedSubtitlesLanguage, :wantedQuality, :watched)")
-	void save(@Bind("moviedId") long movieId, @Bind("imdbId") String imdbId, @Bind("movieDbId") int movieDbId, @Bind("name") String name, @Bind("year") int year, @BindEnum("originalLanguage") Language originalLanguage,
+			+ "ID, IMDBID, MOVIEDBID, YEAR, ORIGINALLANGUAGE, QUALITY, RATING, RELEASEGROUP, SOURCE, SUBTITLED, SUBTITLESPATH, TRAKTURL, WANTEDAUDIOLANGUAGE, WANTEDSUBTITLESLANGUAGE, WANTEDQUALITY, WATCHED) VALUES("
+			+ ":moviedId, :imdbId, :movieDbId, :year, :originalLanguage, :quality, :rating, :releasegroup, :videoSource, :subtitled, :subtitlesPath, :trakURL, :wantedAudioLanguage, :wantedSubtitlesLanguage, :wantedQuality, :watched)")
+	void save(@Bind("moviedId") long movieId, @Bind("imdbId") String imdbId, @Bind("movieDbId") int movieDbId, @Bind("year") int year, @BindEnum("originalLanguage") Language originalLanguage,
 			@BindEnum("quality") VideoQuality quality, @Bind("rating") Float rating, @Bind("releasegroup") String releasegroup, @BindEnum("videoSource") VideoSource videoSource,
 			@Bind("subtitled") boolean subtitled, @BindPath("subtitlesPath") Path subtitlesPath, @Bind("trakURL") String trakURL, @BindEnum("wantedAudioLanguage") Language wantedAudioLanguage,
 			@BindEnum("wantedSubtitlesLanguage") Language wantedSubtitlesLanguage, @BindEnum("wantedQuality") VideoQuality wantedQuality, @Bind("watched") boolean watched	);
