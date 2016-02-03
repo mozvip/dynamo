@@ -230,7 +230,7 @@ public class MusicArtistManagedBean extends DynamoManagedBean {
 		List<MusicFile> targetFiles = null;
 		long targetAlbumId = -1;
 		for (MusicAlbum album : getAlbums()) {
-			if (album.getAlbum().equalsIgnoreCase( albumSearch )) {
+			if (album.getName().equalsIgnoreCase( albumSearch )) {
 				targetAlbumId = album.getId();
 				targetFiles = getFiles( targetAlbumId );
 				break;

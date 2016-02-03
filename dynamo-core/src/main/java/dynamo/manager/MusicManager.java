@@ -298,11 +298,11 @@ public class MusicManager implements Reconfigurable {
 		
 		if (album == null && createIfMissing ) {
 			album = new MusicAlbum(
-					DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, path, image, status),
+					DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, path, image, status),
 					status, path, image, null, 
 					artist.getName(), albumName, null, quality, null
 			);
-			musicDAO.save(album.getId(), albumName, artist.getName(), null, genre, quality, searchString);
+			musicDAO.save(album.getId(), artist.getName(), null, genre, quality, searchString);
 			if (image == null) {
 				BackLogProcessor.getInstance().schedule( new FindMusicAlbumImageTask( album ), false );
 			}

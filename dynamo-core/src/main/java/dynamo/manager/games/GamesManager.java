@@ -157,7 +157,7 @@ public class GamesManager implements Reconfigurable {
 
 		GamePlatform newGamePlatform = GamePlatform.match( platform );
 		String image = getLocalImage(theGamesDbId, title, newGamePlatform );
-		long videoGameId = DownloadableManager.getInstance().createDownloadable(VideoGame.class, folder, image, status );
+		long videoGameId = DownloadableManager.getInstance().createDownloadable(VideoGame.class, title, folder, image, status );
 		VideoGame game = new VideoGame(videoGameId, status, folder, image, title, newGamePlatform, theGamesDbId );
 		videoGameDAO.save( videoGameId, title, game.getPlatform(), game.getTheGamesDbId() );
 		

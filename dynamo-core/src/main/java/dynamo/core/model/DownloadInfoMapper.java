@@ -23,6 +23,7 @@ public class DownloadInfoMapper implements ResultSetMapper<DownloadInfo> {
 		try {
 			return new DownloadInfo(
 					r.getLong("ID"),
+					r.getString("NAME"),
 					Class.forName(r.getString("DTYPE")),
 					pathStr != null ? Paths.get(pathStr) : null,
 					r.getString("COVER_IMAGE"),

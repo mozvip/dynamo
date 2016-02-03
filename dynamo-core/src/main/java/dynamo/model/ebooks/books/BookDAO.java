@@ -34,8 +34,8 @@ public interface BookDAO {
 	@Mapper(BookMapper.class)
 	public List<Book> findWantedAndSnatched();
 
-	@SqlUpdate("MERGE INTO BOOK(ID, NAME, AUTHOR, LANGUAGE) VALUES (:id, :name, :author, :language)")
-	void save(@Bind("id") long id, @Bind("name") String name, @Bind("author") String author, @BindEnum("language") Language language);
+	@SqlUpdate("MERGE INTO BOOK(ID, AUTHOR, LANGUAGE) VALUES (:id, :author, :language)")
+	void save(@Bind("id") long id, @Bind("author") String author, @BindEnum("language") Language language);
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, BOOK.* FROM BOOK INNER JOIN DOWNLOADABLE ON BOOK.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS='SUGGESTED' AND (BOOK.LANGUAGE =:language OR :language IS NULL) AND UPPER(BOOK.NAME) LIKE :filter ORDER BY CREATION_DATE DESC")
 	@Mapper(BookMapper.class)

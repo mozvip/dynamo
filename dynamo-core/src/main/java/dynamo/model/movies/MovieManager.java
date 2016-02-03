@@ -270,7 +270,7 @@ public class MovieManager implements Reconfigurable {
 					coverImage = "/downloaded-movie-unknown.jpg";
 				}
 			}
-			long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, null, coverImage, status );
+			long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, movieDb.getTitle(), null, coverImage, status );
 
 			Language originalLanguage = Language.EN;
 			if (movieDb.getSpokenLanguages() != null && movieDb.getSpokenLanguages().size() > 0) {

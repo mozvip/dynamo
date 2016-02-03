@@ -12,8 +12,6 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.Video;
 
 public class Movie extends Downloadable implements Video {
-	
-	private String name;
 
 	private Path subtitlesPath;
 	private boolean subtitled;
@@ -44,8 +42,8 @@ public class Movie extends Downloadable implements Video {
 			String releaseGroup, int movieDbId,
 			String imdbID, String traktUrl, float rating, int year,
 			boolean watched) {
-		super( id, status, null, coverImage, aka, null );
-		this.name = name;
+		super( id, name, status, null, coverImage, aka, null );
+
 		this.subtitlesPath = subtitlesPath;
 		this.subtitled = subtitled;
 		this.wantedQuality = wantedQuality;
@@ -61,14 +59,6 @@ public class Movie extends Downloadable implements Video {
 		this.rating = rating;
 		this.year = year;
 		this.watched = watched;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	@Override
@@ -212,7 +202,7 @@ public class Movie extends Downloadable implements Video {
 
 	@Override
 	public String toString() {
-		return String.format("%s (%d)", name, year);
+		return String.format("%s (%d)", getName(), year);
 	}
 	
 	@Override

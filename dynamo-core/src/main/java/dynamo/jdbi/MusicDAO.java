@@ -49,8 +49,8 @@ public interface MusicDAO {
 	@SqlUpdate("UPDATE MUSICALBUM SET ALLMUSICURL=:allMusicURL WHERE id=:albumId")
 	void updateAllMusicURL(@Bind("albumId") long albumId, @Bind("allMusicURL") String allMusicURL);
 	
-	@SqlUpdate("MERGE INTO MUSICALBUM(ID, ARTIST_NAME, ALBUM, ALLMUSICURL, GENRE, QUALITY, SEARCHSTRING) VALUES(:albumId, :artistName, :albumName, :allMusicURL, :genre, :quality, :searchString)")
-	public void save(@Bind("albumId") long albumId, @Bind("albumName") String albumName, @Bind("artistName") String artistName, @Bind("allMusicURL") String allMusicURL, @Bind("genre") String genre, @BindEnum("quality") MusicQuality quality, @Bind("searchString") String searchString);
+	@SqlUpdate("MERGE INTO MUSICALBUM(ID, ARTIST_NAME, ALLMUSICURL, GENRE, QUALITY, SEARCHSTRING) VALUES(:albumId, :artistName, :allMusicURL, :genre, :quality, :searchString)")
+	public void save(@Bind("albumId") long albumId, @Bind("artistName") String artistName, @Bind("allMusicURL") String allMusicURL, @Bind("genre") String genre, @BindEnum("quality") MusicQuality quality, @Bind("searchString") String searchString);
 
 	@SqlQuery("SELECT * FROM MUSICFILE WHERE ALBUM_ID=:albumId ORDER BY TRACK")
 	@Mapper(MusicFileMapper.class)
@@ -118,7 +118,7 @@ public interface MusicDAO {
 	@Mapper(MusicFileMapper.class)
 	List<MusicFile> findFilesInFolder(@BindPath("folder") Path folder);
 
-	@SqlQuery("SELECT DOWNLOADABLE.*, MUSICALBUM.* FROM MUSICALBUM INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS='DOWNLOADED' AND UPPER(ARTIST_NAME) LIKE :artistsSearchFilter ORDER BY ALBUM LIMIT :limit OFFSET :start")
+	@SqlQuery("SELECT DOWNLOADABLE.*, MUSICALBUM.* FROM MUSICALBUM INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS='DOWNLOADED' AND UPPER(ARTIST_NAME) LIKE :artistsSearchFilter ORDER BY NAME LIMIT :limit OFFSET :start")
 	@Mapper(MusicAlbumMapper.class)
 	List<MusicAlbum> getDownloadedAlbums(@BindContains("artistsSearchFilter") String artistsSearchFilter, @Bind("start") int start, @Bind("limit") int limit);
 
@@ -131,7 +131,7 @@ public interface MusicDAO {
 	@SqlQuery("SELECT COUNT(*) FROM MUSICFILE WHERE MUSICFILE.ALBUM_ID = :albumId")
 	int getMusicFilesCount(@Bind("albumId") long albumId );
 
-	@SqlQuery("SELECT MUSICFILE.* FROM MUSICFILE INNER JOIN MUSICALBUM ON MUSICALBUM.ID = MUSICFILE.ALBUM_ID WHERE UPPER(ARTIST_NAME) LIKE :artistsSearchFilter AND UPPER(MUSICALBUM.ALBUM) LIKE :albumNameFilter ORDER BY MUSICALBUM.ALBUM LIMIT :limit OFFSET :start")
+	@SqlQuery("SELECT MUSICFILE.* FROM MUSICFILE INNER JOIN MUSICALBUM ON MUSICALBUM.ID = MUSICFILE.ALBUM_ID WHERE UPPER(ARTIST_NAME) LIKE :artistsSearchFilter AND UPPER(MUSICALBUM.NAME) LIKE :albumNameFilter ORDER BY NAME LIMIT :limit OFFSET :start")
 	@Mapper(MusicFileMapper.class)
 	List<MusicFile> getMusicFiles(@BindContains("artistsSearchFilter") String artistsSearchFilter, @BindContains("albumNameFilter") String albumNameFilter, @Bind("start") int start, @Bind("limit") int limit );
 

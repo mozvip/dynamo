@@ -164,7 +164,7 @@ public class TVShow extends DynamoManagedBean {
 		
 		List<SelectItem> episodeItems = new ArrayList<>();
 		for (ManagedEpisode episode : availableEpisodes) {
-			episodeItems.add( new SelectItem( episode.getEpisodeNumber(), String.format("%02d - %s", episode.getEpisodeNumber(), episode.getEpisodeName()) ));
+			episodeItems.add( new SelectItem( episode.getEpisodeNumber(), String.format("%02d - %s", episode.getEpisodeNumber(), episode.getName()) ));
 		}
 		return episodeItems;
 	}

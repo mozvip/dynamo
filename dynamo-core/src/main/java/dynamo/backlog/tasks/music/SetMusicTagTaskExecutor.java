@@ -36,7 +36,7 @@ public class SetMusicTagTaskExecutor extends TaskExecutor<SetMusicTagTask> {
 
 		if ( task.getAlbumArtist() != null || task.getAlbum() != null ) {
 			String albumArtist = task.getAlbumArtist() != null ? task.getAlbumArtist() : musicAlbum.getArtistName() ;
-			String album = task.getAlbum() != null ? task.getAlbum() : musicAlbum.getAlbum() ;
+			String album = task.getAlbum() != null ? task.getAlbum() : musicAlbum.getName() ;
 			
 			albumPath = MusicManager.getInstance().getPath(albumArtist, album);
 	

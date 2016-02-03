@@ -419,7 +419,7 @@ public class TVShowManager implements Reconfigurable {
 	}
 
 	public void saveEpisode(ManagedEpisode episode) {
-		tvShowDAO.saveEpisode( episode.getId(), episode.getEpisodeName(), episode.getEpisodeNumber(), episode.getFirstAired(), episode.getQuality(), episode.getReleaseGroup(),  
+		tvShowDAO.saveEpisode( episode.getId(), episode.getEpisodeNumber(), episode.getFirstAired(), episode.getQuality(), episode.getReleaseGroup(),  
 			 	episode.getSource(), episode.isSubtitled(),  episode.getSubtitlesPath(), episode.isWatched(), episode.getSeasonId() );
 		downloadableDAO.updatePath(episode.getId(), episode.getPath());
 	}

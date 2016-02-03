@@ -95,7 +95,7 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 			MusicAlbum musicAlbum = task.getMusicAlbum();
 			if (musicAlbum != null) {
 				artistName = musicAlbum.getArtistName();
-				albumName = musicAlbum.getAlbum();
+				albumName = musicAlbum.getName();
 			} else {
 				
 				Path albumFolder = folder;

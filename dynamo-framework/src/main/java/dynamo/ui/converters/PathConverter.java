@@ -1,5 +1,8 @@
 package dynamo.ui.converters;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -13,7 +16,16 @@ public class PathConverter implements Converter {
 
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
-		return value != null ? Paths.get( value ) : null;
+		if (value == null) {
+			return null;
+		}
+		
+		try {
+			URL url = new URL( value );
+			return Paths.get( url.toURI() );
+		} catch (MalformedURLException | URISyntaxException e) {
+			return Paths.get( value );
+		}
 	}
 
 	@Override

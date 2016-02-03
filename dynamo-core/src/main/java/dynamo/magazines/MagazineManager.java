@@ -167,7 +167,6 @@ public class MagazineManager implements Reconfigurable {
 				issue.getId(),
 				issue.getIssue(),
 				issue.getIssueDate(),
-				issue.getRawName(),
 				issue.getYear(),
 				issue.isSpecial(),
 				issue.getLanguage(),
@@ -226,9 +225,10 @@ public class MagazineManager implements Reconfigurable {
 		}
 		
 		long downloadableId;
+		String rawName = issueInfo.toString();
 		if (existingIssue == null) {
 			existingIssue = MagazineManager.getInstance().createIssue(magazine, issueInfo.getIssueName(), coverImage);
-			downloadableId = DownloadableManager.getInstance().createDownloadable( MagazineIssue.class, null, coverImage, DownloadableStatus.SUGGESTED);
+			downloadableId = DownloadableManager.getInstance().createDownloadable( MagazineIssue.class, rawName, null, coverImage, DownloadableStatus.SUGGESTED);
 		} else {
 			if (existingIssue.getCoverImage() == null && coverImage != null) {
 				DownloadableManager.getInstance().updateCoverImage( existingIssue.getId(), coverImage);
@@ -240,7 +240,7 @@ public class MagazineManager implements Reconfigurable {
 
 		magazineDAO.saveIssue(
 				downloadableId, issueNumber, issueInfo.getIssueDate(),
-				issueInfo.toString(), issueInfo.getYear(), issueInfo.isSpecial(), issueInfo.getLanguage() != null ? issueInfo.getLanguage() : suggestion.getLanguage(),
+				issueInfo.getYear(), issueInfo.isSpecial(), issueInfo.getLanguage() != null ? issueInfo.getLanguage() : suggestion.getLanguage(),
 				magazine.getSearchName());
 
 		DownloadableManager.getInstance().saveDownloadLocations(downloadableId, suggestion.getTitle(), suggestion.getSuggesterName(), suggestion.getDownloadFinderClass(), suggestion.getReferer(), suggestion.getSize(), suggestion.getDownloadLocations());

@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-    <changeSet author="mozvip" id="1406620788324-1">
-        <createTable tableName="ANDROIDAPPLICATION">
-            <column name="ID" type="INT(10)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ICONURL" type="VARCHAR(2147483647)"/>
-            <column name="NAME" type="VARCHAR(2147483647)"/>
-            <column name="VERSION" type="VARCHAR(2147483647)"/>
-        </createTable>
-    </changeSet>
     <changeSet author="mozvip" id="1406620788324-3">
         <createTable tableName="DOWNLOADABLE">
             <column autoIncrement="true" name="ID" type="INT(10)">
@@ -18,9 +8,27 @@
             <column name="DTYPE" type="VARCHAR(100)">
             	<constraints nullable="false"/>
             </column>
+            <column name="NAME" type="VARCHAR(512)"/>
             <column name="PATH" type="VARCHAR(2048)"/>
             <column name="STATUS" type="VARCHAR(50)"/>
             <column name="AKA" type="VARCHAR(2147483647)" />
+			<column name="XXX" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+    		<column name="COVER_IMAGE" type="VARCHAR(512)" />
+			<column name="SUGGESTEDBY" type="VARCHAR(500)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="mozvip" id="1406620788324-1">
+        <createTable tableName="ANDROIDAPPLICATION">
+            <column name="ID" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ICONURL" type="VARCHAR(2147483647)"/>
+            <column name="VERSION" type="VARCHAR(2147483647)"/>
         </createTable>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-5">
@@ -53,6 +61,7 @@
             <column name="CURRENTISSUE" type="VARCHAR(2147483647)"/>
             <column name="AKA" type="VARCHAR(2147483647)"/>
             <column name="BLACKLIST" type="VARCHAR(2147483647)"/>
+            <column name="CATEGORY" type="VARCHAR(512)" />            
         </createTable>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-9">
@@ -62,8 +71,6 @@
             </column>
             <column name="ISSUE" type="INT(10)"/>
             <column name="ISSUEDATE" type="date"/>
-            <column name="ISSUENAME" type="VARCHAR(2147483647)"/>
-            <column name="RAWNAME" type="VARCHAR(2147483647)"/>
             <column name="SPECIAL" type="BOOLEAN(1)"/>
             <column name="MAGAZINE_SEARCHNAME" type="VARCHAR(2147483647)"/>
         </createTable>
@@ -80,9 +87,6 @@
             	<constraints nullable="false"/>
             </column>
             <column name="ABSOLUTENUMBER" type="INT(10)" />
-            <column name="EPISODENAME" type="VARCHAR(500)">
-            	<constraints nullable="false"/>
-            </column>
             <column name="FIRSTAIRED" type="date"/>
             <column name="QUALITY" type="VARCHAR(100)"/>
             <column name="RELEASEGROUP" type="VARCHAR(100)"/>
@@ -100,6 +104,9 @@
             <column name="NAME" type="VARCHAR(255)">
             	<constraints nullable="false"/>
             </column>
+			<column name="ORIGINAL_LANGUAGE" type="VARCHAR(50)" defaultValue="EN">
+				<constraints nullable="false"/>
+			</column>
             <column name="METADATALANGUAGE" type="VARCHAR(50)"/>
             <column name="AUDIOLANGUAGE" type="VARCHAR(50)"/>
             <column name="SUBTITLELANGUAGE" type="VARCHAR(50)"/>
@@ -123,7 +130,6 @@
             </column>
             <column name="IMDBID" type="VARCHAR(9)"/>
             <column name="MOVIEDBID" type="INT(10)"/>
-            <column name="NAME" type="VARCHAR(2147483647)"/>
             <column name="YEAR" type="INT(4)"/>
             <column name="ORIGINALLANGUAGE" type="VARCHAR(100)"/>
             <column name="POSTERPATH" type="VARCHAR(2147483647)"/>
@@ -146,9 +152,6 @@
                 <constraints primaryKey="true" primaryKeyName="PK_MUSICALBUM"/>
             </column>
             <column name="ARTIST_NAME" type="VARCHAR(255)">
-            	<constraints nullable="false"/>
-            </column>
-            <column name="ALBUM" type="VARCHAR(2147483647)">
             	<constraints nullable="false"/>
             </column>
             <column name="YEAR" type="INT(4)" />
@@ -269,13 +272,9 @@
             <column name="ID" type="INT(10)">
                 <constraints primaryKey="true" primaryKeyName="PK_VIDEOGAME"/>
             </column>
-            <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
             <column name="PLATFORM" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
-            <column name="COVER_IMAGE" type="VARCHAR(500)" />
         </createTable>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-31">
@@ -364,22 +363,6 @@
     	<dropColumn tableName="SEARCHRESULTFILE" columnName="EXPIREDATE"/>
     </changeSet>
 
-	<changeSet author="mozvip" id="4">
-		<addColumn tableName="MAGAZINEISSUE">
-			<column name="COVER_IMAGE" type="VARCHAR(2048)"/>
-		</addColumn>
-	</changeSet>
-
-    <changeSet author="mozvip" id="5">
-        <createTable tableName="MAGAZINE_KIOSK_ISSUES">
-            <column name="TITLE" type="VARCHAR(512)">
-            	<constraints primaryKey="true" primaryKeyName="PK_MAGAZINE_KIOSK_ISSUES"/>
-            </column>
-            <column name="LANGUAGE" type="VARCHAR(32)" />
-            <column name="IMAGE" type="VARCHAR(512)" />
-        </createTable>
-    </changeSet>
-
 	<changeSet author="mozvip" id="6">
 		<addColumn tableName="MAGAZINEISSUE">
 			<column name="PERIOD" type="VARCHAR(255)"/>
@@ -394,10 +377,6 @@
 		<addColumn tableName="MAGAZINEISSUE">
 			<column name="LANGUAGE" type="VARCHAR(255)"/>
 		</addColumn>
-		<dropTable tableName="MAGAZINE_KIOSK_ISSUES"/>
-	</changeSet>
-	<changeSet author="mozvip" id="9">
-		<dropColumn tableName="MAGAZINEISSUE" columnName="ISSUENAME"/>
 	</changeSet>
 	<changeSet author="mozvip" id="10">
 		<addColumn tableName="MUSICARTIST">
@@ -434,20 +413,6 @@
     <changeSet author="mozvip" id="18">
     	<sql>DELETE FROM DOWNLOADABLE WHERE PATH IN (SELECT PATH FROM DOWNLOADABLE WHERE PATH IS NOT NULL GROUP BY PATH HAVING COUNT(*) > 1) AND  DTYPE = 'dynamo.model.movies.Movie'</sql>
     </changeSet>
-
-    <changeSet author="mozvip" id="19">
-    	<addColumn tableName="DOWNLOADABLE">
-    		<column name="COVER_IMAGE" type="VARCHAR(512)" />
-    	</addColumn>
-    	<sql>UPDATE DOWNLOADABLE SET COVER_IMAGE=(SELECT COVER_IMAGE FROM VIDEOGAME WHERE VIDEOGAME.ID = DOWNLOADABLE.ID) WHERE DOWNLOADABLE.DTYPE='dynamo.model.games.VideoGame'</sql>
-    	<dropColumn tableName="VIDEOGAME" columnName="COVER_IMAGE"/>
-    	<sql>UPDATE DOWNLOADABLE SET COVER_IMAGE=(SELECT IMAGE FROM MUSICALBUM WHERE MUSICALBUM.ID = DOWNLOADABLE.ID) WHERE DOWNLOADABLE.DTYPE='dynamo.model.music.MusicAlbum'</sql>
-    	<dropColumn tableName="MUSICALBUM" columnName="IMAGE"/>
-    	<sql>UPDATE DOWNLOADABLE SET COVER_IMAGE=(SELECT POSTERPATH FROM MOVIE WHERE MOVIE.ID = DOWNLOADABLE.ID) WHERE DOWNLOADABLE.DTYPE='dynamo.model.movies.Movie'</sql>
-    	<dropColumn tableName="MOVIE" columnName="POSTERPATH"/>
-    	<sql>UPDATE DOWNLOADABLE SET COVER_IMAGE=(SELECT COVER_IMAGE FROM MAGAZINEISSUE WHERE MAGAZINEISSUE.ID = DOWNLOADABLE.ID) WHERE DOWNLOADABLE.DTYPE='dynamo.model.magazines.MagazineIssue'</sql>
-    	<dropColumn tableName="MAGAZINEISSUE" columnName="COVER_IMAGE"/>
-    </changeSet>
     
     <changeSet author="mozvip" id="20">
     	<dropNotNullConstraint tableName="MAGAZINE" columnName="LANGUAGE" columnDataType="INT(10)"/>
@@ -472,20 +437,6 @@
 		<modifyDataType tableName="BOOK" columnName="LANGUAGE" newDataType="VARCHAR(255)"/>
 	</changeSet>
 
-	<changeSet author="mozvip" id="23">
-		<addColumn tableName="DOWNLOADABLE">
-			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
-				<constraints nullable="false"/>
-			</column>
-		</addColumn>
-	</changeSet>
-	<changeSet author="mozvip" id="24">
-		<addColumn tableName="MANAGEDSERIES">
-			<column name="ORIGINAL_LANGUAGE" type="VARCHAR(50)" defaultValue="EN">
-				<constraints nullable="false"/>
-			</column>
-		</addColumn>
-	</changeSet>
 	<changeSet author="mozvip" id="25">
 		<createTable tableName="DOWNLOADABLE_FILES">
 			<column name="DOWNLOADABLE_ID" type="INT(10)">
@@ -503,14 +454,6 @@
 		<addPrimaryKey constraintName="PK_DOWNLOADABLE_FILES" tableName="DOWNLOADABLE_FILES" columnNames="DOWNLOADABLE_ID,FILE_PATH"/>
 		<addForeignKeyConstraint constraintName="FK_DOWNLOADABLE_FILES_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="DOWNLOADABLE_ID" baseTableName="DOWNLOADABLE_FILES" referencedColumnNames="ID" onDelete="CASCADE"/>
 	</changeSet>
-	<changeSet author="mozvip" id="26">
-		<delete tableName="VIDEOGAME" />
-	</changeSet>
-	<changeSet author="mozvip" id="27">
-		<addColumn tableName="DOWNLOADABLE">
-			 <column name="SUGGESTEDBY" type="VARCHAR(500)"/>
-		</addColumn>
-	</changeSet>
 	<changeSet author="mozvip" id="28">
 		<createTable tableName="VIDEO_METADATA">
 			<column name="VIDEO_ID" type="INT(10)">
@@ -520,29 +463,9 @@
 			<column name="SUBTITLE_LANGUAGES" type="VARCHAR(4096)" />
 			<column name="WIDTH" type="INT(5)" />
 			<column name="HEIGHT" type="INT(5)" />
+			<column name="OPENSUBTITLES_HASH" type="CHAR(16)"></column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="FK_VIDEO_METADATA_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="VIDEO_ID" baseTableName="VIDEO_METADATA" referencedColumnNames="ID" onDelete="CASCADE"/>
 	</changeSet>
-	<changeSet author="mozvip" id="29">
-		<delete tableName="VIDEO_METADATA"></delete>
-	</changeSet>
-	<changeSet author="mozvip" id="30">
-		<addColumn tableName="VIDEO_METADATA">
-			<column name="OPENSUBTITLES_HASH" type="CHAR(16)"></column>
-		</addColumn>
-		<delete tableName="VIDEO_METADATA"></delete>
-	</changeSet>
-	<changeSet author="mozvip" id="31">
-		<addColumn tableName="DOWNLOADABLE">
-			<column name="XXX" type="BOOLEAN" defaultValueBoolean="false">
-				<constraints nullable="false"/>
-			</column>
-		</addColumn>
-	</changeSet>
-    <changeSet author="mozvip" id="33">
-    	<addColumn tableName="MAGAZINE">
-    		<column name="CATEGORY" type="VARCHAR(512)" />
-    	</addColumn>
-    </changeSet>
 	
 </databaseChangeLog>

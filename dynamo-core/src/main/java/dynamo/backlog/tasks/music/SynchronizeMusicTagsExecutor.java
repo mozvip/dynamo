@@ -47,7 +47,7 @@ public class SynchronizeMusicTagsExecutor extends TaskExecutor<SynchronizeMusicT
 
 		MusicAlbum album = musicDAO.find( musicFile.getAlbumId() );
 		
-		audioTag.setField(FieldKey.ALBUM, album.getAlbum() );
+		audioTag.setField(FieldKey.ALBUM, album.getName() );
 		audioTag.setField(FieldKey.ALBUM_ARTIST, album.getArtistName() );
 		audioTag.setField(FieldKey.ARTIST, musicFile.getSongArtist() );
 		audioTag.setField(FieldKey.TITLE, musicFile.getSongTitle() );

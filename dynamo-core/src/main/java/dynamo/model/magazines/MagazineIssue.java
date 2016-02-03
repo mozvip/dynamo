@@ -11,7 +11,6 @@ import dynamo.model.ebooks.EBook;
 
 public class MagazineIssue extends Downloadable implements EBook {
 
-	private String rawName;
 	private Language language;
 
 	private int issue;
@@ -23,10 +22,9 @@ public class MagazineIssue extends Downloadable implements EBook {
 	private int year;
 	
 	public MagazineIssue(Long id, Path path, DownloadableStatus status, String aka, String magazineSearchName, Language language, String rawName, Date issueDate, int year, int issueNumber, boolean special, String coverImage, Date creationDate) {
-		super(id, status, path, coverImage, aka, creationDate);
+		super(id, rawName, status, path, coverImage, aka, creationDate);
 		this.magazineSearchName = magazineSearchName;
 		this.language = language;
-		this.rawName = rawName;
 		this.issueDate = issueDate;
 		this.year = year;
 		this.issue = issueNumber;
@@ -45,10 +43,6 @@ public class MagazineIssue extends Downloadable implements EBook {
 		return special;
 	}
 
-	public String getRawName() {
-		return rawName;
-	}
-	
 	public String getMagazineSearchName() {
 		return magazineSearchName;
 	}
@@ -63,7 +57,7 @@ public class MagazineIssue extends Downloadable implements EBook {
 
 	@Override
 	public String toString() {
-		return rawName;
+		return getName();
 	}
 	
 	@Override

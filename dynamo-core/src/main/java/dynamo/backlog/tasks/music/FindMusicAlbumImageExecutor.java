@@ -39,7 +39,7 @@ public class FindMusicAlbumImageExecutor extends TaskExecutor<FindMusicAlbumImag
 		} else {
 			
 			// google images search
-			String albumName = MusicManager.getAlbumName(  album.getAlbum() );
+			String albumName = MusicManager.getAlbumName(  album.getName() );
 			
 			String[] searchStrings = new String[] { String.format("%s \"%s\"", album.getArtistName(), albumName), String.format("%s+%s+album", album.getArtistName(), albumName) };
 			for (String string : searchStrings) {

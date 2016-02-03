@@ -9,19 +9,13 @@ import dynamo.model.DownloadableStatus;
 
 public class VideoGame extends Downloadable {
 
-	private String name;
 	private GamePlatform platform;
 	private Long theGamesDbId;
 
 	public VideoGame( Long id, DownloadableStatus status, Path path, String coverImage, String name, GamePlatform platform, Long theGamesDbId) {
-		super( id, status, path, coverImage, null, null);
-		this.name = name;
+		super( id, name, status, path, coverImage, null, null);
 		this.platform = platform;
 		this.theGamesDbId = theGamesDbId;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public GamePlatform getPlatform() {
@@ -43,7 +37,7 @@ public class VideoGame extends Downloadable {
 
 	@Override
 	public String toString() {
-		return String.format("%s (%s)", name, platform.name());
+		return String.format("%s (%s)", getName(), platform.name());
 	}
 
 	@Override

@@ -9,13 +9,11 @@ import model.ManagedSeries;
 public class TVShowSeason extends Downloadable {
 
 	private String seriesId;
-	private String seriesName;
 	private int season;
 
-	public TVShowSeason( Long id, DownloadableStatus status, Path path, String seriesId, String seriesName, int seasonNumber) {
-		super(id, status, path, null, null, null);
+	public TVShowSeason( Long id, DownloadableStatus status, Path path, String seriesId, String name, int seasonNumber) {
+		super(id, name, status, path, null, null, null);
 		this.seriesId = seriesId;
-		this.seriesName = seriesName;
 		this.season = seasonNumber;
 	}
 
@@ -29,11 +27,7 @@ public class TVShowSeason extends Downloadable {
 
 	@Override
 	public String toString() {
-		if (season >= 0) {
-			return String.format("%s season %d", seriesName, season);
-		} else {
-			return String.format("%s", seriesName);
-		}
+		return getName();
 	}
 
 	@Override

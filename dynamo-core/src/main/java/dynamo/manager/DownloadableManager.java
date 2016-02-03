@@ -123,8 +123,8 @@ public class DownloadableManager {
 		return downloadableDAO.updateStatus(downloadable.getId(), newStatus);
 	}
 
-	public long createDownloadable(Class<?> klass, Path path, String coverImage, DownloadableStatus status) {
-		return downloadableDAO.createDownloadable( klass, path, coverImage, status );
+	public long createDownloadable(Class<?> klass, String name, Path path, String coverImage, DownloadableStatus status) {
+		return downloadableDAO.createDownloadable( klass, name, path, coverImage, status );
 	}
 	
 	public void logStatusChange( Downloadable downloadable, DownloadableStatus newStatus) {

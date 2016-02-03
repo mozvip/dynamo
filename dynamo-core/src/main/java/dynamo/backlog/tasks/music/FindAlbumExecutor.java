@@ -72,7 +72,7 @@ public class FindAlbumExecutor extends FindDownloadableExecutor {
 		List<SearchResult> allResults = new ArrayList<SearchResult>();
 		try {
 			
-			String albumName = musicAlbum.getAlbum();
+			String albumName = musicAlbum.getName();
 			albumName = albumName.replace('/', ' ');
 			
 			Set<String> albumNames = new HashSet<>();

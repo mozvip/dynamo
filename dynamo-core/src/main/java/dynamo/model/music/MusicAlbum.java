@@ -11,7 +11,6 @@ import dynamo.model.DownloadableStatus;
 
 public class MusicAlbum extends Downloadable {
 
-	private String album;
 	private String searchString;
 	private MusicQuality quality = MusicQuality.COMPRESSED;
 	private String allMusicURL;
@@ -19,26 +18,18 @@ public class MusicAlbum extends Downloadable {
 	private String genre;
 
 	public MusicAlbum(  Long id, DownloadableStatus status, Path path, String coverImage, String aka, String artistName, String albumName, String genre, MusicQuality quality, String allMusicURL) {
-		super( id, status, path, coverImage, aka, null );
-		this.album = albumName;
+		super( id, albumName, status, path, coverImage, aka, null );
 		this.artistName = artistName;
 		this.genre = genre;
 		this.allMusicURL = allMusicURL;
 		this.quality = quality;
 		
-		this.searchString = MusicManager.getSearchString( artistName, album );
+		this.searchString = MusicManager.getSearchString( artistName, getName() );
 	}
 
 	public String getSearchString() {
 		return searchString;
 	}
-
-	public String getAlbum() {
-		return album;
-	}
-	public void setAlbum(String album) {
-		this.album = album;
-	}	
 
 	public MusicQuality getQuality() {
 		return quality;
@@ -69,7 +60,7 @@ public class MusicAlbum extends Downloadable {
 
 	@Override
 	public String toString() {
-		return String.format("%s - %s", artistName, album);
+		return String.format("%s - %s", artistName, getName());
 	}
 	
 	@Override
@@ -100,7 +91,7 @@ public class MusicAlbum extends Downloadable {
 		if ( getPath() != null ) {
 			return getPath();
 		} else {
-			return MusicManager.getInstance().getPath(getArtistName(), getAlbum() );
+			return MusicManager.getInstance().getPath(getArtistName(), getName() );
 		}
 	}
 

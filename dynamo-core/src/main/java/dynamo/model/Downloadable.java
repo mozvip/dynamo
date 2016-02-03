@@ -9,6 +9,7 @@ import java.util.List;
 public abstract class Downloadable {
 	
 	private Long id;
+	private String name;
 	private DownloadableStatus status = DownloadableStatus.IGNORED;
 	private Path path;
 	private String type;
@@ -16,7 +17,7 @@ public abstract class Downloadable {
 	private String aka;
 	private Date creationDate;
 
-	public Downloadable(Long id, DownloadableStatus status, Path path, String coverImage, String aka, Date creationDate) {
+	public Downloadable(Long id, String name, DownloadableStatus status, Path path, String coverImage, String aka, Date creationDate) {
 		this.id = id;
 		this.status = status;
 		this.path = path;
@@ -27,6 +28,14 @@ public abstract class Downloadable {
 
 	public long getId() {
 		return id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public DownloadableStatus getStatus() {

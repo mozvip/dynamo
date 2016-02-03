@@ -15,14 +15,16 @@ public class DownloadInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	private String name;
 	private Path path;
 	private DownloadableStatus status = DownloadableStatus.IGNORED;
 	private String type;
 	private String coverImage;
 
-	public DownloadInfo(Long id, Class downloadableClass, Path path, String coverImage, 
+	public DownloadInfo(Long id, String name, Class downloadableClass, Path path, String coverImage, 
 			DownloadableStatus status, String aka) {
 		this.id = id;
+		this.name = name;
 		this.type = downloadableClass.getName();
 		this.path = path;
 		this.coverImage = coverImage;
@@ -80,6 +82,10 @@ public class DownloadInfo implements Serializable {
 	@Override
 	public int hashCode() {
 		return id.intValue();
+	}
+	
+	public String getName() {
+		return name;
 	}
 
 	public String getType() {

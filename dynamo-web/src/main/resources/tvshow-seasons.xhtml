@@ -52,7 +52,7 @@
 									#{episode.absoluteNumber}
 								</h:column>
 			<h:column>
-				<h:outputText class="hidden-xs" value="#{episode.episodeName}" />
+				<h:outputText class="hidden-xs" value="#{episode.name}" />
 			</h:column>
 			<h:column>
 				<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{episode.status == 'DOWNLOADED' or episode.status == 'SNATCHED'}" action="#{tvshow.redownload(episode)}" onclick="return confirm('Are you sure you want to redownload this episode ?');"

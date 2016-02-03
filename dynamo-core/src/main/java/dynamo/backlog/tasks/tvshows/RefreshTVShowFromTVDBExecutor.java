@@ -75,7 +75,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 				existingEpisode = tvShowDAO.findEpisode( season.getId(), episode.getEpisodeNumber() );
 			} else {
 				Path seasonPath = series.getFolder().resolve( String.format( TVShowManager.getInstance().getSeasonFolderPattern(), episode.getSeasonNumber()));
-				seasonId = DownloadableManager.getInstance().createDownloadable( TVShowSeason.class, seasonPath, null, DownloadableStatus.IGNORED );
+				seasonId = DownloadableManager.getInstance().createDownloadable( TVShowSeason.class, String.format("%s S%02d", series.getName(), episode.getSeasonNumber()), seasonPath, null, DownloadableStatus.IGNORED );
 				tvShowDAO.createSeason( seasonId, episode.getSeriesId(), episode.getSeasonNumber() );
 			}
 
@@ -107,7 +107,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 
 			if (existingEpisode == null) {
 			
-				existingEpisode = new ManagedEpisode( DownloadableManager.getInstance().createDownloadable( ManagedEpisode.class, null, null, newStatusForEpisode ), null, newStatusForEpisode, series.getName(), null, null, null, null, episode.getSeriesId(), seasonId, episode.getSeasonNumber(), episode.getEpisodeNumber(), null, episode.getEpisodeName(), firstAiredDate, false, false );
+				existingEpisode = new ManagedEpisode( DownloadableManager.getInstance().createDownloadable( ManagedEpisode.class, episode.getEpisodeName(), null, null, newStatusForEpisode ), null, newStatusForEpisode, series.getName(), null, null, null, null, episode.getSeriesId(), seasonId, episode.getSeasonNumber(), episode.getEpisodeNumber(), null, episode.getEpisodeName(), firstAiredDate, false, false );
 			
 			} else if ( existingEpisode.getStatus() == DownloadableStatus.FUTURE && newStatusForEpisode != DownloadableStatus.FUTURE) {
 				
@@ -124,14 +124,14 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 			}
 
 			existingEpisode.setFirstAired( firstAiredDate );
-			existingEpisode.setEpisodeName( episode.getEpisodeName() );
+			existingEpisode.setName( episode.getEpisodeName() );
 			existingEpisode.setEpisodeNumber( episode.getEpisodeNumber() );
 
 			if (StringUtils.isNotBlank(episode.getAbsoluteNumber())) {
 				existingEpisode.setAbsoluteNumber( Integer.parseInt( episode.getAbsoluteNumber() ) );
 			}
 
-			tvShowDAO.saveEpisode( existingEpisode.getId(), existingEpisode.getEpisodeName(), existingEpisode.getEpisodeNumber(), existingEpisode.getFirstAired(), existingEpisode.getQuality(), existingEpisode.getReleaseGroup(),  
+			tvShowDAO.saveEpisode( existingEpisode.getId(), existingEpisode.getEpisodeNumber(), existingEpisode.getFirstAired(), existingEpisode.getQuality(), existingEpisode.getReleaseGroup(),  
 				 	existingEpisode.getSource(), existingEpisode.isSubtitled(),  existingEpisode.getSubtitlesPath(), existingEpisode.isWatched(), existingEpisode.getSeasonId() );
 		}
 		

@@ -26,8 +26,6 @@ public class ManagedEpisode extends Downloadable implements Video {
 	private int episodeNumber;
 	private Integer absoluteNumber;
 
-	private String episodeName;
-
 	private Date firstAired;
 
 	private boolean subtitled = false;
@@ -41,7 +39,7 @@ public class ManagedEpisode extends Downloadable implements Video {
 			int episodeNumber, Integer absoluteNumber, String episodeName,
 			Date firstAired, boolean subtitled, boolean watched) {
 
-		super(id, status, path, null, null, null);
+		super(id, episodeName, status, path, null, null, null);
 		
 		this.seriesName = seriesName;
 		this.subtitlesPath = subtitlesPath;
@@ -53,7 +51,6 @@ public class ManagedEpisode extends Downloadable implements Video {
 		this.seasonId = seasonId;
 		this.episodeNumber = episodeNumber;
 		this.absoluteNumber = absoluteNumber;
-		this.episodeName = episodeName;
 		this.firstAired = firstAired;
 		this.subtitled = subtitled;
 		this.watched = watched;
@@ -109,14 +106,6 @@ public class ManagedEpisode extends Downloadable implements Video {
 
 	public boolean isAired() {
 		return !getStatus().equals( DownloadableStatus.FUTURE );
-	}
-
-	public String getEpisodeName() {
-		return episodeName;
-	}
-
-	public void setEpisodeName(String episodeName) {
-		this.episodeName = episodeName;
 	}
 
 	@Override

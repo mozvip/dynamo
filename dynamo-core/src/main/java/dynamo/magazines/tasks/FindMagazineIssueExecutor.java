@@ -43,7 +43,7 @@ public class FindMagazineIssueExecutor extends FindDownloadableExecutor<Magazine
 		try {
 			List<String> searchStrings = new ArrayList<>();
 
-			String rawName = issue.getRawName().replaceAll("[-°]", "");
+			String rawName = issue.getName().replaceAll("[-ï¿½]", "");
 			rawName = rawName.replaceAll("\\s+", " ");
 			searchStrings.add( rawName );
 			for (String aka : magazine.getAka()) {

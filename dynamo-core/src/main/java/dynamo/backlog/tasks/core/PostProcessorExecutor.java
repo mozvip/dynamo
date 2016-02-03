@@ -219,10 +219,11 @@ public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> i
 					Path destinationFolder = GamesManager.getInstance().getFolder( isoType.getGamePlatform() );
 					if (destinationFolder != null ) {
 						Path destination = destinationFolder.resolve( path.getFileName() );
+						String gameName = path.getFileName().toString();
 
-						long videoGameId = downloadableDAO.createDownloadable( VideoGame.class, destination, null, DownloadableStatus.DOWNLOADED );
-						videoGameDAO.save( videoGameId, path.getFileName().toString(), isoType.getGamePlatform(), null );
-						VideoGame videoGame = new VideoGame( videoGameId, DownloadableStatus.DOWNLOADED, destination, null, path.getFileName().toString(), isoType.getGamePlatform(), null );
+						long videoGameId = downloadableDAO.createDownloadable( VideoGame.class, gameName, destination, null, DownloadableStatus.DOWNLOADED );
+						videoGameDAO.save( videoGameId, gameName, isoType.getGamePlatform(), null );
+						VideoGame videoGame = new VideoGame( videoGameId, DownloadableStatus.DOWNLOADED, destination, null, gameName, isoType.getGamePlatform(), null );
 						queue( new MoveFileTask(path, destination, videoGame), false );
 					}
 				}
