@@ -88,9 +88,9 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 						if (!managedEpisode.isDownloaded()) {
 							// cancel search for this episode
 							BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("this.episode.id == %d", managedEpisode.getId()) );
+							downloadableDAO.updateStatus( managedEpisode.getId(), DownloadableStatus.DOWNLOADED );
+							DownloadableManager.getInstance().addFile( managedEpisode.getId(), p, 0);
 						}
-
-						downloadableDAO.updatePathAndStatus( managedEpisode.getId(), p, DownloadableStatus.DOWNLOADED );
 
 						if ( episodeInfo != null ) {
 							managedEpisode.setQuality( episodeInfo.getQuality() );
