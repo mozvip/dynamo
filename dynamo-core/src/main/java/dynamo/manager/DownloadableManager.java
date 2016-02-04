@@ -250,7 +250,9 @@ public class DownloadableManager {
 		boolean filesFound = true;
 		
 		Path destinationFolder = downloadable.determineDestinationFolder();
-		Files.createDirectories( destinationFolder );
+		if (!Files.exists( destinationFolder )) {
+			Files.createDirectories( destinationFolder );
+		}
 
 		int fileIndex = 0;
 
