@@ -469,23 +469,6 @@ public class MusicManager implements Reconfigurable {
 		}
 	}
 
-	public void newMusicFile( Path p, MusicAlbum musicAlbum, String songTitle, String songArtist, int track, int year, boolean keepExisting ) throws IOException, ExecutionException {
-		Path targetPath = p;
-		if (!keepExisting) {
-			// we are allowed to move this file to its final destination // FIXME: handle Disc %d parent folders
-			targetPath = musicAlbum.getPath().resolve(p.getFileName()).toAbsolutePath();
-			if ((!Files.exists(targetPath)) || (!Files.isSameFile(p, targetPath))) {
-				BackLogProcessor.getInstance().schedule( new MoveFileTask(p, targetPath, musicAlbum), false );
-			}
-		}
-
-		if (songTitle != null ) {
-			songTitle = StringUtils.capitalize( songTitle ).trim();
-		}
-		musicDAO.createMusicFile( targetPath, musicAlbum.getId(), songTitle, songArtist, track, year, Files.size(p), false );
-		DownloadableManager.getInstance().addFile( musicAlbum.getId(), p, track );
-	}
-
 	public MusicArtist findArtist(String name) {
 		return musicDAO.findArtist( name );
 	}

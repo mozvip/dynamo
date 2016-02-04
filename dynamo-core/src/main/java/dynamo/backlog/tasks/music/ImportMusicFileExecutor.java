@@ -1,7 +1,9 @@
 package dynamo.backlog.tasks.music;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jaudiotagger.audio.AudioFile;
@@ -14,8 +16,12 @@ import org.jaudiotagger.tag.images.Artwork;
 
 import core.RegExp;
 import dynamo.backlog.BackLogProcessor;
+import dynamo.backlog.tasks.files.MoveFileTask;
+import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.TaskExecutor;
+import dynamo.jdbi.MusicDAO;
+import dynamo.manager.DownloadableManager;
 import dynamo.manager.LocalImageCache;
 import dynamo.manager.MusicManager;
 import dynamo.model.DownloadableStatus;
@@ -26,6 +32,7 @@ import dynamo.webapps.acoustid.AcoustId;
 public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 	
 	protected String[] intermediateFolders = new String[] {"Disc 1", "CD 1", "CD1", "Disc 2", "CD 2", "CD2"};
+	private MusicDAO musicDAO = DAOManager.getInstance().getDAO( MusicDAO.class );
 
 	public ImportMusicFileExecutor(ImportMusicFileTask task) {
 		super(task);
@@ -92,17 +99,19 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 				songArtist = audioTag.getFirst(FieldKey.ORIGINAL_ARTIST);
 			}
 			
+			Path albumDestinationFolder = folder;
+
 			MusicAlbum musicAlbum = task.getMusicAlbum();
 			if (musicAlbum != null) {
 				artistName = musicAlbum.getArtistName();
 				albumName = musicAlbum.getName();
+				
+				albumDestinationFolder = musicAlbum.getPath();
 			} else {
-				
-				Path albumFolder = folder;
-				
+
 				boolean importInPlace = false;
 				for (Path configuredFolder : MusicManager.getInstance().getFolders()) {
-					if (albumFolder.startsWith(configuredFolder)) {
+					if (albumDestinationFolder.startsWith(configuredFolder)) {
 						importInPlace = true;
 						break;
 					}
@@ -110,21 +119,24 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 				
 				if (importInPlace) {
 					for (String folderName : intermediateFolders) {
-						if (albumFolder.getFileName().toString().equalsIgnoreCase(folderName)) {
-							albumFolder = albumFolder.getParent();
+						if (albumDestinationFolder.getFileName().toString().equalsIgnoreCase(folderName)) {
+							albumDestinationFolder = albumDestinationFolder.getParent();
 						}
 					}
-				} else {
-					albumFolder = MusicManager.getInstance().getPath(artistName, albumName);
 				}
 				
 				musicAlbum = MusicManager.getInstance().getAlbum(
 						artistName, albumName, null, localImage, DownloadableStatus.DOWNLOADED,
-						albumFolder, audioTag instanceof FlacTag ? MusicQuality.LOSSLESS : MusicQuality.COMPRESSED, true);
+						albumDestinationFolder, audioTag instanceof FlacTag ? MusicQuality.LOSSLESS : MusicQuality.COMPRESSED, true);
+			}
+			
+			if (albumDestinationFolder == null) {
+				// default destination folder
+				albumDestinationFolder = MusicManager.getInstance().getPath(artistName, albumName);
 			}
 
 			try {
-				MusicManager.getInstance().newMusicFile( musicFilePath, musicAlbum, songTitle, songArtist, track, year, task.isKeepSourceFile() );
+				newMusicFile( musicFilePath, albumDestinationFolder, musicAlbum, songTitle, songArtist, track, year, task.isKeepSourceFile() );
 			} catch (Exception e) {
 				ErrorManager.getInstance().reportThrowable( task, String.format("Error while trying to import %s : %s", musicFilePath.toString(), e.getClass().getName()), e);
 			}
@@ -141,5 +153,22 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 			}
 		}
 	}
+	
+	protected void newMusicFile( Path musicFilePath, Path albumDestinationFolder, MusicAlbum musicAlbum, String songTitle, String songArtist, int track, int year, boolean keepExisting ) throws IOException, ExecutionException {
+		Path targetPath = musicFilePath;
+		if (!keepExisting) {
+			// we are allowed to move this file to its final destination // FIXME: handle Disc %d parent folders
+			targetPath = albumDestinationFolder.resolve(musicFilePath.getFileName()).toAbsolutePath();
+			if ((!Files.exists(targetPath)) || (!Files.isSameFile(musicFilePath, targetPath))) {
+				BackLogProcessor.getInstance().schedule( new MoveFileTask(musicFilePath, targetPath, musicAlbum), false );
+			}
+		}
+
+		if (songTitle != null ) {
+			songTitle = StringUtils.capitalize( songTitle ).trim();
+		}
+		musicDAO.createMusicFile( targetPath, musicAlbum.getId(), songTitle, songArtist, track, year, Files.size(musicFilePath), false );
+		DownloadableManager.getInstance().addFile( musicAlbum.getId(), musicFilePath, track );
+	}	
 
 }
