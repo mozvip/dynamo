@@ -22,6 +22,9 @@ public class CopyFileExecutor extends TaskExecutor<CopyFileTask> {
 
 	@Override
 	public void execute() throws IOException {
+		if (!Files.exists(source)) {
+			throw new IOException( String.format("Source file %s does not exist", source.toAbsolutePath().toString() ));
+		}
 		if (!source.equals( destination )) {
 			Files.createDirectories( destination.getParent() );
 			Files.copy( source, destination, StandardCopyOption.REPLACE_EXISTING );

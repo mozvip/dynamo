@@ -21,6 +21,10 @@ public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask
 	@Override
 	public void execute() throws IOException {
 		
+		if (!Files.exists(source)) {
+			throw new IOException( String.format("Source file %s does not exist", source.toAbsolutePath().toString() ));
+		}		
+		
 		if (!Files.isDirectory( destination.getParent())) {
 			Files.createDirectories( destination.getParent() );
 		}
