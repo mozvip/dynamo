@@ -26,11 +26,6 @@
 				margin-bottom: 0px;
 			}
 			
-			.videoGameCover {
-				min-height: 200px;
-				max-height: 200px;
-			}			
-			
 			.videoGameCaption {
 				font-size: 12px;
 				font-weight: bold;
@@ -137,7 +132,7 @@
 						</ui:fragment>
 					</div>
 					<div class="thumbnail videoGameThumb">
-						<img class="videoGameCover" data-src="#{game.urlEncodedCoverImage}" alt="#{game.name}" />
+						<img class="img-responsive img-thumbnail" data-src="#{game.urlEncodedCoverImage}" alt="#{game.name}" />
 						<div class="caption videoGameCaption">
 							<h5>#{game.name}</h5>
 							<ui:fragment rendered="#{empty games.platform}">

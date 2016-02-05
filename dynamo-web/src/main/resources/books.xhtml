@@ -20,11 +20,6 @@
 				border: none;
 			}
 			
-			.bookCover {
-				min-height: 215px;
-				max-height: 215px;
-			}
-			
 			.bookCaption {
 				font-size: 12px;
 				font-weight: bold;
@@ -66,7 +61,7 @@
 					<div class="thumbnail bookThumb">
 						<ui:fragment rendered="#{book.status == 'DOWNLOADED'}">
 							<a href="/download?id=#{book.id}" target="_blank">
-								<img class="bookCover" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+								<img class="img-responsive img-thumbnail" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{book.status == 'SUGGESTED'}">

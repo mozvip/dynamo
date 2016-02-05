@@ -16,11 +16,6 @@
 				border: none;
 			}
 			
-			.magazineCover {
-				min-height: 240px;
-				max-height: 240px;
-			}
-			
 			.magazineCaption {
 				font-size: 12px;
 				font-weight: bold;
@@ -43,7 +38,7 @@
 					<div class="thumbnail magazineThumb">
 						<ui:fragment rendered="#{issue.status == 'DOWNLOADED'}">					
 							<a href="/download?id=#{issue.id}" target="_blank">
-								<img class="magazineCover" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
+								<img class="img-responsive img-thumbnail" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{issue.status != 'DOWNLOADED'}">					
