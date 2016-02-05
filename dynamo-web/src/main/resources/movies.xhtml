@@ -17,19 +17,15 @@
 		<ui:include src="fragment-movie-search.xhtml" />
 	
 		<style>
-			.itemThumb {
-				height: 280px;
+			.thumbnail {
 				border: none;
 			}
-			.itemCaption {
-				font-size: 12px;
-				font-weight: bold;
-				width: 100%;
+			.thumbnail .caption {
+				white-space: nowrap;
 				text-align: center;
 			}
-			
 			.buttons {
-				position: absolute; right: 10px;
+				position: absolute; right: 32px; top: 10px; width: 20px;
 			}
 		</style>
 
@@ -38,7 +34,7 @@
 			<ui:include src="/components/pager.xhtml" />
 		
 			<ui:repeat var="movie" value="#{pager.items}">
-				<div class="movie col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{movie.id}">
+				<div class="col-lg-2 col-md-2 col-sm-3 col-xs-6">
 					<div class="buttons btn-group-vertical" role="group">
 						<h:commandLink styleClass="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(movie.name)} ?')) { disappear( 'bounceOutUp', $('##{movie.id}') ); return true; }  else { return false; }"
 							rendered="#{movie.status != 'SUGGESTED'}">
@@ -84,12 +80,12 @@
 							</a>
 						</h:panelGroup>
 					</div>
-					<div class="thumbnail itemThumb">
+					<div class="thumbnail">
 						<a href="http://www.imdb.com/title/#{movie.imdbID}" class="poster" title="#{movie.name}"
 							target="_blank">
 							<img class="img-responsive img-thumbnail" data-src="#{movie.urlEncodedCoverImage}" alt="#{movie.name}" />
 						</a>
-						<div class="caption itemCaption">
+						<div class="caption">
 							<span>#{movie.name} (#{movie.year})</span>
 							<i class="fa fa-star" />
 							<h:outputText value="#{movie.rating}" />

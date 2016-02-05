@@ -20,21 +20,16 @@
 		</f:metadata>
 
 		<style>
-			.videoGameThumb {
+			.thumbnail {
 				border: none;
-				height: 280px;
-				margin-bottom: 0px;
 			}
-			
-			.videoGameCaption {
-				font-size: 12px;
-				font-weight: bold;
+			.thumbnail .caption {
+				white-space: nowrap;
 				text-align: center;
 			}
-			
 			.buttons {
-				position: absolute; right: 10px;
-			}			
+				position: absolute; right: 32px; top: 10px; width: 20px;
+			}	
 		</style>
 
 		<div id="manualSearch" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -112,7 +107,7 @@
 		
 			<ui:include src="/components/simple-pager.xhtml" />
 			<ui:repeat var="game" value="#{pager.items}">
-				<div class="game book col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{game.id}">
+				<div class="col-lg-2 col-md-2 col-sm-3 col-xs-6">
 					<div class="buttons btn-group-vertical" role="group">
 						<a href="#" class="btn btn-sm btn-danger" data-downloadable="${game.id}" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(game.name)} ?')) { deleteDownloadable('#{game.id}'); } else { return false;}">
 							<i class="fa fa-trash"></i>
@@ -131,7 +126,7 @@
 							</a>
 						</ui:fragment>
 					</div>
-					<div class="thumbnail videoGameThumb">
+					<div class="thumbnail">
 						<img class="img-responsive img-thumbnail" data-src="#{game.urlEncodedCoverImage}" alt="#{game.name}" />
 						<div class="caption videoGameCaption">
 							<h5>#{game.name}</h5>

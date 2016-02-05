@@ -69,16 +69,12 @@
 					<f:ajax execute="@this" render="@none" />
 					<i class="fa fa-play" />
 				</h:commandLink>
-				<h:panelGroup rendered="#{episode.status == 'DOWNLOADED'}" styleClass="hidden-sm hidden-xs">
-					#{episode.fileName}
-				</h:panelGroup>
 				<h:panelGroup rendered="#{!episode.aired}">
 					#{episode.firstAired}
 				</h:panelGroup>
-				<h:panelGroup
-					rendered="#{episode.status != 'DOWNLOADED' and episode.status != 'FUTURE'}">
-										#{episode.status.label}
-									</h:panelGroup>
+				<h:panelGroup rendered="#{episode.status != 'DOWNLOADED' and episode.status != 'FUTURE'}">
+					#{episode.status.label}
+				</h:panelGroup>
 			</h:column>
 			<h:column rendered="#{tvshow.managedSeries.subtitleLanguage != null}">
 				<h:panelGroup rendered="#{episode.status == 'DOWNLOADED'}">
@@ -103,7 +99,7 @@
 							title="Download subtitles">
 							<f:ajax render=":messages" />
 							<i class="fa fa-warning" />&nbsp;No Subs
-											</h:commandLink>
+						</h:commandLink>
 					</h:panelGroup>
 				</h:panelGroup>
 			</h:column>
