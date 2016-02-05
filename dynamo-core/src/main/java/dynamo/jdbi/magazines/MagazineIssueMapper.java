@@ -17,7 +17,6 @@ public class MagazineIssueMapper implements ResultSetMapper<MagazineIssue> {
 	public MagazineIssue map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 		return new MagazineIssue(
 				r.getLong("ID"),
-				MapperUtils.getPath(r, "PATH"),
 				MapperUtils.getEnum(r, "STATUS", DownloadableStatus.class),
 				r.getString("AKA"),
 				r.getString("MAGAZINE_SEARCHNAME"),

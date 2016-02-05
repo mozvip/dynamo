@@ -25,7 +25,6 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.AudioFileFilter;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.backlog.tasks.files.FileUtils;
-import dynamo.backlog.tasks.files.MoveFileTask;
 import dynamo.backlog.tasks.music.FindMusicAlbumImageTask;
 import dynamo.backlog.tasks.music.ImportMusicFolderTask;
 import dynamo.core.Language;
@@ -298,7 +297,7 @@ public class MusicManager implements Reconfigurable {
 		
 		if (album == null && createIfMissing ) {
 			album = new MusicAlbum(
-					DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, path, image, status),
+					DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, image, status),
 					status, path, image, null, 
 					artist.getName(), albumName, null, quality, null
 			);
@@ -306,10 +305,6 @@ public class MusicManager implements Reconfigurable {
 			if (image == null) {
 				BackLogProcessor.getInstance().schedule( new FindMusicAlbumImageTask( album ), false );
 			}
-		}
-
-		if (album != null && album.getPath() == null && path != null) {
-			downloadableDAO.updatePath(album.getId(), path);
 		}
 
 		return album;

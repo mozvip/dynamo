@@ -77,8 +77,6 @@ public class LookupMusicArtistExecutor extends TaskExecutor<LookupMusicArtistTas
 					List<MusicFile> musicFiles = musicDAO.findMusicFiles( album.getId() );
 					if (!musicFiles.isEmpty()) {
 						newStatus = DownloadableStatus.DOWNLOADED;
-					} else {
-						downloadableDAO.updatePath( album.getId(), MusicManager.getInstance().getPath( artist.getName(), albumName ) );
 					}
 					downloadableDAO.updateStatus( album.getId(), newStatus);
 

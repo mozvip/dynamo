@@ -11,7 +11,6 @@
             <column name="NAME" type="VARCHAR(512)">
             	<constraints nullable="false"/>
             </column>
-            <column name="PATH" type="VARCHAR(2048)"/>
             <column name="STATUS" type="VARCHAR(50)"/>
             <column name="AKA" type="VARCHAR(2147483647)" />
 			<column name="XXX" type="BOOLEAN" defaultValueBoolean="false">
@@ -156,6 +155,7 @@
             <column name="ARTIST_NAME" type="VARCHAR(255)">
             	<constraints nullable="false"/>
             </column>
+            <column name="PATH" type="VARCHAR(2048)"/>
             <column name="YEAR" type="INT(4)" />
             <column name="ALLMUSICURL" type="VARCHAR(2147483647)"/>
             <column name="GENRE" type="VARCHAR(2147483647)"/>
@@ -277,6 +277,7 @@
             <column name="PLATFORM" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
+    		<column name="THEGAMESDB_ID" type="BIGINT" />
         </createTable>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-31">
@@ -403,17 +404,9 @@
     <changeSet author="mozvip" id="15">
     	<dropColumn tableName="SEARCHRESULT" columnName="DESTINATION"/>
     </changeSet>    
-    <changeSet author="mozvip" id="16">
-    	<addColumn tableName="VIDEOGAME">
-    		<column name="THEGAMESDB_ID" type="BIGINT" />
-    	</addColumn>
-    	<sql>DELETE FROM MAGAZINEISSUE WHERE ID IN ( SELECT ID FROM DOWNLOADABLE WHERE STATUS = 'SUGGESTED' AND DTYPE='dynamo.model.magazines.MagazineIssue')</sql>
-    </changeSet>    
+
     <changeSet author="mozvip" id="17">
     	<dropColumn tableName="MAGAZINEISSUE" columnName="PERIOD"/>
-    </changeSet>
-    <changeSet author="mozvip" id="18">
-    	<sql>DELETE FROM DOWNLOADABLE WHERE PATH IN (SELECT PATH FROM DOWNLOADABLE WHERE PATH IS NOT NULL GROUP BY PATH HAVING COUNT(*) > 1) AND  DTYPE = 'dynamo.model.movies.Movie'</sql>
     </changeSet>
     
     <changeSet author="mozvip" id="20">

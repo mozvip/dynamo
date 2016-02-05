@@ -27,15 +27,6 @@ public interface DownloadableDAO {
 	@SqlUpdate("UPDATE DOWNLOADABLE SET STATUS = :status WHERE ID = :downloadableId AND STATUS != :status")
 	public int updateStatus( @Bind("downloadableId") long downloadableId, @BindEnum("status") DownloadableStatus status );
 
-	@SqlUpdate("UPDATE DOWNLOADABLE SET PATH = :path WHERE ID = :downloadableId")
-	public void updatePath( @Bind("downloadableId") long downloadableId, @BindPath("path") Path path );
-
-	@SqlUpdate("UPDATE DOWNLOADABLE SET PATH = NULL, STATUS='IGNORED' WHERE ID = :downloadableId")
-	public void nullifyPath( @Bind("downloadableId") long downloadableId );
-
-	@SqlUpdate("UPDATE DOWNLOADABLE SET PATH = :path, STATUS = :status WHERE ID = :downloadableId")
-	public void updatePathAndStatus( @Bind("downloadableId") long downloadableId, @BindPath("path") Path path, @BindEnum("status") DownloadableStatus status);
-
 	@SqlUpdate("UPDATE DOWNLOADABLE SET NAME = :name WHERE ID = :downloadableId")
 	public void updateName( @Bind("downloadableId") long downloadableId, @Bind("name") String name);
 
@@ -56,9 +47,9 @@ public interface DownloadableDAO {
 	@SqlUpdate("DELETE FROM DOWNLOADABLE WHERE DTYPE = :className AND status = :statusToDelete")
 	public void delete(@BindClassName("className") Class<? extends Downloadable> className, @BindEnum("statusToDelete") DownloadableStatus statusToDelete);
 
-	@SqlUpdate("INSERT INTO DOWNLOADABLE(DTYPE, NAME, PATH, COVER_IMAGE, STATUS, CREATION_DATE) VALUES (:className, :name, :path, :coverImage, :status, CURRENT_TIMESTAMP())")
+	@SqlUpdate("INSERT INTO DOWNLOADABLE(DTYPE, NAME, COVER_IMAGE, STATUS, CREATION_DATE) VALUES (:className, :name, :coverImage, :status, CURRENT_TIMESTAMP())")
 	@GetGeneratedKeys
-	public long createDownloadable(@BindClassName("className") Class<?> klass, @Bind("name") String name, @BindPath("path") Path path,	@Bind("coverImage") String coverImage, @BindEnum("status") DownloadableStatus status);
+	public long createDownloadable(@BindClassName("className") Class<?> klass, @Bind("name") String name, @Bind("coverImage") String coverImage, @BindEnum("status") DownloadableStatus status);
 
 	@SqlUpdate("UPDATE DOWNLOADABLE SET AKA = :akas WHERE ID = :downloadableId")
 	public void saveAka(@Bind("downloadableId") Long downloadableId, @BindStringList("akas") Collection<String> akas);
@@ -66,9 +57,6 @@ public interface DownloadableDAO {
 	@SqlQuery("SELECT * FROM DOWNLOADABLE WHERE ID = :downloadableId")
 	@Mapper(DownloadInfoMapper.class)
 	public DownloadInfo find(@Bind("downloadableId") long downloadableId);
-
-	@SqlUpdate("UPDATE DOWNLOADABLE SET PATH = NULL WHERE STATUS != 'DOWNLOADED'")
-	public void cleanData();
 
 	@SqlQuery("SELECT * FROM DOWNLOADABLE WHERE PATH=:path AND STATUS='DOWNLOADED'")
 	@Mapper(DownloadInfoMapper.class)

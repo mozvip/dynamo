@@ -103,6 +103,7 @@ public class VideoManager {
 	
 	public VideoMetaData getMetaData(Downloadable video, Path videoFilePath) throws IOException, InterruptedException { 
 		VideoMetaData metaData = videoDAO.getMetaData( video.getId() );
+		// FIXME : implement locking
 		if (metaData == null) {
 			String openSubtitlesHash = OpenSubtitlesHasher.computeHash( videoFilePath );
 

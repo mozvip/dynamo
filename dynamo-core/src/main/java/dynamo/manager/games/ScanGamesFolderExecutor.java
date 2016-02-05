@@ -122,7 +122,7 @@ public class ScanGamesFolderExecutor extends AbstractNewFolderExecutor<ScanGames
 			try {
 				VideoGame game = games.get( currentGame.getId() );
 				if (game == null) {
-					game = GamesManager.getInstance().createGame(title, platform.getLabel(), currentGame.getId(), p.getParent(), DownloadableStatus.DOWNLOADED);
+					game = GamesManager.getInstance().createGame(title, platform.getLabel(), currentGame.getId(), DownloadableStatus.DOWNLOADED);
 					games.put( currentGame.getId(), game );
 				}
 				DownloadableManager.getInstance().addFile(game.getId(), p, Files.size(p), fileIndex);

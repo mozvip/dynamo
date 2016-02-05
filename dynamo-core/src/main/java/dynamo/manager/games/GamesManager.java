@@ -152,12 +152,12 @@ public class GamesManager implements Reconfigurable {
 		return videoGameDAO.findByTheGamesDbId(theGamesDbId);
 	}
 
-	public VideoGame createGame( String title, String platform, long theGamesDbId, Path folder, DownloadableStatus status )  {
+	public VideoGame createGame( String title, String platform, long theGamesDbId, DownloadableStatus status )  {
 
 		GamePlatform newGamePlatform = GamePlatform.match( platform );
 		String image = getLocalImage(theGamesDbId, title, newGamePlatform );
-		long videoGameId = DownloadableManager.getInstance().createDownloadable(VideoGame.class, title, folder, image, status );
-		VideoGame game = new VideoGame(videoGameId, status, folder, image, title, newGamePlatform, theGamesDbId );
+		long videoGameId = DownloadableManager.getInstance().createDownloadable(VideoGame.class, title, image, status );
+		VideoGame game = new VideoGame(videoGameId, status, image, title, newGamePlatform, theGamesDbId );
 		videoGameDAO.save( videoGameId, game.getPlatform(), game.getTheGamesDbId() );
 		
 		return game;
@@ -193,7 +193,7 @@ public class GamesManager implements Reconfigurable {
 		if (game == null) {
 			TheGamesDBGame theGamesDbGame = TheGamesDB.getInstance().getGame( theGamesDbId );
 			if (theGamesDbGame != null) {
-				game = GamesManager.getInstance().createGame( theGamesDbGame.getGameTitle(), theGamesDbGame.getPlatform(), theGamesDbId, null, DownloadableStatus.WANTED );
+				game = GamesManager.getInstance().createGame( theGamesDbGame.getGameTitle(), theGamesDbGame.getPlatform(), theGamesDbId, DownloadableStatus.WANTED );
 				if (theGamesDbGame.getAlternateTitles() != null && theGamesDbGame.getAlternateTitles().size() > 0) {
 					DownloadableManager.getInstance().setAkas(game.getId(), theGamesDbGame.getAlternateTitles());
 				}

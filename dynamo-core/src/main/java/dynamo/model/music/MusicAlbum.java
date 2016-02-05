@@ -16,14 +16,16 @@ public class MusicAlbum extends Downloadable {
 	private String allMusicURL;
 	private String artistName;
 	private String genre;
+	private Path path;
 
 	public MusicAlbum(  Long id, DownloadableStatus status, Path path, String coverImage, String aka, String artistName, String albumName, String genre, MusicQuality quality, String allMusicURL) {
-		super( id, albumName, status, path, coverImage, aka, null );
+		super( id, albumName, status, coverImage, aka, null );
 		this.artistName = artistName;
 		this.genre = genre;
 		this.allMusicURL = allMusicURL;
 		this.quality = quality;
-		
+		this.path = path;
+
 		this.searchString = MusicManager.getSearchString( artistName, albumName );
 	}
 
@@ -84,6 +86,14 @@ public class MusicAlbum extends Downloadable {
 			return ((MusicAlbum)obj).getSearchString().equals( getSearchString() );
 		}
 		return false;
+	}
+	
+	public Path getPath() {
+		return path;
+	}
+	
+	public void setPath(Path path) {
+		this.path = path;
 	}
 
 	@Override

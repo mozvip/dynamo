@@ -33,13 +33,13 @@ public class ManagedEpisode extends Downloadable implements Video {
 	
 	private String seriesName;
 
-	public ManagedEpisode(Long id, Path path, DownloadableStatus status, String seriesName, Path subtitlesPath,
+	public ManagedEpisode(Long id, DownloadableStatus status, String seriesName, Path subtitlesPath,
 			VideoQuality quality, VideoSource source,
 			String releaseGroup, String seriesId, long seasonId, int seasonNumber,
 			int episodeNumber, Integer absoluteNumber, String episodeName,
 			Date firstAired, boolean subtitled, boolean watched) {
 
-		super(id, episodeName, status, path, null, null, null);
+		super(id, episodeName, status, null, null, null);
 		
 		this.seriesName = seriesName;
 		this.subtitlesPath = subtitlesPath;

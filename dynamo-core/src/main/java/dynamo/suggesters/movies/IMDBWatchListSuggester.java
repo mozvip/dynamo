@@ -66,7 +66,7 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 
 		String coverImage = LocalImageCache.getInstance().download( "movies", imdbID, title.getImage().getUrl(), title.getImage().getReferer() );
 
-		long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, title.getName(), null, coverImage, DownloadableStatus.SUGGESTED );
+		long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, title.getName(), coverImage, DownloadableStatus.SUGGESTED );
 		Movie suggestion = new Movie(downloadableId, DownloadableStatus.SUGGESTED, null, null, title.getName(), null, false, null, null, null, null, null, null, null, -1, imdbID, null, title.getRating(), title.getYear(), false );
 
 		return suggestion;

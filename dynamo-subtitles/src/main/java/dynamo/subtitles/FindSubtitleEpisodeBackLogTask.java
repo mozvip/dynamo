@@ -3,9 +3,11 @@ package dynamo.subtitles;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.EventManager;
+import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.HistoryDAO;
 import dynamo.core.model.TaskExecutor;
 import dynamo.core.model.video.VideoMetaData;
@@ -37,21 +39,29 @@ public class FindSubtitleEpisodeBackLogTask extends TaskExecutor<FindSubtitleEpi
 	@Override
 	public void execute() throws Exception {
 		
-		if (episode.getPath() == null || !Files.isRegularFile( episode.getPath()) || episode.isSubtitled() || series.getSubtitleLanguage() == null) {
+		Optional<Path> mainVideoFile = VideoManager.getInstance().getMainVideoFile( episode.getId() );
+		Path mainVideoFilePath = mainVideoFile.get();
+		if (!mainVideoFile.isPresent() || !Files.isRegularFile( mainVideoFilePath)) {
+			ErrorManager.getInstance().reportWarning( String.format( "Unable to download subtitles for %s : video file not present", episode.getName() ));
 			return;
 		}
 
-		VideoMetaData metaData = VideoManager.getInstance().getMetaData(episode, episode.getPath());
+		if (episode.isSubtitled() || series.getSubtitleLanguage() == null) {
+			return;
+		}
+
+		VideoMetaData metaData = VideoManager.getInstance().getMetaData(episode, mainVideoFilePath);
 		if (metaData.getSubtitleLanguages() != null && metaData.getSubtitleLanguages().contains( series.getSubtitleLanguage() )) {
 			tvShowDAO.setSubtitled(episode.getId());
 			return;
 		}
 
-		for (String name : series.getAka()) {
+		for (String seriesName : series.getAka()) {
 
 			Path subtitles = SubTitleDownloader.getInstance().downloadSubTitle(
 					episode,
-					name,
+					mainVideoFilePath,
+					seriesName,
 					episode.getQuality(),
 					episode.getSource(),
 					episode.getReleaseGroup(),
@@ -60,13 +70,13 @@ public class FindSubtitleEpisodeBackLogTask extends TaskExecutor<FindSubtitleEpi
 			
 			if ( subtitles != null ) {
 				
-				String filename = episode.getPath().getFileName().toString();
+				String filename = mainVideoFilePath.getFileName().toString();
 				String filenameWithoutExtension = filename; 
 				if ( filenameWithoutExtension.lastIndexOf('.') > 0 ) {
 					filenameWithoutExtension = filenameWithoutExtension.substring( 0, filenameWithoutExtension.lastIndexOf('.'));
 				}
 				
-				Path destinationSRT = episode.getPath().getParent().resolve( filenameWithoutExtension + ".srt" );
+				Path destinationSRT = mainVideoFilePath.getParent().resolve( filenameWithoutExtension + ".srt" );
 				
 				Files.move( subtitles, destinationSRT, StandardCopyOption.REPLACE_EXISTING);
 

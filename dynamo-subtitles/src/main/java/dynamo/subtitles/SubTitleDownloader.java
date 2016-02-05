@@ -55,11 +55,12 @@ public class SubTitleDownloader implements Reconfigurable {
 		}
 	}
 
-	public Path downloadSubTitle( Downloadable video, String name, VideoQuality quality, VideoSource source, String releaseGroup, int season, int episode, Language subtitlesLanguage ) throws Exception {
+	public Path downloadSubTitle( Downloadable video, Path videoFile, String seriesName, VideoQuality quality, VideoSource source, String releaseGroup, int season, int episode, Language subtitlesLanguage ) throws Exception {
 
-		VideoMetaData metaData = VideoManager.getInstance().getMetaData(video, video.getPath());
 		
-		VideoDetails details = new VideoDetails( video.getPath(), name, quality, source, releaseGroup, season, episode, metaData.getOpenSubtitlesHash() );
+		VideoMetaData metaData = VideoManager.getInstance().getMetaData(video, videoFile );
+		
+		VideoDetails details = new VideoDetails( videoFile, seriesName, quality, source, releaseGroup, season, episode, metaData.getOpenSubtitlesHash() );
 		
 		RemoteSubTitles selectedSubTitles = null;
 		for (SubtitlesFinder subTitleFinder : finders) {

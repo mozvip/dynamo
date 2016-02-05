@@ -125,7 +125,7 @@ public class BookManager implements Enableable {
 
 	private long createSuggestion(String title, String author, Language language, String imageURL, String referer) throws MalformedURLException {
 		String image = imageURL != null ? LocalImageCache.getInstance().download("books", String.format("%s-%s", author, title), imageURL, referer) : null;
-		long downloadableId = DownloadableManager.getInstance().createDownloadable( Book.class, title, null, image, DownloadableStatus.SUGGESTED);
+		long downloadableId = DownloadableManager.getInstance().createDownloadable( Book.class, title, image, DownloadableStatus.SUGGESTED);
 		bookDAO.save( downloadableId, author, language );
 		return downloadableId;
 	}

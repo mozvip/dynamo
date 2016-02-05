@@ -1,10 +1,8 @@
 package dynamo.webapps.googleimages;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 

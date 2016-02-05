@@ -115,20 +115,20 @@
 						<div class="col-lg-10">
 							<h:panelGroup rendered="#{album.allMusicURL != null}">
 								<a href="#{album.allMusicURL}" target="_blank">
-									<h3>#{album.album}</h3>
+									<h3>#{album.name}</h3>
 								</a>
 							</h:panelGroup>
 							<h:panelGroup rendered="#{album.allMusicURL == null}">
 								<h3>
 									<h:panelGroup rendered="#{musicArtist.artist.allMusicURL != null}">
-										#{album.album}
+										#{album.name}
 										<h:commandLink p:data-toggle="modal" p:data-target="#manualAlbumSearch" action="#{musicArtist.setSelectedAlbumId(album.id)}">
 											<f:ajax onevent="openAlbumDialog" execute="@form" render="@form" />
 											<i class="fa fa-search" />
 										</h:commandLink>											
 									</h:panelGroup>
 									<h:panelGroup rendered="#{musicArtist.artist.allMusicURL == null}">
-										#{album.album}
+										#{album.name}
 									</h:panelGroup>
 									<div>
 										<ui:fragment rendered="#{album.status == 'IGNORED'}">

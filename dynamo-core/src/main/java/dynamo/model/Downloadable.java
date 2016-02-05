@@ -11,17 +11,15 @@ public abstract class Downloadable {
 	private Long id;
 	private String name;
 	private DownloadableStatus status = DownloadableStatus.IGNORED;
-	private Path path;
 	private String type;
 	private String coverImage;
 	private String aka;
 	private Date creationDate;
 
-	public Downloadable(Long id, String name, DownloadableStatus status, Path path, String coverImage, String aka, Date creationDate) {
+	public Downloadable(Long id, String name, DownloadableStatus status, String coverImage, String aka, Date creationDate) {
 		this.id = id;
 		this.name = name;
 		this.status = status;
-		this.path = path;
 		this.coverImage = coverImage;
 		this.aka = aka;
 		this.creationDate = creationDate;
@@ -43,14 +41,6 @@ public abstract class Downloadable {
 		return status;
 	}
 
-	public Path getPath() {
-		return path;
-	}
-	
-	public String getFileName() {
-		return path != null ? path.getFileName().toString() : null;
-	}
-	
 	public List<String> getAlternateNames() {
 		return aka != null  ?Arrays.asList( aka.split(";") ) : new ArrayList<String>();
 	}
@@ -91,12 +81,10 @@ public abstract class Downloadable {
 	
 	public void setIgnored() {
 		status = DownloadableStatus.IGNORED;
-		path = null;
 	}
 
 	public void setWanted() {
 		status = DownloadableStatus.WANTED;
-		path = null;
 	}	
 
 	@Override

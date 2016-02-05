@@ -25,8 +25,6 @@ public class RefreshWantedExecutor extends TaskExecutor<RefreshWantedTask> {
 	@Override
 	public void execute() throws Exception {
 
-		DownloadableManager.getInstance().cleanData();
-
 		List<DownloadInfo> infos = DownloadableManager.getInstance().findWanted();
 		List<ManagedEpisode> episodes = new ArrayList<>();
 

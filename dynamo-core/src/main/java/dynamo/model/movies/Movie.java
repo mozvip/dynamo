@@ -42,7 +42,7 @@ public class Movie extends Downloadable implements Video {
 			String releaseGroup, int movieDbId,
 			String imdbID, String traktUrl, float rating, int year,
 			boolean watched) {
-		super( id, name, status, null, coverImage, aka, null );
+		super( id, name, status, coverImage, aka, null );
 
 		this.subtitlesPath = subtitlesPath;
 		this.subtitled = subtitled;

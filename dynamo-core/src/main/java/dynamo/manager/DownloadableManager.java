@@ -123,8 +123,8 @@ public class DownloadableManager {
 		return downloadableDAO.updateStatus(downloadable.getId(), newStatus);
 	}
 
-	public long createDownloadable(Class<?> klass, String name, Path path, String coverImage, DownloadableStatus status) {
-		return downloadableDAO.createDownloadable( klass, name, path, coverImage, status );
+	public long createDownloadable(Class<?> klass, String name, String coverImage, DownloadableStatus status) {
+		return downloadableDAO.createDownloadable( klass, name, coverImage, status );
 	}
 	
 	public void logStatusChange( Downloadable downloadable, DownloadableStatus newStatus) {
@@ -149,10 +149,6 @@ public class DownloadableManager {
 		}
 	}
 	
-	public void cleanData() {
-		downloadableDAO.cleanData();
-	}
-	
 	public void snatched( Downloadable downloadable ) {
 		DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SNATCHED,
 				String.format("<a href='%s'>%s</a> has been snatched", downloadable.getRelativeLink(), downloadable.toString()) );
@@ -168,9 +164,11 @@ public class DownloadableManager {
 		if (Files.isDirectory( newFile )) {
 			return;
 		}
-
+		
 		Long id = downloadable.getId();
 
+		addFile(id, newFile, 0);
+		
 		if ( downloadable instanceof MusicAlbum) {
 			
 			MusicAlbum musicAlbum = ( MusicAlbum ) downloadable;
@@ -191,8 +189,6 @@ public class DownloadableManager {
 						if (fileName.contains("-sample") || fileName.startsWith("sample-") || Files.size(newFile) < (50*1024*1024)) {
 							BackLogProcessor.getInstance().schedule( new DeleteTask( newFile, false ));	// FIXME : should have been done earlier, by the post processor ?
 						} else {
-							downloadableDAO.updatePath( id, newFile );
-							
 							if (downloadable instanceof ManagedEpisode) {
 								ManagedSeries series = TVShowManager.getInstance().getManagedSeries(((ManagedEpisode) downloadable).getSeriesId());
 								if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, series.getSubtitleLanguage() )) {
@@ -214,8 +210,6 @@ public class DownloadableManager {
 				}
 
 			} else if (downloadable instanceof TVShowSeason) {
-				
-				downloadableDAO.updatePath( id, newFile.getParent() );
 
 				if ( VideoFileFilter.getInstance().accept( newFile ) ) {
 					TVShowSeason season = TVShowManager.getInstance().findSeason( id );
@@ -229,13 +223,6 @@ public class DownloadableManager {
 					BackLogProcessor.getInstance().schedule( new ScanTVShowTask( series ));
 				}
 
-			} else {
-				
-				String fileName = newFile.getFileName().toString();
-				
-				if (!fileName.endsWith(".par2") && !fileName.endsWith(".txt") && !fileName.endsWith(".torrent") && !fileName.endsWith(".nfo") && !fileName.endsWith(".html")) {
-					downloadableDAO.updatePath( id, newFile );
-				}
 			}
 
 		}
@@ -277,12 +264,6 @@ public class DownloadableManager {
 				destinationFile = destinationFolder.resolve( source.subpath(sourceFolder.getNameCount(), source.getNameCount()) );
 			}
 
-			if (downloadable instanceof Video || downloadable instanceof EBook) {
-				DownloadableManager.getInstance().updatePath( downloadable.getId(), destinationFile );
-			}
-
-			DownloadableManager.getInstance().addFile( downloadable.getId(), destinationFile, Files.size(source), fileIndex++);
-
 			if (moveFiles) {
 				FolderManager.moveFile(source, destinationFile, downloadable);
 			} else {
@@ -294,10 +275,6 @@ public class DownloadableManager {
 			logStatusChange( downloadable, DownloadableStatus.DOWNLOADED, String.format("<a href='%s'>%s</a> has been downloaded", downloadable.getRelativeLink(), downloadable.toString()) );
 		}
 
-	}
-
-	public void updatePath(long id, Path newPath) {
-		downloadableDAO.updatePath(id, newPath);
 	}
 
 	public void delete(Class<? extends Downloadable> klass, DownloadableStatus statusToDelete) {
@@ -383,9 +360,12 @@ public class DownloadableManager {
 		downloadableDAO.addFile( downloadableId, file, size, index );
 	}
 
-	public void addFile( long downloadableId, Path file, int index ) throws IOException {
-		long size = Files.size( file );
-		downloadableDAO.addFile( downloadableId, file, size, index );
+	public void addFile( long downloadableId, Path file, int index ) {
+		try {
+			downloadableDAO.addFile( downloadableId, file, Files.size( file ), index );
+		} catch (IOException e) {
+			ErrorManager.getInstance().reportThrowable(e);
+		}
 	}
 
 	public Stream<DownloadableFile> getAllFiles(long downloadableId) {

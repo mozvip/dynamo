@@ -1,7 +1,6 @@
 package dynamo.backlog.tasks.tvshows;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -74,8 +73,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 				seasonId = season.getId();
 				existingEpisode = tvShowDAO.findEpisode( season.getId(), episode.getEpisodeNumber() );
 			} else {
-				Path seasonPath = series.getFolder().resolve( String.format( TVShowManager.getInstance().getSeasonFolderPattern(), episode.getSeasonNumber()));
-				seasonId = DownloadableManager.getInstance().createDownloadable( TVShowSeason.class, String.format("%s S%02d", series.getName(), episode.getSeasonNumber()), seasonPath, null, DownloadableStatus.IGNORED );
+				seasonId = DownloadableManager.getInstance().createDownloadable( TVShowSeason.class, String.format("%s S%02d", series.getName(), episode.getSeasonNumber()), null, DownloadableStatus.IGNORED );
 				tvShowDAO.createSeason( seasonId, episode.getSeriesId(), episode.getSeasonNumber() );
 			}
 
@@ -107,7 +105,8 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 
 			if (existingEpisode == null) {
 			
-				existingEpisode = new ManagedEpisode( DownloadableManager.getInstance().createDownloadable( ManagedEpisode.class, episode.getEpisodeName(), null, null, newStatusForEpisode ), null, newStatusForEpisode, series.getName(), null, null, null, null, episode.getSeriesId(), seasonId, episode.getSeasonNumber(), episode.getEpisodeNumber(), null, episode.getEpisodeName(), firstAiredDate, false, false );
+				existingEpisode = new ManagedEpisode(
+						DownloadableManager.getInstance().createDownloadable( ManagedEpisode.class, episode.getEpisodeName(), null, newStatusForEpisode ), newStatusForEpisode, series.getName(), null, null, null, null, episode.getSeriesId(), seasonId, episode.getSeasonNumber(), episode.getEpisodeNumber(), null, episode.getEpisodeName(), firstAiredDate, false, false );
 			
 			} else if ( existingEpisode.getStatus() == DownloadableStatus.FUTURE && newStatusForEpisode != DownloadableStatus.FUTURE) {
 				

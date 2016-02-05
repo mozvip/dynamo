@@ -1,6 +1,5 @@
 package dynamo.core.model;
 
-import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -17,7 +16,6 @@ public class DownloadInfoMapper implements ResultSetMapper<DownloadInfo> {
 	public DownloadInfo map(int index, ResultSet r, StatementContext ctx)
 			throws SQLException {
 
-		String pathStr = r.getString("PATH");
 		String statusStr = r.getString("STATUS");
 
 		try {
@@ -25,7 +23,6 @@ public class DownloadInfoMapper implements ResultSetMapper<DownloadInfo> {
 					r.getLong("ID"),
 					r.getString("NAME"),
 					Class.forName(r.getString("DTYPE")),
-					pathStr != null ? Paths.get(pathStr) : null,
 					r.getString("COVER_IMAGE"),
 					statusStr != null ? DownloadableStatus.valueOf( statusStr) : null,
 					r.getString("AKA") );

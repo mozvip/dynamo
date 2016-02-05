@@ -3,7 +3,6 @@ package dynamo.backlog.tasks.torrent;
 import java.nio.file.Path;
 
 import dynamo.backlog.queues.HTTPDownloadQueue;
-import dynamo.backlog.tasks.tvshows.ScanFileSystemQueue;
 import dynamo.core.DynamoTask;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.model.Task;

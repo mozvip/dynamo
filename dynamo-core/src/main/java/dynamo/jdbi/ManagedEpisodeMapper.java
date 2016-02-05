@@ -19,7 +19,7 @@ public class ManagedEpisodeMapper implements ResultSetMapper<ManagedEpisode> {
 			throws SQLException {
 
 		return new ManagedEpisode(r.getLong("ID"),
-				MapperUtils.getPath(r,"PATH"), MapperUtils.getEnum(r, "STATUS",
+				MapperUtils.getEnum(r, "STATUS",
 				DownloadableStatus.class), r.getString("SERIESNAME"),
 				MapperUtils.getPath(r, "SUBTITLESPATH"),
 				MapperUtils.getEnum(r, "QUALITY", VideoQuality.class),

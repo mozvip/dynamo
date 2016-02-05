@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import core.RegExp;
@@ -15,6 +16,7 @@ import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.MovieDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.movies.Movie;
+import dynamo.video.VideoManager;
 
 public class RenameMovieFileExecutor extends TaskExecutor< RenameMovieFileTask > {
 	
@@ -33,8 +35,14 @@ public class RenameMovieFileExecutor extends TaskExecutor< RenameMovieFileTask >
 			// it is highly probable the movie was not properly identified, so do not take the risk to rename it
 			return;
 		}
+		
+		Optional<Path> mainVideoFile = VideoManager.getInstance().getMainVideoFile( movie.getId() );
+		if (!mainVideoFile.isPresent()) {
+			return;
+		}
 
-		String currentName = RegExp.extract( movie.getFileName(), "(.*)\\.\\w+");
+		String mainVideoFileName = mainVideoFile.get().getFileName().toString();
+		String currentName = RegExp.extract( mainVideoFileName, "(.*)\\.\\w+");
 		String newFileName = String.format("%s (%d)", movie.getName(), movie.getYear() );	// MAYBE_TODO : externalize renaming pattern ?
 
 		if ( currentName.equals( newFileName )) {
@@ -53,9 +61,6 @@ public class RenameMovieFileExecutor extends TaskExecutor< RenameMovieFileTask >
 			String fileExtension = fileName.substring( fileName.lastIndexOf('.') );
 			Path newFilePath = downloadableFile.getFilePath().getParent().resolve( newFileName + fileExtension );
 			Files.move( downloadableFile.getFilePath(), newFilePath, StandardCopyOption.REPLACE_EXISTING );
-			if (videoFile) {
-				DownloadableManager.getInstance().updatePath(movie.getId(), newFilePath);
-			}
 			if (subtitlesFile) {
 				movieDAO.setSubtitled(movie.getId(), newFilePath);
 			}

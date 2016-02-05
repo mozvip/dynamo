@@ -335,7 +335,8 @@ public class TVShowManager implements Reconfigurable {
 
 	public void assignEpisodes( Path path, List<ManagedEpisode> episodes ) {
 		for (ManagedEpisode managedEpisode : episodes) {
-			downloadableDAO.updatePathAndStatus( managedEpisode.getId(), path, DownloadableStatus.DOWNLOADED );
+			DownloadableManager.getInstance().addFile(managedEpisode.getId(), path, 0);
+			downloadableDAO.updateStatus( managedEpisode.getId(), DownloadableStatus.DOWNLOADED );
 		}
 		deleteUnrecognizedFile( path );
 	}
@@ -421,7 +422,6 @@ public class TVShowManager implements Reconfigurable {
 	public void saveEpisode(ManagedEpisode episode) {
 		tvShowDAO.saveEpisode( episode.getId(), episode.getEpisodeNumber(), episode.getFirstAired(), episode.getQuality(), episode.getReleaseGroup(),  
 			 	episode.getSource(), episode.isSubtitled(),  episode.getSubtitlesPath(), episode.isWatched(), episode.getSeasonId() );
-		downloadableDAO.updatePath(episode.getId(), episode.getPath());
 	}
 
 	public List<UnrecognizedFile> getUnrecognizedFiles( String seriesId ) {

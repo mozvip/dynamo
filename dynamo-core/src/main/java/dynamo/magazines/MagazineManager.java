@@ -165,7 +165,8 @@ public class MagazineManager implements Reconfigurable {
 	public MagazineIssue createIssue( Magazine magazine, String rawIssueName, String coverImage ) {
 		MagazineIssueInfo info = MagazineNameParser.getIssueInfo( rawIssueName );
 		DownloadableStatus status = magazine.isAutoDownload() ? DownloadableStatus.WANTED : DownloadableStatus.IGNORED;
-		MagazineIssue issue = new MagazineIssue(null, null, status, null, magazine.getSearchName(), magazine.getLanguage(), rawIssueName, info.getIssueDate(), info.getYear(), info.getIssueNumber(), info.isSpecial(), coverImage, new Date() );
+		MagazineIssue issue = new MagazineIssue(
+				null, status, null, magazine.getSearchName(), magazine.getLanguage(), rawIssueName, info.getIssueDate(), info.getYear(), info.getIssueNumber(), info.isSpecial(), coverImage, new Date() );
 		return issue;
 	}
 
@@ -217,7 +218,7 @@ public class MagazineManager implements Reconfigurable {
 		String rawName = issueInfo.toString();
 		if (existingIssue == null) {
 			existingIssue = MagazineManager.getInstance().createIssue(magazine, issueInfo.getIssueName(), coverImage);
-			downloadableId = DownloadableManager.getInstance().createDownloadable( MagazineIssue.class, rawName, null, coverImage, DownloadableStatus.SUGGESTED);
+			downloadableId = DownloadableManager.getInstance().createDownloadable( MagazineIssue.class, rawName, coverImage, DownloadableStatus.SUGGESTED);
 		} else {
 			if (existingIssue.getCoverImage() == null && coverImage != null) {
 				DownloadableManager.getInstance().updateCoverImage( existingIssue.getId(), coverImage);

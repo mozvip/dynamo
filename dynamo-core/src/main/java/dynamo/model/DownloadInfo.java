@@ -1,7 +1,6 @@
 package dynamo.model;
 
 import java.io.Serializable;
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,17 +15,15 @@ public class DownloadInfo implements Serializable {
 
 	private Long id;
 	private String name;
-	private Path path;
 	private DownloadableStatus status = DownloadableStatus.IGNORED;
 	private String type;
 	private String coverImage;
 
-	public DownloadInfo(Long id, String name, Class downloadableClass, Path path, String coverImage, 
+	public DownloadInfo(Long id, String name, Class downloadableClass, String coverImage, 
 			DownloadableStatus status, String aka) {
 		this.id = id;
 		this.name = name;
 		this.type = downloadableClass.getName();
-		this.path = path;
 		this.coverImage = coverImage;
 		this.status = status;
 		
@@ -64,21 +61,6 @@ public class DownloadInfo implements Serializable {
 		this.status = status;
 	}
 
-	public Path getPath() {
-		return path;
-	}
-
-	public void setPath(Path path) {
-		this.path = path;
-	}
-
-	public String getFileName() {
-		if (path != null) {
-			return path.getFileName().toString();
-		}
-		return null;
-	}
-
 	@Override
 	public int hashCode() {
 		return id.intValue();
@@ -101,8 +83,7 @@ public class DownloadInfo implements Serializable {
 	}
 
 	public boolean isDownloaded() {
-		return status != null && status.equals(DownloadableStatus.DOWNLOADED)
-				&& path != null;
+		return status != null && status.equals(DownloadableStatus.DOWNLOADED);
 	}
 
 	@Override

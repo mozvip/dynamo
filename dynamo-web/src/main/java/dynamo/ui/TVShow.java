@@ -339,9 +339,6 @@ public class TVShow extends DynamoManagedBean {
 
 	public void redownload( ManagedEpisode episode ) {
 
-		if (episode.getPath() != null) {
-			BackLogProcessor.getInstance().schedule( new DeleteTask( episode.getPath(), false ), false );
-		}
 		if (episode.getSubtitlesPath() != null) {
 			BackLogProcessor.getInstance().schedule( new DeleteTask( episode.getSubtitlesPath(), false ), false );
 		}

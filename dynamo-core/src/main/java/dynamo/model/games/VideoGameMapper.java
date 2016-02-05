@@ -17,7 +17,6 @@ public class VideoGameMapper implements ResultSetMapper<VideoGame> {
 		return new VideoGame(
 				r.getLong("ID"),
 				MapperUtils.getEnum(r, "STATUS", DownloadableStatus.class),
-				MapperUtils.getPath(r, "PATH"),
 				r.getString("COVER_IMAGE"),
 				r.getString("NAME"),
 				MapperUtils.getEnum(r, "PLATFORM", GamePlatform.class),

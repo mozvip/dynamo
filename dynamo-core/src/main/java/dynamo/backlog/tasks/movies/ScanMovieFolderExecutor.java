@@ -162,7 +162,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 			// create new movie
 			String movieName = movieDb != null ? movieDb.getTitle() : movieFile.getFileName().toString();
 			
-			long id = downloadableDAO.createDownloadable( Movie.class, movieName, movieFile, null, DownloadableStatus.DOWNLOADED );
+			long id = downloadableDAO.createDownloadable( Movie.class, movieName, null, DownloadableStatus.DOWNLOADED );
 			movie = new Movie(
 					id, DownloadableStatus.DOWNLOADED, null, null, movieName, null, false, null, null, null, null, null, null, null, -1, null, null, -1, -1, false );
 			if ( movieInfo != null ) {

@@ -58,7 +58,7 @@
 						</ui:fragment>
 						<h:outputLink styleClass="btn btn-sm btn-default"
 							p:data-toggle="modal" p:data-target="#manualSearch" value="#"
-							onclick="$('.manualSearchMovieId').val('#{movie.id}'); $('.manualSearchField').val('#{movies.searchName(movie.name)}'); $('.manualSearchFieldPath').html('#{movies.fixName(movie.path.fileName)}');"
+							onclick="$('.manualSearchMovieId').val('#{movie.id}'); $('.manualSearchField').val('#{movies.searchName(movie.name)}');"
 							rendered="#{movie.status == 'DOWNLOADED'}">
 							<i class="fa fa-search"></i>
 						</h:outputLink>
@@ -85,9 +85,9 @@
 						</h:panelGroup>
 					</div>
 					<div class="thumbnail itemThumb">
-						<a href="http://www.imdb.com/title/#{movie.imdbID}" class="poster" title="#{movie.path}"
+						<a href="http://www.imdb.com/title/#{movie.imdbID}" class="poster" title="#{movie.name}"
 							target="_blank">
-							<img class="img-responsive" data-src="#{movie.urlEncodedCoverImage}" width="145" height="220" alt="#{movie.name}" />
+							<img class="img-responsive" data-src="#{movie.urlEncodedCoverImage}" alt="#{movie.name}" />
 						</a>
 						<div class="caption itemCaption">
 							<span>#{movie.name} (#{movie.year})</span>

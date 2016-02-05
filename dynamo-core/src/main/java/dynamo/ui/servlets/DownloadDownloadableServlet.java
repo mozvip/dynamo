@@ -3,6 +3,7 @@ package dynamo.ui.servlets;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,8 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dynamo.core.manager.DownloadableFactory;
-import dynamo.model.DownloadInfo;
+import dynamo.core.model.DownloadableFile;
+import dynamo.manager.DownloadableManager;
 
 @WebServlet("/download")
 public class DownloadDownloadableServlet extends HttpServlet {
@@ -23,15 +24,22 @@ public class DownloadDownloadableServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		long id = Integer.parseInt( request.getParameter("id"));
-		DownloadInfo info = DownloadableFactory.getInstance().getDownloadInfo(id);
-
-		response.setContentLength( (int) Files.size( info.getPath() ));
-		response.setContentType( Files.probeContentType( info.getPath() ) );
 		
-		response.setHeader("Content-Disposition", "filename='" + info.getPath().getFileName().toString()+"'");
+		Optional<DownloadableFile> firstFile = DownloadableManager.getInstance().getAllFiles( id ).findFirst();
+
+		if (!firstFile.isPresent()) {
+			throw new ServletException( "File not found");
+		}
+
+		DownloadableFile downloadableFile = firstFile.get();
+		
+		response.setContentLength( (int) downloadableFile.getSize() );
+		response.setContentType( Files.probeContentType( downloadableFile.getFilePath() ) );
+		
+		response.setHeader("Content-Disposition", "filename='" + downloadableFile.getFilePath().getFileName().toString()+"'");
 		
 		try (OutputStream output = response.getOutputStream()) {
-			Files.copy( info.getPath(), output);
+			Files.copy( downloadableFile.getFilePath(), output);
 			output.flush();
 		}
 		

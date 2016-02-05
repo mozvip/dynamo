@@ -6,14 +6,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.List;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.TVShowDAO;
-import dynamo.model.tvshows.TVShowManager;
-import model.ManagedEpisode;
 import model.ManagedSeries;
 import model.backlog.RefreshTVShowTask;
 import model.backlog.ScanTVShowTask;

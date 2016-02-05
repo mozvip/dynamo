@@ -2,8 +2,6 @@ package dynamo.backlog.tasks.files;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.core.model.DownloadableFile;
@@ -11,15 +9,12 @@ import dynamo.core.model.LogSuccess;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.DownloadableManager;
-import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.Video;
 import dynamo.model.backlog.find.FindSeasonTask;
 import dynamo.model.games.VideoGame;
 import dynamo.model.movies.Movie;
-import dynamo.model.music.MusicAlbum;
-import dynamo.model.result.SearchResult;
 import dynamo.model.tvshows.TVShowManager;
 import model.ManagedEpisode;
 
@@ -37,18 +32,10 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 	@Override
 	public void execute() throws Exception {
 		Downloadable downloadable = task.getDownloadable();	
-		boolean canDeletePath = true;
-		if ( downloadable instanceof MusicAlbum && downloadable.getPath() != null ) {
-			// FIXME
-			List<DownloadInfo> otherDownloads = downloadableDAO.findDownloadedByPath( downloadable.getPath() );
-			canDeletePath = (otherDownloads.size() == 1);
-		}
 
-		if (canDeletePath) {
-			List<DownloadableFile> allFiles = downloadableDAO.getAllFiles(downloadable.getId());
-			for (DownloadableFile downloadableFile : allFiles) {
-				queue( new DeleteTask( downloadableFile.getFilePath(), true ), false );
-			}
+		List<DownloadableFile> allFiles = downloadableDAO.getAllFiles(downloadable.getId());
+		for (DownloadableFile downloadableFile : allFiles) {
+			queue( new DeleteTask( downloadableFile.getFilePath(), true ), false );
 		}
 
 		// unschedule any associated tasks
@@ -82,8 +69,6 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 
 		if (downloadable instanceof Movie || downloadable instanceof VideoGame) {
 			DownloadableManager.getInstance().delete( downloadable.getId() );
-		} else {
-			downloadableDAO.nullifyPath( downloadable.getId() );
 		}
 	}
 

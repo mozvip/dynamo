@@ -14,8 +14,8 @@ public class Book extends Downloadable implements EBook {
 	private String author;
 	private Language language;
 
-	public Book(Long id, DownloadableStatus status, Path path, String coverImage, String aka, String name, String author, Language language, Date creationDate) {
-		super(id, name, status, path, coverImage, aka, creationDate);
+	public Book(Long id, DownloadableStatus status, String coverImage, String aka, String name, String author, Language language, Date creationDate) {
+		super(id, name, status, coverImage, aka, creationDate);
 		this.author = author;
 		this.language = language;
 	}
