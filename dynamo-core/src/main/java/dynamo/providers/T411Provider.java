@@ -165,10 +165,13 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	public List<SearchResult> findDownloadsForEpisode( String searchString, Language audioLanguage, int seasonNumber, int episodeNumber ) throws Exception {
 
 		String searchParams = String.format("%s S%02dE%02d", searchString, seasonNumber, episodeNumber);
+		
+		String additionalParams = "term[45][]=" + ( 967 + seasonNumber );
+		additionalParams += "term[46][]=" + ( 936 + episodeNumber );
 
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		results.addAll( searchVideo( searchParams, audioLanguage, 433, null ) );
-		results.addAll( searchVideo( searchParams, audioLanguage, 637, null ) );
+		results.addAll( searchVideo( searchParams, audioLanguage, 433, additionalParams ) );
+		results.addAll( searchVideo( searchParams, audioLanguage, 637, additionalParams ) );
 		return results;
 	}
 
@@ -182,11 +185,14 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		} else {
 			searches.add( String.format("%s", seriesName) );
 		}
-
+		
+		String additionalParams = "term[45][]=" + ( 967 + seasonNumber );
+		additionalParams += "&term[46][]=936";
+				
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		for (String search : searches) {
-			results.addAll( searchVideo( search, audioLanguage, 433, "term[46][]=936" ) );
-			results.addAll( searchVideo( search, audioLanguage, 637, "term[46][]=936" ) );
+			results.addAll( searchVideo( search, audioLanguage, 433, additionalParams ) );
+			results.addAll( searchVideo( search, audioLanguage, 637, additionalParams ) );
 		}
 		return results;
 
