@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.finders.core.TVShowSeasonProvider;
@@ -11,6 +12,7 @@ import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.FinderManager;
 import dynamo.model.backlog.core.FindDownloadableTask;
+import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.find.FindSeasonTask;
 import dynamo.model.result.SearchResult;
 import dynamo.model.tvshows.TVShowManager;
@@ -48,11 +50,18 @@ public class FindSeasonExecutor extends AbstractFindTVShowExecutor<TVShowSeason>
 
 	@Override
 	public void rescheduleTask(FindDownloadableTask<TVShowSeason> task) {
+		List<ManagedEpisode> episodes = TVShowManager.getInstance().findEpisodesForSeason( task.getDownloadable().getId() );
 		if ( mustReschedule ) {
 			// switch to episode search in this case
-			List<ManagedEpisode> episodes = TVShowManager.getInstance().findEpisodesForSeason( task.getDownloadable().getId() );
 			for (ManagedEpisode episode : episodes) {
 				DownloadableManager.getInstance().want( episode );
+			}
+		} else {
+			// search was successfull
+			for (ManagedEpisode episode : episodes) {
+				DownloadableManager.getInstance().snatched( episode );
+				// cancel search for individual episode
+				BackLogProcessor.getInstance().unschedule( FindEpisodeTask.class, "this.downloadable.id == " + episode.getId() );
 			}
 		}
 	}
