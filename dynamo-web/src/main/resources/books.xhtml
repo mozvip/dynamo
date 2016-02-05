@@ -18,17 +18,20 @@
 		<style>
 			.bookThumb {
 				border: none;
+				height: 350px;
 			}
 			
-			.bookCaption {
-				font-size: 12px;
-				font-weight: bold;
+			.bookThumb img {
+				max-height: 320px;
+			}
+			
+			.thumbnail .caption {
 				white-space: nowrap;
-				overflow: hidden;
+				text-align: center;
 			}
 			
 			.buttons {
-				position: absolute; right: 32px; top: 10px; width: 20px;
+				position: absolute; right: 32px; top: 10px;
 			}
 		</style>
 
@@ -72,7 +75,7 @@
 						<ui:fragment rendered="#{book.status != 'SUGGESTED' and book.status != 'DOWNLOADED'}">
 							<img class="bookCover" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
 						</ui:fragment>
-						<div class="caption bookCaption">#{book.name}</div>
+						<div class="caption">#{book.name}</div>
 					</div>
 					<div class="buttons">
 						<h:commandLink styleClass="btn btn-sm btn-danger" onclick="return (confirm('Are you sure you want to delete #{movies.fixName(book.name)} ?'));" rendered="#{book.status != 'SUGGESTED'}">

@@ -14,17 +14,20 @@
 		<style>
 			.magazineThumb {
 				border: none;
+				height: 350px;
 			}
 			
-			.magazineCaption {
-				font-size: 12px;
-				font-weight: bold;
+			.magazineThumb img {
+				max-height: 320px;
+			}
+			
+			.thumbnail .caption {
 				white-space: nowrap;
-				overflow: hidden;
+				text-align: center;
 			}
 
 			.buttons {
-				position: absolute; right: 32px; top: 10px; width: 20px;
+				position: absolute; right: 32px; top: 10px;
 			}
 		</style>
 		
@@ -44,7 +47,7 @@
 						<ui:fragment rendered="#{issue.status != 'DOWNLOADED'}">					
 							<img class="magazineCover" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
 						</ui:fragment>
-						<div class="caption magazineCaption">#{issue.name}</div>
+						<div class="caption">#{issue.name}</div>
 					</div>
 					<div class="buttons">
 						<ui:fragment rendered="#{issue.status == 'SUGGESTED'}">

@@ -34,7 +34,7 @@ public class CoverImageFinder {
 		return SingletonHolder.instance;
 	}	
 	
-	public String selectCoverImage( Iterable<Element> images, float targetRatio, int minHeight ) throws IOException, URISyntaxException {
+	public String selectCoverImage( Iterable<Element> images, float targetRatio, int minHeight ) throws URISyntaxException {
 			
 		String imageURL = null;
 		
@@ -56,37 +56,38 @@ public class CoverImageFinder {
 			}
 			
 			BufferedImage img = null;
+			String url = element.absUrl("src");
+			
+			Path p;
 			try {
-				
-				String url = element.absUrl("src");
-				
-				Path p = HTTPClient.getInstance().download( url, null, tempFolder, HTTPClient.REFRESH_ONE_MONTH );
-				if (p == null) {
-					continue;
-				}
-				try {
-				    img = ImageIO.read( p.toFile() );
-				} catch (Exception e) {
-					continue;
-				}
-				if (img == null) {
-					continue;
-				}
-
-				if (img.getHeight() < minHeight) {
-					continue;
-				}
-				
-				imageURL = url;
-
-			    float imageRatio = (float)img.getWidth() / img.getHeight();
-
-			    if ( Math.abs(imageRatio - targetRatio) < 0.20) {
-			    	return imageURL;
-			    }
-			    
+				p = HTTPClient.getInstance().download( url, null, tempFolder, HTTPClient.REFRESH_ONE_MONTH );
 			} catch (IOException e) {
+				ErrorManager.getInstance().reportThrowable(String.format("Error downloading URL %s", url ), e);
+				continue;
 			}
+			if (p == null) {
+				continue;
+			}
+			try {
+			    img = ImageIO.read( p.toFile() );
+			} catch (Exception e) {
+				continue;
+			}
+			if (img == null) {
+				continue;
+			}
+
+			if (img.getHeight() < minHeight) {
+				continue;
+			}
+			
+			imageURL = url;
+
+		    float imageRatio = (float)img.getWidth() / img.getHeight();
+
+		    if ( Math.abs(imageRatio - targetRatio) < 0.20) {
+		    	return imageURL;
+		    }
 		}
 		
 		return imageURL;

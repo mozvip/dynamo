@@ -35,6 +35,10 @@ public class ErrorManager {
 		reportThrowable( task, null, t );
 	}
 	
+	public void reportThrowable( String message, Throwable t ) {
+		reportThrowable( null, message, t );
+	}
+
 	public void logThrowable( Throwable t ) {
 		String messageToLog = String.format("%s : %s", t.toString(), t.getMessage());
 		logThrowable(messageToLog, null, t);
@@ -89,7 +93,7 @@ public class ErrorManager {
 	}
 
 	public void reportThrowable( Throwable t ) {
-		reportThrowable( null, t);
+		reportThrowable( (Task) null, t);
 	}
 
 	public List<LogItem> findLogItems(List<LogItemSeverity> filterSeverities) {
