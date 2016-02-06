@@ -92,6 +92,8 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	}
 
 	protected List<SearchResult> extractResults( String searchURL, int pages ) throws Exception {
+		
+		searchURL += "&order=added&type=desc";
 
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		WebDocument document = client.getDocument( searchURL, baseURL + "/", HTTPClient.REFRESH_ONE_HOUR );

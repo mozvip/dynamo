@@ -22,14 +22,19 @@
 		<style>
 			.thumbnail {
 				border: none;
+				height: 330px;
+			}
+			.imgThumb {
+				border: none;
+				height: 290px;
 			}
 			.thumbnail .caption {
 				white-space: nowrap;
 				text-align: center;
 			}
 			.buttons {
-				position: absolute; right: 32px; top: 10px; width: 20px;
-			}	
+				position: absolute; right: 32px; top: 10px;
+			}
 		</style>
 
 		<div id="manualSearch" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -127,8 +132,8 @@
 						</ui:fragment>
 					</div>
 					<div class="thumbnail">
-						<img class="img-responsive img-thumbnail" data-src="#{game.urlEncodedCoverImage}" alt="#{game.name}" />
-						<div class="caption videoGameCaption">
+						<img class="imgThumb" data-src="#{game.urlEncodedCoverImage}" alt="#{game.name}" />
+						<div class="caption">
 							<h5>#{game.name}</h5>
 							<ui:fragment rendered="#{empty games.platform}">
 								<p>#{game.platform.label}</p>

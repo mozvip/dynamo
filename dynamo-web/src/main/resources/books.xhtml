@@ -18,11 +18,11 @@
 		<style>
 			.bookThumb {
 				border: none;
-				height: 350px;
+				height: 320px;
 			}
 			
-			.bookThumb img {
-				height: 320px;
+			.imgThumb {
+				height: 290px;
 			}
 			
 			.thumbnail .caption {
@@ -64,16 +64,16 @@
 					<div class="thumbnail bookThumb">
 						<ui:fragment rendered="#{book.status == 'DOWNLOADED'}">
 							<a href="/download?id=#{book.id}" target="_blank">
-								<img data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+								<img class="imgThumb" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{book.status == 'SUGGESTED'}">
 							<a href="#" onclick="want('#{book.id}');">
-								<img data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+								<img class="imgThumb" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{book.status != 'SUGGESTED' and book.status != 'DOWNLOADED'}">
-							<img data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+							<img class="imgThumb" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
 						</ui:fragment>
 						<div class="caption">#{book.name}</div>
 					</div>
