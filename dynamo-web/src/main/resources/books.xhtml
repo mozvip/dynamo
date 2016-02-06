@@ -69,11 +69,11 @@
 						</ui:fragment>
 						<ui:fragment rendered="#{book.status == 'SUGGESTED'}">
 							<a href="#" onclick="want('#{book.id}');">
-								<img class="bookCover" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+								<img class="img-responsive img-thumbnail" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{book.status != 'SUGGESTED' and book.status != 'DOWNLOADED'}">
-							<img class="bookCover" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+							<img class="img-responsive img-thumbnail" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
 						</ui:fragment>
 						<div class="caption">#{book.name}</div>
 					</div>

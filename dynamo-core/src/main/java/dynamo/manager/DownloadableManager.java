@@ -113,13 +113,10 @@ public class DownloadableManager {
 	}	
 	
 	public void scheduleFind( Downloadable downloadable ) {
-		BackLogProcessor.getInstance().schedule( findDownloadableFactory.newInstance( downloadable ), true );
+		BackLogProcessor.getInstance().schedule( findDownloadableFactory.newInstance( downloadable ), false );
 	}
 	
 	public int updateStatus( Downloadable downloadable, DownloadableStatus newStatus ) {
-		if (downloadable.getStatus() == DownloadableStatus.SNATCHED && newStatus == DownloadableStatus.DOWNLOADED) {
-			DownloadableManager.getInstance().cancelDownload(downloadable);
-		}
 		return downloadableDAO.updateStatus(downloadable.getId(), newStatus);
 	}
 
@@ -240,8 +237,6 @@ public class DownloadableManager {
 		if (!Files.exists( destinationFolder )) {
 			Files.createDirectories( destinationFolder );
 		}
-
-		int fileIndex = 0;
 
 		for (Path source : sourceFiles) {
 			

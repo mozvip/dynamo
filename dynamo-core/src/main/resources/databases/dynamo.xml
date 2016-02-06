@@ -11,6 +11,7 @@
             <column name="NAME" type="VARCHAR(512)">
             	<constraints nullable="false"/>
             </column>
+            <column name="LABEL" type="VARCHAR(1024)" />
             <column name="STATUS" type="VARCHAR(50)"/>
             <column name="AKA" type="VARCHAR(2147483647)" />
 			<column name="XXX" type="BOOLEAN" defaultValueBoolean="false">
@@ -48,13 +49,11 @@
             <column name="SEARCHNAME" type="VARCHAR(512)">
                 <constraints primaryKey="true" primaryKeyName="PK_MAGAZINE"/>
             </column>
-            <column name="LANGUAGE" type="INT(10)">
+            <column name="LANGUAGE" type="INT(10)" />
+            <column name="NAME" type="VARCHAR(512)">
             	<constraints nullable="false"/>
            	</column>
-            <column name="NAME" type="VARCHAR(2147483647)">
-            	<constraints nullable="false"/>
-           	</column>
-            <column name="PATH" type="VARCHAR(2147483647)">
+            <column name="PATH" type="VARCHAR(1024)">
             	<constraints nullable="false"/>
            	</column>
             <column name="PERIODICITY" type="INT(10)"/>
@@ -73,6 +72,8 @@
             <column name="ISSUE" type="INT(10)"/>
             <column name="ISSUEDATE" type="date"/>
             <column name="SPECIAL" type="BOOLEAN(1)"/>
+			<column name="YEAR" type="INT"/>
+			<column name="LANGUAGE" type="VARCHAR(255)"/>
             <column name="MAGAZINE_SEARCHNAME" type="VARCHAR(2147483647)"/>
         </createTable>
     </changeSet>
@@ -366,21 +367,7 @@
     	<dropColumn tableName="SEARCHRESULTFILE" columnName="EXPIREDATE"/>
     </changeSet>
 
-	<changeSet author="mozvip" id="6">
-		<addColumn tableName="MAGAZINEISSUE">
-			<column name="PERIOD" type="VARCHAR(255)"/>
-		</addColumn>
-	</changeSet>
-	<changeSet author="mozvip" id="7">
-		<addColumn tableName="MAGAZINEISSUE">
-			<column name="YEAR" type="INT"/>
-		</addColumn>
-	</changeSet>
-	<changeSet author="mozvip" id="8">
-		<addColumn tableName="MAGAZINEISSUE">
-			<column name="LANGUAGE" type="VARCHAR(255)"/>
-		</addColumn>
-	</changeSet>
+
 	<changeSet author="mozvip" id="10">
 		<addColumn tableName="MUSICARTIST">
 			<column name="IMAGE" type="VARCHAR(255)"/>
@@ -392,11 +379,6 @@
     		<column name="BLACKLISTED" type="BOOLEAN(1)" />
     	</addColumn>
     </changeSet>
-    <changeSet author="mozvip" id="12">
-    	<addColumn tableName="MAGAZINEISSUE">
-    		<column name="CREATION_DATE" type="TIMESTAMP" />
-    	</addColumn>
-    </changeSet>
     <changeSet author="mozvip" id="13">
     	<modifyDataType tableName="MANAGEDSERIES" columnName="IMDBID" newDataType="VARCHAR(10)"/>
     	<modifyDataType tableName="MOVIE" columnName="IMDBID" newDataType="VARCHAR(10)"/>
@@ -405,14 +387,6 @@
     	<dropColumn tableName="SEARCHRESULT" columnName="DESTINATION"/>
     </changeSet>    
 
-    <changeSet author="mozvip" id="17">
-    	<dropColumn tableName="MAGAZINEISSUE" columnName="PERIOD"/>
-    </changeSet>
-    
-    <changeSet author="mozvip" id="20">
-    	<dropNotNullConstraint tableName="MAGAZINE" columnName="LANGUAGE" columnDataType="INT(10)"/>
-    </changeSet>
-    
     <changeSet author="mozvip" id="21">
         <createTable tableName="BOOK">
             <column name="ID" type="INT(10)">

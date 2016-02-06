@@ -45,7 +45,7 @@
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{issue.status != 'DOWNLOADED'}">					
-							<img class="magazineCover" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
+							<img class="img-responsive img-thumbnail" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
 						</ui:fragment>
 						<div class="caption">#{issue.name}</div>
 					</div>
