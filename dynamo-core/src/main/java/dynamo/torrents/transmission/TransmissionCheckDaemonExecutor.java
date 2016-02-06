@@ -12,6 +12,7 @@ import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
+import dynamo.model.DownloadableStatus;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 
@@ -90,8 +91,10 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 
 			if (!torrentFound) {
 				// torrent was deleted manually ?
-				if (downloadable.isDownloaded()) {
-					searchResultDAO.freeClientId(searchResult.getClientId());
+				searchResultDAO.freeClientId(searchResult.getClientId());
+				if ( downloadable.getStatus() == DownloadableStatus.SNATCHED){
+					DownloadableManager.getInstance().blackListSearchResult( searchResult.getUrl() );
+					DownloadableManager.getInstance().want(downloadable);
 				}
 			}
 		}

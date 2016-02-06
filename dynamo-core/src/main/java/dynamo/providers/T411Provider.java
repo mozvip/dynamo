@@ -179,25 +179,15 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 
 	@Override
 	public List<SearchResult> findDownloadsForSeason( String seriesName, Language audioLanguage, int seasonNumber ) throws Exception {
-
-		List<String> searches = new ArrayList<String>();
-		if (seasonNumber >= 0) {
-			searches.add( String.format("%s Saison %d", seriesName, seasonNumber) );
-			searches.add( String.format("%s S%02d", seriesName, seasonNumber) );
-		} else {
-			searches.add( String.format("%s", seriesName) );
-		}
 		
 		String additionalParams = "term[45][]=" + ( 967 + seasonNumber );
 		additionalParams += "&term[46][]=936";
 				
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		for (String search : searches) {
-			results.addAll( searchVideo( search, audioLanguage, 433, additionalParams ) );
-			results.addAll( searchVideo( search, audioLanguage, 637, additionalParams ) );
-		}
-		return results;
+		results.addAll( searchVideo( seriesName, audioLanguage, 433, additionalParams ) );
+		results.addAll( searchVideo( seriesName, audioLanguage, 637, additionalParams ) );
 
+		return results;
 	}
 
 	@Override
