@@ -12,7 +12,7 @@
 		<ui:include src="/fragment-filesDialog.xhtml" />
 
 		<style>
-			.magazineThumb {
+			.downloadableThumb {
 				border: none;
 				height: 350px;
 			}
@@ -38,7 +38,7 @@
 
 			<ui:repeat var="issue" value="#{pager.items}">
 				<div id="#{issue.id}" class="magazine col-lg-2 col-md-2 col-sm-3 col-xs-6">
-					<div class="thumbnail magazineThumb">
+					<div class="thumbnail downloadableThumb">
 						<ui:fragment rendered="#{issue.status == 'DOWNLOADED'}">					
 							<a href="/download?id=#{issue.id}" target="_blank">
 								<img data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />

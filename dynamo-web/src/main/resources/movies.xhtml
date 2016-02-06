@@ -17,11 +17,11 @@
 		<ui:include src="fragment-movie-search.xhtml" />
 	
 		<style>
-			.thumbnail {
+			.downloadableThumb {
 				border: none;
 				height: 330px;
 			}
-			.imgThumb {
+			.downloadableThumb img {
 				border: none;
 				height: 290px;
 			}
@@ -85,10 +85,10 @@
 							</a>
 						</h:panelGroup>
 					</div>
-					<div class="thumbnail">
+					<div class="thumbnail downloadableThumb">
 						<a href="http://www.imdb.com/title/#{movie.imdbID}" class="poster" title="#{movie.name}"
 							target="_blank">
-							<img class="imgThumb" data-src="#{movie.urlEncodedCoverImage}" alt="#{movie.name}" />
+							<img data-src="#{movie.urlEncodedCoverImage}" alt="#{movie.name}" />
 						</a>
 						<div class="caption">
 							<span>#{movie.name} (#{movie.year})</span>

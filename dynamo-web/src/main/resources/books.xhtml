@@ -16,12 +16,12 @@
 		<ui:include src="fragment-filesDialog.xhtml" />
 
 		<style>
-			.bookThumb {
+			.downloadableThumb {
 				border: none;
 				height: 320px;
 			}
 			
-			.imgThumb {
+			.downloadableThumb img {
 				height: 290px;
 			}
 			
@@ -61,19 +61,19 @@
 
 			<ui:repeat var="book" value="#{pager.items}">
 				<div class="book col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{book.id}">
-					<div class="thumbnail bookThumb">
+					<div class="thumbnail downloadableThumb">
 						<ui:fragment rendered="#{book.status == 'DOWNLOADED'}">
 							<a href="/download?id=#{book.id}" target="_blank">
-								<img class="imgThumb" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+								<img data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{book.status == 'SUGGESTED'}">
 							<a href="#" onclick="want('#{book.id}');">
-								<img class="imgThumb" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+								<img data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{book.status != 'SUGGESTED' and book.status != 'DOWNLOADED'}">
-							<img class="imgThumb" data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+							<img data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
 						</ui:fragment>
 						<div class="caption">#{book.name}</div>
 					</div>

@@ -20,11 +20,11 @@
 		</f:metadata>
 
 		<style>
-			.thumbnail {
+			.downloadableThumb {
 				border: none;
 				height: 330px;
 			}
-			.imgThumb {
+			.downloadableThumb img {
 				border: none;
 				height: 290px;
 			}
@@ -131,8 +131,8 @@
 							</a>
 						</ui:fragment>
 					</div>
-					<div class="thumbnail">
-						<img class="imgThumb" data-src="#{game.urlEncodedCoverImage}" alt="#{game.name}" />
+					<div class="thumbnail downloadableThumb">
+						<img data-src="#{game.urlEncodedCoverImage}" alt="#{game.name}" />
 						<div class="caption">
 							<h5>#{game.name}</h5>
 							<ui:fragment rendered="#{empty games.platform}">
