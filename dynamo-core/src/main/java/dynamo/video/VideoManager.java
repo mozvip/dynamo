@@ -79,7 +79,7 @@ public class VideoManager {
 				if (language != null) {
 					mediaInfo.addAudioLanguage(language);
 				} else {
-					ErrorManager.getInstance().reportWarning("Unrecognized language : " + l);
+					ErrorManager.getInstance().reportWarning("Unrecognized language : " + l, true);
 				}
 			}
 		}
@@ -93,7 +93,7 @@ public class VideoManager {
 				if (language != null) {
 					mediaInfo.addSubtitle(language);
 				} else {
-					ErrorManager.getInstance().reportWarning("Unrecognized language : " + l);
+					ErrorManager.getInstance().reportWarning("Unrecognized language : " + l, true);
 				}
 			}
 		}

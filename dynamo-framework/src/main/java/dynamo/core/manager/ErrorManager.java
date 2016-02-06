@@ -72,7 +72,7 @@ public class ErrorManager {
 	}
 
 	public void reportWarning( String message ) {
-		reportWarning( null, message, false );
+		reportWarning( null, message, true );
 	}
 
 	public void reportWarning( String message, boolean logOnly ) {

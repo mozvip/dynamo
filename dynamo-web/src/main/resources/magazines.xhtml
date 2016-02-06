@@ -41,11 +41,11 @@
 					<div class="thumbnail magazineThumb">
 						<ui:fragment rendered="#{issue.status == 'DOWNLOADED'}">					
 							<a href="/download?id=#{issue.id}" target="_blank">
-								<img class="img-responsive img-thumbnail" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
+								<img data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{issue.status != 'DOWNLOADED'}">					
-							<img class="img-responsive img-thumbnail" data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
+							<img data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
 						</ui:fragment>
 						<div class="caption">#{issue.name}</div>
 					</div>
