@@ -12,6 +12,7 @@ import dynamo.core.model.HistoryDAO;
 import dynamo.core.model.TaskExecutor;
 import dynamo.core.model.video.VideoMetaData;
 import dynamo.jdbi.TVShowDAO;
+import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import dynamo.model.tvshows.TVShowManager;
@@ -19,7 +20,7 @@ import dynamo.video.VideoManager;
 import model.ManagedEpisode;
 import model.ManagedSeries;
 
-public class FindSubtitleEpisodeBackLogTask extends TaskExecutor<FindSubtitleEpisodeTask> {
+public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisodeTask> {
 	
 	private HistoryDAO historyDAO;
 	private TVShowDAO tvShowDAO;
@@ -27,7 +28,7 @@ public class FindSubtitleEpisodeBackLogTask extends TaskExecutor<FindSubtitleEpi
 	private ManagedEpisode episode;
 	private ManagedSeries series;
 	
-	public FindSubtitleEpisodeBackLogTask( FindSubtitleEpisodeTask item, TVShowDAO tvShowDAO, HistoryDAO historyDAO ) {
+	public FindSubtitleEpisodeExecutor( FindSubtitleEpisodeTask item, TVShowDAO tvShowDAO, HistoryDAO historyDAO ) {
 		super(item);
 		this.tvShowDAO = tvShowDAO;
 		this.historyDAO = historyDAO;
@@ -85,6 +86,9 @@ public class FindSubtitleEpisodeBackLogTask extends TaskExecutor<FindSubtitleEpi
 				String message = String.format("Subtitles for <a href='%s'>%s</a> have been found", episode.getRelativeLink(), episode.toString());
 				historyDAO.insert( message, DownloadableStatus.SUBTITLED, episode.getId() );
 				EventManager.getInstance().reportSuccess( message );
+				
+				// add subtitles to the list of files for this downloadable
+				DownloadableManager.getInstance().addFile( episode.getId(), destinationSRT, 1 );
 
 				break;				
 			}

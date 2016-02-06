@@ -169,7 +169,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		String searchParams = String.format("%s S%02dE%02d", searchString, seasonNumber, episodeNumber);
 		
 		String additionalParams = "term[45][]=" + ( 967 + seasonNumber );
-		additionalParams += "term[46][]=" + ( 936 + episodeNumber );
+		additionalParams += "&term[46][]=" + ( 936 + episodeNumber );
 
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		results.addAll( searchVideo( searchParams, audioLanguage, 433, additionalParams ) );
