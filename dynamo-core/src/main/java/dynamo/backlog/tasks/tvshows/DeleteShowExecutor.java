@@ -42,6 +42,7 @@ public class DeleteShowExecutor extends TaskExecutor<DeleteShowTask> {
 						return FileVisitResult.CONTINUE;
 					}
 				});
+				Files.deleteIfExists( series.getFolder() );
 			}
 		}
 	}
