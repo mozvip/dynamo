@@ -14,10 +14,6 @@ public class BlackListArtistTask extends Task {
 		return artistName;
 	}
 	
-	public void setArtistName(String artistName) {
-		this.artistName = artistName;
-	}
-	
 	@Override
 	public String toString() {
 		return String.format("Black-listing music artist : %s", artistName); 

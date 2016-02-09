@@ -15,6 +15,7 @@ import dynamo.model.Video;
 import dynamo.model.backlog.find.FindSeasonTask;
 import dynamo.model.games.VideoGame;
 import dynamo.model.movies.Movie;
+import dynamo.model.music.MusicAlbum;
 import dynamo.model.tvshows.TVShowManager;
 import model.ManagedEpisode;
 
@@ -67,7 +68,7 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 			}
 		}
 
-		if (downloadable instanceof Movie || downloadable instanceof VideoGame) {
+		if (downloadable instanceof Movie || downloadable instanceof VideoGame || downloadable instanceof MusicAlbum) {
 			DownloadableManager.getInstance().delete( downloadable.getId() );
 		}
 	}

@@ -19,7 +19,7 @@ public class BlackListArtistTaskExecutor extends TaskExecutor<BlackListArtistTas
 	@Override
 	public void execute() throws Exception {
 		musicDAO.blackList( task.getArtistName() );
-		List<MusicAlbum> albums = musicDAO.findDownloadedAlbumsForArtist( task.getArtistName() );
+		List<MusicAlbum> albums = musicDAO.findAllAlbumsForArtist( task.getArtistName() );
 		if (albums != null) {
 			for (MusicAlbum album : albums) {
 				queue( new DeleteDownloadableTask( album ));
