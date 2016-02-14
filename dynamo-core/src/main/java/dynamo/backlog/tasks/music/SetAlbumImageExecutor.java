@@ -24,15 +24,20 @@ public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 		
 		long albumId = task.getMusicAlbum().getId();
 		
+		Path albumPath = null;
+		
 		DownloadableManager.getInstance().updateCoverImage( albumId, task.getLocalImagePath() );
 		List<MusicFile> files = musicDAO.findMusicFiles( albumId );
 		if (files != null && files.size() > 0) {
 			for (MusicFile file : files) {
+				if (albumPath == null) {
+					albumPath = file.getPath().getParent();
+				}
 				queue( new SynchronizeMusicTagsTask( file.getPath() ), false );	// update file tag
 			}
 		}
 
-		Path folderJpg = task.getMusicAlbum().getPath().resolve("folder.jpg");
+		Path folderJpg = albumPath.resolve("folder.jpg");
 		Path sourceImage = LocalImageCache.getInstance().resolveLocal( task.getLocalImagePath() );
 		
 		queue( new CopyFileTask(sourceImage, folderJpg, task.getMusicAlbum()), false );
