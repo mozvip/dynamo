@@ -25,6 +25,7 @@ public class MovieMapper implements ResultSetMapper<Movie> {
 				r.getString("COVER_IMAGE"),
 				r.getString("AKA"),
 				r.getString("NAME"),
+				r.getString("LABEL"),
 				MapperUtils.getPath(r, "SUBTITLESPATH"),
 				r.getBoolean("SUBTITLED"),
 				MapperUtils.getEnum(r, "WANTEDQUALITY", VideoQuality.class),

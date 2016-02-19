@@ -12,7 +12,7 @@ public class TVShowSeason extends Downloadable {
 	private int season;
 
 	public TVShowSeason( Long id, DownloadableStatus status, String seriesId, String name, int seasonNumber) {
-		super(id, name, status, null, null, null);
+		super(id, name, null, status, null, null, null);
 		this.seriesId = seriesId;
 		this.season = seasonNumber;
 	}

@@ -30,6 +30,9 @@ public interface DownloadableDAO {
 	@SqlUpdate("UPDATE DOWNLOADABLE SET NAME = :name WHERE ID = :downloadableId")
 	public void updateName( @Bind("downloadableId") long downloadableId, @Bind("name") String name);
 
+	@SqlUpdate("UPDATE DOWNLOADABLE SET LABEL = :label WHERE ID = :downloadableId")
+	public void updateLabel( @Bind("downloadableId") long downloadableId, @Bind("label") String label);
+
 	@SqlUpdate("UPDATE DOWNLOADABLE SET COVER_IMAGE = :coverImage WHERE ID = :downloadableId")
 	public void updateCoverImage( @Bind("downloadableId") long downloadableId, @Bind("coverImage") String coverImage );
 

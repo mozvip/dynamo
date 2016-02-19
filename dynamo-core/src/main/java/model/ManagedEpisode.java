@@ -37,9 +37,9 @@ public class ManagedEpisode extends Downloadable implements Video {
 			VideoQuality quality, VideoSource source,
 			String releaseGroup, String seriesId, long seasonId, int seasonNumber,
 			int episodeNumber, Integer absoluteNumber, String episodeName,
-			Date firstAired, boolean subtitled, boolean watched) {
+			Date firstAired, boolean subtitled, boolean watched, String label) {
 
-		super(id, episodeName, status, null, null, null);
+		super(id, episodeName, label, status, null, null, null);
 		
 		this.seriesName = seriesName;
 		this.subtitlesPath = subtitlesPath;

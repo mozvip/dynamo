@@ -28,7 +28,7 @@ public class ManagedEpisodeMapper implements ResultSetMapper<ManagedEpisode> {
 				r.getLong("SEASON_ID"), r.getInt("SEASON"),
 				r.getInt("EPISODENUMBER"), r.getInt("ABSOLUTENUMBER"),
 				r.getString("NAME"), r.getDate("FIRSTAIRED"),
-				r.getBoolean("SUBTITLED"), r.getBoolean("WATCHED"));
+				r.getBoolean("SUBTITLED"), r.getBoolean("WATCHED"), r.getString("LABEL"));
 	}
 
 }

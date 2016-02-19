@@ -59,7 +59,7 @@ public class FindSeasonExecutor extends AbstractFindTVShowExecutor<TVShowSeason>
 		} else {
 			// search was successfull
 			for (ManagedEpisode episode : episodes) {
-				DownloadableManager.getInstance().snatched( episode );
+				DownloadableManager.getInstance().snatched( episode, selectedResult );
 				// cancel search for individual episode
 				BackLogProcessor.getInstance().unschedule( FindEpisodeTask.class, "this.downloadable.id == " + episode.getId() );
 			}

@@ -146,14 +146,20 @@ public class DownloadableManager {
 		}
 	}
 	
-	public void snatched( Downloadable downloadable ) {
-		DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SNATCHED,
-				String.format("<a href='%s'>%s</a> has been snatched", downloadable.getRelativeLink(), downloadable.toString()) );
-	}
-	
 	public void snatched( Downloadable downloadable, SearchResult result ) {
-		DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SNATCHED,
-				String.format("<a href='%s'>%s</a> has been snatched from %s : %s", downloadable.getRelativeLink(), downloadable.toString(), result.getProviderName(), result.getTitle()) );
+		
+		if (result != null) {
+		
+			DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SNATCHED,
+					String.format("<a href='%s'>%s</a> has been snatched from %s : %s", downloadable.getRelativeLink(), downloadable.toString(), result.getProviderName(), result.getTitle()) );
+			downloadableDAO.updateLabel(downloadable.getId(), result.getTitle());
+			
+		} else {
+			
+			DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SNATCHED,
+					String.format("<a href='%s'>%s</a> has been snatched", downloadable.getRelativeLink(), downloadable.toString()) );
+			
+		}
 	}
 
 	public void newFile( Task task, Downloadable downloadable, Path newFile ) {

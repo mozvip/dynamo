@@ -106,7 +106,10 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 			if (existingEpisode == null) {
 			
 				existingEpisode = new ManagedEpisode(
-						DownloadableManager.getInstance().createDownloadable( ManagedEpisode.class, episode.getEpisodeName(), null, newStatusForEpisode ), newStatusForEpisode, series.getName(), null, null, null, null, episode.getSeriesId(), seasonId, episode.getSeasonNumber(), episode.getEpisodeNumber(), null, episode.getEpisodeName(), firstAiredDate, false, false );
+						DownloadableManager.getInstance().createDownloadable( ManagedEpisode.class, episode.getEpisodeName(), null,
+								newStatusForEpisode ), newStatusForEpisode, series.getName(), null, null, null, null,
+						episode.getSeriesId(), seasonId, episode.getSeasonNumber(), episode.getEpisodeNumber(), null,
+						episode.getEpisodeName(), firstAiredDate, false, false, null );
 			
 			} else if ( existingEpisode.getStatus() == DownloadableStatus.FUTURE && newStatusForEpisode != DownloadableStatus.FUTURE) {
 				
@@ -122,15 +125,11 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 			
 			}
 
-			existingEpisode.setFirstAired( firstAiredDate );
-			existingEpisode.setName( episode.getEpisodeName() );
-			existingEpisode.setEpisodeNumber( episode.getEpisodeNumber() );
-
 			if (StringUtils.isNotBlank(episode.getAbsoluteNumber())) {
 				existingEpisode.setAbsoluteNumber( Integer.parseInt( episode.getAbsoluteNumber() ) );
 			}
 
-			tvShowDAO.saveEpisode( existingEpisode.getId(), existingEpisode.getEpisodeNumber(), existingEpisode.getFirstAired(), existingEpisode.getQuality(), existingEpisode.getReleaseGroup(),  
+			tvShowDAO.saveEpisode( existingEpisode.getId(), episode.getEpisodeNumber(), firstAiredDate, existingEpisode.getQuality(), existingEpisode.getReleaseGroup(),  
 				 	existingEpisode.getSource(), existingEpisode.isSubtitled(),  existingEpisode.getSubtitlesPath(), existingEpisode.isWatched(), existingEpisode.getSeasonId() );
 		}
 		

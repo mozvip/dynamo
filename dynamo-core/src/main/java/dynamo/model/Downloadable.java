@@ -12,13 +12,15 @@ public abstract class Downloadable {
 	private String name;
 	private DownloadableStatus status = DownloadableStatus.IGNORED;
 	private String type;
+	private String label;
 	private String coverImage;
 	private String aka;
 	private Date creationDate;
 
-	public Downloadable(Long id, String name, DownloadableStatus status, String coverImage, String aka, Date creationDate) {
+	public Downloadable(Long id, String name, String label, DownloadableStatus status, String coverImage, String aka, Date creationDate) {
 		this.id = id;
 		this.name = name;
+		this.label = label;
 		this.status = status;
 		this.coverImage = coverImage;
 		this.aka = aka;
@@ -36,7 +38,11 @@ public abstract class Downloadable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	public String getLabel() {
+		return label;
+	}
+	
 	public DownloadableStatus getStatus() {
 		return status;
 	}

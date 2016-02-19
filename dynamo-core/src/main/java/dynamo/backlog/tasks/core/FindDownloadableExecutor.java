@@ -25,6 +25,7 @@ public abstract class FindDownloadableExecutor<T extends Downloadable> extends T
 	
 	protected boolean mustReschedule = false;	
 	private SearchResultDAO searchResultDAO = null;
+	protected SearchResult selectedResult = null;
 
 	public final static int SCORE_THRESHOLD = 10;
 
@@ -162,7 +163,10 @@ public abstract class FindDownloadableExecutor<T extends Downloadable> extends T
 
 	}
 
-	protected void selectResult(SearchResult selectedResult) {
+	protected void selectResult(SearchResult result) {
+		
+		this.selectedResult = result;
+		
 		searchResultDAO.save(
 				selectedResult.getUrl(),
 				selectedResult.getProviderName(),

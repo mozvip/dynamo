@@ -291,7 +291,7 @@ public class MovieManager implements Reconfigurable {
 				}
 			}
 
-			movie = new Movie( downloadableId, status, coverImage, null, movieDb.getTitle(), null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, movieDb.getVoteAverage(), year, watched );
+			movie = new Movie( downloadableId, status, coverImage, null, movieDb.getTitle(), null, null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, movieDb.getVoteAverage(), year, watched );
 		}
 		associate( movie, movieDb );
 		save( movie );

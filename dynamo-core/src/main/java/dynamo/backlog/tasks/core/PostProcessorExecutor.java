@@ -283,7 +283,7 @@ public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> i
 							}
 
 							for (ManagedEpisode episode : associatedEpisodes) {
-								DownloadableManager.getInstance().snatched( episode );
+								DownloadableManager.getInstance().snatched( episode, null );
 							}
 							
 						}

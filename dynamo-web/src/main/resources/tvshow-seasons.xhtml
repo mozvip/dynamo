@@ -55,6 +55,9 @@
 				<h:outputText class="hidden-xs" value="#{episode.name}" />
 			</h:column>
 			<h:column>
+				<h:outputText class="hidden-xs" value="#{episode.label}" />
+			</h:column>
+			<h:column>
 				<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{episode.status == 'DOWNLOADED' or episode.status == 'SNATCHED'}" action="#{tvshow.redownload(episode)}" onclick="return confirm('Are you sure you want to redownload this episode ?');"
 					title="Re-download episode">
 					<f:ajax execute="@form" render="@form" />
