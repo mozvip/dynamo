@@ -1,6 +1,7 @@
 package dynamo.parsers;
 
 import dynamo.core.Language;
+import dynamo.parsers.magazines.MagazineNameParser;
 
 public enum DayParser {
 

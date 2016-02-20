@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import dynamo.parsers.magazines.MagazineNameParser;
 import dynamo.tests.AbstractDynamoTest;
 import junit.framework.Assert;
 

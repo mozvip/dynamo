@@ -31,7 +31,7 @@ public class EBookW implements KioskIssuesSuggester {
 				Elements imageElement = shortNews.select("img");
 				if (imageElement != null && imageElement.size() > 0) {
 					String coverImage = imageElement.first().absUrl("src");
-					String title = shortNews.select("strong").text();
+					String title = imageElement.attr("title");
 	
 					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, null, -1.0f, toString(), null, false));
 				}

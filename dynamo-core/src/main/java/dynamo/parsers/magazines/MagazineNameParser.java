@@ -1,28 +1,60 @@
-package dynamo.parsers;
+package dynamo.parsers.magazines;
 
+import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import core.RegExp;
 import dynamo.core.Language;
+import dynamo.core.manager.ErrorManager;
+import dynamo.parsers.DayParser;
 import dynamo.utils.DynamoStringUtils;
 
 public class MagazineNameParser {
 	
-	public final static String NAME_REGEXP = "[…ÈË‡Í«Á!&,í'\\[\\]\\w\\s\\.\\d\\-:Ω\\+\\?#∞]+";
-	public final static String SEPARATOR_REGEXP = "[\\s\\.\\-ñ_\\/]+";	
+	public static String NAME_REGEXP = "[…ÈË‡Í«Á!&,í'\\[\\]\\w\\s\\.\\d\\-:Ω\\+\\?#∞]+";
+	public static String SEPARATOR_REGEXP = "[\\s\\.\\-ñ_\\/]+";	
 
-	public final static String DAY_SEPARATOR_REGEXP = "[\\s\\-ñ_]+";	
-	public final static String MONTH = "(\\d{1,2}|[\\w…È˚]+)";
-	public final static String MONTH_LABEL = "[\\w…È˚]+";
+	public static String DAY_SEPARATOR_REGEXP = "[\\s\\-ñ_]+";	
+	public static String MONTH = "(\\d{1,2}|[\\w…È˚]+)";
+	public static String MONTH_LABEL = "[\\w…È˚]+";
 	
-	static String[] monthRegexps = new String[] {
+	private Map<String, MagazineMetadata> magazineNameMetaData = new HashMap<>();
+	
+	String[] monthRegexps = new String[] {
 		"(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(\\w+)" + SEPARATOR_REGEXP + "(\\d{4})"
 	};
 	
-	private static MagazineIssueInfo parseSecondPass( MagazineIssueInfo issueInfo ) {
+	static class SingletonHolder {
+		static MagazineNameParser instance = new MagazineNameParser();
+	}
+
+	public static MagazineNameParser getInstance() {
+		return SingletonHolder.instance;
+	}
+	
+	private MagazineNameParser() {
+		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			MagazinesMetadata json = mapper.readValue( this.getClass().getClassLoader().getResource("magazines-metadata.json"), MagazinesMetadata.class );
+			for (MagazineMetadata magazine : json.getMagazines()) {
+				magazineNameMetaData.put(magazine.getName().toUpperCase(), magazine);
+			}
+		} catch (IOException e) {
+			ErrorManager.getInstance().reportThrowable( e );
+		}
+		
+		
+	}
+	
+	private MagazineIssueInfo parseSecondPass( MagazineIssueInfo issueInfo ) {
 		
 		String magazineName = issueInfo.getMagazineName();
 		
@@ -41,6 +73,16 @@ public class MagazineNameParser {
 		
 		if (RegExp.matches( issueInfo.getIssueName(), ".*Hors-SÈrie.*")) {
 			issueInfo.setLanguage(Language.FR);
+		}
+		
+		if (magazineNameMetaData.containsKey( magazineName.toUpperCase() )) {
+			MagazineMetadata magazineMetadata = magazineNameMetaData.get( magazineName.toUpperCase() );
+			if (magazineMetadata.getLanguage() != null) {
+				issueInfo.setLanguage( magazineMetadata.getLanguage() );
+			}
+			if (magazineMetadata.getActualName() != null) {
+				magazineName = magazineMetadata.getActualName();
+			}
 		}
 
 		issueInfo = new MagazineIssueInfo( magazineName, issueInfo.getLanguage(), issueInfo.getIssueName(), issueInfo.getDay(), issueInfo.getMonth(), issueInfo.getYear(), issueInfo.getSeason(), issueInfo.getIssueNumber(), issueInfo.getFormat() );
@@ -101,7 +143,7 @@ public class MagazineNameParser {
 			format = "epub";
 		}
 
-		// replace all parenthesis () and brackets [] and {} by spaces
+		// replace all parenthesis (), brackets [] and {} by spaces
 		title = title.replaceAll("[\\(\\)\\[\\]\\{\\}]", " ").trim();
 
 		title = RegExp.clean(title, nameCleaners);
@@ -322,7 +364,7 @@ public class MagazineNameParser {
 		return new MagazineIssueInfo(remainingString, issueLanguage, title, day, month, year, season, issueNumber, format );
 	}
 	
-	public static MagazineIssueInfo getIssueInfo(String title) {
+	public MagazineIssueInfo getIssueInfo(String title) {
 		MagazineIssueInfo issueInfo = parseIssueInfo(title);
 		issueInfo = parseSecondPass(issueInfo);
 		return issueInfo;

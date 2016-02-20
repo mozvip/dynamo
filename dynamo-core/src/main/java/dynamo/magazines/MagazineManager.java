@@ -21,8 +21,8 @@ import dynamo.model.DownloadSuggestion;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.magazines.Magazine;
 import dynamo.model.magazines.MagazineIssue;
-import dynamo.parsers.MagazineIssueInfo;
-import dynamo.parsers.MagazineNameParser;
+import dynamo.parsers.magazines.MagazineIssueInfo;
+import dynamo.parsers.magazines.MagazineNameParser;
 import dynamo.webapps.googleimages.GoogleImages;
 
 public class MagazineManager implements Reconfigurable {
@@ -163,7 +163,7 @@ public class MagazineManager implements Reconfigurable {
 	}
 	
 	public MagazineIssue createIssue( Magazine magazine, String rawIssueName, String coverImage ) {
-		MagazineIssueInfo info = MagazineNameParser.getIssueInfo( rawIssueName );
+		MagazineIssueInfo info = MagazineNameParser.getInstance().getIssueInfo( rawIssueName );
 		DownloadableStatus status = magazine.isAutoDownload() ? DownloadableStatus.WANTED : DownloadableStatus.IGNORED;
 		MagazineIssue issue = new MagazineIssue(
 				null, status, null, magazine.getSearchName(), magazine.getLanguage(), rawIssueName, info.getIssueDate(), info.getYear(), info.getIssueNumber(), info.isSpecial(), coverImage, new Date() );
@@ -179,7 +179,7 @@ public class MagazineManager implements Reconfigurable {
 	}
 	
 	public synchronized void suggest( DownloadSuggestion suggestion ) {
-		MagazineIssueInfo issueInfo = MagazineNameParser.getIssueInfo( suggestion.getTitle() );
+		MagazineIssueInfo issueInfo = MagazineNameParser.getInstance().getIssueInfo( suggestion.getTitle() );
 		
 		if ( issueInfo == null || issueInfo.getMagazineName() == null ) {
 			ErrorManager.getInstance().reportWarning( String.format("Impossible to parse magazine issue info from : %s", suggestion.getTitle()), true); 

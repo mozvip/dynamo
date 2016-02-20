@@ -1,14 +1,131 @@
 {
-	"magazine": {
-		"name": "La Gazzetta dello Sport",
-		"language": "IT"
-	},
-	"magazine": {
-		"name": "Corriere dello Sport",
-		"language": "IT"
-	},
-	"magazine": {
-		"name": "Tutto Sport",
-		"language": "IT"
-	}	
+	"magazines": [
+		{
+			"name": "La Gazzetta dello Sport",
+			"language": "IT"
+		}
+		,{
+			"name": "Corriere dello Sport",
+			"language": "IT"
+		}
+		,{
+			"name": "Tutto Sport",
+			"language": "IT"
+		}	
+		,{
+			"name": "Elle France",
+			"language": "FR",
+			"actualName" : "Elle"
+		}
+		,{
+			"name": "Public France",
+			"language": "FR",
+			"actualName" : "Public"
+		}
+		,{
+			"name": "Closer France",
+			"language": "FR",
+			"actualName" : "Closer"
+		}
+		,{
+			"name": "Psychologies France",
+			"language": "FR",
+			"actualName" : "Psychologies"
+		}
+		,{
+			"name": "Psychologies Magazine",
+			"language": "FR",
+			"actualName" : "Psychologies"
+		}
+		,{
+			"name": "Grazia France",
+			"language": "FR",
+			"actualName" : "Grazia"
+		}
+		,{
+			"name": "NW Magazine",
+			"language": "EN",
+			"actualName" : "NW"
+		}
+		,{
+			"name": "Vogue France",
+			"language": "FR",
+			"actualName" : "Vogue"
+		}
+		,{
+			"name": "GQ France",
+			"language": "FR",
+			"actualName" : "GQ"
+		}
+		,{
+			"name": "Bike France",
+			"language": "FR",
+			"actualName" : "Bike"
+		}
+		,{
+			"name": "T3 France",
+			"language": "FR",
+			"actualName" : "T3 High Tech Magazine"
+		}
+		,{
+			"name": "Playboy Nederland",
+			"language": "NL",
+			"actualName" : "Playboy"
+		}
+		,{
+			"name": "Playboy Netherlands",
+			"language": "NL",
+			"actualName" : "Playboy"
+		}
+		,{
+			"name": "TopGear Nederland",
+			"language": "NL",
+			"actualName" : "Top Gear"
+		}
+		,{
+			"name": "Top Gear Netherlands",
+			"language": "NL",
+			"actualName" : "Top Gear"
+		}
+		,{
+			"name": "Motor Sport France",
+			"language": "FR",
+			"actualName" : "Motor Sport"
+		}
+		,{
+			"name": "Auto Plus France",
+			"language": "FR",
+			"actualName" : "Auto Plus"
+		}
+		,{
+			"name": "Marie Claire France",
+			"language": "FR",
+			"actualName" : "Marie Claire"
+		}
+		,{
+			"name": "Cosmopolitan France",
+			"language": "FR",
+			"actualName" : "Cosmopolitan"
+		}
+		,{
+			"name": "Men's Fitness France",
+			"language": "FR",
+			"actualName" : "Men's Fitness"
+		}
+		,{
+			"name": "Gala France",
+			"language": "FR",
+			"actualName" : "Gala"
+		}
+		,{
+			"name": "Bella UK",
+			"language": "EN",
+			"actualName" : "Bella"
+		}
+		,{
+			"name": "Fr Sie",
+			"language": "DE",
+			"actualName" : "Für Sie"
+		}
+	]
 }
