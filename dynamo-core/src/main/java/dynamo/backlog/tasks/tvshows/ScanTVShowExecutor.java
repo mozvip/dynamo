@@ -111,6 +111,8 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 							}
 						}
 
+						downloadableDAO.updateLabel( managedEpisode.getId(), p.getFileName().toString() );
+
 						TVShowManager.getInstance().saveEpisode( managedEpisode );
 						
 						VideoManager.getInstance().getMetaData(managedEpisode, p);
@@ -123,7 +125,7 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 
 	@Override
 	public void execute() throws IOException, InterruptedException {
-		
+
 		// cleanup
 		tvShowDAO.deleteUnrecognizedFiles( task.getSeries().getId() );
 
@@ -135,7 +137,7 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 				if (episodePaths != null && !episodePaths.isEmpty()) {
 					for (Path path : episodePaths) {
 						if (Files.exists( path)) {
-							if (VideoFileFilter.getInstance().accept(path)) {
+							if (VideoFileFilter.getInstance().accept(path) && !path.getFileName().toString().contains("-sample")) {
 								videoFileFound = true;
 							}
 						} else {

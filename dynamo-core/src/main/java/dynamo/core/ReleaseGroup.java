@@ -49,6 +49,7 @@ public enum ReleaseGroup {
 	IMMERSE( new String[] {"immerse", ".IMM."} ),
 	CTRLHD( new String[] {"ctrlhd", "CtrlHD", "ctrl"} ),
 	NFHD(new String[] {"NFHD"} ),
+	NESTA(new String[] {"NESTA"} ),
 	TLA(new String[] {"tla"} ),
 	SINNERS( new String[] {"sinners"} ),
 	NOTV( new String[] {".notv.", "-notv.", "NoTV"} ),

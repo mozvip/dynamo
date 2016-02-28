@@ -23,6 +23,16 @@
 			"actualName" : "Public"
 		}
 		,{
+			"name": "NEWLOOK France",
+			"language": "FR",
+			"actualName" : "Newlook"
+		}
+		,{
+			"name": "Lui France",
+			"language": "FR",
+			"actualName" : "Lui"
+		}
+		,{
 			"name": "Closer France",
 			"language": "FR",
 			"actualName" : "Closer"
