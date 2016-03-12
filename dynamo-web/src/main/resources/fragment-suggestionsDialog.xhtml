@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://xmlns.jcp.org/jsf/passthrough" lang="en">
+
+<h:form id="showSuggestionsForm">
+	<div id="suggestionsList" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Suggestions List</h4>
+				</div>
+				<div class="modal-body">
+					<table id="suggestionsListTable" class="table table-condensed">
+						<thead>
+							<tr>
+								<th>URL</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</h:form>
+
+<script src="fragment-suggestionsDialog.js" />
+</html>

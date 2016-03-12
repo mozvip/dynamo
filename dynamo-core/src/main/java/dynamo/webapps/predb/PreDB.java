@@ -9,7 +9,6 @@ import org.jsoup.select.Elements;
 import core.RegExp;
 import core.WebDocument;
 import dynamo.core.Language;
-import dynamo.model.DownloadableStatus;
 import dynamo.model.movies.MovieManager;
 import dynamo.parsers.MovieInfo;
 import dynamo.parsers.VideoNameParser;
@@ -58,18 +57,20 @@ public class PreDB implements MovieSuggester {
 				
 				String id = element.attr("id");
 				
-				WebDocument d = HTTPClient.getInstance().getDocument( String.format("http://predb.me/?post=%s&jsload=1", id), HTTPClient.REFRESH_ONE_WEEK);
+				String suggestionURL = String.format("http://predb.me/?post=%s", id);
+				WebDocument d = HTTPClient.getInstance().getDocument( suggestionURL, HTTPClient.REFRESH_ONE_WEEK);
+				
 				Element imdbLink = d.jsoupSingle("a.ext-link[href*=imdb]");
 				String imdbId = null;
 				if (imdbLink != null) {
 					String imdbURL = imdbLink.absUrl("href");
 					imdbId = RegExp.extract( imdbURL, "http://www.imdb.com/title/(\\w+).*");
-					MovieManager.getInstance().createByImdbID( imdbId, null, Language.EN, DownloadableStatus.SUGGESTED, false );
+					MovieManager.getInstance().suggestImdbId( imdbId, null, Language.EN, suggestionURL );
 				} else {
 					String title = element.select("h2 a").text();
 					MovieInfo movieInfo = VideoNameParser.getMovieInfo( title );
 					if (movieInfo != null ) {
-						MovieManager.getInstance().createByName(movieInfo.getName(), movieInfo.getYear(), null, Language.EN, false);
+						MovieManager.getInstance().suggestByName(movieInfo.getName(), movieInfo.getYear(), null, Language.EN, false, suggestionURL);
 					}
 				}
 			}

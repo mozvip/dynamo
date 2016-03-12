@@ -11,8 +11,8 @@ public abstract class AmazonRSSBookSuggester extends AmazonRSSSuggester implemen
 	public abstract Language getLanguage();
 
 	@Override
-	protected void createSuggestion(String title, String contributor, String imageURL, String rssURL) throws Exception {
-		BookManager.getInstance().suggest( new BookInfo(title, contributor, getLanguage() ), imageURL, rssURL );
+	protected void createSuggestion(String title, String contributor, String imageURL, String rssURL, String suggestionURL) throws Exception {
+		BookManager.getInstance().suggest( new BookInfo(title, contributor, getLanguage() ), imageURL, rssURL, suggestionURL );
 	}
 	
 	@Override

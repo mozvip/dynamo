@@ -18,7 +18,7 @@ import hclient.HTTPClient;
 
 public abstract class AmazonRSSSuggester {
 	
-	protected abstract void createSuggestion( String title, String contributor, String imageURL, String rssURL ) throws Exception;
+	protected abstract void createSuggestion( String title, String contributor, String imageURL, String rssURL, String suggestionURL ) throws Exception;
 
 	protected void suggest( String rssURL ) {
 
@@ -44,9 +44,10 @@ public abstract class AmazonRSSSuggester {
 					String contributor = textNode.getWholeText().trim();
 	
 					String imageURL = document.evaluateSingleElementJSoup( ".url > img").attr("src");
+					String suggestionURL = document.evaluateSingleElementJSoup( ".url").attr("href");
 	
 					try {
-						createSuggestion( title, contributor, imageURL, rssURL );
+						createSuggestion( title, contributor, imageURL, rssURL, suggestionURL );
 					} catch (Exception e) {
 						ErrorManager.getInstance().reportThrowable(e);
 					}

@@ -29,9 +29,10 @@ public class WorldMagsNet implements KioskIssuesSuggester {
 			Elements elements = document.jsoup("div.news-mags");
 			for (Element magazineElement : elements) {
 				Element imageElt = magazineElement.select(".news-img-mags img").first();
-				String title = magazineElement.select(".news-title-mags a").text();
+				Element magazineLink = magazineElement.select(".news-title-mags a").first();
+				String title = magazineLink.text();
 				
-				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, imageElt.absUrl("src"), url, null, null, -1.0f, toString(), null, false));
+				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, imageElt.absUrl("src"), url, null, null, -1.0f, toString(), null, false, magazineLink.absUrl("href")));
 			}
 		}
 	}

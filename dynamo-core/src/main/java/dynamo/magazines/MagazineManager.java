@@ -218,12 +218,13 @@ public class MagazineManager implements Reconfigurable {
 		String rawName = issueInfo.toString();
 		if (existingIssue == null) {
 			existingIssue = MagazineManager.getInstance().createIssue(magazine, issueInfo.getIssueName(), coverImage);
-			downloadableId = DownloadableManager.getInstance().createDownloadable( MagazineIssue.class, rawName, coverImage, DownloadableStatus.SUGGESTED);
+			downloadableId = DownloadableManager.getInstance().createSuggestion( MagazineIssue.class, rawName, coverImage, suggestion.getSuggestionURL() );
 		} else {
 			if (existingIssue.getCoverImage() == null && coverImage != null) {
 				DownloadableManager.getInstance().updateCoverImage( existingIssue.getId(), coverImage);
 			}
 			downloadableId = existingIssue.getId();
+			DownloadableManager.getInstance().saveSuggestionURL(downloadableId, suggestion.getSuggestionURL());
 		}
 		
 		int issueNumber = existingIssue.getIssue() > 0 ? existingIssue.getIssue() : issueInfo.getIssueNumber(); 

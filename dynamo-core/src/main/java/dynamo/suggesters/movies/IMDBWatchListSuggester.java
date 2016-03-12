@@ -25,7 +25,6 @@ import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.LocalImageCache;
-import dynamo.model.DownloadableStatus;
 import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
 import dynamo.model.tvshows.TVShowManager;
@@ -57,19 +56,13 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 		return "IMDB Watch lists";
 	}
 	
-	public static Movie getMovieSuggestionFromIMDB( String imdbID ) throws IOException, URISyntaxException {
+	private static void getMovieSuggestionFromIMDB( String imdbID, String suggestionURL ) throws IOException, URISyntaxException {
 		IMDBTitle title = extractIMDBTitle( imdbID );
-
 		if (title.isTvSeries() && !title.isReleased()) {
-			return null;
+			return;
 		}
-
 		String coverImage = LocalImageCache.getInstance().download( "movies", imdbID, title.getImage().getUrl(), title.getImage().getReferer() );
-
-		long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, title.getName(), coverImage, DownloadableStatus.SUGGESTED );
-		Movie suggestion = new Movie(downloadableId, DownloadableStatus.SUGGESTED, null, null, title.getName(), null, null, false, null, null, null, null, null, null, null, -1, imdbID, null, title.getRating(), title.getYear(), false );
-
-		return suggestion;
+		DownloadableManager.getInstance().createSuggestion( Movie.class, title.getName(), coverImage, suggestionURL );
 	}
 	
 	public static IMDBTitle extractIMDBTitle( String imdbID ) throws IOException {
@@ -168,7 +161,7 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 							if (MovieManager.getInstance().getWatchedImdbIds().contains( imdbID)) {
 								continue;
 							}
-							getMovieSuggestionFromIMDB( imdbID );
+							getMovieSuggestionFromIMDB( imdbID, currentURL );
 						}
 
 						Element nextPageLink = document

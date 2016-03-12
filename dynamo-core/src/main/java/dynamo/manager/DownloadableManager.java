@@ -38,6 +38,7 @@ import dynamo.model.DownloadInfo;
 import dynamo.model.DownloadLocation;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
+import dynamo.model.SuggestionURLDAO;
 import dynamo.model.Video;
 import dynamo.model.backlog.core.FindDownloadableTask;
 import dynamo.model.ebooks.EBook;
@@ -64,6 +65,7 @@ public class DownloadableManager {
 	private MovieDAO movieDAO = DAOManager.getInstance().getDAO( MovieDAO.class );
 	private HistoryDAO historyDAO = DAOManager.getInstance().getDAO( HistoryDAO.class );
 	private SearchResultDAO searchResultDAO = DAOManager.getInstance().getDAO( SearchResultDAO.class );
+	private SuggestionURLDAO suggestionURLDAO = DAOManager.getInstance().getDAO( SuggestionURLDAO.class );
 	
 	@Configurable(category="Notifiers", name="Notify on Snatch events", defaultValue="false")
 	private boolean notifyOnSnatch;
@@ -124,6 +126,12 @@ public class DownloadableManager {
 		return downloadableDAO.createDownloadable( klass, name, coverImage, status );
 	}
 	
+	public long createSuggestion(Class<?> klass, String name, String coverImage, String suggestionURL) {
+		long downloadableId = downloadableDAO.createDownloadable( klass, name, coverImage, DownloadableStatus.SUGGESTED );
+		suggestionURLDAO.saveSuggestionURL(downloadableId, suggestionURL);
+		return downloadableId;
+	}
+
 	public void logStatusChange( Downloadable downloadable, DownloadableStatus newStatus) {
 		logStatusChange(downloadable, newStatus, null);
 	}
@@ -309,9 +317,9 @@ public class DownloadableManager {
 		BackLogProcessor.getInstance().unschedule( String.format( "this.downloadable.id == %d", downloadable.getId() ) );
 	}
 
-	public void suggest(Downloadable downloadable) {
+	public void suggest( Downloadable downloadable, String url ) {
 		DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SUGGESTED );
-		BackLogProcessor.getInstance().unschedule( String.format( "this.downloadable.id == %d", downloadable.getId() ) );
+		suggestionURLDAO.saveSuggestionURL(downloadable.getId(), url );
 	}
 	
 	public void cancelDownload( Downloadable downloadable ) {
@@ -401,6 +409,10 @@ public class DownloadableManager {
 
 	public DownloadableFile getFile(Path p) {
 		return downloadableDAO.getFile( p );
+	}
+
+	public void saveSuggestionURL(long downloadableId, String suggestionURL) {
+		suggestionURLDAO.saveSuggestionURL(downloadableId, suggestionURL);
 	}
 
 }

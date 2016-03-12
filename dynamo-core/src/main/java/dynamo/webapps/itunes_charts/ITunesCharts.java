@@ -34,9 +34,11 @@ public class ITunesCharts implements MusicAlbumSuggester, MovieSuggester {
 			String artistName = element.select("h4").first().text();
 			String imageURL = img.absUrl("src");
 			
+			String suggestionURL = img.parent().absUrl("href");
+			
 			// FIXME : extract genre
 
-			MusicManager.getInstance().suggest(artistName, albumName, null, imageURL, referer);
+			MusicManager.getInstance().suggest(artistName, albumName, null, imageURL, referer, suggestionURL);
 		}
 	}
 	
@@ -58,6 +60,8 @@ public class ITunesCharts implements MusicAlbumSuggester, MovieSuggester {
 			String genre = element.select("h4").first().text();
 			String imageURL = img.absUrl("src");
 			
+			String suggestionURL = img.parent().absUrl("href");
+			
 			// TODO : use genre ?
 			
 			int year = -1;
@@ -68,7 +72,7 @@ public class ITunesCharts implements MusicAlbumSuggester, MovieSuggester {
 				year = Integer.parseInt( groups[1]);
 			}
 
-			MovieManager.getInstance().createByName(movieName, year, new WebResource(imageURL, referer), Language.EN, false);
+			MovieManager.getInstance().suggestByName(movieName, year, new WebResource(imageURL, referer), Language.EN, false, suggestionURL);
 		}
 	}
 	

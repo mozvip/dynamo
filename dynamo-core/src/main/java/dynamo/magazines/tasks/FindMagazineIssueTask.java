@@ -1,6 +1,7 @@
 package dynamo.magazines.tasks;
 
 import dynamo.manager.DownloadableManager;
+import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.core.FindDownloadableTask;
 import dynamo.model.magazines.MagazineIssue;
 
@@ -17,7 +18,7 @@ public class FindMagazineIssueTask extends FindDownloadableTask<MagazineIssue> {
 	
 	@Override
 	public void cancel() {
-		DownloadableManager.getInstance().suggest( downloadable );
+		DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SUGGESTED );
 	}	
 
 }

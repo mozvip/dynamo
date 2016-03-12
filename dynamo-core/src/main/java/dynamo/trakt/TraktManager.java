@@ -12,7 +12,6 @@ import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.ConfigValueManager;
-import dynamo.model.DownloadableStatus;
 import dynamo.model.movies.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 import hclient.RetrofitClient;
@@ -116,7 +115,7 @@ public class TraktManager implements Reconfigurable, MovieSuggester, Enableable 
 	public void suggestMovies() throws Exception {
 		List<TraktWatchListEntry> watchList = service.moviesWatchList( username );
 		for (TraktWatchListEntry watchListEntry : watchList) {
-			MovieManager.getInstance().createByImdbID( watchListEntry.getMovie().getIds().get("imdb"), null, Language.EN, DownloadableStatus.SUGGESTED, false );
+			MovieManager.getInstance().suggestImdbId( watchListEntry.getMovie().getIds().get("imdb"), null, Language.EN, watchListEntry.getMovie().getUrl() );
 		}
 	}
 	

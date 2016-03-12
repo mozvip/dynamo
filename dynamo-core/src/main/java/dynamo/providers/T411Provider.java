@@ -332,7 +332,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 				Set<DownloadLocation> downloadLocations = new HashSet<>();
 				downloadLocations.add( new DownloadLocation(SearchResultType.TORRENT, torrentURL));
 				try {
-					suggestions.add( new DownloadSuggestion(title, imageSrc, href, downloadLocations, Language.FR, parseSize(size), toString(), getClass(), false) );
+					suggestions.add( new DownloadSuggestion(title, imageSrc, href, downloadLocations, Language.FR, parseSize(size), toString(), getClass(), false, href) );
 				} catch (Exception e) {
 					ErrorManager.getInstance().reportThrowable(e);
 				}
@@ -430,7 +430,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 			if (groups != null) {
 				String movieName =  groups[0].trim();
 				movieName = movieName.replaceAll("\\.", " ").trim();
-				Movie movie = MovieManager.getInstance().createByName( movieName, Integer.parseInt( groups[1] ), null, Language.FR, false);
+				Movie movie = MovieManager.getInstance().suggestByName( movieName, Integer.parseInt( groups[1] ), null, Language.FR, false, movieSuggestion.getReferer());
 				if (movie != null) {
 					// TODO: store search result
 				}

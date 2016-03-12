@@ -16,8 +16,9 @@ public class DownloadSuggestion {
 	private Class<? extends DownloadFinder> downloadFinderClass;
 	private Set<DownloadLocation> downloadLocations;
 	private boolean xxx;
+	private String suggestionURL;
 
-	public DownloadSuggestion(String title, String imageURL, String referer, Set<DownloadLocation> downloadLocations, Language language, float size, String suggesterName, Class<? extends DownloadFinder> downloadFinderClass, boolean xxx) {
+	public DownloadSuggestion(String title, String imageURL, String referer, Set<DownloadLocation> downloadLocations, Language language, float size, String suggesterName, Class<? extends DownloadFinder> downloadFinderClass, boolean xxx, String suggestionURL) {
 		super();
 		this.title = title;
 		this.imageURL = imageURL;
@@ -28,6 +29,7 @@ public class DownloadSuggestion {
 		this.suggesterName = suggesterName;
 		this.downloadFinderClass = downloadFinderClass;
 		this.xxx = xxx;
+		this.suggestionURL = suggestionURL;
 	}
 
 	public String getTitle() {
@@ -64,6 +66,10 @@ public class DownloadSuggestion {
 	
 	public boolean isXxx() {
 		return xxx;
+	}
+	
+	public String getSuggestionURL() {
+		return suggestionURL;
 	}
 
 }

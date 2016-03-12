@@ -24,7 +24,7 @@ public class TelechargerMagazineCOM implements KioskIssuesSuggester {
 			String url = String.format("http://www.telecharger-magazine.com/page/%d/", page);
 			WebDocument document;
 			try {
-				document = HTTPClient.getInstance().getDocument( url, HTTPClient.REFRESH_ONE_HOUR );
+				document = HTTPClient.getInstance().getDocument( url, HTTPClient.REFRESH_ONE_DAY );
 			} catch (IOException e) {
 				throw new KioskIssuesSuggesterException( e );
 			}
@@ -33,11 +33,12 @@ public class TelechargerMagazineCOM implements KioskIssuesSuggester {
 			for (Element magazineElement : elements) {
 				
 				Element image = magazineElement.select("img").first();
+				Element link = image.parent();
 				
 				String coverImage = image.absUrl("src");
 				String title = RegExp.extract( image.attr("title"), "télécharger (.*)" );
 				
-				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, Language.FR, -1.0f, toString(), null, false));
+				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, Language.FR, -1.0f, toString(), null, false, link.absUrl("href")));
 			}
 		}
 	}

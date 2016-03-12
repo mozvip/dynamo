@@ -134,7 +134,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 				MovieInfo info = VideoNameParser.getMovieInfo( searchResult.getTitle() );
 				if (info != null) {
 					try {
-						MovieManager.getInstance().createByName(info.getName(), year, null, Language.FR, false);
+						MovieManager.getInstance().suggestByName(info.getName(), year, null, Language.FR, false, null);
 					} catch (Exception e) {
 						ErrorManager.getInstance().reportThrowable( e );
 					}

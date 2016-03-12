@@ -37,13 +37,13 @@ public class AmazonFRBestSellersDVDMovieSuggester extends AmazonRSSSuggester imp
 	}
 
 	@Override
-	protected void createSuggestion(String title, String contributor, String imageURL, String rssURL) throws Exception {
+	protected void createSuggestion(String title, String contributor, String imageURL, String rssURL, String suggestionURL) throws Exception {
 		try {
 			title = VideoNameParser.clean(title, filtersRegExps);
 			
 			WebResource image = new WebResource( imageURL.toString(), rssURL.toString() );
-			
-			Movie movie = MovieManager.getInstance().createByName(title, 0, image, Language.FR, false);
+
+			Movie movie = MovieManager.getInstance().suggestByName(title, 0, image, Language.FR, false, suggestionURL);
 			if (movie == null) {
 				ErrorManager.getInstance().reportWarning(String.format("Unable to parse movie name %s", title), true);
 			}

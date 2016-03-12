@@ -57,7 +57,7 @@ public class AllMusicNewReleasesSuggester implements MusicAlbumSuggester {
 					
 					String imageURL = thumbnail.attr("abs:data-original");
 					try {
-						MusicManager.getInstance().suggest(artist.getName(), albumName, genre, imageURL, url);
+						MusicManager.getInstance().suggest(artist.getName(), albumName, genre, imageURL, url, url);
 					} catch (ExecutionException e) {
 						ErrorManager.getInstance().reportThrowable( e );
 					}

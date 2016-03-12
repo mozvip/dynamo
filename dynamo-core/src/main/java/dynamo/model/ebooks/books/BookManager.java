@@ -106,12 +106,12 @@ public class BookManager implements Enableable {
 
 	public void suggest( DownloadSuggestion suggestion ) throws MalformedURLException {
 		BookInfo bookInfo = BookNameParser.getBookInfo( suggestion.getTitle() );
-		long downloadableId = suggest( bookInfo, suggestion.getImageURL(), suggestion.getReferer() );
+		long downloadableId = suggest( bookInfo, suggestion.getImageURL(), suggestion.getReferer(), suggestion.getReferer() );
 		
 		DownloadableManager.getInstance().saveDownloadLocations(downloadableId, suggestion.getTitle(), suggestion.getSuggesterName(), suggestion.getDownloadFinderClass(), suggestion.getReferer(), suggestion.getSize(), suggestion.getDownloadLocations());
 	}
 
-	public long suggest(BookInfo bookInfo, String imageURL, String referer) throws MalformedURLException {
+	public long suggest(BookInfo bookInfo, String imageURL, String referer, String suggestionURL) throws MalformedURLException {
 		Book existingBook = bookDAO.find(bookInfo.getAuthor(), bookInfo.getName());
 		if (existingBook != null ) {
 			if (existingBook.getCoverImage() == null) {
@@ -120,12 +120,12 @@ public class BookManager implements Enableable {
 			}
 			return existingBook.getId();
 		}
-		return createSuggestion(bookInfo.getName(), bookInfo.getAuthor(), bookInfo.getLanguage(), imageURL, referer);
+		return createSuggestion(bookInfo.getName(), bookInfo.getAuthor(), bookInfo.getLanguage(), imageURL, referer, suggestionURL);
 	}
 
-	private long createSuggestion(String title, String author, Language language, String imageURL, String referer) throws MalformedURLException {
+	private long createSuggestion(String title, String author, Language language, String imageURL, String referer, String suggestionURL) throws MalformedURLException {
 		String image = imageURL != null ? LocalImageCache.getInstance().download("books", String.format("%s-%s", author, title), imageURL, referer) : null;
-		long downloadableId = DownloadableManager.getInstance().createDownloadable( Book.class, title, image, DownloadableStatus.SUGGESTED);
+		long downloadableId = DownloadableManager.getInstance().createSuggestion( Book.class, title, image, suggestionURL);
 		bookDAO.save( downloadableId, author, language );
 		return downloadableId;
 	}

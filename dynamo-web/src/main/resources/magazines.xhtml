@@ -10,6 +10,7 @@
 	<ui:define name="content">
 	
 		<ui:include src="/fragment-filesDialog.xhtml" />
+		<ui:include src="/fragment-suggestionsDialog.xhtml" />
 
 		<style>
 			.downloadableThumb {
@@ -26,6 +27,8 @@
 				font-weight: bold;
 				white-space: nowrap;
 				text-align: center;
+				overflow: scroll;
+				max-width: 270px;
 			}
 
 			.buttons {
@@ -71,6 +74,9 @@
 								<i class="fa fa-list"></i>
 							</a>
 						</ui:fragment>
+						<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#suggestionsList" data-downloadable="${issue.id}" title="Show suggestion source URLs">
+							<i class="fa fa-question"></i>
+						</a>
 					</div>
 				</div>
 			</ui:repeat>

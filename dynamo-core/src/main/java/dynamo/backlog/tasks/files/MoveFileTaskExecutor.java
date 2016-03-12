@@ -35,7 +35,7 @@ public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask
 		}
 		boolean parentFolderEmpty = FileUtils.isDirEmpty( source.getParent() );
 		if (parentFolderEmpty) {
-			queue( new DeleteTask(source.getParent(), false), false );
+			Files.delete( source.getParent() );
 		}
 
 	}

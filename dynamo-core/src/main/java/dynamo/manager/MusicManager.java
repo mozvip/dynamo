@@ -260,9 +260,12 @@ public class MusicManager implements Reconfigurable {
 
 	}
 	
-	public void suggest( String artistName, String albumName, String genre, String imageURL, String referer) throws MalformedURLException, ExecutionException {
+	public void suggest( String artistName, String albumName, String genre, String imageURL, String referer, String suggestionURL) throws MalformedURLException, ExecutionException {
 		String image = LocalImageCache.getInstance().download("albums", MusicManager.getSearchString(artistName, albumName), imageURL, referer);
-		getAlbum(artistName, albumName, genre, image, DownloadableStatus.SUGGESTED, null, musicQuality, true);
+		MusicAlbum album = getAlbum(artistName, albumName, genre, image, DownloadableStatus.SUGGESTED, null, musicQuality, true);
+		if (suggestionURL != null) {
+			DownloadableManager.getInstance().saveSuggestionURL(album.getId(), suggestionURL);
+		}
 	}
 
 	public synchronized MusicAlbum getAlbum( String artistName, String albumName, String genre, String image, DownloadableStatus status, Path path, MusicQuality quality, boolean createIfMissing ) throws ExecutionException {

@@ -429,5 +429,18 @@
 		</createTable>
 		<addForeignKeyConstraint constraintName="FK_VIDEO_METADATA_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="VIDEO_ID" baseTableName="VIDEO_METADATA" referencedColumnNames="ID" onDelete="CASCADE"/>
 	</changeSet>
-	
+	<changeSet author="mozvip" id="29">
+		<createTable tableName="SUGGESTION_URL">
+			<column name="DOWNLOADABLE_ID" type="INT(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="SUGGESTION_URL" type="VARCHAR(4096)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addPrimaryKey tableName="SUGGESTION_URL" columnNames="DOWNLOADABLE_ID,SUGGESTION_URL"/>
+		<addForeignKeyConstraint constraintName="FK_SUGGESTION_URL_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="DOWNLOADABLE_ID" baseTableName="SUGGESTION_URL" referencedColumnNames="ID" onDelete="CASCADE"/>
+		<dropColumn tableName="DOWNLOADABLE" columnName="SUGGESTEDBY"/>
+	</changeSet>
+
 </databaseChangeLog>

@@ -41,8 +41,10 @@ public class RLSBBCom implements KioskIssuesSuggester {
 				for (Element link : links) {
 					downloadLocations.add( new DownloadLocation(SearchResultType.HTTP, link.absUrl("href") ));
 				}
+				
+				Element readMoreLink = titles.select("a.postReadMore").first();
 
-				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, downloadLocations, Language.EN, -1.0f, toString(), null, false));
+				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, downloadLocations, Language.EN, -1.0f, toString(), null, false, readMoreLink.absUrl("href")));
 			}
 		}
 	}

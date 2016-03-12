@@ -24,7 +24,6 @@ public class RefreshWatchedMoviesTraktExecutor extends TaskExecutor<RefreshWatch
 		if (watchedMovies != null ) {
 			for (TraktWatchedEntry watched : watchedMovies) {
 				String imdbId = watched.getMovie().getIds().get("imdb");
-				
 				MovieManager.getInstance().createByImdbID( imdbId, null, Language.EN, DownloadableStatus.IGNORED, true );
 			}
 		}

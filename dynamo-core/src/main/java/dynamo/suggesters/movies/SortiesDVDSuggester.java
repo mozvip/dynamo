@@ -31,8 +31,10 @@ public class SortiesDVDSuggester implements MovieSuggester {
 				WebResource image = new WebResource( imageURL, document.getOriginalURL());
 				Elements links = row.select("header>h2>a");
 				if (links != null && !links.isEmpty()) {
-					String title = links.first().text();
-					MovieManager.getInstance().createByName(title, -1, image, Language.FR, false);
+					Element firstLink = links.first();
+					String title = firstLink.text();
+					String suggestionURL = firstLink.absUrl("href");
+					MovieManager.getInstance().suggestByName(title, -1, image, Language.FR, false, suggestionURL);
 				}
 			}
 		}
