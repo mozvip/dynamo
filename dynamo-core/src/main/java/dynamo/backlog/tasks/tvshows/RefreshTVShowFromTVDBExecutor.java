@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.omertron.thetvdbapi.TvDbException;
 import com.omertron.thetvdbapi.model.Episode;
 import com.omertron.thetvdbapi.model.Series;
 
@@ -37,7 +38,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws TvDbException {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.add( Calendar.MONTH, 1);

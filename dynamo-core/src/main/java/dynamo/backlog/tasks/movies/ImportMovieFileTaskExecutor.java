@@ -2,7 +2,7 @@ package dynamo.backlog.tasks.movies;
 
 import java.nio.file.Path;
 
-import com.omertron.themoviedbapi.model.MovieDb;
+import com.omertron.themoviedbapi.model.movie.MovieInfo;
 
 import dynamo.backlog.tasks.files.FileUtils;
 import dynamo.core.model.TaskExecutor;
@@ -13,7 +13,7 @@ import dynamo.model.movies.MovieManager;
 
 public class ImportMovieFileTaskExecutor extends TaskExecutor< ImportMovieFileTask > {
 	
-	MovieDb movieDb;
+	MovieInfo movieDb;
 	Path path;
 
 	public ImportMovieFileTaskExecutor(ImportMovieFileTask task) {

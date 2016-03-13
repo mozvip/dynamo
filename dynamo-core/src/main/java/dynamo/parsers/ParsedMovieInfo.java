@@ -1,15 +1,15 @@
 package dynamo.parsers;
 
-public class MovieInfo extends VideoInfo {
+public class ParsedMovieInfo extends VideoInfo {
 	
 	private int year = -1;
 
-	public MovieInfo( String name, int year, String extraNameData ) {
+	public ParsedMovieInfo( String name, int year, String extraNameData ) {
 		super( name, extraNameData );
 		this.year = year;
 	}
 
-	public MovieInfo( String name, String extraNameData ) {
+	public ParsedMovieInfo( String name, String extraNameData ) {
 		super( name, extraNameData );
 	}
 

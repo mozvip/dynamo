@@ -12,7 +12,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 import com.omertron.themoviedbapi.MovieDbException;
-import com.omertron.themoviedbapi.model.MovieDb;
+import com.omertron.themoviedbapi.model.movie.MovieInfo;
 
 import dynamo.backlog.tasks.core.AbstractNewFolderExecutor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
@@ -29,7 +29,7 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.subtitles.FindMovieSubtitleTask;
 import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
-import dynamo.parsers.MovieInfo;
+import dynamo.parsers.ParsedMovieInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.suggesters.movies.IMDBTitle;
 import dynamo.suggesters.movies.IMDBWatchListSuggester;
@@ -96,7 +96,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 
 				// fix movieDB data if not set
 				if (movie.getMovieDbId() == 0 || movie.getYear() <= 0 ) {
-					MovieInfo movieInfo = VideoNameParser.getMovieInfo( p );
+					ParsedMovieInfo movieInfo = VideoNameParser.getMovieInfo( p );
 					if ( movieInfo != null ) {
 						try {
 							MovieManager.getInstance().setMovieInfo( movie, movieInfo );
@@ -116,7 +116,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 				
 				if (mustRefresh) {
 					try {
-						MovieDb movieDb = MovieManager.getInstance().getMovieInfo( movie.getMovieDbId() );
+						MovieInfo movieDb = MovieManager.getInstance().getMovieInfo( movie.getMovieDbId() );
 						MovieManager.getInstance().associate(movie, movieDb);
 					} catch (MovieDbException e) {
 						ErrorManager.getInstance().reportThrowable( e );
@@ -144,8 +144,8 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 	protected Movie handleNewMovie( Path movieFile ) throws IOException, InterruptedException, MovieDbException, ParseException {
 
 		Movie movie = null;
-		MovieInfo movieInfo = VideoNameParser.getMovieInfo( movieFile );
-		MovieDb movieDb = null;
+		ParsedMovieInfo movieInfo = VideoNameParser.getMovieInfo( movieFile );
+		MovieInfo movieDb = null;
 		if (movieInfo != null) {
 			movieDb = MovieManager.getInstance().searchByName( movieInfo.getName(), movieInfo.getYear(), null, false);
 			if (movieDb != null) {

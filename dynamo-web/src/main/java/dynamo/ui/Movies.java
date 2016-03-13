@@ -12,7 +12,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
 import com.omertron.themoviedbapi.MovieDbException;
-import com.omertron.themoviedbapi.model.MovieDb;
+import com.omertron.themoviedbapi.model.movie.MovieInfo;
 
 import dynamo.backlog.tasks.movies.RenameMovieFileTask;
 import dynamo.core.Language;
@@ -38,7 +38,7 @@ public class Movies extends DynamoManagedBean {
 	private Language newMovieSubtitlesLanguage = MovieManager.getInstance().getSubtitlesLanguage();
 	private boolean renameFile;
 	
-	private List<MovieDb> searchResults;
+	private List<MovieInfo> searchResults;
 	private long searchMovieId;
 	private String searchMovie;
 	
@@ -96,11 +96,11 @@ public class Movies extends DynamoManagedBean {
 		this.searchMovie = searchMovie;
 	}
 	
-	public List<MovieDb> getSearchResults() {
+	public List<MovieInfo> getSearchResults() {
 		return searchResults;
 	}
 	
-	public void setSearchResults(List<MovieDb> searchResults) {
+	public void setSearchResults(List<MovieInfo> searchResults) {
 		this.searchResults = searchResults;
 	}
 
@@ -124,7 +124,7 @@ public class Movies extends DynamoManagedBean {
 		searchResults = MovieManager.getInstance().search( searchMovie, 0, searchLanguage ).getResults();
 	}
 
-	public void selectMovie( MovieDb movie ) throws IOException, MovieDbException {
+	public void selectMovie( MovieInfo movie ) throws IOException, MovieDbException {
 		searchResults = null;
 		MovieManager.getInstance().wantMovie( movie, newMovieQuality, newMovieAudioLanguage, newMovieSubtitlesLanguage );
 		addMessage("Operation queued successfully");
@@ -141,7 +141,7 @@ public class Movies extends DynamoManagedBean {
 		}
 	}
 
-	public void select( MovieDb selectedMovie ) throws MovieDbException {
+	public void select( MovieInfo selectedMovie ) throws MovieDbException {
 		MovieManager.getInstance().associate( searchMovieId, selectedMovie);
 		if (isRenameFile()) {
 			for (Movie movie : collectionContents.objects) {

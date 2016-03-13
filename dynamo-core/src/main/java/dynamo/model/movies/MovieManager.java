@@ -18,8 +18,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
-import com.omertron.themoviedbapi.model.MovieDb;
-import com.omertron.themoviedbapi.results.TmdbResultsList;
+import com.omertron.themoviedbapi.enumeration.SearchType;
+import com.omertron.themoviedbapi.model.movie.MovieInfo;
+import com.omertron.themoviedbapi.results.ResultList;
+import com.omertron.themoviedbapi.tools.HttpTools;
 
 import core.RegExp;
 import core.WebResource;
@@ -39,7 +41,7 @@ import dynamo.jdbi.MovieDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadableStatus;
-import dynamo.parsers.MovieInfo;
+import dynamo.parsers.ParsedMovieInfo;
 import dynamo.suggesters.RefreshMovieSuggestionTask;
 import dynamo.suggesters.movies.IMDBTitle;
 import dynamo.suggesters.movies.IMDBWatchListSuggester;
@@ -197,11 +199,11 @@ public class MovieManager implements Reconfigurable {
 		}
 	}
 	
-	public TmdbResultsList<MovieDb> search( String name, int year, Language language ) throws MovieDbException {
-		return api.searchMovie( name, year > 0 ? year : 0, language != null ? language.getShortName() : null, true, 0 );
+	public ResultList<MovieInfo> search( String name, int year, Language language ) throws MovieDbException {
+		return api.searchMovie( name, 0, language != null ? language.getShortName() : null, true, year > 0 ? year : 0, year > 0 ? year : 0, SearchType.PHRASE );
 	}
 	
-	public MovieDb getMovieInfo( int movieId, String language) throws MovieDbException {
+	public MovieInfo getMovieInfo( int movieId, String language) throws MovieDbException {
 		return api.getMovieInfo(movieId, language);
 	}
 	
@@ -209,7 +211,7 @@ public class MovieManager implements Reconfigurable {
 		return api.createImageUrl(imagePath, "w185").toExternalForm();
 	}
 	
-	public MovieDb getMovieInfo( int movieId ) throws MovieDbException {
+	public MovieInfo getMovieInfo( int movieId ) throws MovieDbException {
 		return getMovieInfo( movieId, metaDataLanguage != null ? metaDataLanguage.getShortName() : null );	
 	}
 
@@ -221,14 +223,14 @@ public class MovieManager implements Reconfigurable {
 		this.defaultQuality = defaultQuality;
 	}
 	
-	public Movie associate( long movieId, MovieDb movieDb) throws MovieDbException {
+	public Movie associate( long movieId, MovieInfo movieDb) throws MovieDbException {
 		Movie movie = movieDAO.find(movieId);
 		associate(movie, movieDb);
 		save( movie );
 		return movie;
 	}
 
-	public void associate( Movie movie, MovieDb movieDb ) throws MovieDbException {	
+	public void associate( Movie movie, MovieInfo movieDb ) throws MovieDbException {	
 		if (movieDb.getImdbID() == null) {
 			movieDb = getMovieInfo(movieDb.getId());
 		}
@@ -253,7 +255,7 @@ public class MovieManager implements Reconfigurable {
 		}
 	}
 
-	public Movie createMovieFromMovieDB( MovieDb movieDb, Language language, WebResource defaultImage, DownloadableStatus status, boolean watched ) throws MovieDbException, MalformedURLException {
+	public Movie createMovieFromMovieDB( MovieInfo movieDb, Language language, WebResource defaultImage, DownloadableStatus status, boolean watched ) throws MovieDbException, MalformedURLException {
 		Movie movie = movieDAO.findByMovieDbId( movieDb.getId() );
 		if (movie == null) {
 			if (movieDb.getImdbID() == null) {
@@ -299,12 +301,12 @@ public class MovieManager implements Reconfigurable {
 		return movie;
 	}
 	
-	public MovieDb getMovieDb( String name, int year ) throws MovieDbException {
-		TmdbResultsList<MovieDb> movieDbResults = search( name, year, MovieManager.getInstance().getMetaDataLanguage() );
+	public MovieInfo getMovieDb( String name, int year ) throws MovieDbException {
+		ResultList<MovieInfo> movieDbResults = search( name, year, MovieManager.getInstance().getMetaDataLanguage() );
 		if (movieDbResults.getTotalResults() == 1) {
 			return movieDbResults.getResults().get( 0 );
 		} else if (movieDbResults.getTotalResults() > 0) {
-			for (MovieDb movieDb : movieDbResults.getResults()) {
+			for (MovieInfo movieDb : movieDbResults.getResults()) {
 				if (nameEquals( name, movieDb.getTitle())) {
 					return movieDb;
 				}
@@ -314,9 +316,9 @@ public class MovieManager implements Reconfigurable {
 		return null;
 	}
 
-	public void setMovieInfo(Movie movie, MovieInfo movieInfo ) throws MovieDbException {
+	public void setMovieInfo(Movie movie, ParsedMovieInfo movieInfo ) throws MovieDbException {
 		movie.setName( movieInfo.getName() );
-		MovieDb movieDb = getMovieDb( movieInfo.getName(), movieInfo.getYear() );
+		MovieInfo movieDb = getMovieDb( movieInfo.getName(), movieInfo.getYear() );
 		if (movieDb != null) {
 			associate(movie, movieDb);
 		}
@@ -325,7 +327,7 @@ public class MovieManager implements Reconfigurable {
 		movie.setSource( movieInfo.getSource() );
 	}
 	
-	public Movie wantMovie( MovieDb movieDb, VideoQuality wantedQuality, Language wantedAudioLanguage, Language wantedSubtitlesLanguage ) throws IOException, MovieDbException {
+	public Movie wantMovie( MovieInfo movieDb, VideoQuality wantedQuality, Language wantedAudioLanguage, Language wantedSubtitlesLanguage ) throws IOException, MovieDbException {
 
 		Movie movie = createMovieFromMovieDB( movieDb, getMetaDataLanguage(), null, DownloadableStatus.WANTED, false );
 
@@ -484,12 +486,12 @@ public class MovieManager implements Reconfigurable {
 		}
 	}
 	
-	public MovieDb searchByName( String name, int year, Language language, boolean maybeUnreleased ) throws MovieDbException, ParseException {
-		MovieDb selectedMovie = null;
-		TmdbResultsList<MovieDb> movieResults = search( name, year, language);
+	public MovieInfo searchByName( String name, int year, Language language, boolean maybeUnreleased ) throws MovieDbException, ParseException {
+		MovieInfo selectedMovie = null;
+		ResultList<MovieInfo> movieResults = search( name, year, language);
 		if (movieResults.getTotalResults() > 0) {
 			Date now = new Date();
-			for (MovieDb movieDb : movieResults.getResults()) {
+			for (MovieInfo movieDb : movieResults.getResults()) {
 				if ( !nameEquals( movieDb.getTitle(), name ) ) {
 					continue;
 				}
@@ -514,7 +516,7 @@ public class MovieManager implements Reconfigurable {
 	}
 
 	public Movie suggestByName( String name, int year, WebResource defaultImage, Language language, boolean maybeUnreleased, String suggestionURL ) throws MovieDbException, IOException, URISyntaxException, ParseException {
-		MovieDb movieDb = searchByName( name, year, language, maybeUnreleased);
+		MovieInfo movieDb = searchByName( name, year, language, maybeUnreleased);
 		if (movieDb != null && movieDb.getImdbID() != null) {
 			Movie movie = findByImdbId( movieDb.getImdbID() );
 			if (movie == null) {

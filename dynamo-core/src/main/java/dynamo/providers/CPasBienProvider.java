@@ -25,7 +25,7 @@ import dynamo.model.movies.MovieManager;
 import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
-import dynamo.parsers.MovieInfo;
+import dynamo.parsers.ParsedMovieInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.suggesters.movies.MovieSuggester;
 import hclient.HTTPClient;
@@ -131,7 +131,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 			
 			List<SearchResult> results = extractResults(currentDocument, null);
 			for (SearchResult searchResult : results) {
-				MovieInfo info = VideoNameParser.getMovieInfo( searchResult.getTitle() );
+				ParsedMovieInfo info = VideoNameParser.getMovieInfo( searchResult.getTitle() );
 				if (info != null) {
 					try {
 						MovieManager.getInstance().suggestByName(info.getName(), year, null, Language.FR, false, null);

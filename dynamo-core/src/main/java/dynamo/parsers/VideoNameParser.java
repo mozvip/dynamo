@@ -62,7 +62,7 @@ public class VideoNameParser {
 		String[] groups = RegExp.parseGroups(title, "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(MULTI VFF 720p BluRay x264 AC3).*");
 		if (groups != null) {
 			String name = getName( groups[0] );
-			return new MovieInfo( name, -1, groups[1] );
+			return new ParsedMovieInfo( name, -1, groups[1] );
 		}
 
 		groups = RegExp.parseGroups(title, "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(S\\d{2}E\\d{2}E\\d{2})(.*)");
@@ -107,13 +107,13 @@ public class VideoNameParser {
 		groups = RegExp.parseGroups(title, "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "\\((\\d{4})\\)(.*)");
 		if (groups != null) {
 			String name = getName( groups[0] );
-			return new MovieInfo( name, Integer.parseInt( groups[1]), groups[2] );
+			return new ParsedMovieInfo( name, Integer.parseInt( groups[1]), groups[2] );
 		}
 
 		groups = RegExp.parseGroups(title, "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(\\d{4}[\\.\\s]{1})(.*)");
 		if (groups != null) {
 			String name = getName( groups[0] );
-			return new MovieInfo( name, Integer.parseInt( groups[1].substring(0,  4)), groups[2] );
+			return new ParsedMovieInfo( name, Integer.parseInt( groups[1].substring(0,  4)), groups[2] );
 		}
 
 		groups = RegExp.parseGroups(title, "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(\\d{3})\\D{1}(.*)");
@@ -128,7 +128,7 @@ public class VideoNameParser {
 		groups = RegExp.parseGroups(title, "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(.*)" + SEPARATOR_REGEXP + "(\\d{4})$");
 		if (groups != null) {
 			String name = getName( groups[0] );
-			return new MovieInfo( name, Integer.parseInt( groups[2]), groups[1] );
+			return new ParsedMovieInfo( name, Integer.parseInt( groups[2]), groups[1] );
 		}		
 
 		return null;
@@ -229,25 +229,25 @@ public class VideoNameParser {
 		return quality != null ? quality : VideoQuality.SD;
 	}
 	
-	public static MovieInfo getMovieInfo( String string ) {
+	public static ParsedMovieInfo getMovieInfo( String string ) {
 
 		string = clean( string, filters );
 		// this method is called when we know that the file is a Movie file
 		VideoInfo info = getVideoInfo( string );
-		if (info instanceof MovieInfo) {
-			return (MovieInfo) info;
+		if (info instanceof ParsedMovieInfo) {
+			return (ParsedMovieInfo) info;
 		}
 		return null;
 
 	}	
 
-	public static MovieInfo getMovieInfo(Path path) {
+	public static ParsedMovieInfo getMovieInfo(Path path) {
 		
 		// this method is called when we know that the file is a Movie file
 
 		VideoInfo info = getVideoInfo(path);
-		if (info instanceof MovieInfo) {
-			return (MovieInfo) info;
+		if (info instanceof ParsedMovieInfo) {
+			return (ParsedMovieInfo) info;
 		}
 
 		String fileNameWithoutExtension = path.getFileName().toString();
@@ -255,7 +255,7 @@ public class VideoNameParser {
 			fileNameWithoutExtension = fileNameWithoutExtension.substring(0, fileNameWithoutExtension.lastIndexOf('.'));			
 		}
 		String title = clean( fileNameWithoutExtension, filters );
-		return new MovieInfo( title, null );
+		return new ParsedMovieInfo( title, null );
 	}
 
 }

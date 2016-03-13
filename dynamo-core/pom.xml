@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>com.omertron</groupId>
 			<artifactId>thetvdbapi</artifactId>
-			<version>1.7</version>
+			<version>1.8</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>log4j</artifactId>
@@ -149,7 +149,7 @@
 		<dependency>
 			<groupId>com.omertron</groupId>
 			<artifactId>themoviedbapi</artifactId>
-			<version>3.11</version>
+			<version>4.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
@@ -170,6 +170,11 @@
 			<groupId>jcifs</groupId>
 			<artifactId>jcifs</artifactId>
 			<version>1.3.17</version>
+		</dependency>
+		<dependency>
+			<groupId>com.uwetrottmann</groupId>
+			<artifactId>trakt-java</artifactId>
+			<version>4.5.4</version>
 		</dependency>
 	</dependencies>
 	<packaging>jar</packaging>

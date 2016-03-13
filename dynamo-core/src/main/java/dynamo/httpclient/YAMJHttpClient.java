@@ -11,12 +11,17 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 import org.yamj.api.common.http.CommonHttpClient;
+import org.yamj.api.common.http.DigestedResponse;
+import org.yamj.api.common.http.IUserAgentSelector;
 
 import hclient.HTTPClient;
 import hclient.SimpleResponse;
@@ -44,8 +49,7 @@ public class YAMJHttpClient implements CommonHttpClient {
 	@Override
 	public HttpResponse execute(HttpUriRequest request) throws IOException,
 			ClientProtocolException {
-		// TODO Auto-generated method stub
-		return null;
+		return client.execute(request);
 	}
 
 	@Override
@@ -101,65 +105,6 @@ public class YAMJHttpClient implements CommonHttpClient {
 		return null;
 	}
 
-	@Override
-	public void setProxy(String host, int port, String username, String password) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setTimeouts(int connectionTimeout, int socketTimeout) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String requestContent(URL url) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String requestContent(URL url, Charset charset) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String requestContent(String uri) throws IOException {
-		return requestContent(uri, Charset.defaultCharset());
-	}
-
-	@Override
-	public String requestContent(String uri, Charset charset)
-			throws IOException {
-		return client.get(uri).getStringContents( charset );
-	}
-
-	@Override
-	public String requestContent(URI uri) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String requestContent(URI uri, Charset charset) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String requestContent(HttpGet httpGet) throws IOException {
-		SimpleResponse response = client.get( httpGet.getURI().toString(), null, HTTPClient.REFRESH_ONE_DAY );
-		return response.getStringContents();
-	}
-
-	@Override
-	public String requestContent(HttpGet httpGet, Charset charset)
-			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public HttpEntity requestResource(URL url) throws IOException {
@@ -183,6 +128,206 @@ public class YAMJHttpClient implements CommonHttpClient {
 	public HttpEntity requestResource(HttpGet httpGet) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setUserAgentSelector(IUserAgentSelector userAgentSelector) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public DigestedResponse postContent(URL url, HttpEntity entity) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse postContent(URL url, HttpEntity entity, Charset charset) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse postContent(String uri, HttpEntity entity) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse postContent(String uri, HttpEntity entity, Charset charset) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse postContent(URI uri, HttpEntity entity) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse postContent(URI uri, HttpEntity entity, Charset charset) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse postContent(HttpPost httpPost) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse postContent(HttpPost httpPost, Charset charset) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse deleteContent(URL url) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse deleteContent(URL url, Charset charset) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse deleteContent(String uri) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse deleteContent(String uri, Charset charset) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse deleteContent(URI uri) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse deleteContent(URI uri, Charset charset) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse deleteContent(HttpDelete httpDelete) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse deleteContent(HttpDelete httpDelete, Charset charset) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HttpEntity postResource(URL url, HttpEntity entity) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HttpEntity postResource(String uri, HttpEntity entity) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HttpEntity postResource(URI uri, HttpEntity entity) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HttpEntity postResource(HttpPost httpPost) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HttpEntity deleteResource(URL url) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HttpEntity deleteResource(String uri) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HttpEntity deleteResource(URI uri) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HttpEntity deleteResource(HttpDelete httpDelete) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DigestedResponse requestContent(URL url) throws IOException {
+		SimpleResponse response = client.get( url.toString(), HTTPClient.REFRESH_ONE_DAY );
+		return new DigestedResponse(response.getCode(), response.getStringContents());
+	}
+
+	@Override
+	public DigestedResponse requestContent(URL url, Charset charset) throws IOException {
+		SimpleResponse response = client.get( url.toString(), HTTPClient.REFRESH_ONE_DAY );
+		return new DigestedResponse(response.getCode(), response.getStringContents(charset));
+	}
+
+	@Override
+	public DigestedResponse requestContent(String uri) throws IOException {
+		SimpleResponse response = client.get( uri, HTTPClient.REFRESH_ONE_DAY );
+		return new DigestedResponse(response.getCode(), response.getStringContents());
+	}
+
+	@Override
+	public DigestedResponse requestContent(String uri, Charset charset) throws IOException {
+		SimpleResponse response = client.get( uri );
+		return new DigestedResponse(response.getCode(), response.getStringContents(charset));
+	}
+
+	@Override
+	public DigestedResponse requestContent(URI uri) throws IOException {
+		SimpleResponse response = client.get( uri.toString() );
+		return new DigestedResponse(response.getCode(), response.getStringContents());
+	}
+
+	@Override
+	public DigestedResponse requestContent(URI uri, Charset charset) throws IOException {
+		SimpleResponse response = client.get( uri.toString() );
+		return new DigestedResponse(response.getCode(), response.getStringContents(charset));
+	}
+
+	@Override
+	public DigestedResponse requestContent(HttpGet httpGet) throws IOException {
+		HttpResponse response = client.execute( httpGet );
+		HttpEntity entity = response.getEntity();
+		return new DigestedResponse(response.getStatusLine().getStatusCode(), EntityUtils.toString(entity));
+	}
+
+	@Override
+	public DigestedResponse requestContent(HttpGet httpGet, Charset charset) throws IOException {
+		HttpResponse response = client.execute( httpGet );
+		HttpEntity entity = response.getEntity();
+		return new DigestedResponse(response.getStatusLine().getStatusCode(), EntityUtils.toString(entity, charset));
 	}
 
 }

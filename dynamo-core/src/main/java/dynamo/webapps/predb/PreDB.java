@@ -10,7 +10,7 @@ import core.RegExp;
 import core.WebDocument;
 import dynamo.core.Language;
 import dynamo.model.movies.MovieManager;
-import dynamo.parsers.MovieInfo;
+import dynamo.parsers.ParsedMovieInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.suggesters.movies.MovieSuggester;
 import hclient.HTTPClient;
@@ -68,7 +68,7 @@ public class PreDB implements MovieSuggester {
 					MovieManager.getInstance().suggestImdbId( imdbId, null, Language.EN, suggestionURL );
 				} else {
 					String title = element.select("h2 a").text();
-					MovieInfo movieInfo = VideoNameParser.getMovieInfo( title );
+					ParsedMovieInfo movieInfo = VideoNameParser.getMovieInfo( title );
 					if (movieInfo != null ) {
 						MovieManager.getInstance().suggestByName(movieInfo.getName(), movieInfo.getYear(), null, Language.EN, false, suggestionURL);
 					}

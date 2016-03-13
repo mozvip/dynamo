@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
+import com.omertron.thetvdbapi.TvDbException;
 import com.omertron.thetvdbapi.model.Series;
 
 import core.FileNameUtils;
@@ -121,20 +122,26 @@ public class TVShows extends DynamoManagedBean {
 			unrecognizedFolders = null;
 			
 			return "tvshow?faces-redirect=true&id=" + id;
-		} catch (IOException e) {
+		} catch (IOException | TvDbException e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}
 		
 		return null;
 	}
 	
-	public String newShow( String seriesName, String id, String language ) throws IOException {
-		Path targetFolder = newShowFolder.resolve( FileNameUtils.sanitizeFileName( seriesName ) );
-		TVShowManager.getInstance().identifyFolder( targetFolder, id, language, audioLanguage, subtitlesLanguage );
-		series = null;
-		unrecognizedFolders = null;
+	public String newShow( String seriesName, String id, String language ) {
+		try {
+			Path targetFolder = newShowFolder.resolve( FileNameUtils.sanitizeFileName( seriesName ) );
+			TVShowManager.getInstance().identifyFolder( targetFolder, id, language, audioLanguage, subtitlesLanguage );
+			series = null;
+			unrecognizedFolders = null;
+			
+			return "tvshow?faces-redirect=true&id=" + id;
+		} catch (IOException | TvDbException e) {
+			ErrorManager.getInstance().reportThrowable( e );
+		}
 		
-		return "tvshow?faces-redirect=true&id=" + id;
+		return null;
 	}	
 
 	public Language getSearchLanguage() {

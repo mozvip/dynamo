@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.omertron.themoviedbapi.MovieDbException;
-import com.omertron.themoviedbapi.model.MovieDb;
+import com.omertron.themoviedbapi.model.movie.MovieInfo;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.MoveFileTask;
@@ -40,7 +40,7 @@ import dynamo.model.movies.MovieManager;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultFile;
 import dynamo.model.tvshows.TVShowManager;
-import dynamo.parsers.MovieInfo;
+import dynamo.parsers.ParsedMovieInfo;
 import dynamo.parsers.TVShowEpisodeInfo;
 import dynamo.parsers.VideoInfo;
 import dynamo.parsers.VideoNameParser;
@@ -234,11 +234,11 @@ public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> i
 				
 				VideoInfo info = VideoNameParser.getVideoInfo(path);
 				
-				if ( MovieManager.getInstance().isEnabled() && info instanceof MovieInfo ) {
+				if ( MovieManager.getInstance().isEnabled() && info instanceof ParsedMovieInfo ) {
 
 					// movie found
-					MovieInfo movieInfo = (MovieInfo) info;
-					MovieDb movieDb;
+					ParsedMovieInfo movieInfo = (ParsedMovieInfo) info;
+					MovieInfo movieDb;
 					try {
 						movieDb = MovieManager.getInstance().getMovieDb(movieInfo.getName(), movieInfo.getYear());
 						if (movieDb != null) {

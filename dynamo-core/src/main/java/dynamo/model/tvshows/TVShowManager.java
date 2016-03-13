@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import com.omertron.thetvdbapi.TheTVDBApi;
+import com.omertron.thetvdbapi.TvDbException;
 import com.omertron.thetvdbapi.model.Episode;
 import com.omertron.thetvdbapi.model.Series;
 
@@ -266,7 +267,7 @@ public class TVShowManager implements Reconfigurable {
 		return tvShowDAO.findTVShow(id);
 	}
 
-	public void identifyFolder( Path path, String id, String language, Language audioLang, Language subsLang ) throws IOException {
+	public void identifyFolder( Path path, String id, String language, Language audioLang, Language subsLang ) throws IOException, TvDbException {
 		ManagedSeries series = tvShowDAO.getTVShowForFolder( path );
 		if ( series != null && !series.getId().equals( id ) ) {
 			BackLogProcessor.getInstance().unschedule( String.format( "this.episode.series_id == %s", series.getId() ));
@@ -281,15 +282,15 @@ public class TVShowManager implements Reconfigurable {
 		newSeries( api.getSeries(id, language), path, Language.getByShortName( language ), audioLang, subsLang );
 	}
 
-	public Series getSeries(String id, Language language) {
+	public Series getSeries(String id, Language language) throws TvDbException {
 		return api.getSeries(id, language != null ? language.getShortName() : null);
 	}
 
-	public List<Episode> getAllEpisodes(String id, Language metaDataLanguage) {
+	public List<Episode> getAllEpisodes(String id, Language metaDataLanguage) throws TvDbException {
 		return api.getAllEpisodes(id, metaDataLanguage != null ? metaDataLanguage.getShortName() : Language.EN.getShortName());
 	}
 
-	public Episode getEpisode(String seriesId, int seasonNbr, int episodeNbr, Language language) {
+	public Episode getEpisode(String seriesId, int seasonNbr, int episodeNbr, Language language) throws TvDbException {
 		return api.getEpisode(seriesId, seasonNbr, episodeNbr, language.getShortName());
 	}
 	

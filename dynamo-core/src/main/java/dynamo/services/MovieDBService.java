@@ -11,13 +11,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.omertron.themoviedbapi.MovieDbException;
-import com.omertron.themoviedbapi.model.MovieDb;
-import com.omertron.themoviedbapi.results.TmdbResultsList;
+import com.omertron.themoviedbapi.model.movie.MovieInfo;
+import com.omertron.themoviedbapi.results.ResultList;
 
 import core.RegExp;
 import dynamo.core.Language;
 import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
+import dynamo.services.MovieDBService.MovieResult;
 
 @Path("movie-db")
 public class MovieDBService {
@@ -37,7 +38,7 @@ public class MovieDBService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<MovieResult> find(@QueryParam("name") String name, @QueryParam("year") int year, @QueryParam("lang") String language) throws MovieDbException {
-		TmdbResultsList<MovieDb> result = MovieManager.getInstance().search(name, year, Language.getByShortName( language ));
+		ResultList<MovieInfo> result = MovieManager.getInstance().search(name, year, Language.getByShortName( language ));
 		if (result.getTotalResults() > 0) {
 			return result.getResults().stream().map( movie -> new MovieResult( movie.getId(), movie.getTitle(), parseYear(movie.getReleaseDate()) )).collect( Collectors.toList() );
 		}
@@ -46,7 +47,7 @@ public class MovieDBService {
 	
 	@PUT
 	public Movie selectMovie(@QueryParam("id") long id, @QueryParam("movieDbId") int movieDbId) throws MovieDbException {
-		MovieDb movieDb = MovieManager.getInstance().getMovieInfo( movieDbId );
+		MovieInfo movieDb = MovieManager.getInstance().getMovieInfo( movieDbId );
 		return MovieManager.getInstance().associate(id, movieDb);
 	}
 

@@ -28,6 +28,16 @@
 			"actualName" : "Newlook"
 		}
 		,{
+			"name": "Esprit Bebe",
+			"language": "FR",
+			"actualName" : "Esprit Bébé"
+		}
+		,{
+			"name": "Tele 7 jours",
+			"language": "FR",
+			"actualName" : "Télé 7 jours"
+		}
+		,{
 			"name": "Lui France",
 			"language": "FR",
 			"actualName" : "Lui"
