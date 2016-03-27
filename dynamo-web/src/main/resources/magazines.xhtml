@@ -11,6 +11,7 @@
 	
 		<ui:include src="/fragment-filesDialog.xhtml" />
 		<ui:include src="/fragment-suggestionsDialog.xhtml" />
+		<ui:include src="/fragment-searchResultsDialog.xhtml" />
 
 		<style>
 			.downloadableThumb {
@@ -41,41 +42,44 @@
 		<h:form id="listForm">
 			<ui:include src="/components/pager.xhtml" />
 
-			<ui:repeat var="issue" value="#{pager.items}">
-				<div id="#{issue.id}" class="magazine col-lg-2 col-md-2 col-sm-3 col-xs-6">
+			<ui:repeat var="downloadable" value="#{pager.items}">
+				<div id="#{downloadable.id}" class="col-lg-2 col-md-2 col-sm-3 col-xs-6">
 					<div class="thumbnail downloadableThumb">
-						<ui:fragment rendered="#{issue.status == 'DOWNLOADED'}">					
-							<a href="/download?id=#{issue.id}" target="_blank">
-								<img data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
+						<ui:fragment rendered="#{downloadable.status == 'DOWNLOADED'}">
+							<a href="/download?id=#{downloadable.id}" target="_blank">
+								<img data-src="#{downloadable.urlEncodedCoverImage}" alt="#{downloadable.name}" title="#{downloadable.name}" />
 							</a>
 						</ui:fragment>
-						<ui:fragment rendered="#{issue.status != 'DOWNLOADED'}">					
-							<img data-src="#{issue.urlEncodedCoverImage}" alt="#{issue.name}" title="#{issue.name}" />
+						<ui:fragment rendered="#{downloadable.status != 'DOWNLOADED'}">					
+							<img data-src="#{downloadable.urlEncodedCoverImage}" alt="#{downloadable.name}" title="#{downloadable.name}" />
 						</ui:fragment>
-						<div class="caption">#{issue.name}</div>
+						<div class="caption">#{downloadable.name}</div>
 					</div>
 					<div class="buttons">
-						<ui:fragment rendered="#{issue.status == 'SUGGESTED'}">
-							<a class="btn btn-sm btn-default" onclick="want('#{issue.id}');" title="Want Suggestion">
+						<ui:fragment rendered="#{downloadable.status == 'SUGGESTED'}">
+							<a class="btn btn-sm btn-default" onclick="want('#{downloadable.id}');" title="Want Suggestion">
 								<i class="fa fa-heart"></i>
 							</a>
 						</ui:fragment>
-						<ui:fragment rendered="#{issue.status != 'SUGGESTED'}">
-							<a class="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(issue.name)} ?')) { deleteDownloadable('#{issue.id}'); };" title="Delete Issue">
+						<ui:fragment rendered="#{downloadable.status != 'SUGGESTED'}">
+							<a class="btn btn-sm btn-danger" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(downloadable.name)} ?')) { deleteDownloadable('#{downloadable.id}'); };" title="Delete Issue">
 								<i class="fa fa-trash-o"></i>
 							</a>
 						</ui:fragment>
-						<h:commandLink styleClass="btn btn-sm btn-default" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(issue.name)} ?'));" rendered="#{issue.status == 'SNATCHED' or issue.status == 'DOWNLOADED'}">
-							<f:ajax execute="@this" render="@none" listener="#{kiosk.redownload(issue.id)}" />
+						<h:commandLink styleClass="btn btn-sm btn-default" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(downloadable.name)} ?'));" rendered="#{downloadable.status == 'SNATCHED' or downloadable.status == 'DOWNLOADED'}">
+							<f:ajax execute="@this" render="@none" listener="#{kiosk.redownload(downloadable.id)}" />
 							<i class="fa fa-refresh"></i>
 						</h:commandLink>
-						<ui:fragment rendered="#{issue.status == 'DOWNLOADED'}">
-							<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#fileList" data-downloadable="${issue.id}" title="Show magazine files">
+						<ui:fragment rendered="#{downloadable.status == 'DOWNLOADED'}">
+							<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#fileList" data-downloadable="${downloadable.id}" title="Show files">
 								<i class="fa fa-list"></i>
 							</a>
 						</ui:fragment>
-						<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#suggestionsList" data-downloadable="${issue.id}" title="Show suggestion source URLs">
+						<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#suggestionsList" data-downloadable="${downloadable.id}" title="Show suggestion sources">
 							<i class="fa fa-question"></i>
+						</a>
+						<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#searchResultsList" data-downloadable="${downloadable.id}" title="Show search results">
+							<i class="fa fa-search"></i>
 						</a>
 					</div>
 				</div>

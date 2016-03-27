@@ -21,7 +21,7 @@ public class DeleteDownloadableTask extends DownloadableTask implements LogQueui
 
 	@Override
 	public String toString() {
-		return String.format("Delete %s", downloadable.toString());
+		return String.format("Delete <a href='%s'>%s</a>", downloadable.getRelativeLink(), downloadable.toString());
 	}
 
 }

@@ -144,9 +144,9 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 							BackLogProcessor.getInstance().schedule( new DeleteFileTask( path ));
 						}
 					}
-				}
-				if (!videoFileFound) {
-					TVShowManager.getInstance().ignoreOrDeleteEpisode( managedEpisode );
+					if (!videoFileFound) {
+						TVShowManager.getInstance().ignoreOrDeleteEpisode( managedEpisode );
+					}
 				}
 			}
 		}

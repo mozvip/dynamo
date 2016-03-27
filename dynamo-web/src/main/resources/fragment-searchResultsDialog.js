@@ -1,4 +1,4 @@
-$('#suggestionsList').on(
+$('#searchResultsList').on(
 		'show.bs.modal',
 		function(event) {
 			var button = $(event.relatedTarget) // Button that triggered the modal
@@ -7,17 +7,17 @@ $('#suggestionsList').on(
 			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 			var modal = $(this)
 
-			$("#suggestionsListTable tbody").empty();
+			$("#searchResultsListTable tbody").empty();
 
 			$.ajax({
-				url : "../services/suggestions/" + downloadableId,
+				url : "../services/searchResults/" + downloadableId,
 				dataType : "json",
 				context : document.body
 			}).done(
 					function(data) {
-						var table = $("#suggestionsListTable tbody");
+						var table = $("#searchResultsListTable tbody");
 						$.each(data, function(idx, row) {
-							table.append("<tr><td><a href='" + row.url + "'>" + row.url + "</a></td></tr>");
+							table.append("<tr><td>" + row.title + "</td><td>" + row.type + "</td><td>" + row.sizeInMegs + "</td><td><a href='" + row.url + "'>" + row.url + "</a></td></tr>");
 						});
 					});
 

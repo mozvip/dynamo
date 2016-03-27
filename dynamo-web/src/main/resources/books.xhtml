@@ -7,31 +7,31 @@
 
 <ui:composition template="/template.xhtml">
 
-	<ui:define name="title">
-		Books Collection
-	</ui:define>
-
 	<ui:define name="content">
 	
-		<ui:include src="fragment-filesDialog.xhtml" />
+		<ui:include src="/fragment-filesDialog.xhtml" />
+		<ui:include src="/fragment-suggestionsDialog.xhtml" />
+		<ui:include src="/fragment-searchResultsDialog.xhtml" />
 
 		<style>
 			.downloadableThumb {
 				border: none;
-				height: 320px;
+				height: 350px;
 			}
 			
 			.downloadableThumb img {
-				min-height: 290px;
-				max-height: 290px;
+				min-height: 330px;
+				max-height: 330px;
 			}
 			
 			.thumbnail .caption {
 				font-weight: bold;
 				white-space: nowrap;
 				text-align: center;
+				overflow: scroll;
+				max-width: 270px;
 			}
-			
+
 			.buttons {
 				position: absolute; right: 32px; top: 10px;
 			}
@@ -61,39 +61,45 @@
 			
 			<ui:include src="/components/pager.xhtml" />
 
-			<ui:repeat var="book" value="#{pager.items}">
-				<div class="book col-lg-2 col-md-2 col-sm-3 col-xs-6" id="#{book.id}">
+			<ui:repeat var="downloadable" value="#{pager.items}">
+				<div id="#{downloadable.id}" class="col-lg-2 col-md-2 col-sm-3 col-xs-6">
 					<div class="thumbnail downloadableThumb">
-						<ui:fragment rendered="#{book.status == 'DOWNLOADED'}">
-							<a href="/download?id=#{book.id}" target="_blank">
-								<img data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+						<ui:fragment rendered="#{downloadable.status == 'DOWNLOADED'}">
+							<a href="/download?id=#{downloadable.id}" target="_blank">
+								<img data-src="#{downloadable.urlEncodedCoverImage}" alt="#{downloadable.name}" title="#{downloadable.name}" />
 							</a>
 						</ui:fragment>
-						<ui:fragment rendered="#{book.status == 'SUGGESTED'}">
-							<a href="#" onclick="want('#{book.id}');">
-								<img data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+						<ui:fragment rendered="#{downloadable.status == 'SUGGESTED'}">
+							<a href="#" onclick="want('#{downloadable.id}');">
+								<img data-src="#{downloadable.urlEncodedCoverImage}" alt="#{downloadable.name}" title="#{downloadable.name}" />
 							</a>
 						</ui:fragment>
-						<ui:fragment rendered="#{book.status != 'SUGGESTED' and book.status != 'DOWNLOADED'}">
-							<img data-src="#{book.urlEncodedCoverImage}" alt="#{book.name}" title="#{book.name}" />
+						<ui:fragment rendered="#{downloadable.status != 'SUGGESTED' and downloadable.status != 'DOWNLOADED'}">
+							<img data-src="#{downloadable.urlEncodedCoverImage}" alt="#{downloadable.name}" title="#{downloadable.name}" />
 						</ui:fragment>
-						<div class="caption">#{book.name}</div>
+						<div class="caption">#{downloadable.name}</div>
 					</div>
 					<div class="buttons">
-						<h:commandLink styleClass="btn btn-sm btn-danger" onclick="return (confirm('Are you sure you want to delete #{movies.fixName(book.name)} ?'));" rendered="#{book.status != 'SUGGESTED'}">
+						<h:commandLink styleClass="btn btn-sm btn-danger" onclick="return (confirm('Are you sure you want to delete #{movies.fixName(downloadable.name)} ?'));" rendered="#{downloadable.status != 'SUGGESTED'}">
 							<f:ajax execute="@this" render="@none" listener="#{bookKiosk.delete}" onevent="removeIssueFromKiosk"/>
-							<f:param name="id" value="#{book.id}" />
+							<f:param name="id" value="#{downloadable.id}" />
 							<i class="fa fa-trash-o"></i>
 						</h:commandLink>
-						<h:commandLink styleClass="btn btn-sm btn-default" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(book.name)} ?'));" rendered="#{book.status == 'SNATCHED' or book.status == 'DOWNLOADED'}">
-							<f:ajax execute="@this" render="@none" listener="#{bookKiosk.redownload(book.id)}" />
+						<h:commandLink styleClass="btn btn-sm btn-default" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(downloadable.name)} ?'));" rendered="#{downloadable.status == 'SNATCHED' or downloadable.status == 'DOWNLOADED'}">
+							<f:ajax execute="@this" render="@none" listener="#{bookKiosk.redownload(downloadable.id)}" />
 							<i class="fa fa-refresh"></i>
 						</h:commandLink>
-						<ui:fragment rendered="#{book.status == 'DOWNLOADED'}">
-							<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#fileList" data-downloadable="${book.id}" title="Show book files">
+						<ui:fragment rendered="#{downloadable.status == 'DOWNLOADED'}">
+							<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#fileList" data-downloadable="${downloadable.id}" title="Show files">
 								<i class="fa fa-list"></i>
 							</a>
 						</ui:fragment>						
+						<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#suggestionsList" data-downloadable="${downloadable.id}" title="Show suggestion sources">
+							<i class="fa fa-question"></i>
+						</a>
+						<a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#searchResultsList" data-downloadable="${downloadable.id}" title="Show search results">
+							<i class="fa fa-search"></i>
+						</a>
 					</div>
 				</div>
 			</ui:repeat>
@@ -104,11 +110,6 @@
 	</ui:define>
 	<ui:define name="custom_js">
 		<script>
-		function removeIssueFromKiosk( data ) {
-			if (data.status == 'begin') {
-				disappear( 'bounceOutUp', $(data.source).closest('div.book') );
-			}
-		}
 		function want(id) {
 			$.ajax({
 				  url: "want",
@@ -119,6 +120,11 @@
 					  disappear( 'bounceOutUp', $('#' + id) );
 				  }
 				});
+		}
+		function removeIssueFromKiosk( data ) {
+			if (data.status == 'begin') {
+				disappear( 'bounceOutUp', $(data.source).closest('div.book') );
+			}
 		}
 		</script>
 	</ui:define>
