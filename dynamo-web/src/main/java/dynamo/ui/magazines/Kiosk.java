@@ -83,9 +83,5 @@ public class Kiosk extends DynamoManagedBean {
 		queue( new InvokeMethodTask( MagazineManager.getInstance(), "deleteKiosk", "Delete Kiosk Contents" ), false );
 		BackLogProcessor.getInstance().schedule( new RefreshKioskTask() );
 	}
-	
-	public void redownload( long downloadableId ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		DownloadableManager.getInstance().redownload( downloadableId );
-	}	
 
 }

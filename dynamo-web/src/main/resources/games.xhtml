@@ -114,11 +114,11 @@
 			<ui:repeat var="game" value="#{pager.items}">
 				<div class="col-lg-2 col-md-2 col-sm-3 col-xs-6">
 					<div class="buttons btn-group-vertical" role="group">
-						<a href="#" class="btn btn-sm btn-danger" data-downloadable="${game.id}" onclick="if (confirm('Are you sure you want to delete #{movies.fixName(game.name)} ?')) { deleteDownloadable('#{game.id}'); } else { return false;}">
+						<a href="#" class="btn btn-sm btn-danger" data-downloadable="${game.id}" onclick="if (confirm('Are you sure you want to delete #{downloadableManagedBean.fixName(game.name)} ?')) { deleteDownloadable('#{game.id}'); } else { return false;}">
 							<i class="fa fa-trash"></i>
 						</a>
 						<ui:fragment rendered="#{game.status == 'SNATCHED' or game.status == 'DOWNLOADED'}">
-							<a href="#" class="btn btn-sm btn-danger" data-downloadable="${game.id}" onclick="if (confirm('Are you sure you want to redownload #{movies.fixName(game.name)} ?')) { redownload('#{game.id}'); } else { return false;}">
+							<a href="#" class="btn btn-sm btn-danger" data-downloadable="${game.id}" onclick="if (confirm('Are you sure you want to redownload #{downloadableManagedBean.fixName(game.name)} ?')) { redownload('#{game.id}'); } else { return false;}">
 								<i class="fa fa-refresh"></i>
 							</a>
 						</ui:fragment>

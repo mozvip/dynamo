@@ -177,14 +177,6 @@ public class Movies extends DynamoManagedBean {
 		this.newMovieSubtitlesLanguage = newMovieSubtitlesLanguage;
 	}
 
-	public String fixName( String name ) {
-		return name.replace("'", "\\'");
-	}
-	
-	public String searchName( String name) {
-		return fixName(name).replace('.', ' ');
-	}
-
 	public boolean isRenameFile() {
 		return renameFile;
 	}

@@ -81,10 +81,6 @@ public class BookKiosk extends DynamoManagedBean {
 		queue( new DeleteDownloadableTask( displayedContents.remove( idToDelete ) ));
 	}
 	
-	public void redownload( long downloadableId ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		DownloadableManager.getInstance().redownload( downloadableId );
-	}	
-	
 	public void reset() throws NoSuchMethodException, SecurityException {
 		changeFilter();
 		BackLogProcessor.getInstance().unschedule(RefreshBookSuggestionsTask.class);

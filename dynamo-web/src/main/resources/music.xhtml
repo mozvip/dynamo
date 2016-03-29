@@ -71,7 +71,7 @@
 								<i class="fa fa-download"></i>
 							</a>
 						</ui:fragment>
-						<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{album.status == 'SNATCHED' or album.status == 'DOWNLOADED'}" title="Redownload" onclick="return (confirm('Are you sure you want to redownload #{movies.fixName(album.name)} ?'));">
+						<h:commandLink styleClass="btn btn-sm btn-default" rendered="#{album.status == 'SNATCHED' or album.status == 'DOWNLOADED'}" title="Redownload" onclick="return (confirm('Are you sure you want to redownload #{downloadableManagedBean.fixName(album.name)} ?'));">
 							<f:ajax render="@none" listener="#{music.redownload}" execute="@this" />
 							<f:param name="id" value="#{album.id}" />
 							<i class="fa fa-refresh" />
@@ -82,13 +82,13 @@
 							</a>
 						</ui:fragment>
 						<h:commandLink title="Blacklist Artist" styleClass="btn btn-danger btn-sm" action="#{music.blackListArtist}" rendered="#{album.status == 'SUGGESTED'}"
-							onclick="return confirm('Are you sure you want to blacklist #{movies.fixName(album.artistName)} ?');">
+							onclick="return confirm('Are you sure you want to blacklist #{downloadableManagedBean.fixName(album.artistName)} ?');">
 							<f:ajax render="@none" execute="@this" onevent="removeThumbnail"/>
 							<f:param name="id" value="#{album.id}" />
 							<i class="fa fa-trash-o"></i>
 						</h:commandLink>
 						<h:commandLink title="Delete Album" styleClass="btn btn-danger btn-sm" action="#{music.deleteAlbum}" rendered="#{album.status != 'SUGGESTED'}"
-							onclick="return confirm('Are you sure you want to delete #{movies.fixName(album.name)} ?');">
+							onclick="return confirm('Are you sure you want to delete #{downloadableManagedBean.fixName(album.name)} ?');">
 							<f:ajax render="@none" execute="@this" onevent="removeThumbnail"/>
 							<f:param name="id" value="#{album.id}" />
 							<i class="fa fa-trash-o"></i>
