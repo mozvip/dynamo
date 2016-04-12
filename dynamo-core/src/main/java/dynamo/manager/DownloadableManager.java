@@ -248,10 +248,6 @@ public class DownloadableManager {
 		boolean filesFound = true;
 		
 		Path destinationFolder = downloadable.determineDestinationFolder();
-		if (!Files.exists( destinationFolder )) {
-			Files.createDirectories( destinationFolder );
-		}
-
 		for (Path source : sourceFiles) {
 			
 			if (Files.isDirectory(source)) {

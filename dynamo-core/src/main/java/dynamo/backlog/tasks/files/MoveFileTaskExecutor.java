@@ -23,13 +23,10 @@ public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask
 		
 		if (!Files.exists(source)) {
 			throw new IOException( String.format("Source file %s does not exist", source.toAbsolutePath().toString() ));
-		}		
-		
-		if (!Files.isDirectory( destination.getParent())) {
-			Files.createDirectories( destination.getParent() );
 		}
 
 		if (Files.isWritable(source.getParent()) && !source.toAbsolutePath().equals( destination.toAbsolutePath() )) {
+			Files.createDirectories( destination.getParent() );
 			Files.move( source, destination, StandardCopyOption.REPLACE_EXISTING);
 			DownloadableManager.getInstance().newFile( task, task.getDownloadable(), destination );
 		}

@@ -18,9 +18,44 @@
 			"actualName" : "Elle"
 		}
 		,{
+			"name": "PlayStation Official",
+			"language": "EN",
+			"actualName" : "PlayStation Official Magazine"
+		}
+		,{
+			"name": "Prima France",
+			"language": "FR",
+			"actualName" : "Prima"
+		}
+		,{
 			"name": "Public France",
 			"language": "FR",
 			"actualName" : "Public"
+		}
+		,{
+			"name": "Runner's World France",
+			"language": "FR",
+			"actualName" : "Runner's World"
+		}
+		,{
+			"name": "Vanity Fair France",
+			"language": "FR",
+			"actualName" : "Vanity Fair"
+		}
+		,{
+			"name": "National Geographic France",
+			"language": "FR",
+			"actualName" : "National Geographic"
+		}
+		,{
+			"name": "Stuff France",
+			"language": "FR",
+			"actualName" : "Stuff"
+		}
+		,{
+			"name": "Rolling Stone France",
+			"language": "FR",
+			"actualName" : "Rolling Stone"
 		}
 		,{
 			"name": "NEWLOOK France",

@@ -25,7 +25,7 @@ public class MagazineNameParserTest extends AbstractDynamoTest {
 				
 				System.out.println(title);
 				
-				String result = MagazineNameParser.getIssueInfo( title ).toString();
+				String result = MagazineNameParser.getInstance().getIssueInfo( title ).toString();
 				
 				System.out.println(expected);
 				System.out.println(result);
