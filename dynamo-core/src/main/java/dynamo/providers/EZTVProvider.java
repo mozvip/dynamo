@@ -39,6 +39,9 @@ public class EZTVProvider extends DownloadFinder implements EpisodeFinder {
 	}
 
 	protected List<SearchResult> search( String search ) throws IOException {
+		
+		String searchChars = search.replaceAll("\\W", "").toLowerCase();
+		
 		List<SearchResult> results = new ArrayList<>();
 		
 		String searchString = search.replaceAll("\\s+", "-").toLowerCase();
@@ -49,11 +52,17 @@ public class EZTVProvider extends DownloadFinder implements EpisodeFinder {
 		for (Element row : rows) {
 
 			Element link = row.select("a.epinfo").first();
+			String title = link.text();
+			
+			String titleChars = title.replaceAll("\\W", "").toLowerCase();
+			
+			if (!titleChars.contains( searchChars )) {
+				continue;
+			}
 
 			String sizeExpression = RegExp.extract( link.attr("title") , ".*\\s+\\(([\\d\\.]+\\s+[MG]B)\\)");
 			float sizeInMegs = sizeExpression != null ? parseSize(sizeExpression) : -1.0f;
 
-			String title = link.text();
 			Elements downloadLinks = row.select("a[class~=magnet|download_\\d+]");
 			for (Element downloadLink : downloadLinks) {
 				results.add( new SearchResult( this, SearchResultType.TORRENT, title, downloadLink.attr("href"), referer, sizeInMegs, false) );
