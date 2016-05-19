@@ -23,6 +23,11 @@
 			"actualName" : "PlayStation Official Magazine"
 		}
 		,{
+			"name": "Femina France",
+			"language": "FR",
+			"actualName" : "Femina"
+		}
+		,{
 			"name": "Prima France",
 			"language": "FR",
 			"actualName" : "Prima"

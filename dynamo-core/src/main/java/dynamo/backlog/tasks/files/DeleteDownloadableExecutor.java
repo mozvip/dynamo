@@ -60,13 +60,15 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 				episode.setSource( null );
 				episode.setQuality( null );
 				episode.setSubtitled( false );
-				episode.setIgnored();
 				
 				TVShowManager.getInstance().saveEpisode(episode);
 				
 				BackLogProcessor.getInstance().unschedule( FindSeasonTask.class, String.format("this.downloadable.series.id == %s and this.downloadable.season == %d", episode.getSeriesId(), episode.getSeasonNumber()) );
 			}
 		}
+		
+		downloadableDAO.updateStatus( downloadable.getId(), DownloadableStatus.IGNORED );
+		downloadableDAO.updateLabel( downloadable.getId(), null );
 
 		if (downloadable instanceof Movie || downloadable instanceof VideoGame || downloadable instanceof MusicAlbum) {
 			DownloadableManager.getInstance().delete( downloadable.getId() );

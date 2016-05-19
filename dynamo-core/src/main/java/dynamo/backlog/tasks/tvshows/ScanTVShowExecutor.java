@@ -116,7 +116,6 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 						TVShowManager.getInstance().saveEpisode( managedEpisode );
 						
 						VideoManager.getInstance().getMetaData(managedEpisode, p);
-
 					}
 				}
 			}
@@ -144,9 +143,9 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 							BackLogProcessor.getInstance().schedule( new DeleteFileTask( path ));
 						}
 					}
-					if (!videoFileFound) {
-						TVShowManager.getInstance().ignoreOrDeleteEpisode( managedEpisode );
-					}
+				}
+				if (!videoFileFound) {
+					TVShowManager.getInstance().ignoreOrDeleteEpisode( managedEpisode );
 				}
 			}
 		}
