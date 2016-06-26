@@ -9,10 +9,10 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   });
 }])
 
-.factory('tvShowsService', ['$http', function($http){
+.factory('tvShowsService', ['BackendService', function(BackendService){
   var tvShowsService = {};
   tvShowsService.find = function( type, status ) {
-    return $http.get('http://localhost:8081/services/tvshows');
+    return BackendService.get('tvshows');
   }
   return tvShowsService;
 }])

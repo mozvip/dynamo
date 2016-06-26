@@ -10,13 +10,13 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 }])
 
 
-.factory('movieDbSearchService', ['$http', function($http){
+.factory('movieDbSearchService', ['BackendService', '$http', function(BackendService, $http){
   var movieDbSearchService = {};
   movieDbSearchService.find =  function( name, year, lang ) {
-    return $http.get('http://localhost:8081/services/movie-db?name=' + name + '&year=' + year + '&lang=' + lang);
+    return BackendService.get( 'movie-db?name=' + name + '&year=' + year + '&lang=' + lang );
   }
   movieDbSearchService.associate =  function( id, movieDbId ) {
-    return $http.put('http://localhost:8081/services/movie-db?id=' + id + '&movieDbId=' + movieDbId);
+    return $http.put(BackendService.getBackendURL() + 'movie-db?id=' + id + '&movieDbId=' + movieDbId);
   }
   return movieDbSearchService;
 }])

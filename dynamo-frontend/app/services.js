@@ -1,11 +1,17 @@
 'use strict';
 
-angular.module('myApp')
+angular.module('dynamo')
 
-.factory('BackendService', [function() {
+.factory('BackendService', ['backendHostAndPort', '$http', function(backendHostAndPort, $http){
 
-}])
+    return {
+        getBackendURL : function() {
+            return 'http://' + backendHostAndPort + '/services/';
+        },
 
-.controller('View2Ctrl', [function() {
+        get: function( urlPrefix ) {
+            return $http.get( this.getBackendURL() + urlPrefix );
+        }
+    }
 
 }]);
