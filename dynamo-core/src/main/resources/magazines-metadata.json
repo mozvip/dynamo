@@ -23,6 +23,21 @@
 			"actualName" : "PlayStation Official Magazine"
 		}
 		,{
+			"name": "Science et Santé",
+			"language": "FR",
+			"actualName" : "Science & Santé"
+		}
+		,{
+			"name": "Science et Vie Découvertes",
+			"language": "FR",
+			"actualName" : "Science & Vie Decouvertes"
+		}
+		,{
+			"name": "Science et Vie Junior",
+			"language": "FR",
+			"actualName" : "Science & Vie Junior"
+		}
+		,{
 			"name": "Femina France",
 			"language": "FR",
 			"actualName" : "Femina"

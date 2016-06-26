@@ -1,0 +1,33 @@
+<div class="form-inline">
+  <div class="input-group">
+    <label class="control-label">Name</label>
+    <input type="text" ng-model="filter" class="form-control" placeholder="Search for ..." ng-change="filterChanged()"/>
+  </div>
+  <div class="input-group">
+    <label class="control-label">Language</label>
+    <select ng-model="filterLanguage" class="form-control" ng-change="filterChanged()"/>
+  </div>
+</div>
+
+<div class="row" ng-show="filteredList.length > 24">
+  <p class="text-center">
+    <uib-pagination total-items="filteredList.length" items-per-page="24" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+  </p>
+</div>
+
+<div class="thumbnail downloadable-thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents">
+  <img src="http://localhost:8081{{downloadable.urlEncodedCoverImage}}" alt="{{downloadable.name}}" ng-if="downloadable.urlEncodedCoverImage" style="min-height: 280px;" />
+  <img src="common/movie.jpg" alt="{{downloadable.name}}" ng-if="!downloadable.urlEncodedCoverImage" style="max-height: 280px;" />
+  <div class="buttons">
+    <button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default btn-lg btn-block">Show Files</button>
+    <button type="button" confirmed-click="delete(downloadable)" ng-confirm-click="Are you sure you want to delete {{downloadable.name}} ?" class="btn btn-danger btn-lg btn-block">Delete</button>
+    <button type="button" ng-show="downloadable.status == 'DOWNLOADED' || downloadable.status == 'SNATCHED'" confirmed-click="redownload(downloadable)" ng-confirm-click="Are you sure you want to redownload {{downloadable.name}} ?" class="btn btn-danger btn-lg btn-block">Redownload</button>
+    <button type="button" ng-show="downloadable.status == 'SUGGESTED'" ng-click="want(downloadable)" class="btn btn-primary btn-lg btn-block">Want</button>
+    <a target="_blank" ng-show="downloadable.imdbID" class="btn btn-default btn-lg btn-block" href="http://www.imdb.com/title/{{downloadable.imdbID}}">IMDB&nbsp;<span class="glyphicon glyphicon-new-window" /></a>
+  </div>
+  <div class="caption">
+    {{downloadable.name}}
+  </div>
+</div>
+
+<ng-include src="'common/templates.html'" />

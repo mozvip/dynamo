@@ -1,0 +1,33 @@
+<script type="text/ng-template" id="fileList.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Files</h3>
+    </div>
+    <div class="modal-body">
+      <table class="table table-condensed table-striped">
+        <tr ng-repeat="item in files">
+          <td>
+            <div class="button-list">
+              <button class="btn btn-sm btn-danger" confirmed-click="delete(item)" ng-confirm-click="Are you sure you want to delete {{item.filePath}} ?">
+                <span class="glyphicon glyphicon-trash" />
+              </button>
+              <button class="btn btn-sm btn-default">
+                <span class="glyphicon glyphicon-download" />
+              </button>
+            </div>
+          </td>
+          <td>
+            <span>
+              {{ item.filePath }}
+            </span>
+          </td>
+          <td>
+            {{ item.size | number }}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</script>

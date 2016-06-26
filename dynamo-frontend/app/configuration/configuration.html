@@ -1,0 +1,41 @@
+
+<uib-accordion>
+  <uib-accordion-group heading="{{category.name}}" ng-repeat="category in categories | orderBy : 'name'">
+
+    <div ng-repeat="item in category.items">
+
+      Key : {{item.key}}
+      Disabled : {{isDisabled(item.key)}}
+      Required : {{isRequired(item.key)}}
+
+      {{item.type}}
+
+      <div ng-if="item.type == 'dynamo.core.Language'">
+        <label class="control-label">{{item.label}}</label>
+        <select />
+      </div>
+
+      <div ng-if="!isDisabled(item.key) && (item.type == 'java.util.List' || item.type == 'java.util.Set' || item.type == 'java.util.Collection')">
+        {{item.label}}
+        <ul>
+          <li ng-repeat="value in item.value">
+            {{value}}
+          </li>
+        <ul>
+
+      </div>
+
+      <div class="checkbox" ng-if="item.type == 'boolean'">
+        <label>
+          <input type="checkbox" ng-model="items[item.key].value" ng-required="items[item.key].required" ng-change="configurationChanged(item.key)">{{item.label}}
+        </label>
+      </div>
+
+      <div ng-if="item.type == 'java.lang.String'">
+        <label class="control-label">{{item.label}}</label>
+        <input type="text" ng-required="items[item.key].required" ng-model="items[item.key].value" class="form-control" />
+      </div>
+
+    </div>
+  </uib-accordion-group>
+</uib-accordion>
