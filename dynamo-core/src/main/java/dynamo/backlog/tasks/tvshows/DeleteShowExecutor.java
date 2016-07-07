@@ -8,9 +8,10 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import dynamo.backlog.BackLogProcessor;
-import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.TVShowDAO;
+import dynamo.model.backlog.find.FindEpisodeTask;
+import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import model.ManagedSeries;
 import model.backlog.RefreshTVShowTask;
 import model.backlog.ScanTVShowTask;
@@ -30,6 +31,8 @@ public class DeleteShowExecutor extends TaskExecutor<DeleteShowTask> {
 	public void execute() throws Exception {
 		BackLogProcessor.getInstance().unschedule(RefreshTVShowTask.class, String.format("this.series.id == %s", series.getId()));
 		BackLogProcessor.getInstance().unschedule(ScanTVShowTask.class, String.format("this.series.id == %s", series.getId()));
+		BackLogProcessor.getInstance().unschedule(FindSubtitleEpisodeTask.class, String.format("this.episode.seriesId == %s", series.getId()));
+		BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("this.episode.seriesId == %s", series.getId()));
 
 		tvShowDAO.deleteTVShow(series.getId());
 
@@ -48,7 +51,7 @@ public class DeleteShowExecutor extends TaskExecutor<DeleteShowTask> {
 						return FileVisitResult.CONTINUE;
 					}
 				});
-				Files.deleteIfExists( series.getFolder() );
+				Files.delete( series.getFolder() );
 			}
 		}
 	}

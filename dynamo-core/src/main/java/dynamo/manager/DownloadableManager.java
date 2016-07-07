@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.reflections.Reflections;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.AudioFileFilter;
@@ -97,8 +98,14 @@ public class DownloadableManager {
 		return SingletonHolder.instance;
 	}
 	
+	private Set<Class<? extends Downloadable>> downloadableTypes;
+	
 	private DownloadableManager() {
 		findDownloadableFactory = new DynamoObjectFactory<FindDownloadableTask>( "dynamo", FindDownloadableTask.class);
+
+		Reflections reflections = new Reflections("dynamo");
+		downloadableTypes = reflections.getSubTypesOf(Downloadable.class);
+		
 	}
 	
 	private DownloadableDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableDAO.class );
