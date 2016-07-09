@@ -13,7 +13,11 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 .factory('movieDbSearchService', ['BackendService', '$http', function(BackendService, $http){
   var movieDbSearchService = {};
   movieDbSearchService.find =  function( name, year, lang ) {
-    return BackendService.get( 'movie-db?name=' + name + '&year=' + year + '&lang=' + lang );
+    var url = 'movie-db?name=' + name + '&lang=' + lang;
+    if (year) {
+      url = url + "&year=" + year;
+    }
+    return BackendService.get( url );
   }
   movieDbSearchService.associate =  function( id, movieDbId ) {
     return $http.put(BackendService.getBackendURL() + 'movie-db?id=' + id + '&movieDbId=' + movieDbId);

@@ -47,6 +47,10 @@ public interface DownloadableDAO {
 	@SqlUpdate("DELETE FROM DOWNLOADABLE WHERE ID = :downloadableId")
 	public void delete(@Bind("downloadableId") long downloadableId);
 
+	@SqlQuery("SELECT * FROM DOWNLOADABLE WHERE DTYPE = :className AND status = :status")
+	@Mapper(DownloadInfoMapper.class)
+	public List<DownloadInfo> findByStatus(@BindClassName("className") Class<? extends Downloadable> klass, @BindEnum("status") DownloadableStatus status);
+
 	@SqlUpdate("DELETE FROM DOWNLOADABLE WHERE DTYPE = :className AND status = :statusToDelete")
 	public void delete(@BindClassName("className") Class<? extends Downloadable> className, @BindEnum("statusToDelete") DownloadableStatus statusToDelete);
 

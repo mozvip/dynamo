@@ -417,5 +417,17 @@ public class DownloadableManager {
 	public void saveSuggestionURL(long downloadableId, String suggestionURL) {
 		suggestionURLDAO.saveSuggestionURL(downloadableId, suggestionURL);
 	}
+	
+	public Class<? extends Downloadable> getDownloadableTypeBySimpleName( String simpleName ) {
+		for (Class<? extends Downloadable> downloadableClass : downloadableTypes) {
+			if (downloadableClass.getSimpleName().equalsIgnoreCase( simpleName )) {
+				return downloadableClass;
+			}
+		}
+		return null;
+	}
 
+	public List<DownloadInfo> findByStatus(Class<? extends Downloadable> klass, DownloadableStatus status) {
+		return downloadableDAO.findByStatus(klass, status);
+	}
 }

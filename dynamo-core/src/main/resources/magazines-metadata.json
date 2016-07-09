@@ -1,6 +1,19 @@
 {
 	"magazines": [
 		{
+			"name": "Playboy Venezuela",
+			"language": "SP"
+		}
+		,{
+			"name": "Playboy Slovenija",
+			"language": "SL"
+		}
+		,{
+			"name": "Us Weekly",
+			"actualName" : "US Weekly",
+			"language": "EN"
+		}
+		,{
 			"name": "La Gazzetta dello Sport",
 			"language": "IT"
 		}
@@ -23,12 +36,12 @@
 			"actualName" : "PlayStation Official Magazine"
 		}
 		,{
-			"name": "Science et Santé",
+			"name": "Science et SantÃ©",
 			"language": "FR",
-			"actualName" : "Science & Santé"
+			"actualName" : "Science & SantÃ©"
 		}
 		,{
-			"name": "Science et Vie Découvertes",
+			"name": "Science et Vie DÃ©couvertes",
 			"language": "FR",
 			"actualName" : "Science & Vie Decouvertes"
 		}
@@ -85,12 +98,12 @@
 		,{
 			"name": "Esprit Bebe",
 			"language": "FR",
-			"actualName" : "Esprit Bébé"
+			"actualName" : "Esprit BÃ©bÃ©"
 		}
 		,{
 			"name": "Tele 7 jours",
 			"language": "FR",
-			"actualName" : "Télé 7 jours"
+			"actualName" : "TÃ©lÃ© 7 jours"
 		}
 		,{
 			"name": "Lui France",
@@ -200,7 +213,7 @@
 		,{
 			"name": "Fr Sie",
 			"language": "DE",
-			"actualName" : "Für Sie"
+			"actualName" : "FÃ¼r Sie"
 		}
 	]
 }

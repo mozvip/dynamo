@@ -42,6 +42,16 @@ public class DownloadInfo implements Serializable {
 	public String getCoverImage() {
 		return coverImage;
 	}
+	
+	public String getUrlEncodedCoverImage() {
+		if (coverImage == null) {
+			return null;
+		}
+		String url = "/data/" + coverImage;
+		url = url.replaceAll("\\+", "%2B");
+		url = url.replaceAll("\\#", "%23");
+		return url;
+	}	
 
 	private Set<String> alternateNames = new HashSet<String>();
 
