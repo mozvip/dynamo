@@ -11,8 +11,6 @@ It is coded in Java 7.
 
 ### How do I get set up? ###
 
-### Builds are automatically uploaded here : http://ns331806.ip-37-59-55.eu/ ###
-
 If you want to build yourself, Maven is the easiest way, you can create an Eclipse workspace too if you want.
 
 the "dynamo" project is the parent pom.
