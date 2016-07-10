@@ -15,15 +15,17 @@ public abstract class Downloadable {
 	private String label;
 	private String coverImage;
 	private String aka;
+	protected int year;
 	private Date creationDate;
 
-	public Downloadable(Long id, String name, String label, DownloadableStatus status, String coverImage, String aka, Date creationDate) {
+	public Downloadable(Long id, String name, String label, DownloadableStatus status, String coverImage, String aka, int year, Date creationDate) {
 		this.id = id;
 		this.name = name;
 		this.label = label;
 		this.status = status;
 		this.coverImage = coverImage;
 		this.aka = aka;
+		this.year = year;
 		this.creationDate = creationDate;
 	}
 
@@ -101,6 +103,14 @@ public abstract class Downloadable {
 	@Override
 	public boolean equals(Object obj) {
 		return (obj instanceof Downloadable) && ((Downloadable)obj).getId() == id;
+	}
+	
+	public int getYear() {
+		return year;
+	}
+	
+	public void setYear(int year) {
+		this.year = year;
 	}
 	
 	public Date getCreationDate() {

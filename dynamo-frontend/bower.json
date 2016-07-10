@@ -17,6 +17,8 @@
     "bootstrap": "~3.3.6",
     "angular-messages": "~1.5.7",
     "toastr": "~2.1.2",
-    "angular-resource": "~1.5.7"
+    "angular-resource": "~1.5.7",
+    "ng-sweet-alert": "~1.0.7",
+    "sweetalert": "~1.1.3"
   }
 }

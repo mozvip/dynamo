@@ -28,6 +28,7 @@ import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
+import dynamo.core.model.DownloableCount;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.HistoryDAO;
@@ -297,17 +298,15 @@ public class DownloadableManager {
 		downloadableDAO.delete(id);
 	}
 
-	public void redownload(Downloadable downloadable) {
-		// blacklist search result
-		searchResultDAO.blacklist(downloadable.getId());
-		// delete all corresponding files
-		getAllFiles(downloadable.getId()).forEach( downloadedFile -> BackLogProcessor.getInstance().schedule( new DeleteTask(downloadedFile.getFilePath(), true), false ));
-		want(downloadable);
+	public void redownload(Downloadable downloadable) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+		redownload(downloadable.getId());
 	}
 
 	public void redownload( long downloadableId ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 		// blacklist search result
 		searchResultDAO.blacklist( downloadableId );
+		// delete all corresponding files
+		getAllFiles(downloadableId).forEach( downloadedFile -> BackLogProcessor.getInstance().schedule( new DeleteTask(downloadedFile.getFilePath(), true), false ));
 		want(downloadableId);
 	}
 	
@@ -429,5 +428,17 @@ public class DownloadableManager {
 
 	public List<DownloadInfo> findByStatus(Class<? extends Downloadable> klass, DownloadableStatus status) {
 		return downloadableDAO.findByStatus(klass, status);
+	}
+
+	public void updateYear(long id, int year) {
+		downloadableDAO.updateYear(id, year);
+	}
+
+	public void updateName(long id, String name) {
+		downloadableDAO.updateName(id, name);
+	}
+
+	public List<DownloableCount> getCounts() {
+		return downloadableDAO.getCounts();
 	}
 }

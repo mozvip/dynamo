@@ -13,7 +13,7 @@ public class VideoGame extends Downloadable {
 	private Long theGamesDbId;
 
 	public VideoGame( Long id, DownloadableStatus status, String coverImage, String name, GamePlatform platform, Long theGamesDbId) {
-		super( id, name, null, status, coverImage, null, null);
+		super( id, name, null, status, coverImage, null,-1,  null);
 		this.platform = platform;
 		this.theGamesDbId = theGamesDbId;
 	}

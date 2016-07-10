@@ -25,7 +25,7 @@ public class DownloadInfoMapper implements ResultSetMapper<DownloadInfo> {
 					Class.forName(r.getString("DTYPE")),
 					r.getString("COVER_IMAGE"),
 					statusStr != null ? DownloadableStatus.valueOf( statusStr) : null,
-					r.getString("AKA") );
+					r.getString("AKA"), r.getInt("YEAR") );
 		} catch (ClassNotFoundException e) {
 			ErrorManager.getInstance().reportThrowable( e );
 			return null;

@@ -39,7 +39,7 @@ public class ManagedEpisode extends Downloadable implements Video {
 			int episodeNumber, Integer absoluteNumber, String episodeName,
 			Date firstAired, boolean subtitled, boolean watched, String label) {
 
-		super(id, episodeName, label, status, null, null, null);
+		super(id, episodeName, label, status, null, null, -1, null);
 		
 		this.seriesName = seriesName;
 		this.subtitlesPath = subtitlesPath;

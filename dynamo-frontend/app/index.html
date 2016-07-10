@@ -11,6 +11,7 @@
   <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
   <link href="bower_components/toastr/toastr.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="bower_components/sweetalert/dist/sweetalert.css">
   <link href="app.css" rel="stylesheet" />
 
 </head>
@@ -34,9 +35,9 @@
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Movies <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#/movies/DOWNLOADED">Collection</a></li>
-                <li><a href="#/movies/WANTED,SNATCHED">Wanted</a></li>
-                <li><a href="#/movies/SUGGESTED">Suggestions</a></li>
+                <li><a ng-show="moviesCollectionCount > 0" href="#/movies/DOWNLOADED">Collection <span class="badge">{{moviesCollectionCount}}</span></a></li>
+                <li><a ng-show="moviesWantedCount > 0" href="#/movies/WANTED,SNATCHED">Wanted <span class="badge">{{moviesWantedCount}}</span></a></li>
+                <li><a ng-show="moviesSuggestionCount > 0"href="#/movies/SUGGESTED">Suggestions <span class="badge">{{moviesSuggestionCount}}</span></a></li>
               </ul>
             </li>
             <li class="dropdown">
@@ -100,6 +101,8 @@
   <script src="bower_components/angular-resource/angular-resource.min.js"></script>
   <script src="bower_components/angular-websocket/angular-websocket.min.js"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="bower_components/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="bower_components/ng-sweet-alert/ng-sweet-alert.js"></script>
 
   <script src="app.js"></script>
   <script src="services.js"></script>

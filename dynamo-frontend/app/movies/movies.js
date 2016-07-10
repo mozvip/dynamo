@@ -82,6 +82,9 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 
   $scope.filterChanged = function() {
     $scope.filteredList = filterFilter($scope.allItems, {'name': $scope.filter });
+    if ($scope.filterYear) {
+      $scope.filteredList = filterFilter($scope.filteredList, {'year': $scope.filterYear });
+    }
     $scope.currentPage = 1;
     $scope.pageChanged();
   }

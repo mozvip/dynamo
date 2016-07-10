@@ -31,8 +31,6 @@ public class Movie extends Downloadable implements Video {
 	
 	private float rating;
 	
-	private int year;
-	
 	private boolean watched;
 
 	public Movie( Long id, DownloadableStatus status, String coverImage, String aka, String name, String label, Path subtitlesPath, boolean subtitled,
@@ -42,7 +40,7 @@ public class Movie extends Downloadable implements Video {
 			String releaseGroup, int movieDbId,
 			String imdbID, String traktUrl, float rating, int year,
 			boolean watched) {
-		super( id, name, label, status, coverImage, aka, null );
+		super( id, name, label, status, coverImage, aka, year, null );
 
 		this.subtitlesPath = subtitlesPath;
 		this.subtitled = subtitled;
@@ -57,7 +55,6 @@ public class Movie extends Downloadable implements Video {
 		this.imdbID = imdbID;
 		this.traktUrl = traktUrl;
 		this.rating = rating;
-		this.year = year;
 		this.watched = watched;
 	}
 
@@ -154,14 +151,6 @@ public class Movie extends Downloadable implements Video {
 
 	public void setWantedSubtitlesLanguage(Language wantedSubtitlesLanguage) {
 		this.wantedSubtitlesLanguage = wantedSubtitlesLanguage;
-	}
-
-	public int getYear() {
-		return year;
-	}
-
-	public void setYear(int year) {
-		this.year = year;
 	}
 
 	public Language getOriginalLanguage() {

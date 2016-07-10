@@ -17,10 +17,10 @@ public class DownloadInfo implements Serializable {
 	private String name;
 	private DownloadableStatus status = DownloadableStatus.IGNORED;
 	private String type;
+	private int year;
 	private String coverImage;
 
-	public DownloadInfo(Long id, String name, Class downloadableClass, String coverImage, 
-			DownloadableStatus status, String aka) {
+	public DownloadInfo(Long id, String name, Class downloadableClass, String coverImage, DownloadableStatus status, String aka, int year) {
 		this.id = id;
 		this.name = name;
 		this.type = downloadableClass.getName();
@@ -33,6 +33,8 @@ public class DownloadInfo implements Serializable {
 				alternateNames.add(element);
 			}
 		}
+		
+		this.year = year;
 	}
 
 	public long getId() {
@@ -104,6 +106,10 @@ public class DownloadInfo implements Serializable {
 
 	public String getRelativeLink() {
 		return "";
+	}
+	
+	public int getYear() {
+		return year;
 	}
 
 	public Class<Downloadable> getDownloadableClass() throws ClassNotFoundException {

@@ -1,6 +1,7 @@
 package dynamo.model.tvshows;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -466,7 +467,7 @@ public class TVShowManager implements Reconfigurable {
 		return null;
 	}
 	
-	public void redownload( ManagedEpisode episode ) {
+	public void redownload( ManagedEpisode episode ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 		DownloadableManager.getInstance().redownload( episode );
 		saveEpisode(episode);
 	}

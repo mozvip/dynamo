@@ -79,11 +79,17 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   downloadableService.find = function( type, status ) {
     return $http.get('http://' + backendHostAndPort + '/services/downloadable?type=' + type + '&status=' + status);
   }
+  downloadableService.counts = function() {
+    return $http.get('http://' + backendHostAndPort + '/services/downloadable/counts');
+  }
   downloadableService.want = function( downloadableId ) {
     return $http.post('http://' + backendHostAndPort + '/services/downloadable/want?id=' + downloadableId);
   }
   downloadableService.redownload = function( downloadableId ) {
-    return $http.post('http://' + backendHostAndPort + '/services/downloadable/redownload?id=' + downloadableId);
+    return $http.post('http://' + backendHostAndPort + '/services/downloadable/redownload/' + downloadableId);
+  }
+  downloadableService.delete = function( downloadableId ) {
+    return $http.delete('http://' + backendHostAndPort + '/services/downloadable/' + downloadableId);
   }
   downloadableService.updateImage = function( downloadableId ) {
     return $http.post('http://' + backendHostAndPort + '/services/downloadable/updateImage?id=' + downloadableId);

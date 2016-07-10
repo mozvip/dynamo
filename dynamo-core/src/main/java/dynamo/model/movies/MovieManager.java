@@ -21,7 +21,6 @@ import com.omertron.themoviedbapi.TheMovieDbApi;
 import com.omertron.themoviedbapi.enumeration.SearchType;
 import com.omertron.themoviedbapi.model.movie.MovieInfo;
 import com.omertron.themoviedbapi.results.ResultList;
-import com.omertron.themoviedbapi.tools.HttpTools;
 
 import core.RegExp;
 import core.WebResource;
@@ -235,19 +234,22 @@ public class MovieManager implements Reconfigurable {
 			movieDb = getMovieInfo(movieDb.getId());
 		}
 
-		movie.setName( movieDb.getTitle() );
+		if (movie.getName().equals(movieDb.getTitle())) {
+			DownloadableManager.getInstance().updateName( movie.getId(), movieDb.getTitle());
+			movie.setName( movieDb.getTitle() );
+		}
 		movie.setMovieDbId( movieDb.getId() );
 		movie.setImdbID( movieDb.getImdbID() );
-
-		if (StringUtils.isNotBlank( movieDb.getReleaseDate() )) {
-			movie.setYear( Integer.parseInt( RegExp.extract( movieDb.getReleaseDate(), "(\\d{4}).*") ) );
-		}
 
 		String coverImage = null;
 		if (movieDb.getPosterPath() != null) {
 			coverImage = LocalImageCache.getInstance().download( "movies", movie.getImdbID(), getImageURL( movieDb.getPosterPath()), null );		
 		} else {
 			coverImage = "/downloaded-movie-unknown.jpg";
+		}
+		if ( movie.getYear() < 0 && StringUtils.isNotBlank( movieDb.getReleaseDate() )) {
+			movie.setYear( Integer.parseInt( RegExp.extract( movieDb.getReleaseDate(), "(\\d{4}).*") ) );
+			DownloadableManager.getInstance().updateYear( movie.getId(), movie.getYear());
 		}
 		if ( movie.getCoverImage() == null || !movie.getCoverImage().equals( coverImage )) {
 			movie.setCoverImage( coverImage );
@@ -437,12 +439,8 @@ public class MovieManager implements Reconfigurable {
 	}
 
 	public void save(Movie movie) {
-		save(movie.getId(), movie);
-	}
-
-	public void save(long downloadableId, Movie movie) {
 		movieDAO.save(
-				downloadableId, movie.getImdbID(), movie.getMovieDbId(), movie.getYear(), movie.getOriginalLanguage(),
+				movie.getId(), movie.getImdbID(), movie.getMovieDbId(), movie.getOriginalLanguage(),
 				movie.getQuality(), movie.getRating(), movie.getReleaseGroup(), movie.getSource(), movie.isSubtitled(), movie.getSubtitlesPath(),
 				movie.getTraktUrl(), movie.getWantedAudioLanguage(), movie.getWantedSubtitlesLanguage(), movie.getQuality(), movie.isWatched()
 		);

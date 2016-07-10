@@ -1,6 +1,7 @@
 package dynamo.ui.music;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -277,7 +278,7 @@ public class MusicArtistManagedBean extends DynamoManagedBean {
 		DownloadableManager.getInstance().want( album );
 	}
 	
-	public void redownload( long downloadableId ) {
+	public void redownload( long downloadableId ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 		for (MusicAlbum musicAlbum : albums) {
 			if (musicAlbum.getId() == downloadableId) {
 				List<MusicFile> files = getFiles( downloadableId );

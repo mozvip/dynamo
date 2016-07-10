@@ -47,7 +47,7 @@ public interface DownloadableDAO {
 	@SqlUpdate("DELETE FROM DOWNLOADABLE WHERE ID = :downloadableId")
 	public void delete(@Bind("downloadableId") long downloadableId);
 
-	@SqlQuery("SELECT * FROM DOWNLOADABLE WHERE DTYPE = :className AND status = :status")
+	@SqlQuery("SELECT * FROM DOWNLOADABLE WHERE DTYPE = :className AND status = :status ORDER BY NAME")
 	@Mapper(DownloadInfoMapper.class)
 	public List<DownloadInfo> findByStatus(@BindClassName("className") Class<? extends Downloadable> klass, @BindEnum("status") DownloadableStatus status);
 
@@ -90,5 +90,12 @@ public interface DownloadableDAO {
 	@SqlQuery("SELECT * FROM DOWNLOADABLE_FILES WHERE FILE_PATH = :path")
 	@Mapper(DownloadableFileMapper.class)
 	public DownloadableFile getFile(@BindPath("path") Path path);
+
+	@SqlUpdate("UPDATE DOWNLOADABLE SET YEAR = :year WHERE ID = :id")
+	public void updateYear(@Bind("id") long id, @Bind("year") int year);
+	
+	@SqlQuery("SELECT DTYPE, STATUS, COUNT(*) AS C FROM DOWNLOADABLE GROUP BY DTYPE, STATUS")
+	@Mapper(DownloableCountMapper.class)
+	public List<DownloableCount> getCounts();
 
 }
