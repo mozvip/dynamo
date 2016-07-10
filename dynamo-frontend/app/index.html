@@ -32,7 +32,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="dropdown">
+            <li class="dropdown" ng-show="moviesCollectionCount > 0 || moviesWantedCount > 0 || moviesSuggestionCount > 0">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Movies <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a ng-show="moviesCollectionCount > 0" href="#/movies/DOWNLOADED">Collection <span class="badge">{{moviesCollectionCount}}</span></a></li>
@@ -40,28 +40,28 @@
                 <li><a ng-show="moviesSuggestionCount > 0"href="#/movies/SUGGESTED">Suggestions <span class="badge">{{moviesSuggestionCount}}</span></a></li>
               </ul>
             </li>
-            <li class="dropdown">
+            <li class="dropdown" ng-show="magazinesCollectionCount > 0 || magazinesWantedCount > 0 || magazinesSuggestionCount > 0">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Magazines <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#/magazines/DOWNLOADED">Collection</a></li>
-                <li><a href="#/magazines/WANTED,SNATCHED">Wanted</a></li>
-                <li><a href="#/magazines/SUGGESTED">Suggestions</a></li>
+                <li><a ng-show="magazinesCollectionCount > 0" href="#/magazines/DOWNLOADED">Collection <span class="badge">{{magazinesCollectionCount}}</span></a></li>
+                <li><a ng-show="magazinesWantedCount > 0" href="#/magazines/WANTED,SNATCHED">Wanted <span class="badge">{{magazinesWantedCount}}</span></a></li>
+                <li><a ng-show="magazinesSuggestionCount > 0" href="#/magazines/SUGGESTED">Suggestions <span class="badge">{{magazinesSuggestionCount}}</span></a></li>
               </ul>
             </li>
-            <li class="dropdown">
+            <li class="dropdown" ng-show="booksCollectionCount > 0 || booksWantedCount > 0 || booksSuggestionCount > 0">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Books <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#/books/DOWNLOADED">Collection</a></li>
-                <li><a href="#/books/WANTED,SNATCHED">Wanted</a></li>
-                <li><a href="#/books/SUGGESTED">Suggestions</a></li>
+                <li><a ng-show="booksCollectionCount > 0" href="#/books/DOWNLOADED">Collection <span class="badge">{{booksCollectionCount}}</span></a></li>
+                <li><a ng-show="booksWantedCount > 0" href="#/books/WANTED,SNATCHED">Wanted <span class="badge">{{booksWantedCount}}</span></a></li>
+                <li><a ng-show="booksSuggestionCount > 0" href="#/books/SUGGESTED">Suggestions <span class="badge">{{booksSuggestionCount}}</span></a></li>
               </ul>
             </li>
-            <li class="dropdown">
+            <li class="dropdown" ng-show="musicAlbumsCollectionCount > 0 || musicAlbumsWantedCount > 0 || musicAlbumsSuggestionCount > 0">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Music <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#/music/DOWNLOADED">Collection</a></li>
-                <li><a href="#/music/WANTED,SNATCHED">Wanted</a></li>
-                <li><a href="#/music/SUGGESTED">Suggestions</a></li>
+                <li><a ng-show="musicAlbumsCollectionCount > 0" href="#/music/DOWNLOADED">Collection <span class="badge">{{musicAlbumsCollectionCount}}</span></a></li>
+                <li><a ng-show="musicAlbumsWantedCount > 0" href="#/music/WANTED,SNATCHED">Wanted <span class="badge">{{musicAlbumsWantedCount}}</span></a></li>
+                <li><a ng-show="musicAlbumsSuggestionCount > 0" href="#/music/SUGGESTED">Suggestions <span class="badge">{{musicAlbumsSuggestionCount}}</a></li>
               </ul>
             </li>
             <li><a href="#/tvshows">TV Shows</a></li>
