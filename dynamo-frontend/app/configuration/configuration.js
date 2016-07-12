@@ -46,10 +46,10 @@ angular.module('dynamo.configuration', ['ngRoute'])
     $scope.categories = response.data;
   });
 
-  for (let iCategory=0; iCategory<$scope.categories.length; iCategory++) {
-    let category = $scope.categories[iCategory];
-    for (let iItem=0; iItem<category.items.length; iItem++) {
-      let item = $category.items[iItem];
+  for (var iCategory=0; iCategory<$scope.categories.length; iCategory++) {
+    var category = $scope.categories[iCategory];
+    for (var iItem=0; iItem<category.items.length; iItem++) {
+      var item = $category.items[iItem];
       $scope.items[item.key].value = item.value;
     }
   }
