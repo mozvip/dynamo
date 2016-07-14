@@ -45,8 +45,8 @@ public interface MagazineDAO {
 	@Mapper(MagazineIssueMapper.class)
 	MagazineIssue find(@Bind("id") long id);
 
-	@SqlUpdate("MERGE INTO MAGAZINEISSUE(ID, ISSUE, ISSUEDATE, YEAR, SPECIAL, LANGUAGE, MAGAZINE_SEARCHNAME) VALUES(:id, :issue, :issueDate, :year, :special, :language, :searchName)")
-	void saveIssue(@Bind("id") long id, @Bind("issue") int issue, @Bind("issueDate") Date issueDate, @Bind("year") int year, @Bind("special") boolean special, @BindEnum("language") Language language, @Bind("searchName") String searchName);
+	@SqlUpdate("MERGE INTO MAGAZINEISSUE(ID, ISSUE, ISSUEDATE, SPECIAL, LANGUAGE, MAGAZINE_SEARCHNAME) VALUES(:id, :issue, :issueDate, :special, :language, :searchName)")
+	void saveIssue(@Bind("id") long id, @Bind("issue") int issue, @Bind("issueDate") Date issueDate, @Bind("special") boolean special, @BindEnum("language") Language language, @Bind("searchName") String searchName);
 
 	@SqlUpdate("UPDATE MAGAZINE SET PATH=:path, AKA=:aka, BLACKLIST=:wordsBlackList, LANGUAGE=:language WHERE SEARCHNAME=:searchName")
 	Object save(@Bind("searchName") String searchName, @BindPath("path") Path path, @BindStringList("aka") List<String> aka, @BindStringList("wordsBlackList") List<String> wordsBlackList, @BindEnum("language") Language language);

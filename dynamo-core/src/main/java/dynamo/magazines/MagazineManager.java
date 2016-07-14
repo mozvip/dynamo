@@ -1,5 +1,6 @@
 package dynamo.magazines;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +17,6 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.jdbi.magazines.MagazineDAO;
 import dynamo.manager.DownloadableManager;
-import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadSuggestion;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.magazines.Magazine;
@@ -178,7 +178,7 @@ public class MagazineManager implements Reconfigurable {
 		return magazineDAO.getWantedContents( language, filter );
 	}
 	
-	public synchronized void suggest( DownloadSuggestion suggestion ) {
+	public synchronized void suggest( DownloadSuggestion suggestion ) throws IOException {
 		MagazineIssueInfo issueInfo = MagazineNameParser.getInstance().getIssueInfo( suggestion.getTitle() );
 		
 		if ( issueInfo == null || issueInfo.getMagazineName() == null ) {
@@ -214,22 +214,23 @@ public class MagazineManager implements Reconfigurable {
 			DownloadableManager.getInstance().saveSuggestionURL(downloadableId, suggestion.getSuggestionURL());
 		}
 		
-		String coverImage = null;
 		if (suggestion.getImageURL() == null) {
 			WebResource imageResource = GoogleImages.findImage(suggestion.getTitle(), 0.7f);
 			if (imageResource != null) {
-				coverImage = LocalImageCache.getInstance().download("magazines", suggestion.getTitle(), imageResource.getUrl(), imageResource.getReferer());
+				DownloadableManager.downloadImage(MagazineIssue.class, downloadableId, imageResource.getUrl(), imageResource.getReferer() );
 			}
 		} else {
-			coverImage = LocalImageCache.getInstance().download("magazines", suggestion.getTitle(), suggestion.getImageURL(), suggestion.getReferer());			
+			DownloadableManager.downloadImage(MagazineIssue.class, downloadableId, suggestion.getImageURL(), suggestion.getReferer() );
 		}
 
-		int issueNumber = existingIssue.getIssue() > 0 ? existingIssue.getIssue() : issueInfo.getIssueNumber(); 
+		int issueNumber = existingIssue.getIssue() > 0 ? existingIssue.getIssue() : issueInfo.getIssueNumber();
 
 		magazineDAO.saveIssue(
 				downloadableId, issueNumber, issueInfo.getIssueDate(),
-				issueInfo.getYear(), issueInfo.isSpecial(), issueInfo.getLanguage() != null ? issueInfo.getLanguage() : suggestion.getLanguage(),
+				issueInfo.isSpecial(), issueInfo.getLanguage() != null ? issueInfo.getLanguage() : suggestion.getLanguage(),
 				magazine.getSearchName());
+		
+		DownloadableManager.getInstance().updateYear( downloadableId, issueInfo.getYear() );
 
 		DownloadableManager.getInstance().saveDownloadLocations(downloadableId, suggestion.getTitle(), suggestion.getSuggesterName(), suggestion.getDownloadFinderClass(), suggestion.getReferer(), suggestion.getSize(), suggestion.getDownloadLocations());
 	}

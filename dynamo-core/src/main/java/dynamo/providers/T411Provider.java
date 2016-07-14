@@ -397,11 +397,11 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		List<DownloadSuggestion> magazineSuggestions;
 		try {
 			magazineSuggestions = extractSuggestions(String.format("%s/torrents/search/?subcat=410&order=added&type=desc", baseURL), 10, true);
+			for (DownloadSuggestion magazineSuggestion : magazineSuggestions) {
+				MagazineManager.getInstance().suggest( magazineSuggestion );
+			}
 		} catch (IOException | URISyntaxException e) {
 			throw new KioskIssuesSuggesterException( e );
-		}
-		for (DownloadSuggestion magazineSuggestion : magazineSuggestions) {
-			MagazineManager.getInstance().suggest( magazineSuggestion );
 		}
 	}
 

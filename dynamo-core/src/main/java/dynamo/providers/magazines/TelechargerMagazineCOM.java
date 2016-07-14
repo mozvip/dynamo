@@ -38,7 +38,12 @@ public class TelechargerMagazineCOM implements KioskIssuesSuggester {
 				String coverImage = image.absUrl("src");
 				String title = RegExp.extract( image.attr("title"), "télécharger (.*)" );
 				
-				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, Language.FR, -1.0f, toString(), null, false, link.absUrl("href")));
+				try {
+					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, Language.FR, -1.0f, toString(), null, false, link.absUrl("href")));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
