@@ -141,7 +141,7 @@ public class Movies extends DynamoManagedBean {
 		}
 	}
 
-	public void select( MovieInfo selectedMovie ) throws MovieDbException {
+	public void select( MovieInfo selectedMovie ) throws MovieDbException, IOException {
 		MovieManager.getInstance().associate( searchMovieId, selectedMovie);
 		if (isRenameFile()) {
 			for (Movie movie : collectionContents.objects) {

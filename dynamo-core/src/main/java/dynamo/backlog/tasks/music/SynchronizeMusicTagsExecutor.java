@@ -14,7 +14,7 @@ import org.jaudiotagger.tag.reference.ID3V2Version;
 
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.MusicDAO;
-import dynamo.manager.LocalImageCache;
+import dynamo.manager.DownloadableManager;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicFile;
 
@@ -56,8 +56,8 @@ public class SynchronizeMusicTagsExecutor extends TaskExecutor<SynchronizeMusicT
 			audioTag.setField(FieldKey.YEAR, "" + musicFile.getYear() );
 		}
 
-		if ( album.getCoverImage() != null ) {
-			Path p = LocalImageCache.getInstance().resolveLocal( album.getCoverImage() );
+		Path p = DownloadableManager.resolveImage( album );
+		if ( p != null ) {
 			Artwork artwork = ArtworkFactory.createArtworkFromFile(p.toFile());
 			audioTag.setField(artwork);
 		}

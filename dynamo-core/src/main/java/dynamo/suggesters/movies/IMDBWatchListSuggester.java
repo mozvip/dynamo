@@ -24,7 +24,6 @@ import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
 import dynamo.manager.DownloadableManager;
-import dynamo.manager.LocalImageCache;
 import dynamo.model.movies.Movie;
 import dynamo.model.movies.MovieManager;
 import dynamo.model.tvshows.TVShowManager;
@@ -48,7 +47,7 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 	public void setUrls(Set<String> urls) {
 		this.urls = urls;
 	}
-	
+
 	private HTTPClient client = HTTPClient.getInstance();
 
 	@Override
@@ -61,8 +60,8 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 		if (title.isTvSeries() && !title.isReleased()) {
 			return;
 		}
-		String coverImage = LocalImageCache.getInstance().download( "movies", imdbID, title.getImage().getUrl(), title.getImage().getReferer() );
-		DownloadableManager.getInstance().createSuggestion( Movie.class, title.getName(), coverImage, suggestionURL );
+		long movieId = DownloadableManager.getInstance().createSuggestion( Movie.class, title.getName(), suggestionURL );
+		DownloadableManager.downloadImage(Movie.class, movieId, title.getImage().getUrl(), title.getImage().getReferer());
 	}
 	
 	public static IMDBTitle extractIMDBTitle( String imdbID ) throws IOException {

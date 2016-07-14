@@ -260,15 +260,14 @@ public class MusicManager implements Reconfigurable {
 
 	}
 	
-	public void suggest( String artistName, String albumName, String genre, String imageURL, String referer, String suggestionURL) throws MalformedURLException, ExecutionException {
-		String image = LocalImageCache.getInstance().download("albums", MusicManager.getSearchString(artistName, albumName), imageURL, referer);
-		MusicAlbum album = getAlbum(artistName, albumName, genre, image, DownloadableStatus.SUGGESTED, null, musicQuality, true);
+	public void suggest( String artistName, String albumName, String genre, String imageURL, String referer, String suggestionURL) throws ExecutionException, IOException {
+		MusicAlbum album = getAlbum(artistName, albumName, genre, DownloadableStatus.SUGGESTED, null, musicQuality, true);
 		if (suggestionURL != null) {
 			DownloadableManager.getInstance().saveSuggestionURL(album.getId(), suggestionURL);
 		}
 	}
 
-	public synchronized MusicAlbum getAlbum( String artistName, String albumName, String genre, String image, DownloadableStatus status, Path path, MusicQuality quality, boolean createIfMissing ) throws ExecutionException {
+	public synchronized MusicAlbum getAlbum( String artistName, String albumName, String genre, DownloadableStatus status, Path path, MusicQuality quality, boolean createIfMissing ) throws ExecutionException, IOException {
 		
 		MusicAlbum album = null;
 
@@ -284,7 +283,7 @@ public class MusicManager implements Reconfigurable {
 		String searchString = getSearchString(artist.getName(), albumName);
 		
 		album = musicDAO.findBySearchString(searchString);
-		if ( album != null && album.getCoverImage() == null ) {
+		if ( album != null && !DownloadableManager.hasImage(album)) {
 			BackLogProcessor.getInstance().schedule( new FindMusicAlbumImageTask( album ), false );
 		}
 		
@@ -300,14 +299,11 @@ public class MusicManager implements Reconfigurable {
 		
 		if (album == null && createIfMissing ) {
 			album = new MusicAlbum(
-					DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, image, status),
-					status, path, image, null, 
+					DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, status),
+					status, path, null, 
 					artist.getName(), albumName, null, quality, null
 			);
 			musicDAO.save(album.getId(), artist.getName(), null, genre, quality, searchString);
-			if (image == null) {
-				BackLogProcessor.getInstance().schedule( new FindMusicAlbumImageTask( album ), false );
-			}
 		}
 
 		return album;

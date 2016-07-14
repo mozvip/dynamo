@@ -22,7 +22,6 @@ public class MovieMapper implements ResultSetMapper<Movie> {
 		return new Movie(
 				r.getLong("ID"),
 				MapperUtils.getEnum(r, "STATUS", DownloadableStatus.class),
-				r.getString("COVER_IMAGE"),
 				r.getString("AKA"),
 				r.getString("NAME"),
 				r.getString("LABEL"),

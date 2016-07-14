@@ -143,10 +143,9 @@ public class Music extends DynamoManagedBean {
 		return wanted;
 	}
 
-	public void addNewAlbum() throws ExecutionException {
+	public void addNewAlbum() throws ExecutionException, IOException {
 		queue( new FindMusicAlbumTask( MusicManager.getInstance().getAlbum(
 				newMusicAlbumArtistName, newMusicAlbumName
-				, null
 				, null,
 				DownloadableStatus.WANTED,
 				MusicManager.getInstance().getPath(newMusicAlbumArtistName, newMusicAlbumName),

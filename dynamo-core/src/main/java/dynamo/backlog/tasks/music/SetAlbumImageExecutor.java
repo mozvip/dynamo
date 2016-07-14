@@ -1,13 +1,13 @@
 package dynamo.backlog.tasks.music;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
-import dynamo.backlog.tasks.files.CopyFileTask;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.MusicDAO;
 import dynamo.manager.DownloadableManager;
-import dynamo.manager.LocalImageCache;
 import dynamo.model.music.MusicFile;
 
 public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
@@ -26,7 +26,7 @@ public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 		
 		Path albumPath = null;
 		
-		DownloadableManager.getInstance().updateCoverImage( albumId, task.getLocalImagePath() );
+		DownloadableManager.downloadImage( task.getMusicAlbum(), task.getLocalImagePath() );
 		List<MusicFile> files = musicDAO.findMusicFiles( albumId );
 		if (files != null && files.size() > 0) {
 			for (MusicFile file : files) {
@@ -38,9 +38,7 @@ public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 		}
 
 		Path folderJpg = albumPath.resolve("folder.jpg");
-		Path sourceImage = LocalImageCache.getInstance().resolveLocal( task.getLocalImagePath() );
-		
-		queue( new CopyFileTask(sourceImage, folderJpg, task.getMusicAlbum()), false );
+		Files.copy( task.getLocalImagePath(), folderJpg, StandardCopyOption.REPLACE_EXISTING );
 	}
 
 }

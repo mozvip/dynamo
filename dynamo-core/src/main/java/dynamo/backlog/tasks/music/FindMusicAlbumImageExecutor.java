@@ -1,10 +1,11 @@
 package dynamo.backlog.tasks.music;
 
+import java.nio.file.Path;
+
 import core.WebDocument;
 import core.WebResource;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.model.TaskExecutor;
-import dynamo.manager.LocalImageCache;
 import dynamo.manager.MusicManager;
 import dynamo.model.music.MusicAlbum;
 import dynamo.webapps.googleimages.GoogleImages;
@@ -19,13 +20,11 @@ public class FindMusicAlbumImageExecutor extends TaskExecutor<FindMusicAlbumImag
 	@Override
 	public void execute() throws Exception {
 		
-		String localImage = null;
+		Path localImage = null;
 		
 		String referer = null;
 		
 		MusicAlbum album = task.getAlbum();
-		
-		String albumId = album.getSearchString();
 		
 		if (album.getAllMusicURL() != null) {
 			
@@ -33,8 +32,7 @@ public class FindMusicAlbumImageExecutor extends TaskExecutor<FindMusicAlbumImag
 			
 			WebDocument document = client.getDocument( referer, HTTPClient.REFRESH_ONE_WEEK );
 			String imageURL = document.jsoup("div.album-contain > img").attr("abs:src");
-			
-			localImage = LocalImageCache.getInstance().download("albums", albumId, imageURL, referer, false, true );
+			localImage = HTTPClient.getInstance().download( imageURL, referer );
 			
 		} else {
 			
@@ -45,7 +43,7 @@ public class FindMusicAlbumImageExecutor extends TaskExecutor<FindMusicAlbumImag
 			for (String string : searchStrings) {
 				WebResource googleResult = GoogleImages.findImage( string, 1.0f );
 				if (googleResult != null) {
-					localImage = LocalImageCache.getInstance().download("albums", albumId, googleResult.getUrl(), googleResult.getReferer(), false, true );
+					localImage = HTTPClient.getInstance().download( googleResult.getUrl(), googleResult.getReferer() );
 				}
 				if (localImage != null) {
 					break;

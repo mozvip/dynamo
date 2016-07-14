@@ -17,7 +17,6 @@ public class BookMapper implements ResultSetMapper<Book> {
 		return new Book(
 				r.getLong("ID"),
 				MapperUtils.getEnum(r, "STATUS", DownloadableStatus.class),
-				r.getString("COVER_IMAGE"),
 				r.getString("AKA"),
 				r.getString("NAME"),
 				r.getString("AUTHOR"),

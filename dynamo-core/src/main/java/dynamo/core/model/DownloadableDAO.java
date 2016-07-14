@@ -33,9 +33,6 @@ public interface DownloadableDAO {
 	@SqlUpdate("UPDATE DOWNLOADABLE SET LABEL = :label WHERE ID = :downloadableId")
 	public void updateLabel( @Bind("downloadableId") long downloadableId, @Bind("label") String label);
 
-	@SqlUpdate("UPDATE DOWNLOADABLE SET COVER_IMAGE = :coverImage WHERE ID = :downloadableId")
-	public void updateCoverImage( @Bind("downloadableId") long downloadableId, @Bind("coverImage") String coverImage );
-
 	@SqlQuery("SELECT * FROM DOWNLOADABLE WHERE STATUS = 'WANTED'")
 	@Mapper(DownloadInfoMapper.class)
 	public List<DownloadInfo> findWanted();
@@ -54,9 +51,9 @@ public interface DownloadableDAO {
 	@SqlUpdate("DELETE FROM DOWNLOADABLE WHERE DTYPE = :className AND status = :statusToDelete")
 	public void delete(@BindClassName("className") Class<? extends Downloadable> className, @BindEnum("statusToDelete") DownloadableStatus statusToDelete);
 
-	@SqlUpdate("INSERT INTO DOWNLOADABLE(DTYPE, NAME, COVER_IMAGE, STATUS, CREATION_DATE) VALUES (:className, :name, :coverImage, :status, CURRENT_TIMESTAMP())")
+	@SqlUpdate("INSERT INTO DOWNLOADABLE(DTYPE, NAME, STATUS, CREATION_DATE) VALUES (:className, :name, :status, CURRENT_TIMESTAMP())")
 	@GetGeneratedKeys
-	public long createDownloadable(@BindClassName("className") Class<?> klass, @Bind("name") String name, @Bind("coverImage") String coverImage, @BindEnum("status") DownloadableStatus status);
+	public long createDownloadable(@BindClassName("className") Class<?> klass, @Bind("name") String name, @BindEnum("status") DownloadableStatus status);
 
 	@SqlUpdate("UPDATE DOWNLOADABLE SET AKA = :akas WHERE ID = :downloadableId")
 	public void saveAka(@Bind("downloadableId") Long downloadableId, @BindStringList("akas") Collection<String> akas);

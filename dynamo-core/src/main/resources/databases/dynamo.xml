@@ -13,15 +13,13 @@
             </column>
             <column name="LABEL" type="VARCHAR(1024)" />
             <column name="STATUS" type="VARCHAR(50)"/>
+			<column name="YEAR" type="SMALLINT" />
+			<column name="SUGGESTEDBY" type="VARCHAR(500)"/>
+			<column name="XXX" type="BOOLEAN" defaultValueBoolean="false" />
             <column name="AKA" type="VARCHAR(2147483647)" />
-			<column name="XXX" type="BOOLEAN" defaultValueBoolean="false">
-				<constraints nullable="false"/>
-			</column>
 			<column name="CREATION_DATE" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
 				<constraints nullable="false"/>
 			</column>
-    		<column name="COVER_IMAGE" type="VARCHAR(512)" />
-			<column name="SUGGESTEDBY" type="VARCHAR(500)"/>
         </createTable>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-1">
@@ -72,7 +70,6 @@
             <column name="ISSUE" type="INT(10)"/>
             <column name="ISSUEDATE" type="date"/>
             <column name="SPECIAL" type="BOOLEAN(1)"/>
-			<column name="YEAR" type="INT"/>
 			<column name="LANGUAGE" type="VARCHAR(255)"/>
             <column name="MAGAZINE_SEARCHNAME" type="VARCHAR(2147483647)"/>
         </createTable>
@@ -132,7 +129,6 @@
             </column>
             <column name="IMDBID" type="VARCHAR(9)"/>
             <column name="MOVIEDBID" type="INT(10)"/>
-            <column name="YEAR" type="INT(4)"/>
             <column name="ORIGINALLANGUAGE" type="VARCHAR(100)"/>
             <column name="POSTERPATH" type="VARCHAR(2147483647)"/>
             <column name="QUALITY" type="VARCHAR(100)"/>
@@ -157,7 +153,6 @@
             	<constraints nullable="false"/>
             </column>
             <column name="PATH" type="VARCHAR(2048)"/>
-            <column name="YEAR" type="INT(4)" />
             <column name="ALLMUSICURL" type="VARCHAR(2147483647)"/>
             <column name="GENRE" type="VARCHAR(2147483647)"/>
             <column name="IMAGE" type="VARCHAR(2147483647)"/>
@@ -441,13 +436,6 @@
 		<addPrimaryKey tableName="SUGGESTION_URL" columnNames="DOWNLOADABLE_ID,SUGGESTION_URL"/>
 		<addForeignKeyConstraint constraintName="FK_SUGGESTION_URL_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="DOWNLOADABLE_ID" baseTableName="SUGGESTION_URL" referencedColumnNames="ID" onDelete="CASCADE"/>
 		<dropColumn tableName="DOWNLOADABLE" columnName="SUGGESTEDBY"/>
-	</changeSet>
-	<changeSet author="mozvip" id="30">
-		<addColumn tableName="DOWNLOADABLE">
-			<column name="YEAR" type="SMALLINT" />
-		</addColumn>
-		<sql>UPDATE DOWNLOADABLE SET DOWNLOADABLE.YEAR = ( SELECT MOVIE.YEAR FROM MOVIE WHERE MOVIE.ID = DOWNLOADABLE.ID)</sql>
-		<dropColumn tableName="MOVIE" columnName="YEAR"/>
 	</changeSet>
 
 </databaseChangeLog>

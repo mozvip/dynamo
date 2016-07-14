@@ -21,7 +21,6 @@ public class MusicAlbumMapper implements ResultSetMapper<MusicAlbum> {
 				r.getLong("ID"),
 				MapperUtils.getEnum(r, "STATUS", DownloadableStatus.class),
 				MapperUtils.getPath(r, "PATH"),
-				r.getString("COVER_IMAGE"),
 				r.getString("AKA"),
 				r.getString("ARTIST_NAME"),
 				r.getString("NAME"),

@@ -12,8 +12,8 @@ public class VideoGame extends Downloadable {
 	private GamePlatform platform;
 	private Long theGamesDbId;
 
-	public VideoGame( Long id, DownloadableStatus status, String coverImage, String name, GamePlatform platform, Long theGamesDbId) {
-		super( id, name, null, status, coverImage, null,-1,  null);
+	public VideoGame( Long id, DownloadableStatus status, String name, GamePlatform platform, Long theGamesDbId) {
+		super( id, name, null, status, null,-1,  null);
 		this.platform = platform;
 		this.theGamesDbId = theGamesDbId;
 	}

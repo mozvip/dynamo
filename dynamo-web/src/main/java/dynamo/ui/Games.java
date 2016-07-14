@@ -1,5 +1,6 @@
 package dynamo.ui;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -148,7 +149,7 @@ public class Games extends DynamoManagedBean implements Serializable {
 		DownloadableManager.getInstance().redownload(id);
 	}
 
-	public void downloadGame(long theGamesDbId) throws MalformedURLException {
+	public void downloadGame(long theGamesDbId) throws IOException {
 		GamesManager.getInstance().want(theGamesDbId);
 	}
 

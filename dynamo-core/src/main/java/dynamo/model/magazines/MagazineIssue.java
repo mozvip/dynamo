@@ -21,8 +21,8 @@ public class MagazineIssue extends Downloadable implements EBook {
 	
 	private int year;
 	
-	public MagazineIssue(Long id, DownloadableStatus status, String aka, String magazineSearchName, Language language, String rawName, Date issueDate, int year, int issueNumber, boolean special, String coverImage, Date creationDate) {
-		super(id, rawName, null, status, coverImage, aka, -1, creationDate);
+	public MagazineIssue(Long id, DownloadableStatus status, String aka, String magazineSearchName, Language language, String rawName, Date issueDate, int year, int issueNumber, boolean special, Date creationDate) {
+		super(id, rawName, null, status, aka, -1, creationDate);
 		this.magazineSearchName = magazineSearchName;
 		this.language = language;
 		this.issueDate = issueDate;

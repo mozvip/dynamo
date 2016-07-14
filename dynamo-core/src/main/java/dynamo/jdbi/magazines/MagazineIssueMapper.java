@@ -26,7 +26,6 @@ public class MagazineIssueMapper implements ResultSetMapper<MagazineIssue> {
 				r.getInt("YEAR"),
 				r.getInt("ISSUE"),
 				r.getBoolean("SPECIAL"),
-				r.getString("COVER_IMAGE"),
 				r.getDate("CREATION_DATE")
 		);
 	}

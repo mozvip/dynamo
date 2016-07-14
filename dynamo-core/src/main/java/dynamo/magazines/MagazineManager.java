@@ -162,11 +162,11 @@ public class MagazineManager implements Reconfigurable {
 		return findOrCreateMagazine(magazineName, language, FileUtils.getFolderWithMostUsableSpace(getFolders()));
 	}
 	
-	public MagazineIssue createIssue( Magazine magazine, String rawIssueName, String coverImage ) {
+	public MagazineIssue createIssue( Magazine magazine, String rawIssueName ) {
 		MagazineIssueInfo info = MagazineNameParser.getInstance().getIssueInfo( rawIssueName );
 		DownloadableStatus status = magazine.isAutoDownload() ? DownloadableStatus.WANTED : DownloadableStatus.IGNORED;
 		MagazineIssue issue = new MagazineIssue(
-				null, status, null, magazine.getSearchName(), magazine.getLanguage(), rawIssueName, info.getIssueDate(), info.getYear(), info.getIssueNumber(), info.isSpecial(), coverImage, new Date() );
+				null, status, null, magazine.getSearchName(), magazine.getLanguage(), rawIssueName, info.getIssueDate(), info.getYear(), info.getIssueNumber(), info.isSpecial(), new Date() );
 		return issue;
 	}
 
@@ -204,6 +204,16 @@ public class MagazineManager implements Reconfigurable {
 			}
 		}
 
+		long downloadableId;
+		String rawName = issueInfo.toString();
+		if (existingIssue == null) {
+			existingIssue = MagazineManager.getInstance().createIssue(magazine, issueInfo.getIssueName());
+			downloadableId = DownloadableManager.getInstance().createSuggestion( MagazineIssue.class, rawName, suggestion.getSuggestionURL() );
+		} else {
+			downloadableId = existingIssue.getId();
+			DownloadableManager.getInstance().saveSuggestionURL(downloadableId, suggestion.getSuggestionURL());
+		}
+		
 		String coverImage = null;
 		if (suggestion.getImageURL() == null) {
 			WebResource imageResource = GoogleImages.findImage(suggestion.getTitle(), 0.7f);
@@ -213,20 +223,7 @@ public class MagazineManager implements Reconfigurable {
 		} else {
 			coverImage = LocalImageCache.getInstance().download("magazines", suggestion.getTitle(), suggestion.getImageURL(), suggestion.getReferer());			
 		}
-		
-		long downloadableId;
-		String rawName = issueInfo.toString();
-		if (existingIssue == null) {
-			existingIssue = MagazineManager.getInstance().createIssue(magazine, issueInfo.getIssueName(), coverImage);
-			downloadableId = DownloadableManager.getInstance().createSuggestion( MagazineIssue.class, rawName, coverImage, suggestion.getSuggestionURL() );
-		} else {
-			if (existingIssue.getCoverImage() == null && coverImage != null) {
-				DownloadableManager.getInstance().updateCoverImage( existingIssue.getId(), coverImage);
-			}
-			downloadableId = existingIssue.getId();
-			DownloadableManager.getInstance().saveSuggestionURL(downloadableId, suggestion.getSuggestionURL());
-		}
-		
+
 		int issueNumber = existingIssue.getIssue() > 0 ? existingIssue.getIssue() : issueInfo.getIssueNumber(); 
 
 		magazineDAO.saveIssue(

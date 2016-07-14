@@ -107,10 +107,10 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 				}
 
 				boolean mustRefresh = false;
-				if ( movie.getCoverImage() != null && LocalImageCache.getInstance().missFile( movie.getCoverImage() )) {
+				if ( !DownloadableManager.hasImage( movie )) {
 					mustRefresh = true;
 				}
-				if ( (movie.getImdbID() == null || movie.getCoverImage() == null) && movie.getMovieDbId() > 0 ) {
+				if ( movie.getImdbID() == null && movie.getMovieDbId() > 0 ) {
 					mustRefresh = true;
 				}
 				
@@ -162,9 +162,9 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 			// create new movie
 			String movieName = movieDb != null ? movieDb.getTitle() : movieFile.getFileName().toString();
 			
-			long id = downloadableDAO.createDownloadable( Movie.class, movieName, null, DownloadableStatus.DOWNLOADED );
+			long id = downloadableDAO.createDownloadable( Movie.class, movieName, DownloadableStatus.DOWNLOADED );
 			movie = new Movie(
-					id, DownloadableStatus.DOWNLOADED, null, null, movieName, null, null, false, null, null, null, null, null, null, null, -1, null, null, -1, -1, false );
+					id, DownloadableStatus.DOWNLOADED, null, movieName, null, null, false, null, null, null, null, null, null, null, -1, null, null, -1, -1, false );
 			if ( movieInfo != null ) {
 				try {
 					MovieManager.getInstance().setMovieInfo( movie, movieInfo );

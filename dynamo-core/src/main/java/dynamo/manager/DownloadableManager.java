@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +55,7 @@ import dynamo.model.tvshows.TVShowSeason;
 import dynamo.parsers.TVShowEpisodeInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.webapps.pushbullet.PushBullet;
+import hclient.HTTPClient;
 import model.ManagedEpisode;
 import model.ManagedSeries;
 import model.backlog.ScanTVShowTask;
@@ -130,12 +132,12 @@ public class DownloadableManager {
 		return downloadableDAO.updateStatus(downloadable.getId(), newStatus);
 	}
 
-	public long createDownloadable(Class<?> klass, String name, String coverImage, DownloadableStatus status) {
-		return downloadableDAO.createDownloadable( klass, name, coverImage, status );
+	public long createDownloadable(Class<?> klass, String name, DownloadableStatus status) {
+		return downloadableDAO.createDownloadable( klass, name, status );
 	}
 	
-	public long createSuggestion(Class<?> klass, String name, String coverImage, String suggestionURL) {
-		long downloadableId = downloadableDAO.createDownloadable( klass, name, coverImage, DownloadableStatus.SUGGESTED );
+	public long createSuggestion(Class<?> klass, String name, String suggestionURL) {
+		long downloadableId = downloadableDAO.createDownloadable( klass, name, DownloadableStatus.SUGGESTED );
 		suggestionURLDAO.saveSuggestionURL(downloadableId, suggestionURL);
 		return downloadableId;
 	}
@@ -359,10 +361,6 @@ public class DownloadableManager {
 		
 	}
 
-	public void updateCoverImage(long id, String image) {
-		downloadableDAO.updateCoverImage( id, image );
-	}
-
 	public Set<DownloadableFile> getAllFiles( Class<? extends Downloadable> downloadableClass) {
 		return downloadableDAO.getAllFiles( downloadableClass );
 	}
@@ -441,4 +439,37 @@ public class DownloadableManager {
 	public List<DownloableCount> getCounts() {
 		return downloadableDAO.getCounts();
 	}
+	
+	public static Path resolveImage( Class<? extends Downloadable> downloadableClass, long downloadableId ) {
+		// FIXME : do not hardcode .jpg ??
+		return LocalImageCache.getInstance().resolveLocal( downloadableClass.getSimpleName() + "/" + downloadableId + ".jpg" );
+	}
+
+	public static Path resolveImage( Downloadable downloadable ) {
+		return resolveImage(downloadable.getClass(), downloadable.getId() );
+	}
+	
+	public static boolean hasImage( Downloadable downloadable ) throws IOException {
+		return hasImage( downloadable.getClass(), downloadable.getId() );
+	}
+	
+	public static boolean hasImage( Class<? extends Downloadable> downloadableClass, long downloadableId ) throws IOException {
+		Path image = resolveImage(downloadableClass, downloadableId);
+		return Files.exists( image ) && Files.size( image ) > 0;
+	}
+	
+	public static void downloadImage( Downloadable downloadable, Path localFile ) throws IOException {
+		Path targetFile = resolveImage(downloadable);
+		Files.copy( localFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+	}
+	
+	public static void downloadImage( Downloadable downloadable, String url, String referer ) throws IOException {
+		downloadImage(downloadable.getClass(), downloadable.getId(), url, referer); 
+	}
+	
+	public static void downloadImage( Class<? extends Downloadable> downloadableClass, long downloadableId, String url, String referer ) throws IOException {
+		Path localFile = resolveImage(downloadableClass, downloadableId);
+		String contentType = HTTPClient.getInstance().downloadToFile(url, referer, localFile, 0);
+	}	
+
 }

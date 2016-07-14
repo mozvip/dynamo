@@ -18,8 +18,8 @@ public class MusicAlbum extends Downloadable {
 	private String genre;
 	private Path path;
 
-	public MusicAlbum(  Long id, DownloadableStatus status, Path path, String coverImage, String aka, String artistName, String albumName, String genre, MusicQuality quality, String allMusicURL) {
-		super( id, albumName, null, status, coverImage, aka, -1, null );
+	public MusicAlbum(  Long id, DownloadableStatus status, Path path, String aka, String artistName, String albumName, String genre, MusicQuality quality, String allMusicURL) {
+		super( id, albumName, null, status, aka, -1, null );
 		this.artistName = artistName;
 		this.genre = genre;
 		this.allMusicURL = allMusicURL;

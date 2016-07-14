@@ -1,7 +1,6 @@
 package dynamo.manager.games;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -19,7 +18,6 @@ import dynamo.core.manager.ConfigValueManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.finders.core.GameFinder;
 import dynamo.manager.DownloadableManager;
-import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.games.GamePlatform;
 import dynamo.model.games.VideoGame;
@@ -114,15 +112,8 @@ public class GamesManager implements Reconfigurable {
 		return GoogleImages.findImage( String.format("%s %s front cover", gameName, platform.name() ), platform.getCoverImageRatio());
 	}
 	
-	public void changeImage( VideoGame game ) throws MalformedURLException {
-		String image = getLocalImage(game.getTheGamesDbId(), game.getName(), game.getPlatform() );
-		DownloadableManager.getInstance().updateCoverImage( game.getId(), image);		
-	}
-	
-	private String getLocalImage( long theGamesDbId, String title, GamePlatform platform ) {
-		String imageId = String.format("%s-%s", title, platform.name());
-
-		GetArtResponse response = TheGamesDB.getInstance().getArt(theGamesDbId);
+	public void changeImage( VideoGame game ) throws IOException {
+		GetArtResponse response = TheGamesDB.getInstance().getArt( game.getTheGamesDbId() );
 		List<TheGamesDBBoxArt> boxarts = response.getImages().getBoxarts();
 		
 		String imageURL = null;
@@ -138,27 +129,29 @@ public class GamesManager implements Reconfigurable {
 		}
 		
 		if (imageURL == null) {
-			WebResource resource = findImage( title, platform );
+			WebResource resource = findImage( game.getName(), game.getPlatform() );
 			if (resource != null) {
 				imageURL = resource.getUrl();
 				imageReferer = resource.getReferer();
 			}
 		}
-
-		return imageURL != null ? LocalImageCache.getInstance().download("games", imageId, imageURL, imageReferer) : null;
+		
+		DownloadableManager.downloadImage( game, imageURL, imageReferer );
 	}
+	
 	
 	public VideoGame findByTheGamesDbId( long theGamesDbId ) {
 		return videoGameDAO.findByTheGamesDbId(theGamesDbId);
 	}
 
-	public VideoGame createGame( String title, String platform, long theGamesDbId, DownloadableStatus status )  {
+	public VideoGame createGame( String title, String platform, long theGamesDbId, DownloadableStatus status ) throws IOException  {
+
+		long videoGameId = DownloadableManager.getInstance().createDownloadable(VideoGame.class, title, status );
 
 		GamePlatform newGamePlatform = GamePlatform.match( platform );
-		String image = getLocalImage(theGamesDbId, title, newGamePlatform );
-		long videoGameId = DownloadableManager.getInstance().createDownloadable(VideoGame.class, title, image, status );
-		VideoGame game = new VideoGame(videoGameId, status, image, title, newGamePlatform, theGamesDbId );
+		VideoGame game = new VideoGame(videoGameId, status, title, newGamePlatform, theGamesDbId );
 		videoGameDAO.save( videoGameId, game.getPlatform(), game.getTheGamesDbId() );
+		changeImage(game);
 		
 		return game;
 	}
@@ -179,16 +172,7 @@ public class GamesManager implements Reconfigurable {
 		}
 	}
 
-	public void associate(long videoGameId, TheGamesDBGame game ) throws MalformedURLException {
-
-		GamePlatform newGamePlatform = GamePlatform.match( game.getPlatform() );
-		String image = getLocalImage( game.getId(), game.getGameTitle(), newGamePlatform );
-		DownloadableManager.getInstance().updateCoverImage( videoGameId, image );
-		
-		videoGameDAO.save( videoGameId, newGamePlatform, game.getId() );
-	}
-
-	public void want(long theGamesDbId) {
+	public void want(long theGamesDbId) throws IOException {
 		VideoGame game = GamesManager.getInstance().findByTheGamesDbId( theGamesDbId );
 		if (game == null) {
 			TheGamesDBGame theGamesDbGame = TheGamesDB.getInstance().getGame( theGamesDbId );
@@ -209,6 +193,13 @@ public class GamesManager implements Reconfigurable {
 
 	public List<VideoGame> getGames(GamePlatform platform, DownloadableStatus status) {
 		return getGames(platform, status, null);
+	}
+
+	public void associate(long videoGameId, TheGamesDBGame game) {
+		
+		// FIXME
+		
+		
 	}
 
 }

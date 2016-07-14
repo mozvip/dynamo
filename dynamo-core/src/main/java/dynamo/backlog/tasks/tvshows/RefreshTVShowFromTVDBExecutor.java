@@ -1,5 +1,6 @@
 package dynamo.backlog.tasks.tvshows;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,7 +39,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 	}
 
 	@Override
-	public void execute() throws TvDbException {
+	public void execute() throws TvDbException, IOException {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.add( Calendar.MONTH, 1);
@@ -74,7 +75,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 				seasonId = season.getId();
 				existingEpisode = tvShowDAO.findEpisode( season.getId(), episode.getEpisodeNumber() );
 			} else {
-				seasonId = DownloadableManager.getInstance().createDownloadable( TVShowSeason.class, String.format("%s S%02d", series.getName(), episode.getSeasonNumber()), null, DownloadableStatus.IGNORED );
+				seasonId = DownloadableManager.getInstance().createDownloadable( TVShowSeason.class, String.format("%s S%02d", series.getName(), episode.getSeasonNumber()), DownloadableStatus.IGNORED );
 				tvShowDAO.createSeason( seasonId, episode.getSeriesId(), episode.getSeasonNumber() );
 			}
 
@@ -107,7 +108,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 			if (existingEpisode == null) {
 			
 				existingEpisode = new ManagedEpisode(
-						DownloadableManager.getInstance().createDownloadable( ManagedEpisode.class, episode.getEpisodeName(), null,
+						DownloadableManager.getInstance().createDownloadable( ManagedEpisode.class, episode.getEpisodeName(),
 								newStatusForEpisode ), newStatusForEpisode, series.getName(), null, null, null, null,
 						episode.getSeriesId(), seasonId, episode.getSeasonNumber(), episode.getEpisodeNumber(), null,
 						episode.getEpisodeName(), firstAiredDate, false, false, null );

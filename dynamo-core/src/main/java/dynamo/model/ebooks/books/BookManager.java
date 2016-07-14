@@ -1,5 +1,6 @@
 package dynamo.model.ebooks.books;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -11,7 +12,6 @@ import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.manager.DownloadableManager;
-import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadSuggestion;
 import dynamo.model.DownloadableStatus;
 
@@ -104,28 +104,27 @@ public class BookManager implements Enableable {
 		downloadableDAO.delete( Book.class, DownloadableStatus.SUGGESTED);
 	}
 
-	public void suggest( DownloadSuggestion suggestion ) throws MalformedURLException {
+	public void suggest( DownloadSuggestion suggestion ) throws IOException {
 		BookInfo bookInfo = BookNameParser.getBookInfo( suggestion.getTitle() );
 		long downloadableId = suggest( bookInfo, suggestion.getImageURL(), suggestion.getReferer(), suggestion.getReferer() );
 		
 		DownloadableManager.getInstance().saveDownloadLocations(downloadableId, suggestion.getTitle(), suggestion.getSuggesterName(), suggestion.getDownloadFinderClass(), suggestion.getReferer(), suggestion.getSize(), suggestion.getDownloadLocations());
 	}
 
-	public long suggest(BookInfo bookInfo, String imageURL, String referer, String suggestionURL) throws MalformedURLException {
+	public long suggest(BookInfo bookInfo, String imageURL, String referer, String suggestionURL) throws IOException {
 		Book existingBook = bookDAO.find(bookInfo.getAuthor(), bookInfo.getName());
 		if (existingBook != null ) {
-			if (existingBook.getCoverImage() == null) {
-				String coverImage = imageURL != null ? LocalImageCache.getInstance().download("books", String.format("%s-%s", bookInfo.getAuthor(), bookInfo.getName()), imageURL, referer) : null;
-				downloadableDAO.updateCoverImage(existingBook.getId(), coverImage);
+			if (!DownloadableManager.hasImage( existingBook ) && imageURL != null) {
+				DownloadableManager.downloadImage( existingBook, imageURL, null );
 			}
 			return existingBook.getId();
 		}
 		return createSuggestion(bookInfo.getName(), bookInfo.getAuthor(), bookInfo.getLanguage(), imageURL, referer, suggestionURL);
 	}
 
-	private long createSuggestion(String title, String author, Language language, String imageURL, String referer, String suggestionURL) throws MalformedURLException {
-		String image = imageURL != null ? LocalImageCache.getInstance().download("books", String.format("%s-%s", author, title), imageURL, referer) : null;
-		long downloadableId = DownloadableManager.getInstance().createSuggestion( Book.class, title, image, suggestionURL);
+	private long createSuggestion(String title, String author, Language language, String imageURL, String referer, String suggestionURL) throws IOException {
+		long downloadableId = DownloadableManager.getInstance().createSuggestion( Book.class, title, suggestionURL);
+		DownloadableManager.downloadImage( Book.class, downloadableId, imageURL, referer);
 		bookDAO.save( downloadableId, author, language );
 		return downloadableId;
 	}

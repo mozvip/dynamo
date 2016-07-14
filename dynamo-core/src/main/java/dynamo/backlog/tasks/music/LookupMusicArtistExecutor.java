@@ -72,7 +72,7 @@ public class LookupMusicArtistExecutor extends TaskExecutor<LookupMusicArtistTas
 					
 					DownloadableStatus newStatus = artist.isFavorite() ? DownloadableStatus.WANTED : DownloadableStatus.IGNORED;
 					
-					MusicAlbum album = MusicManager.getInstance().getAlbum( artist.getName(), albumName, null, null, newStatus, MusicManager.getInstance().getPath( artist.getName(), albumName), null, true );
+					MusicAlbum album = MusicManager.getInstance().getAlbum( artist.getName(), albumName, null, newStatus, MusicManager.getInstance().getPath( artist.getName(), albumName), null, true );
 
 					List<MusicFile> musicFiles = musicDAO.findMusicFiles( album.getId() );
 					if (!musicFiles.isEmpty()) {

@@ -15,6 +15,10 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
   $scope.allItems = [];
   $scope.filteredList = [];
 
+  $scope.image = function( imageURL ) {
+    return BackendService.getImageURL( imageURL );
+  }
+
   $scope.pageContents = [];
   downloadableService.find( 'BOOK', $routeParams.status ).then( function( response ) {
     $scope.allItems = response.data;

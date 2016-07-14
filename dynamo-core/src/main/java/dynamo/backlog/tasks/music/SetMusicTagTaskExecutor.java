@@ -41,7 +41,7 @@ public class SetMusicTagTaskExecutor extends TaskExecutor<SetMusicTagTask> {
 			albumPath = MusicManager.getInstance().getPath(albumArtist, album);
 	
 			// FIXME : compressed is hardcoded
-			musicAlbum = MusicManager.getInstance().getAlbum( albumArtist, album, null, null, DownloadableStatus.DOWNLOADED, albumPath, MusicQuality.COMPRESSED, true );
+			musicAlbum = MusicManager.getInstance().getAlbum( albumArtist, album, null, DownloadableStatus.DOWNLOADED, albumPath, MusicQuality.COMPRESSED, true );
 			newAlbumId = musicAlbum.getId();
 		}
 		

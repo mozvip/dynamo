@@ -1,7 +1,6 @@
 package dynamo.model.movies;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,7 +37,6 @@ import dynamo.finders.core.MovieProvider;
 import dynamo.httpclient.YAMJHttpClient;
 import dynamo.jdbi.MovieDAO;
 import dynamo.manager.DownloadableManager;
-import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadableStatus;
 import dynamo.parsers.ParsedMovieInfo;
 import dynamo.suggesters.RefreshMovieSuggestionTask;
@@ -222,14 +220,14 @@ public class MovieManager implements Reconfigurable {
 		this.defaultQuality = defaultQuality;
 	}
 	
-	public Movie associate( long movieId, MovieInfo movieDb) throws MovieDbException {
+	public Movie associate( long movieId, MovieInfo movieDb) throws MovieDbException, IOException {
 		Movie movie = movieDAO.find(movieId);
 		associate(movie, movieDb);
 		save( movie );
 		return movie;
 	}
 
-	public void associate( Movie movie, MovieInfo movieDb ) throws MovieDbException {	
+	public void associate( Movie movie, MovieInfo movieDb ) throws MovieDbException, IOException {	
 		if (movieDb.getImdbID() == null) {
 			movieDb = getMovieInfo(movieDb.getId());
 		}
@@ -241,40 +239,28 @@ public class MovieManager implements Reconfigurable {
 		movie.setMovieDbId( movieDb.getId() );
 		movie.setImdbID( movieDb.getImdbID() );
 
-		String coverImage = null;
-		if (movieDb.getPosterPath() != null) {
-			coverImage = LocalImageCache.getInstance().download( "movies", movie.getImdbID(), getImageURL( movieDb.getPosterPath()), null );		
-		} else {
-			coverImage = "/downloaded-movie-unknown.jpg";
+		if (!DownloadableManager.hasImage( movie ) && movieDb.getPosterPath() != null) {
+			DownloadableManager.downloadImage(movie, getImageURL( movieDb.getPosterPath()), null);
 		}
 		if ( movie.getYear() < 0 && StringUtils.isNotBlank( movieDb.getReleaseDate() )) {
 			movie.setYear( Integer.parseInt( RegExp.extract( movieDb.getReleaseDate(), "(\\d{4}).*") ) );
 			DownloadableManager.getInstance().updateYear( movie.getId(), movie.getYear());
 		}
-		if ( movie.getCoverImage() == null || !movie.getCoverImage().equals( coverImage )) {
-			movie.setCoverImage( coverImage );
-			DownloadableManager.getInstance().updateCoverImage( movie.getId(), coverImage);
-		}
 	}
 
-	public Movie createMovieFromMovieDB( MovieInfo movieDb, Language language, WebResource defaultImage, DownloadableStatus status, boolean watched ) throws MovieDbException, MalformedURLException {
+	public Movie createMovieFromMovieDB( MovieInfo movieDb, Language language, WebResource defaultImage, DownloadableStatus status, boolean watched ) throws MovieDbException, IOException {
 		Movie movie = movieDAO.findByMovieDbId( movieDb.getId() );
 		if (movie == null) {
 			if (movieDb.getImdbID() == null) {
 				movieDb = api.getMovieInfo( movieDb.getId(), language.getShortName());
 			}
 
-			String coverImage = null;
+			long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, movieDb.getTitle(), status );
 			if (movieDb.getPosterPath() != null) {
-				coverImage = LocalImageCache.getInstance().download( "movies", movieDb.getImdbID(), getImageURL( movieDb.getPosterPath()), null );	
-			} else {
-				if (defaultImage != null) {
-					coverImage = LocalImageCache.getInstance().download( "movies", movieDb.getImdbID(), defaultImage.getUrl(), defaultImage.getReferer() );
-				} else {
-					coverImage = "/downloaded-movie-unknown.jpg";
-				}
+				DownloadableManager.downloadImage(Movie.class, downloadableId, getImageURL( movieDb.getPosterPath()), null);
+			} else if (defaultImage != null) {
+				DownloadableManager.downloadImage(Movie.class, downloadableId, defaultImage.getUrl(), defaultImage.getReferer() );
 			}
-			long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, movieDb.getTitle(), coverImage, status );
 
 			Language originalLanguage = Language.EN;
 			if (movieDb.getSpokenLanguages() != null && movieDb.getSpokenLanguages().size() > 0) {
@@ -295,7 +281,7 @@ public class MovieManager implements Reconfigurable {
 				}
 			}
 
-			movie = new Movie( downloadableId, status, coverImage, null, movieDb.getTitle(), null, null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, movieDb.getVoteAverage(), year, watched );
+			movie = new Movie( downloadableId, status, null, movieDb.getTitle(), null, null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, movieDb.getVoteAverage(), year, watched );
 		}
 		associate( movie, movieDb );
 		save( movie );
@@ -318,7 +304,7 @@ public class MovieManager implements Reconfigurable {
 		return null;
 	}
 
-	public void setMovieInfo(Movie movie, ParsedMovieInfo movieInfo ) throws MovieDbException {
+	public void setMovieInfo(Movie movie, ParsedMovieInfo movieInfo ) throws MovieDbException, IOException {
 		movie.setName( movieInfo.getName() );
 		MovieInfo movieDb = getMovieDb( movieInfo.getName(), movieInfo.getYear() );
 		if (movieDb != null) {

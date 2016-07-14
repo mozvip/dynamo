@@ -9,6 +9,10 @@ angular.module('dynamo')
             return 'http://' + backendHostAndPort + '/services/';
         },
 
+        getImageURL : function( imageURL ) {
+            return 'http://' + backendHostAndPort + imageURL;
+        },
+
         get: function( urlPrefix ) {
             return $http.get( this.getBackendURL() + urlPrefix );
         }

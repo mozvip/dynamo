@@ -18,13 +18,16 @@ public class DownloadInfo implements Serializable {
 	private DownloadableStatus status = DownloadableStatus.IGNORED;
 	private String type;
 	private int year;
-	private String coverImage;
+	
+	private String simpleClassName;
 
-	public DownloadInfo(Long id, String name, Class downloadableClass, String coverImage, DownloadableStatus status, String aka, int year) {
+	public DownloadInfo(Long id, String name, Class downloadableClass, DownloadableStatus status, String aka, int year) {
 		this.id = id;
 		this.name = name;
 		this.type = downloadableClass.getName();
-		this.coverImage = coverImage;
+		
+		this.simpleClassName = downloadableClass.getSimpleName();
+		
 		this.status = status;
 		
 		if (aka != null) {
@@ -40,20 +43,6 @@ public class DownloadInfo implements Serializable {
 	public long getId() {
 		return id;
 	}
-	
-	public String getCoverImage() {
-		return coverImage;
-	}
-	
-	public String getUrlEncodedCoverImage() {
-		if (coverImage == null) {
-			return null;
-		}
-		String url = "/data/" + coverImage;
-		url = url.replaceAll("\\+", "%2B");
-		url = url.replaceAll("\\#", "%23");
-		return url;
-	}	
 
 	private Set<String> alternateNames = new HashSet<String>();
 
@@ -96,6 +85,10 @@ public class DownloadInfo implements Serializable {
 
 	public boolean isDownloaded() {
 		return status != null && status.equals(DownloadableStatus.DOWNLOADED);
+	}
+	
+	public String getImage() throws ClassNotFoundException {
+		return String.format("/data/%s/%d.jpg", simpleClassName, getId());
 	}
 
 	@Override

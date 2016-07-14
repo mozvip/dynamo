@@ -1,20 +1,22 @@
 package dynamo.backlog.tasks.music;
 
+import java.nio.file.Path;
+
 import dynamo.core.model.Task;
 import dynamo.model.music.MusicAlbum;
 
 public class SetAlbumImageTask extends Task {
 	
 	private MusicAlbum musicAlbum;
-	private String localImagePath;
+	private Path localImagePath;
 
-	public SetAlbumImageTask(MusicAlbum musicAlbum, String localImagePath) {
+	public SetAlbumImageTask(MusicAlbum musicAlbum, Path localImagePath) {
 		super();
 		this.musicAlbum = musicAlbum;
 		this.localImagePath = localImagePath;
 	}
 	
-	public String getLocalImagePath() {
+	public Path getLocalImagePath() {
 		return localImagePath;
 	}
 	

@@ -13,17 +13,15 @@ public abstract class Downloadable {
 	private DownloadableStatus status = DownloadableStatus.IGNORED;
 	private String type;
 	private String label;
-	private String coverImage;
 	private String aka;
 	protected int year;
 	private Date creationDate;
 
-	public Downloadable(Long id, String name, String label, DownloadableStatus status, String coverImage, String aka, int year, Date creationDate) {
+	public Downloadable(Long id, String name, String label, DownloadableStatus status, String aka, int year, Date creationDate) {
 		this.id = id;
 		this.name = name;
 		this.label = label;
 		this.status = status;
-		this.coverImage = coverImage;
 		this.aka = aka;
 		this.year = year;
 		this.creationDate = creationDate;
@@ -55,24 +53,6 @@ public abstract class Downloadable {
 	
 	public String getType() {
 		return type;
-	}
-
-	public String getCoverImage() {
-		return coverImage;
-	}
-	
-	public void setCoverImage(String coverImage) {
-		this.coverImage = coverImage;
-	}
-	
-	public String getUrlEncodedCoverImage() {
-		if (coverImage == null) {
-			return null;
-		}
-		String url = "/data/" + coverImage;
-		url = url.replaceAll("\\+", "%2B");
-		url = url.replaceAll("\\#", "%23");
-		return url;
 	}
 	
 	public String getAka() {

@@ -126,7 +126,7 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 				}
 				
 				musicAlbum = MusicManager.getInstance().getAlbum(
-						artistName, albumName, null, localImage, DownloadableStatus.DOWNLOADED,
+						artistName, albumName, null, DownloadableStatus.DOWNLOADED,
 						albumDestinationFolder, audioTag instanceof FlacTag ? MusicQuality.LOSSLESS : MusicQuality.COMPRESSED, true);
 			}
 			

@@ -1,5 +1,6 @@
 package dynamo.services;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public class MovieDBService {
 	}
 	
 	@PUT
-	public Movie selectMovie(@QueryParam("id") long id, @QueryParam("movieDbId") int movieDbId) throws MovieDbException {
+	public Movie selectMovie(@QueryParam("id") long id, @QueryParam("movieDbId") int movieDbId) throws MovieDbException, IOException {
 		MovieInfo movieDb = MovieManager.getInstance().getMovieInfo( movieDbId );
 		return MovieManager.getInstance().associate(id, movieDb);
 	}

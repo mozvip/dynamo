@@ -55,6 +55,10 @@ public class LocalImageCache {
 		}
 		return cacheTempFolder.resolve( name ).toAbsolutePath();
 	}
+	
+	public String download( String prefix, String nameWithoutExtension, String url, String referer ) {
+		return download( prefix, nameWithoutExtension, url, referer, false, true );
+	}
 
 	public String download( String prefix, String nameWithoutExtension, String url, String referer, boolean async, boolean overwrite ) {
 		nameWithoutExtension = FileNameUtils.sanitizeFileName( nameWithoutExtension );
@@ -85,17 +89,6 @@ public class LocalImageCache {
 		return String.format( "%s/%s%s", prefix, nameWithoutExtension, extension );
 	}
 	
-	public String download( String prefix, String fileNameWithoutExtension, String url, String referer ) {
-		return download(prefix, fileNameWithoutExtension, url, referer, true, false);
-	}
-
-	public boolean missFile(String relativeFileName) {
-		if (relativeFileName.startsWith("/")) {
-			relativeFileName = relativeFileName.substring( 1 );
-		}
-		return !Files.exists( cacheTempFolder.resolve( relativeFileName ) );
-	}
-
 	public void download(String relativeFileName, byte[] imageData) throws IOException {
 		Path localFile = cacheTempFolder.resolve( relativeFileName ).normalize().toAbsolutePath();
 		if (!Files.exists( localFile )) {
@@ -104,6 +97,11 @@ public class LocalImageCache {
 				IOUtils.write( imageData, o );
 			}
 		}
+	}
+
+	public boolean missFile(String relativeFileName) throws IOException {
+		Path localFile = cacheTempFolder.resolve( relativeFileName ).normalize().toAbsolutePath();
+		return Files.exists( localFile ) && Files.size( localFile ) > 0;
 	}
 
 }
