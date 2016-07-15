@@ -6,18 +6,29 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   $routeProvider.when('/tvshows', {
     templateUrl: 'tvshows/tvshows.html',
     controller: 'TVShowsCtrl'
+  }).when('/tvshows-add', {
+    templateUrl: 'tvshows/tvshows-add.html',
+    controller: 'TVShowsCtrl'
   });
+}])
+
+.factory('tvdbService', ['BackendService', function(BackendService){
+  var tvdbService = {};
+  tvdbService.find = function( title ) {
+    return BackendService.get('tvdb/search', {'title' : title, 'language' : 'EN'});
+  }
+  return tvdbService;
 }])
 
 .factory('tvShowsService', ['BackendService', function(BackendService){
   var tvShowsService = {};
-  tvShowsService.find = function( type, status ) {
+  tvShowsService.find = function() {
     return BackendService.get('tvshows');
   }
   return tvShowsService;
 }])
 
-.controller('TVShowsCtrl', ['$scope', '$routeParams', 'tvShowsService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', function( $scope, $routeParams, tvShowsService, downloadableService, fileListService, $uibModal, filterFilter ) {
+.controller('TVShowsCtrl', ['$scope', '$routeParams', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', function( $scope, $routeParams, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
@@ -53,6 +64,13 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     $scope.filteredList = filterFilter($scope.allItems, {'name': $scope.filter });
     $scope.currentPage = 1;
     $scope.pageChanged();
+  }
+
+  $scope.results = [];
+  $scope.searchTVShow = function() {
+    tvdbService.find( $scope.title ).then( function( response ) {
+      $scope.results = response.data;
+    });
   }
 
   $scope.openFileList = function ( downloadable) {

@@ -13,8 +13,12 @@ angular.module('dynamo')
             return 'http://' + backendHostAndPort + imageURL;
         },
 
-        get: function( urlPrefix ) {
-            return $http.get( this.getBackendURL() + urlPrefix );
+        get: function( urlPrefix, parameters ) {
+            var completeURL = this.getBackendURL() + urlPrefix;
+            if (parameters) {
+                completeURL += ( '?' +  Object.keys(parameters).map(function(key) { return encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]); }).join('&') );
+            }
+            return $http.get( completeURL );
         }
     }
 
