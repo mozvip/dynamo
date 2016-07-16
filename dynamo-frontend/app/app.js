@@ -48,7 +48,7 @@ angular.module('dynamo', [
       if (counts[i].type == 'Movie') {
         if (counts[i].status == 'DOWNLOADED') {
           $scope.moviesCollectionCount = counts[i].count;
-        } else if (counts[i].status == 'DOWNLOADED' || counts[i].status == 'DOWNLOADED') {
+        } else if (counts[i].status == 'SNATCHED' || counts[i].status == 'WANTED') {
           $scope.moviesWantedCount += counts[i].count;
         } else if (counts[i].status == 'SUGGESTED') {
           $scope.moviesSuggestionCount = counts[i].count;
@@ -57,7 +57,7 @@ angular.module('dynamo', [
       if (counts[i].type == 'MagazineIssue') {
         if (counts[i].status == 'DOWNLOADED') {
           $scope.magazinesCollectionCount = counts[i].count;
-        } else if (counts[i].status == 'DOWNLOADED' || counts[i].status == 'DOWNLOADED') {
+        } else if (counts[i].status == 'SNATCHED' || counts[i].status == 'WANTED') {
           $scope.magazinesWantedCount += counts[i].count;
         } else if (counts[i].status == 'SUGGESTED') {
           $scope.magazinesSuggestionCount = counts[i].count;
@@ -66,7 +66,7 @@ angular.module('dynamo', [
       if (counts[i].type == 'Book') {
         if (counts[i].status == 'DOWNLOADED') {
           $scope.booksCollectionCount = counts[i].count;
-        } else if (counts[i].status == 'DOWNLOADED' || counts[i].status == 'DOWNLOADED') {
+        } else if (counts[i].status == 'SNATCHED' || counts[i].status == 'WANTED') {
           $scope.booksWantedCount += counts[i].count;
         } else if (counts[i].status == 'SUGGESTED') {
           $scope.booksSuggestionCount = counts[i].count;
@@ -75,7 +75,7 @@ angular.module('dynamo', [
       if (counts[i].type == 'MusicAlbum') {
         if (counts[i].status == 'DOWNLOADED') {
           $scope.musicAlbumsCollectionCount = counts[i].count;
-        } else if (counts[i].status == 'DOWNLOADED' || counts[i].status == 'DOWNLOADED') {
+        } else if (counts[i].status == 'SNATCHED' || counts[i].status == 'WANTED') {
           $scope.musicAlbumsWantedCount += counts[i].count;
         } else if (counts[i].status == 'SUGGESTED') {
           $scope.musicAlbumsSuggestionCount = counts[i].count;

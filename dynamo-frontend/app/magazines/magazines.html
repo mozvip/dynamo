@@ -25,8 +25,7 @@
     <button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default btn-lg btn-block">Show Files</button>
     <button type="button" ng-show="downloadable.status != 'SUGGESTED'" confirmed-click="delete(downloadable)" ng-confirm-click="Are you sure you want to delete {{downloadable.name}} ?" class="btn btn-danger btn-lg btn-block">Delete</button>
     <button type="button" ng-show="downloadable.status == 'DOWNLOADED' || downloadable.status == 'SNATCHED'" confirmed-click="redownload(downloadable)" ng-confirm-click="Are you sure you want to redownload {{downloadable.name}} ?" class="btn btn-danger btn-lg btn-block">Redownload</button>
-    <button type="button" ng-show="downloadable.status == 'SUGGESTED'" ng-click="want(downloadable)" class="btn btn-primary btn-lg btn-block">Want</button>
-    <a target="_blank" ng-show="downloadable.imdbID" class="btn btn-default btn-lg btn-block" href="http://www.imdb.com/title/{{downloadable.imdbID}}">IMDB&nbsp;<span class="glyphicon glyphicon-new-window" /></a>
+    <button type="button" ng-show="downloadable.status == 'SUGGESTED'" ng-click="want(downloadable)" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-heart" /> Want</button>
   </div>
   <div class="caption">
     {{downloadable.name}}

@@ -114,7 +114,6 @@ public class DownloadableManager {
 	private DownloadableDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableDAO.class );
 
 	public void want( Downloadable downloadable ) {
-		downloadable.setWanted();
 		downloadableDAO.updateStatus(downloadable.getId(), DownloadableStatus.WANTED);
 		scheduleFind( downloadable );
 	}

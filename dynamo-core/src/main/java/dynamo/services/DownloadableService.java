@@ -50,6 +50,12 @@ public class DownloadableService {
 		DownloadableManager.getInstance().redownload(id);
 	}
 	
+	@POST
+	@Path("/want/{id}")
+	public void want(@PathParam("id") long id) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException  {
+		DownloadableManager.getInstance().want(id);
+	}
+
 	@GET
 	@Path("/counts")
 	public List<DownloableCount> getCount() {

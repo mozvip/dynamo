@@ -83,7 +83,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     return $http.get('http://' + backendHostAndPort + '/services/downloadable/counts');
   }
   downloadableService.want = function( downloadableId ) {
-    return $http.post('http://' + backendHostAndPort + '/services/downloadable/want?id=' + downloadableId);
+    return $http.post('http://' + backendHostAndPort + '/services/downloadable/want/' + downloadableId);
   }
   downloadableService.redownload = function( downloadableId ) {
     return $http.post('http://' + backendHostAndPort + '/services/downloadable/redownload/' + downloadableId);

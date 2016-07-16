@@ -265,7 +265,7 @@ public class MovieManager implements Reconfigurable {
 			Language originalLanguage = Language.EN;
 			if (movieDb.getSpokenLanguages() != null && movieDb.getSpokenLanguages().size() > 0) {
 				com.omertron.themoviedbapi.model.Language l = movieDb.getSpokenLanguages().get(0);
-				originalLanguage = Language.getByShortName( l.getIsoCode() );	// FIXME : may not always match
+				originalLanguage = Language.getByShortName( l.getCode() );	// FIXME : may not always match
 			}
 
 			int year = -1;

@@ -5,16 +5,25 @@
   <div class="form-group">
     <input type="number" size="4" ng-model="year" class="form-control" placeholder="Year ..."/>
   </div>
-  <button class="btn btn-primary" ng-click="searchTVShow()">Search</button>
+  <div class="form-group">
+    <label class="control-label">Language</label>
+    <select ng-model="language" class="form-control" ng-options="item.key as item.value for item in languages">
+      <option value="" />
+    </select>
+  </div>
+  <button class="btn btn-primary" ng-click="searchTVShow()"><span class="glyphicon glyphicon-search"/> Search</button>
 </div>
 
 <div class="panel panel-default" ng-repeat="tvshow in results">
   <div class="panel-heading">
-    {{tvshow.seriesName}}
+    <h4 class="text-center">{{tvshow.seriesName}}</h4>
   </div>
   <div class="panel-body">
-    <img ng-src="{{tvshow.banner}}" alt="{{tvshow.seriesName}}" title="{{tvshow.seriesName}}" />
+    <div style="width: 100%; text-align: center">
+      <img ng-show="{{tvshow.banner != null}}" ng-src="{{tvshow.banner}}" alt="{{tvshow.seriesName}}" title="{{tvshow.seriesName}}" />
+    </div>
+    <p ng-show="{{tvshow.firstAired != undefined}}">First aired on <strong>{{tvshow.firstAired}}</strong></p>
     <p>{{tvshow.overview}}</p>
   </div>
-  <div class="panel-footer"><button class="btn btn-primary"><span class="glyphicon glyphicon-download"/> Add {{tvshow.seriesName}} to my collection</button></div>
+  <div class="panel-footer"><button class="btn btn-primary btn-block" ng-click="addTVShow(tvshow.id)"><span class="glyphicon glyphicon-download"/> Add {{tvshow.seriesName}} to my collection</button></div>
 </div>

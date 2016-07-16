@@ -9,6 +9,14 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   }).when('/tvshows-add', {
     templateUrl: 'tvshows/tvshows-add.html',
     controller: 'TVShowsCtrl'
+  }).when('/tvshow-detail/:tvShowId', {
+    templateUrl: 'tvshows/tvshow-detail.html',
+    controller: 'TVShowDetailsCtrl',
+    resolve: {
+      tvshow: ['tvShowsService', '$route', function(  tvShowsService, $route  ) {
+        return tvShowsService.getTVShow( $route.current.params.tvShowId );
+      }]
+    }
   });
 }])
 
@@ -25,7 +33,16 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   tvShowsService.find = function() {
     return BackendService.get('tvshows');
   }
+  tvShowsService.getTVShow = function( tvshowId ) {
+    return BackendService.get('tvshows/' + tvshowId);
+  }
   return tvShowsService;
+}])
+
+.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter ) {
+
+  $scope.tvshow = tvshow;
+
 }])
 
 .controller('TVShowsCtrl', ['$scope', '$routeParams', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', function( $scope, $routeParams, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter ) {
@@ -71,6 +88,10 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     tvdbService.find( $scope.title ).then( function( response ) {
       $scope.results = response.data;
     });
+  }
+
+  $scope.addTVShow = function( id ) {
+    BackendService.post("tvshow/add", {"id": id});
   }
 
   $scope.openFileList = function ( downloadable) {

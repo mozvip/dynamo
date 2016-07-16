@@ -23,7 +23,6 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.core.model.DownloadableFile;
 import dynamo.manager.DownloadableManager;
-import dynamo.manager.LocalImageCache;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.subtitles.FindMovieSubtitleTask;
@@ -114,7 +113,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 					mustRefresh = true;
 				}
 				
-				if (mustRefresh) {
+				if (mustRefresh && movie.getMovieDbId() > 0) {
 					try {
 						MovieInfo movieDb = MovieManager.getInstance().getMovieInfo( movie.getMovieDbId() );
 						MovieManager.getInstance().associate(movie, movieDb);
