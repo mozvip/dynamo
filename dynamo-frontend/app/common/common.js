@@ -32,7 +32,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     'get' : function( key ) {
       return $http.get('http://' + backendHostAndPort + '/services/configuration/' + key);
     },
-    'getCategories' : function() {
+    'getItems' : function() {
       return $http.get('http://' + backendHostAndPort + '/services/configuration');
     },
     'set' : function( key, value ) {

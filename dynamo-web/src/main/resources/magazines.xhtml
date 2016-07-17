@@ -65,11 +65,11 @@
 					<div class="thumbnail downloadableThumb">
 						<ui:fragment rendered="#{downloadable.status == 'DOWNLOADED'}">
 							<a href="/download?id=#{downloadable.id}" target="_blank">
-								<img data-src="#{downloadable.urlEncodedCoverImage}" alt="#{downloadable.name}" title="#{downloadable.name}" />
+								<img data-src="/data/MagazineIssue/#{downloadable.id}.jpg" alt="#{downloadable.name}" title="#{downloadable.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{downloadable.status != 'DOWNLOADED'}">					
-							<img data-src="#{downloadable.urlEncodedCoverImage}" alt="#{downloadable.name}" title="#{downloadable.name}" />
+							<img data-src="/data/MagazineIssue/#{downloadable.id}.jpg" alt="#{downloadable.name}" title="#{downloadable.name}" />
 						</ui:fragment>
 						<div class="caption">#{downloadable.name}</div>
 					</div>

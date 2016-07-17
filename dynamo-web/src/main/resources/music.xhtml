@@ -97,11 +97,11 @@
 					<div class="thumbnail itemThumb" id="#{album.searchString}">
 						<ui:fragment rendered="#{album.status == 'DOWNLOADED'}">
 							<a href="#{album.relativeLink}">
-								<img class="img-responsive albumCover" data-src="#{album.urlEncodedCoverImage}" alt="#{album.name}" />
+								<img class="img-responsive albumCover" data-src="/data/MusicAlbum/#{album.id}.jpg" alt="#{album.name}" />
 							</a>
 						</ui:fragment>
 						<ui:fragment rendered="#{album.status != 'DOWNLOADED'}">
-							<img class="img-responsive albumCover" data-src="#{album.urlEncodedCoverImage}" alt="#{album.name}" />
+							<img class="img-responsive albumCover" data-src="/data/MusicAlbum/#{album.id}.jpg" alt="#{album.name}" />
 						</ui:fragment>
 						<div class="itemCaption">
 							<span class="albumName">#{album.name}</span>

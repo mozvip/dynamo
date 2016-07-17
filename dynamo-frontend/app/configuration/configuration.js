@@ -40,21 +40,10 @@ angular.module('dynamo.configuration', ['ngRoute'])
 .controller('ConfigurationCtrl', ['$scope', 'configurationService', '$filter', function($scope, configurationService, $filter) {
 
   $scope.items = {};
-  $scope.categories = [];
 
-  configurationService.getCategories().then( function( response ) {
-    $scope.categories = response.data;
+  configurationService.getItems().then( function( response ) {
+    $scope.items = response.data;
   });
-
-  for (var iCategory=0; iCategory<$scope.categories.length; iCategory++) {
-    var category = $scope.categories[iCategory];
-    for (var iItem=0; iItem<category.items.length; iItem++) {
-      var item = $category.items[iItem];
-      $scope.items[item.key].value = item.value;
-    }
-  }
-
-  var mainSettings = $filter('filter')($scope.categories, { 'id' : 'MainSettings' });
 
   $scope.configurationChanged = function( key ) {
     configurationService.set(key, $scope.items[key].value);

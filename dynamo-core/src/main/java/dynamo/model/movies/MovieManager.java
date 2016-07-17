@@ -280,7 +280,7 @@ public class MovieManager implements Reconfigurable {
 					ErrorManager.getInstance().reportThrowable( e );
 				}
 			}
-
+			
 			movie = new Movie( downloadableId, status, null, movieDb.getTitle(), null, null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, movieDb.getVoteAverage(), year, watched );
 		}
 		associate( movie, movieDb );
@@ -430,6 +430,7 @@ public class MovieManager implements Reconfigurable {
 				movie.getQuality(), movie.getRating(), movie.getReleaseGroup(), movie.getSource(), movie.isSubtitled(), movie.getSubtitlesPath(),
 				movie.getTraktUrl(), movie.getWantedAudioLanguage(), movie.getWantedSubtitlesLanguage(), movie.getQuality(), movie.isWatched()
 		);
+		DownloadableManager.getInstance().updateYear( movie.getId(), movie.getYear() );	
 	}
 	
 	public Movie suggestImdbId(String imdbId, WebResource defaultImage, Language language, String suggestionURL ) throws MovieDbException, ParseException, IOException, URISyntaxException {
@@ -504,6 +505,11 @@ public class MovieManager implements Reconfigurable {
 		if (movieDb != null && movieDb.getImdbID() != null) {
 			Movie movie = findByImdbId( movieDb.getImdbID() );
 			if (movie == null) {
+				
+				if (defaultImage == null) {
+					defaultImage = new WebResource(getImageURL( movieDb.getPosterPath()));
+				}
+				
 				movie = suggestImdbId( movieDb.getImdbID(), defaultImage, language, suggestionURL );
 			}
 			return movie;

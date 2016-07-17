@@ -1,8 +1,9 @@
 package dynamo.core.services;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -17,14 +18,19 @@ import dynamo.core.manager.ConfigAnnotationManager;
 public class ConfigurationService {
 	
 	@GET
-	@Path("categories")
-	public List<String> getCategories() {
+	public Map<String, List<AbstractConfigurationItem>> getItems() {
 		List<AbstractConfigurationItem> items = ConfigAnnotationManager.getInstance().getItems();
-		List<String> categories = new ArrayList<>();
+		Map<String, List<AbstractConfigurationItem>> categories = new HashMap<>();
 		for (AbstractConfigurationItem item : items) {
-			categories.add( item.getCategory() );
+			List<AbstractConfigurationItem> category;
+			if (!categories.containsKey( item.getCategory() )) {
+				category = new ArrayList<>();
+				categories.put( item.getCategory(), category );	
+			} else {
+				category = categories.get( item.getCategory() );	
+			}
+			category.add( item );
 		}
-		Collections.sort( categories );
 		return categories;
 	}
 
