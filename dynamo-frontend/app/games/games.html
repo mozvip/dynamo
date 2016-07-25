@@ -1,0 +1,32 @@
+<div class="form-inline">
+  <div class="form-group">
+    <label class="control-label">Name</label>
+    <input type="text" ng-model="filter" class="form-control" placeholder="Search for ..." ng-change="filterChanged()"/>
+  </div>
+  <div class="form-group">
+    <label class="control-label">Language</label>
+    <select ng-model="filterLanguage" class="form-control" ng-change="filterChanged()"/>
+  </div>
+</div>
+
+<div class="row" ng-show="filteredList.length > 24">
+  <p class="text-center">
+    <uib-pagination total-items="filteredList.length" max-size="30" items-per-page="24" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+  </p>
+</div>
+
+<div class="thumbnail downloadable-thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents">
+  <img ng-src="http://localhost:8081{{downloadable.image}}" alt="{{downloadable.name}}" style="min-height: 280px;" />
+  <div class="buttons">
+    <button type="button" ng-click="openSearchResults(downloadable)" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>  Search Results</button>
+    <button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default btn-lg btn-block">Show Files</button>
+    <button type="button" confirmed-click="delete(downloadable)" ng-confirm-click="Are you sure you want to delete {{downloadable.name}} ?" class="btn btn-danger btn-lg btn-block"><span class="glyphicon glyphicon-trash" /> Delete</button>
+    <button type="button" ng-show="downloadable.status == 'DOWNLOADED' || downloadable.status == 'SNATCHED'" confirmed-click="redownload(downloadable)" ng-confirm-click="Are you sure you want to redownload {{downloadable.name}} ?" class="btn btn-danger btn-lg btn-block"><span class="glyphicon glyphicon-refresh" /> Redownload</button>
+    <button type="button" ng-show="downloadable.status == 'SUGGESTED'" ng-click="want(downloadable)" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-heart" /> Want</button>
+  </div>
+  <div class="caption">
+    {{downloadable.name}}
+  </div>
+</div>
+
+<ng-include src="'common/templates.html'" />

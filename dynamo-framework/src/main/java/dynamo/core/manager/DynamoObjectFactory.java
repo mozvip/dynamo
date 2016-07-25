@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -29,8 +28,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 import core.RegExp;
-import dynamo.core.Enableable;
-import dynamo.core.configuration.Reconfigurable;
 
 public class DynamoObjectFactory<T> {
 
@@ -263,25 +260,12 @@ public class DynamoObjectFactory<T> {
         return classes;
     }
 
-    public static <T> T getInstance( Class<T> klass ) throws Exception {
+	public static <T> T getInstance( Class<T> klass ) throws Exception {
 		Object object = instancesCache.get( klass );
 		if (object instanceof String && object.equals( NO_INSTANCE_MARKER )) {
 			return null;
 		}
 		return (T) object;
-    }
-   
-    public static <T> T getInstanceAndConfigure( Class<T> klass ) throws Exception {
-		T instance = getInstance(klass);
-		if (instance != null) {
-			ConfigurationManager.getInstance().configureInstance(instance);
-			if (instance instanceof Reconfigurable) {
-				if (!(instance instanceof Enableable) || ((Enableable) instance).isEnabled()) {
-					((Reconfigurable)instance).reconfigure();
-				}
-			}
-		}
-		return instance;
     }
 
     public Set<T> getInstances() throws Exception {
@@ -292,26 +276,5 @@ public class DynamoObjectFactory<T> {
 		}
 		return instances;
     }
-
-	public T newInstance( Object... parameters ) {
-		Set<Class<? extends T>> classes = getMatchingClasses( false, false );
-		
-		Class<?>[] parameterTypes = new Class[ parameters.length];
-		for (int i=0; i<parameterTypes.length; i++) {
-			parameterTypes[i] = parameters[i] != null ? parameters[i].getClass() : null;
-		}
-		for (Class<? extends T> klass : classes) {
-			try {
-				return klass.getConstructor(parameterTypes).newInstance( parameters );
-			} catch (InstantiationException | IllegalAccessException
-					| IllegalArgumentException | InvocationTargetException
-					| SecurityException e) {
-				ErrorManager.getInstance().reportThrowable( e );
-			} catch (NoSuchMethodException e) {
-				// ignored silently
-			}
-		}
-		return null;
-	}
   
 }

@@ -37,6 +37,10 @@ angular.module('dynamo', [
   $scope.booksWantedCount = 0;
   $scope.booksSuggestionCount = 0;
 
+  $scope.gamesCollectionCount = 0;
+  $scope.gamesWantedCount = 0;
+  $scope.gamesSuggestionCount = 0;
+
   $scope.musicAlbumsCollectionCount = 0;
   $scope.musicAlbumsWantedCount = 0;
   $scope.musicAlbumsSuggestionCount = 0;
@@ -70,6 +74,15 @@ angular.module('dynamo', [
           $scope.booksWantedCount += counts[i].count;
         } else if (counts[i].status == 'SUGGESTED') {
           $scope.booksSuggestionCount = counts[i].count;
+        }
+      }
+      if (counts[i].type == 'VideoGame') {
+        if (counts[i].status == 'DOWNLOADED') {
+          $scope.gamesCollectionCount = counts[i].count;
+        } else if (counts[i].status == 'SNATCHED' || counts[i].status == 'WANTED') {
+          $scope.gamesWantedCount += counts[i].count;
+        } else if (counts[i].status == 'SUGGESTED') {
+          $scope.gamesSuggestionCount = counts[i].count;
         }
       }
       if (counts[i].type == 'MusicAlbum') {

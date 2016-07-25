@@ -1,6 +1,7 @@
 package dynamo.manager;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,7 +30,6 @@ import dynamo.core.EventManager;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.DownloadableFactory;
-import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloableCount;
 import dynamo.core.model.DownloadableDAO;
@@ -65,8 +65,6 @@ import model.backlog.ScanTVShowTask;
 
 
 public class DownloadableManager {
-	
-	private DynamoObjectFactory<FindDownloadableTask> findDownloadableFactory;
 	
 	private ManagedEpisodeDAO managedEpisodeDAO = DAOManager.getInstance().getDAO( ManagedEpisodeDAO.class );
 	private MovieDAO movieDAO = DAOManager.getInstance().getDAO( MovieDAO.class );
@@ -106,11 +104,25 @@ public class DownloadableManager {
 	
 	private Set<Class<? extends Downloadable>> downloadableTypes;
 	private Map<Class<? extends Downloadable>, Class<? extends DownloadableDAO>> downloadableDaos;
+	private Map<Class<? extends Downloadable>, Constructor<? extends FindDownloadableTask<Downloadable>>> findDownloadableTaskContructors;
 	
 	private DownloadableManager() {
-		findDownloadableFactory = new DynamoObjectFactory<FindDownloadableTask>( "dynamo", FindDownloadableTask.class);
 
 		Reflections reflections = new Reflections("dynamo");
+		
+		Set<Class<? extends FindDownloadableTask>> findDownloadableTypes = reflections.getSubTypesOf( FindDownloadableTask.class );
+		
+		findDownloadableTaskContructors = new HashMap<>();
+		for (Class<? extends FindDownloadableTask> klass : findDownloadableTypes) {
+			Constructor<?>[] constructors = klass.getConstructors();
+			for (Constructor<?> constructor : constructors) {
+				if (constructor.getParameterTypes().length == 1) {
+					findDownloadableTaskContructors.put( (Class<? extends Downloadable>) constructor.getParameterTypes()[0], (Constructor<? extends FindDownloadableTask<Downloadable>>) constructor);
+					break;
+				}
+			}
+		}
+		
 		downloadableTypes = reflections.getSubTypesOf(Downloadable.class);
 		downloadableDaos = new HashMap<>();
 		Set<Class<? extends DownloadableDAO>> daos = reflections.getSubTypesOf(DownloadableDAO.class);
@@ -143,7 +155,12 @@ public class DownloadableManager {
 	}	
 	
 	public void scheduleFind( Downloadable downloadable ) {
-		BackLogProcessor.getInstance().schedule( findDownloadableFactory.newInstance( downloadable ), false );
+		try {
+			BackLogProcessor.getInstance().schedule( findDownloadableTaskContructors.get(downloadable.getClass()).newInstance( downloadable ), false );
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			ErrorManager.getInstance().reportThrowable( e );
+		}
 	}
 	
 	public int updateStatus( Downloadable downloadable, DownloadableStatus newStatus ) {

@@ -58,6 +58,14 @@
                 <li><a ng-show="booksSuggestionCount > 0" href="#/books/SUGGESTED">Suggestions <span class="badge">{{booksSuggestionCount}}</span></a></li>
               </ul>
             </li>
+            <li class="dropdown" ng-show="gamesCollectionCount > 0 || gamesWantedCount > 0 || gamesSuggestionCount > 0">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Games <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a ng-show="gamesCollectionCount > 0" href="#/games/DOWNLOADED">Collection <span class="badge">{{gamesCollectionCount}}</span></a></li>
+                <li><a ng-show="gamesWantedCount > 0" href="#/games/WANTED,SNATCHED">Wanted <span class="badge">{{gamesWantedCount}}</span></a></li>
+                <li><a ng-show="gamesSuggestionCount > 0" href="#/games/SUGGESTED">Suggestions <span class="badge">{{gamesSuggestionCount}}</span></a></li>
+              </ul>
+            </li>
             <li class="dropdown" ng-show="musicAlbumsCollectionCount > 0 || musicAlbumsWantedCount > 0 || musicAlbumsSuggestionCount > 0">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Music <span class="caret"></span></a>
               <ul class="dropdown-menu">
@@ -145,6 +153,7 @@
   <script src="common/common.js"></script>
   <script src="movies/movies.js"></script>
   <script src="music/music.js"></script>
+  <script src="games/games.js"></script>
   <script src="books/books.js"></script>
   <script src="tvshows/tvshows.js"></script>
   <script src="magazines/magazines.js"></script>
