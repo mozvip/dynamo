@@ -10,8 +10,8 @@ import javax.faces.model.SelectItem;
 
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
-import dynamo.model.games.GamePlatform;
-import dynamo.model.magazines.MagazinePeriodicity;
+import dynamo.games.model.GamePlatform;
+import dynamo.magazines.model.MagazinePeriodicity;
 
 @ManagedBean
 @ApplicationScoped

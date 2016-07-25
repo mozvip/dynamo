@@ -7,7 +7,7 @@ import javax.faces.convert.FacesConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
-import dynamo.model.magazines.MagazinePeriodicity;
+import dynamo.magazines.model.MagazinePeriodicity;
 
 @FacesConverter(value="MagazinePeriodicityConverter")
 public class MagazinePeriodicityConverter implements Converter {

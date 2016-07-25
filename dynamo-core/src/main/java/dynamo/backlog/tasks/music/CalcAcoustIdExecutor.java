@@ -14,15 +14,15 @@ import org.jaudiotagger.tag.reference.ID3V2Version;
 
 import core.RegExp;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MusicDAO;
+import dynamo.music.jdbi.MusicAlbumDAO;
 import dynamo.webapps.acoustid.AcoustId;
 import dynamo.webapps.acoustid.LookupResults;
 
 public class CalcAcoustIdExecutor extends TaskExecutor<CalcAcoustIdTask> {
 
-	private MusicDAO musicDAO;
+	private MusicAlbumDAO musicDAO;
 
-	public CalcAcoustIdExecutor(CalcAcoustIdTask task, MusicDAO musicDAO) {
+	public CalcAcoustIdExecutor(CalcAcoustIdTask task, MusicAlbumDAO musicDAO) {
 		super(task);
 		this.musicDAO = musicDAO;
 	}

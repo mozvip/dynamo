@@ -10,19 +10,19 @@ import org.jaudiotagger.tag.Tag;
 
 import core.RegExp;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MusicDAO;
 import dynamo.manager.MusicManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicQuality;
+import dynamo.music.jdbi.MusicAlbumDAO;
 import dynamo.webapps.acoustid.AcoustId;
 import dynamo.webapps.acoustid.LookupResults;
 
 public class IdentifyMusicFileExecutor extends TaskExecutor<IdentifyMusicFileTask> {
 	
-	private MusicDAO musicDAO = null;
+	private MusicAlbumDAO musicDAO = null;
 
-	public IdentifyMusicFileExecutor(IdentifyMusicFileTask task, MusicDAO musicDAO) {
+	public IdentifyMusicFileExecutor(IdentifyMusicFileTask task, MusicAlbumDAO musicDAO) {
 		super(task);
 		this.musicDAO = musicDAO;
 	}

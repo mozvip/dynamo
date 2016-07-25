@@ -7,15 +7,15 @@ import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MusicDAO;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicFile;
+import dynamo.music.jdbi.MusicAlbumDAO;
 
 public class DeleteMusicFileExecutor extends TaskExecutor<DeleteMusicFileTask> {
 	
-	private MusicDAO musicDAO = null;
+	private MusicAlbumDAO musicDAO = null;
 
-	public DeleteMusicFileExecutor(DeleteMusicFileTask task, MusicDAO musicDAO) {
+	public DeleteMusicFileExecutor(DeleteMusicFileTask task, MusicAlbumDAO musicDAO) {
 		super(task);
 		this.musicDAO = musicDAO;
 	}

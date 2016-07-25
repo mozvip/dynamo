@@ -13,10 +13,9 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.DeleteFileTask;
 import dynamo.core.ReleaseGroup;
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.TVShowDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.find.FindEpisodeTask;
@@ -24,6 +23,8 @@ import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import dynamo.model.tvshows.TVShowManager;
 import dynamo.parsers.TVShowEpisodeInfo;
 import dynamo.parsers.VideoNameParser;
+import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
+import dynamo.tvshows.jdbi.TVShowDAO;
 import dynamo.video.VideoManager;
 import model.ManagedEpisode;
 import model.ManagedSeries;
@@ -32,12 +33,14 @@ import model.backlog.ScanTVShowTask;
 public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 	
 	private TVShowDAO tvShowDAO;
-	private DownloadableDAO downloadableDAO;
+	private DownloadableUtilsDAO downloadableDAO;
+	private ManagedEpisodeDAO managedEpisodeDAO;
 
-	public ScanTVShowExecutor(ScanTVShowTask item, TVShowDAO tvShowDAO, DownloadableDAO downloadableDAO) {
+	public ScanTVShowExecutor(ScanTVShowTask item, TVShowDAO tvShowDAO, DownloadableUtilsDAO downloadableDAO, ManagedEpisodeDAO managedEpisodeDAO) {
 		super(item);
 		this.tvShowDAO = tvShowDAO;
 		this.downloadableDAO = downloadableDAO;
+		this.managedEpisodeDAO = managedEpisodeDAO;
 	}
 
 	private void parseFolder( ManagedSeries series, List<ManagedEpisode> existingEpisodes, Path folder ) throws IOException, InterruptedException {
@@ -128,7 +131,7 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 		// cleanup
 		tvShowDAO.deleteUnrecognizedFiles( task.getSeries().getId() );
 
-		List<ManagedEpisode> managedEpisodes = tvShowDAO.findEpisodesForTVShow( task.getSeries().getId() );
+		List<ManagedEpisode> managedEpisodes = managedEpisodeDAO.findEpisodesForTVShow( task.getSeries().getId() );
 		for ( ManagedEpisode managedEpisode : managedEpisodes ) {
 			if (managedEpisode.isDownloaded()) {
 				List<Path> episodePaths = DownloadableManager.getInstance().getAllFiles( managedEpisode.getId() ).map( downloadedFile -> downloadedFile.getFilePath() ).collect( Collectors.toList() );

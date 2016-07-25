@@ -2,7 +2,7 @@ package dynamo.ui.magazines;
 
 import java.util.List;
 
-import dynamo.model.magazines.MagazineIssue;
+import dynamo.magazines.model.MagazineIssue;
 import dynamo.ui.SimpleQueryPager;
 
 public class MagazineIssuePager extends SimpleQueryPager<MagazineIssue> {

@@ -17,8 +17,8 @@ import com.omertron.themoviedbapi.results.ResultList;
 
 import core.RegExp;
 import dynamo.core.Language;
-import dynamo.model.movies.Movie;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.Movie;
+import dynamo.movies.model.MovieManager;
 import dynamo.services.MovieDBService.MovieResult;
 
 @Path("movie-db")

@@ -56,7 +56,7 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('MoviesCtrl', ['$scope', '$routeParams', 'downloadableService', 'fileListService', '$uibModal', 'movieDbSearchService', 'filterFilter', function( $scope, $routeParams, downloadableService, fileListService, $uibModal, movieDbSearchService, filterFilter ) {
+.controller('MoviesCtrl', ['$scope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'movieDbSearchService', 'filterFilter', function( $scope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, movieDbSearchService, filterFilter ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
@@ -89,20 +89,12 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
     $scope.pageChanged();
   }
 
+  $scope.openSearchResults = function( downloadable ) {
+    searchResultsService.openModal( downloadable );
+  }
+
   $scope.openFileList = function ( downloadable) {
-
-    var modalInstance = $uibModal.open({
-      animation: false,
-      templateUrl: 'fileList.html',
-      controller: 'FileListCtrl',
-      size: 'lg',
-      resolve: {
-        fileList: function () {
-          return fileListService.get( downloadable.id );
-        }
-      }
-    });
-
+    var modalInstance = fileListService.openModal( downloadable );
     modalInstance.result.then(function (selectedItem) {
       $scope.selected = selectedItem;
     });

@@ -45,7 +45,34 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
 
 }])
 
-.factory('fileListService', ['backendHostAndPort', '$http', function(backendHostAndPort, $http){
+.factory('searchResultsService', ['backendHostAndPort', '$http', '$uibModal', function(backendHostAndPort, $http, $uibModal) {
+
+  var searchResultsService = {};
+
+  searchResultsService.get =  function( id ) {
+    return $http.get('http://' + backendHostAndPort + '/services/searchResults/' + id);
+  }  
+
+  searchResultsService.openModal = function( downloadable) {
+
+    $uibModal.open({
+        animation: false,
+        templateUrl: 'searchResults.html',
+        controller: 'SearchResultsCtrl',
+        size: 'lg',
+        resolve: {
+          searchResultsList: function () {
+            return searchResultsService.get( downloadable.id );
+          }
+        }
+      });
+    }
+
+    return searchResultsService;
+
+}])
+
+.factory('fileListService', ['backendHostAndPort', '$http', '$uibModal', function(backendHostAndPort, $http, $uibModal){
   var fileListService = {};
   fileListService.get =  function( id ) {
     return $http.get('http://' + backendHostAndPort + '/services/file-list/' + id);
@@ -53,12 +80,35 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   fileListService.del = function( path ) {
     return $http.delete('http://' + backendHostAndPort + '/services/file-list?path=' + path);
   }
+  fileListService.openModal = function( downloadable ) {
+    return $uibModal.open({
+      animation: false,
+      templateUrl: 'fileList.html',
+      controller: 'FileListCtrl',
+      size: 'lg',
+      resolve: {
+        fileList: function () {
+          return fileListService.get( downloadable.id );
+        }
+      }
+    });    
+  }
   return fileListService;
 }])
 
 . controller('FileListCtrl', ['$scope', '$uibModalInstance', 'fileList', function($scope, $uibModalInstance, fileList) {
 
   $scope.files = fileList.data;
+
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+
+}])
+
+. controller('SearchResultsCtrl', ['$scope', '$uibModalInstance', 'searchResultsList', function($scope, $uibModalInstance, searchResultsList) {
+
+  $scope.searchResults = searchResultsList.data;
 
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel');
@@ -94,21 +144,6 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   downloadableService.updateImage = function( downloadableId ) {
     return $http.post('http://' + backendHostAndPort + '/services/downloadable/updateImage?id=' + downloadableId);
   }
-  return downloadableService;
-}])
 
-.directive('ngConfirmClick', [
-  function(){
-    return {
-      link: function (scope, element, attr) {
-        var msg = attr.ngConfirmClick || "Are you sure?";
-        var clickAction = attr.confirmedClick;
-        element.bind('click',function (event) {
-          if ( window.confirm(msg) ) {
-            scope.$eval(clickAction)
-          }
-        });
-      }
-    };
-  }])
-  ;
+  return downloadableService;
+}]);

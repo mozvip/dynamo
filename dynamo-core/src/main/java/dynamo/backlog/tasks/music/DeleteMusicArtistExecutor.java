@@ -4,14 +4,14 @@ import java.util.List;
 
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MusicDAO;
 import dynamo.model.music.MusicAlbum;
+import dynamo.music.jdbi.MusicAlbumDAO;
 
 public class DeleteMusicArtistExecutor extends TaskExecutor<DeleteMusicArtistTask> {
 	
-	private MusicDAO musicDAO;
+	private MusicAlbumDAO musicDAO;
 
-	public DeleteMusicArtistExecutor(DeleteMusicArtistTask task, MusicDAO musicDAO) {
+	public DeleteMusicArtistExecutor(DeleteMusicArtistTask task, MusicAlbumDAO musicDAO) {
 		super(task);
 		this.musicDAO = musicDAO;
 	}

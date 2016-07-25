@@ -10,22 +10,22 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import core.WebDocument;
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MusicDAO;
 import dynamo.manager.MusicManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicArtist;
 import dynamo.model.music.MusicFile;
+import dynamo.music.jdbi.MusicAlbumDAO;
 import hclient.HTTPClient;
 
 public class LookupMusicArtistExecutor extends TaskExecutor<LookupMusicArtistTask> {
 	
-	private MusicDAO musicDAO;
-	private DownloadableDAO downloadableDAO;
+	private MusicAlbumDAO musicDAO;
+	private DownloadableUtilsDAO downloadableDAO;
 	
-	public LookupMusicArtistExecutor(LookupMusicArtistTask item, MusicDAO musicDAO, DownloadableDAO downloadableDAO) {
+	public LookupMusicArtistExecutor(LookupMusicArtistTask item, MusicAlbumDAO musicDAO, DownloadableUtilsDAO downloadableDAO) {
 		super(item);
 		this.musicDAO = musicDAO;
 		this.downloadableDAO = downloadableDAO;

@@ -2,7 +2,7 @@ package dynamo.finders.core;
 
 import java.util.List;
 
-import dynamo.model.games.VideoGame;
+import dynamo.games.model.VideoGame;
 import dynamo.model.result.SearchResult;
 
 public interface GameFinder {

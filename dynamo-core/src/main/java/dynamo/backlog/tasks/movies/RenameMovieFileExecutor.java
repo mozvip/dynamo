@@ -13,9 +13,9 @@ import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MovieDAO;
 import dynamo.manager.DownloadableManager;
-import dynamo.model.movies.Movie;
+import dynamo.movies.jdbi.MovieDAO;
+import dynamo.movies.model.Movie;
 import dynamo.video.VideoManager;
 
 public class RenameMovieFileExecutor extends TaskExecutor< RenameMovieFileTask > {

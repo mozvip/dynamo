@@ -1,7 +1,7 @@
 package dynamo.backlog.tasks.movies;
 
 import dynamo.core.model.DaemonTask;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.MovieManager;
 import dynamo.trakt.TraktManager;
 
 public class RefreshWatchedMoviesTask extends DaemonTask {

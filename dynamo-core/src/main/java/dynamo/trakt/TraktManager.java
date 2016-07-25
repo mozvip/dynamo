@@ -12,7 +12,7 @@ import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.ConfigValueManager;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 import hclient.RetrofitClient;
 import retrofit.RequestInterceptor;

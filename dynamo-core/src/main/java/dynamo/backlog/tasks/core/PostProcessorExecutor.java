@@ -23,10 +23,11 @@ import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.TaskExecutor;
+import dynamo.games.model.VideoGame;
+import dynamo.games.model.VideoGameDAO;
 import dynamo.jdbi.SearchResultDAO;
-import dynamo.jdbi.TVShowDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.FolderManager;
 import dynamo.manager.games.GamesManager;
@@ -34,16 +35,15 @@ import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.ISOType;
 import dynamo.model.backlog.core.PostProcessFolderTask;
-import dynamo.model.games.VideoGame;
-import dynamo.model.games.VideoGameDAO;
-import dynamo.model.movies.MovieManager;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultFile;
 import dynamo.model.tvshows.TVShowManager;
+import dynamo.movies.model.MovieManager;
 import dynamo.parsers.ParsedMovieInfo;
 import dynamo.parsers.TVShowEpisodeInfo;
 import dynamo.parsers.VideoInfo;
 import dynamo.parsers.VideoNameParser;
+import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.utils.ISOFileIdentifier;
 import model.ManagedEpisode;
 import model.ManagedSeries;
@@ -77,14 +77,14 @@ public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> i
 	
 	private SearchResultDAO searchResultDAO;
 	private VideoGameDAO videoGameDAO;
-	private TVShowDAO tvShowDAO;
-	private DownloadableDAO downloadableDAO;
+	private ManagedEpisodeDAO managedEpisodeDAO;
+	private DownloadableUtilsDAO downloadableDAO;
 
-	public PostProcessorExecutor(PostProcessFolderTask item, SearchResultDAO searchResultDAO, VideoGameDAO videoGameDAO, TVShowDAO tvShowDAO, DownloadableDAO downloadableDAO) {
+	public PostProcessorExecutor(PostProcessFolderTask item, SearchResultDAO searchResultDAO, VideoGameDAO videoGameDAO, ManagedEpisodeDAO managedEpisodeDAO, DownloadableUtilsDAO downloadableDAO) {
 		super(item);
 		this.searchResultDAO = searchResultDAO;
 		this.videoGameDAO = videoGameDAO;
-		this.tvShowDAO = tvShowDAO;
+		this.managedEpisodeDAO = managedEpisodeDAO;
 		this.downloadableDAO = downloadableDAO;
 	}
 
@@ -256,7 +256,7 @@ public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> i
 					if ( series == null ) {
 						LOGGER.info( String.format("TVShow %s is not managed by Dynamo, ignoring file %s", episodeInfo.getName(), path.toString()));
 					} else {
-						List<ManagedEpisode> episodes = tvShowDAO.findEpisodesForTVShowAndSeason( series.getId(), episodeInfo.getSeason() );
+						List<ManagedEpisode> episodes = managedEpisodeDAO.findEpisodesForTVShowAndSeason( series.getId(), episodeInfo.getSeason() );
 						List<ManagedEpisode> associatedEpisodes = new ArrayList<ManagedEpisode>();
 						for (ManagedEpisode managedEpisode : episodes) {
 							if ( managedEpisode.getEpisodeNumber() >= episodeInfo.getFirstEpisode() &&  managedEpisode.getEpisodeNumber() <= episodeInfo.getLastEpisode() ) {

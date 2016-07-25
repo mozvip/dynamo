@@ -11,11 +11,11 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.HistoryDAO;
 import dynamo.core.model.TaskExecutor;
 import dynamo.core.model.video.VideoMetaData;
-import dynamo.jdbi.TVShowDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import dynamo.model.tvshows.TVShowManager;
+import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.video.VideoManager;
 import model.ManagedEpisode;
 import model.ManagedSeries;
@@ -23,14 +23,14 @@ import model.ManagedSeries;
 public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisodeTask> {
 	
 	private HistoryDAO historyDAO;
-	private TVShowDAO tvShowDAO;
+	private ManagedEpisodeDAO episodeDAO;
 	
 	private ManagedEpisode episode;
 	private ManagedSeries series;
 	
-	public FindSubtitleEpisodeExecutor( FindSubtitleEpisodeTask item, TVShowDAO tvShowDAO, HistoryDAO historyDAO ) {
+	public FindSubtitleEpisodeExecutor( FindSubtitleEpisodeTask item, ManagedEpisodeDAO tvShowDAO, HistoryDAO historyDAO ) {
 		super(item);
-		this.tvShowDAO = tvShowDAO;
+		this.episodeDAO = tvShowDAO;
 		this.historyDAO = historyDAO;
 
 		episode = task.getEpisode();
@@ -53,7 +53,7 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 
 		VideoMetaData metaData = VideoManager.getInstance().getMetaData(episode, mainVideoFilePath);
 		if (metaData.getSubtitleLanguages() != null && metaData.getSubtitleLanguages().contains( series.getSubtitleLanguage() )) {
-			tvShowDAO.setSubtitled(episode.getId());
+			episodeDAO.setSubtitled(episode.getId());
 			return;
 		}
 
@@ -81,7 +81,7 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 				
 				Files.move( subtitles, destinationSRT, StandardCopyOption.REPLACE_EXISTING);
 
-				tvShowDAO.updateSubtitlesPath( episode.getId(), destinationSRT );
+				episodeDAO.updateSubtitlesPath( episode.getId(), destinationSRT );
 				
 				String message = String.format("Subtitles for <a href='%s'>%s</a> have been found", episode.getRelativeLink(), episode.toString());
 				historyDAO.insert( message, DownloadableStatus.SUBTITLED, episode.getId() );

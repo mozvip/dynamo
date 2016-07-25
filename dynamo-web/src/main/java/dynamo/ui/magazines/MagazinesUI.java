@@ -9,8 +9,8 @@ import javax.faces.bean.ViewScoped;
 import dynamo.core.Language;
 import dynamo.core.tasks.InvokeMethodTask;
 import dynamo.magazines.MagazineManager;
-import dynamo.model.magazines.Magazine;
-import dynamo.model.magazines.MagazinePeriodicity;
+import dynamo.magazines.model.Magazine;
+import dynamo.magazines.model.MagazinePeriodicity;
 import dynamo.ui.DynamoManagedBean;
 
 @ManagedBean(name="magazines")

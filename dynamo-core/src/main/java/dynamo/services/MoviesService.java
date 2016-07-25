@@ -9,8 +9,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import dynamo.model.DownloadableStatus;
-import dynamo.model.movies.Movie;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.Movie;
+import dynamo.movies.model.MovieManager;
 
 @Path("movies")
 public class MoviesService {

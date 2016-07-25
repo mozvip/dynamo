@@ -16,12 +16,14 @@ import com.omertron.thetvdbapi.model.Series;
 
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.TVShowDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.tvshows.TVShowManager;
 import dynamo.model.tvshows.TVShowSeason;
+import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
+import dynamo.tvshows.jdbi.TVShowDAO;
+import dynamo.tvshows.jdbi.TVShowSeasonDAO;
 import model.ManagedEpisode;
 import model.ManagedSeries;
 import model.backlog.RefreshTVShowTask;
@@ -32,10 +34,14 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 	private	Date nextRefreshDate = null;
 	
 	private TVShowDAO tvShowDAO;
+	private TVShowSeasonDAO tvShowSeasonDAO;
+	private ManagedEpisodeDAO managedEpisodeDAO;
 
-	public RefreshTVShowFromTVDBExecutor( RefreshTVShowTask item, TVShowDAO tvShowDAO ) {
+	public RefreshTVShowFromTVDBExecutor( RefreshTVShowTask item, TVShowDAO tvShowDAO, ManagedEpisodeDAO managedEpisodeDAO, TVShowSeasonDAO tvShowSeasonDAO ) {
 		super( item );
 		this.tvShowDAO = tvShowDAO;
+		this.tvShowSeasonDAO = tvShowSeasonDAO;
+		this.managedEpisodeDAO = managedEpisodeDAO;
 	}
 
 	@Override
@@ -70,13 +76,13 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 			
 			long seasonId;
 			
-			TVShowSeason season = tvShowDAO.findSeason( episode.getSeriesId(), episode.getSeasonNumber() );
+			TVShowSeason season = tvShowSeasonDAO.findSeason( episode.getSeriesId(), episode.getSeasonNumber() );
 			if ( season != null ) {
 				seasonId = season.getId();
-				existingEpisode = tvShowDAO.findEpisode( season.getId(), episode.getEpisodeNumber() );
+				existingEpisode = managedEpisodeDAO.findEpisode( season.getId(), episode.getEpisodeNumber() );
 			} else {
 				seasonId = DownloadableManager.getInstance().createDownloadable( TVShowSeason.class, String.format("%s S%02d", series.getName(), episode.getSeasonNumber()), DownloadableStatus.IGNORED );
-				tvShowDAO.createSeason( seasonId, episode.getSeriesId(), episode.getSeasonNumber() );
+				tvShowSeasonDAO.createSeason( seasonId, episode.getSeriesId(), episode.getSeasonNumber() );
 			}
 
 			DownloadableStatus newStatusForEpisode = series.isAutoDownload() ? DownloadableStatus.WANTED : DownloadableStatus.IGNORED;
@@ -131,7 +137,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 				existingEpisode.setAbsoluteNumber( Integer.parseInt( episode.getAbsoluteNumber() ) );
 			}
 
-			tvShowDAO.saveEpisode( existingEpisode.getId(), episode.getEpisodeNumber(), firstAiredDate, existingEpisode.getQuality(), existingEpisode.getReleaseGroup(),  
+			managedEpisodeDAO.saveEpisode( existingEpisode.getId(), episode.getEpisodeNumber(), firstAiredDate, existingEpisode.getQuality(), existingEpisode.getReleaseGroup(),  
 				 	existingEpisode.getSource(), existingEpisode.isSubtitled(),  existingEpisode.getSubtitlesPath(), existingEpisode.isWatched(), existingEpisode.getSeasonId() );
 		}
 		

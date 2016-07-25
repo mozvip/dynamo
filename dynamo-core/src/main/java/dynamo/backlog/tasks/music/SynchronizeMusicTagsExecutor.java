@@ -13,16 +13,16 @@ import org.jaudiotagger.tag.images.ArtworkFactory;
 import org.jaudiotagger.tag.reference.ID3V2Version;
 
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MusicDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicFile;
+import dynamo.music.jdbi.MusicAlbumDAO;
 
 public class SynchronizeMusicTagsExecutor extends TaskExecutor<SynchronizeMusicTagsTask> {
 	
-	private MusicDAO musicDAO;
+	private MusicAlbumDAO musicDAO;
 
-	public SynchronizeMusicTagsExecutor(SynchronizeMusicTagsTask task, MusicDAO musicDAO) {
+	public SynchronizeMusicTagsExecutor(SynchronizeMusicTagsTask task, MusicAlbumDAO musicDAO) {
 		super(task);
 		this.musicDAO = musicDAO;
 	}

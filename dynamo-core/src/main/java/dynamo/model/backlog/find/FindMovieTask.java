@@ -1,7 +1,7 @@
 package dynamo.model.backlog.find;
 
 import dynamo.model.backlog.core.FindDownloadableTask;
-import dynamo.model.movies.Movie;
+import dynamo.movies.model.Movie;
 
 public class FindMovieTask extends FindDownloadableTask<Movie> {
 	

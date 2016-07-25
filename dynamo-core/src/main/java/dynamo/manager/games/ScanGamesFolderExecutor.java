@@ -13,12 +13,12 @@ import java.util.Set;
 import core.RegExp;
 import dynamo.backlog.tasks.core.AbstractNewFolderExecutor;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
+import dynamo.games.model.GamePlatform;
+import dynamo.games.model.VideoGame;
 import dynamo.core.model.DownloadableFile;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.games.GamePlatform;
-import dynamo.model.games.VideoGame;
 import dynamo.webapps.thegamesdb.net.GetGamesListResponse;
 import dynamo.webapps.thegamesdb.net.TheGamesDB;
 import dynamo.webapps.thegamesdb.net.TheGamesDBGame;
@@ -29,7 +29,7 @@ public class ScanGamesFolderExecutor extends AbstractNewFolderExecutor<ScanGames
 	private Set<DownloadableFile> files;
 	private Map<Long, VideoGame> games;
 
-	public ScanGamesFolderExecutor( ScanGamesFolderTask task, DownloadableDAO downloadableDAO ) {
+	public ScanGamesFolderExecutor( ScanGamesFolderTask task, DownloadableUtilsDAO downloadableDAO ) {
 		super(task);
 		this.platform = task.getPlatform();
 		

@@ -12,7 +12,7 @@ import com.omertron.themoviedbapi.MovieDbException;
 import core.WebDocument;
 import core.WebResource;
 import dynamo.core.Language;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.MovieManager;
 import hclient.HTTPClient;
 
 public class SortiesDVDSuggester implements MovieSuggester {

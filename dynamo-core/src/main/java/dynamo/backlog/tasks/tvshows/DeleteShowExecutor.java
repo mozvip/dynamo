@@ -9,9 +9,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.TVShowDAO;
 import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
+import dynamo.tvshows.jdbi.TVShowDAO;
 import model.ManagedSeries;
 import model.backlog.RefreshTVShowTask;
 import model.backlog.ScanTVShowTask;

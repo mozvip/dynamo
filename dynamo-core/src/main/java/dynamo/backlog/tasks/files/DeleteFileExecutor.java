@@ -3,12 +3,12 @@ package dynamo.backlog.tasks.files;
 import java.nio.file.Files;
 
 import dynamo.core.manager.DAOManager;
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.TaskExecutor;
 
 public class DeleteFileExecutor extends TaskExecutor<DeleteFileTask> {
 	
-	private static DownloadableDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableDAO.class );
+	private static DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
 	public DeleteFileExecutor(DeleteFileTask task) {
 		super(task);

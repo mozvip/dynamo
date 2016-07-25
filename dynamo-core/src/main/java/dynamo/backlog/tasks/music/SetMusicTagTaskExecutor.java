@@ -6,18 +6,18 @@ import java.nio.file.Path;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.files.MoveFileTask;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MusicDAO;
 import dynamo.manager.MusicManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicFile;
 import dynamo.model.music.MusicQuality;
+import dynamo.music.jdbi.MusicAlbumDAO;
 
 public class SetMusicTagTaskExecutor extends TaskExecutor<SetMusicTagTask> {
 	
-	private MusicDAO musicDAO = null;
+	private MusicAlbumDAO musicDAO = null;
 
-	public SetMusicTagTaskExecutor(SetMusicTagTask task, MusicDAO musicDAO) {
+	public SetMusicTagTaskExecutor(SetMusicTagTask task, MusicAlbumDAO musicDAO) {
 		super(task);
 		this.musicDAO = musicDAO;
 	}

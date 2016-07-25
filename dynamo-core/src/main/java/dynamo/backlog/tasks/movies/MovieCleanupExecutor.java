@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MovieDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.movies.Movie;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.jdbi.MovieDAO;
+import dynamo.movies.model.Movie;
+import dynamo.movies.model.MovieManager;
 import dynamo.video.VideoManager;
 
 public class MovieCleanupExecutor extends TaskExecutor<MovieCleanupTask> implements ReportProgress {
@@ -32,9 +32,9 @@ public class MovieCleanupExecutor extends TaskExecutor<MovieCleanupTask> impleme
 	}
 	
 	private MovieDAO movieDAO;
-	private DownloadableDAO downloadableDAO;
+	private DownloadableUtilsDAO downloadableDAO;
 
-	public MovieCleanupExecutor(MovieCleanupTask task, MovieDAO movieDAO, DownloadableDAO downloadableDAO) {
+	public MovieCleanupExecutor(MovieCleanupTask task, MovieDAO movieDAO, DownloadableUtilsDAO downloadableDAO) {
 		super(task);
 		this.movieDAO = movieDAO;
 		this.downloadableDAO = downloadableDAO;

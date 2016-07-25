@@ -24,9 +24,9 @@ import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
 import dynamo.manager.DownloadableManager;
-import dynamo.model.movies.Movie;
-import dynamo.model.movies.MovieManager;
 import dynamo.model.tvshows.TVShowManager;
+import dynamo.movies.model.Movie;
+import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.TVShowSuggester;
 import hclient.HTTPClient;
 

@@ -17,26 +17,26 @@ import dynamo.backlog.tasks.core.FindDownloadableExecutor;
 import dynamo.core.DownloadFinder;
 import dynamo.core.VideoQuality;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.finders.core.MovieProvider;
 import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.FinderManager;
 import dynamo.model.backlog.find.FindMovieTask;
-import dynamo.model.movies.Movie;
-import dynamo.model.movies.MovieManager;
 import dynamo.model.result.SearchResult;
+import dynamo.movies.model.Movie;
+import dynamo.movies.model.MovieManager;
 import dynamo.parsers.VideoNameParser;
 import dynamo.utils.DynamoStringUtils;
 import hclient.HTTPClient;
 
 public class FindMovieExecutor extends FindDownloadableExecutor<Movie> {
 
-	private DownloadableDAO downloadableDAO;
+	private DownloadableUtilsDAO downloadableDAO;
 	private Movie movie;
 	private int minimumSize;
 	private int maximumSize;
 
-	public FindMovieExecutor(FindMovieTask item, SearchResultDAO searchResultDAO, DownloadableDAO downloadableDAO) {
+	public FindMovieExecutor(FindMovieTask item, SearchResultDAO searchResultDAO, DownloadableUtilsDAO downloadableDAO) {
 		super(item, searchResultDAO);
 		this.downloadableDAO = downloadableDAO;
 		this.movie = (Movie) item.getDownloadable();

@@ -9,7 +9,7 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
   });
 }])
 
-.controller('MagazinesCtrl', ['$scope', '$routeParams', 'downloadableService', 'languageService', 'fileListService', '$uibModal', 'filterFilter', function( $scope, $routeParams, downloadableService, languageService, fileListService, $uibModal, filterFilter ) {
+.controller('MagazinesCtrl', ['$scope', '$routeParams', 'downloadableService', 'languageService', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', function( $scope, $routeParams, downloadableService, languageService, fileListService, searchResultsService, $uibModal, filterFilter ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
@@ -52,11 +52,18 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
     if ($scope.filterLanguage) {
       filterObject.language = $scope.filterLanguage;
     }
+    if ($scope.filterYear) {
+      filterObject.year = $scope.filterYear;
+    }    
 
     $scope.filteredList = filterFilter($scope.allItems, filterObject);
     $scope.currentPage = 1;
     $scope.pageChanged();
   }
+
+  $scope.openSearchResults = function( downloadable ) {
+    searchResultsService.openModal( downloadable );
+  }  
 
   $scope.openFileList = function ( downloadable) {
 

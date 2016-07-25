@@ -8,8 +8,8 @@ import com.omertron.themoviedbapi.MovieDbException;
 import core.WebResource;
 import dynamo.core.Language;
 import dynamo.core.manager.ErrorManager;
-import dynamo.model.movies.Movie;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.Movie;
+import dynamo.movies.model.MovieManager;
 import dynamo.parsers.VideoNameParser;
 import dynamo.suggesters.AmazonRSSSuggester;
 

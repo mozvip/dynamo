@@ -14,8 +14,8 @@ import javax.faces.bean.RequestScoped;
 
 import dynamo.magazines.MagazineManager;
 import dynamo.manager.MusicManager;
-import dynamo.model.movies.MovieManager;
 import dynamo.model.tvshows.TVShowManager;
+import dynamo.movies.model.MovieManager;
 
 @ManagedBean
 @RequestScoped

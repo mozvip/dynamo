@@ -20,13 +20,13 @@ import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
 import dynamo.finders.music.MusicAlbumFinder;
 import dynamo.finders.music.MusicAlbumSearchException;
+import dynamo.games.model.GamePlatform;
+import dynamo.games.model.VideoGame;
 import dynamo.magazines.MagazineProvider;
-import dynamo.model.games.GamePlatform;
-import dynamo.model.games.VideoGame;
-import dynamo.model.movies.MovieManager;
 import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
+import dynamo.movies.model.MovieManager;
 import hclient.HTTPClient;
 
 public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, MagazineProvider, GameFinder {

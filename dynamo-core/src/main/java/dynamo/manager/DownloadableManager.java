@@ -6,7 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -32,11 +34,11 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloableCount;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.core.model.DownloadableFile;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.HistoryDAO;
 import dynamo.core.model.Task;
-import dynamo.jdbi.MovieDAO;
+import dynamo.ebooks.model.EBook;
 import dynamo.jdbi.SearchResultDAO;
-import dynamo.jdbi.TVShowDAO;
 import dynamo.model.DownloadInfo;
 import dynamo.model.DownloadLocation;
 import dynamo.model.Downloadable;
@@ -44,16 +46,17 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.SuggestionURLDAO;
 import dynamo.model.Video;
 import dynamo.model.backlog.core.FindDownloadableTask;
-import dynamo.model.ebooks.EBook;
-import dynamo.model.movies.Movie;
-import dynamo.model.movies.MovieManager;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import dynamo.model.tvshows.TVShowManager;
 import dynamo.model.tvshows.TVShowSeason;
+import dynamo.movies.jdbi.MovieDAO;
+import dynamo.movies.model.Movie;
+import dynamo.movies.model.MovieManager;
 import dynamo.parsers.TVShowEpisodeInfo;
 import dynamo.parsers.VideoNameParser;
+import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.webapps.pushbullet.PushBullet;
 import hclient.HTTPClient;
 import model.ManagedEpisode;
@@ -65,7 +68,7 @@ public class DownloadableManager {
 	
 	private DynamoObjectFactory<FindDownloadableTask> findDownloadableFactory;
 	
-	private TVShowDAO tvShowDAO = DAOManager.getInstance().getDAO( TVShowDAO.class );
+	private ManagedEpisodeDAO managedEpisodeDAO = DAOManager.getInstance().getDAO( ManagedEpisodeDAO.class );
 	private MovieDAO movieDAO = DAOManager.getInstance().getDAO( MovieDAO.class );
 	private HistoryDAO historyDAO = DAOManager.getInstance().getDAO( HistoryDAO.class );
 	private SearchResultDAO searchResultDAO = DAOManager.getInstance().getDAO( SearchResultDAO.class );
@@ -102,16 +105,32 @@ public class DownloadableManager {
 	}
 	
 	private Set<Class<? extends Downloadable>> downloadableTypes;
+	private Map<Class<? extends Downloadable>, Class<? extends DownloadableDAO>> downloadableDaos;
 	
 	private DownloadableManager() {
 		findDownloadableFactory = new DynamoObjectFactory<FindDownloadableTask>( "dynamo", FindDownloadableTask.class);
 
 		Reflections reflections = new Reflections("dynamo");
 		downloadableTypes = reflections.getSubTypesOf(Downloadable.class);
+		downloadableDaos = new HashMap<>();
+		Set<Class<? extends DownloadableDAO>> daos = reflections.getSubTypesOf(DownloadableDAO.class);
+		for (Class<? extends DownloadableDAO> dao : daos) {
+			try {
+				Class<? extends Downloadable> downloadableType = (Class<? extends Downloadable>) dao.getDeclaredMethod("find", long.class).getReturnType();
+				downloadableDaos.put(downloadableType, dao);
+			} catch (NoSuchMethodException | SecurityException e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}
+		}
 		
 	}
 	
-	private DownloadableDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableDAO.class );
+	public DownloadableDAO getDAOInstance( Class<? extends Downloadable> downloadableClass ) {
+		return DAOManager.getInstance().getDAO( downloadableDaos.get( downloadableClass ));
+	}
+
+	
+	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
 	public void want( Downloadable downloadable ) {
 		downloadableDAO.updateStatus(downloadable.getId(), DownloadableStatus.WANTED);
@@ -212,7 +231,7 @@ public class DownloadableManager {
 							if (downloadable instanceof ManagedEpisode) {
 								ManagedSeries series = TVShowManager.getInstance().getManagedSeries(((ManagedEpisode) downloadable).getSeriesId());
 								if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, series.getSubtitleLanguage() )) {
-									tvShowDAO.setSubtitled( id, ((ManagedEpisode) downloadable).getSubtitlesPath() );
+									managedEpisodeDAO.setSubtitled( id, ((ManagedEpisode) downloadable).getSubtitlesPath() );
 								}
 							} else if (downloadable instanceof Movie) {
 								if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, MovieManager.getInstance().getSubtitlesLanguage() )) {
@@ -459,6 +478,7 @@ public class DownloadableManager {
 	
 	public static void downloadImage( Downloadable downloadable, Path localFile ) throws IOException {
 		Path targetFile = resolveImage(downloadable);
+		Files.createDirectories(targetFile.getParent());
 		Files.copy( localFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
 	}
 	

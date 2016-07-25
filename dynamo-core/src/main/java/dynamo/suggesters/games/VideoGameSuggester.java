@@ -2,8 +2,8 @@ package dynamo.suggesters.games;
 
 import java.util.List;
 
-import dynamo.model.games.GamePlatform;
-import dynamo.model.games.VideoGame;
+import dynamo.games.model.GamePlatform;
+import dynamo.games.model.VideoGame;
 
 public interface VideoGameSuggester {
 

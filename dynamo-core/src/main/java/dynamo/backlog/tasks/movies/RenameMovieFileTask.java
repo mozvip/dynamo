@@ -1,7 +1,7 @@
 package dynamo.backlog.tasks.movies;
 
 import dynamo.core.model.Task;
-import dynamo.model.movies.Movie;
+import dynamo.movies.model.Movie;
 
 public class RenameMovieFileTask extends Task {
 	

@@ -8,9 +8,9 @@ import dynamo.backlog.tasks.core.FindDownloadableExecutor;
 import dynamo.core.DownloadFinder;
 import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.GameFinder;
+import dynamo.games.model.VideoGame;
 import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.games.GamesManager;
-import dynamo.model.games.VideoGame;
 import dynamo.model.result.SearchResult;
 
 public class FindVideoGameExecutor extends FindDownloadableExecutor<VideoGame> {

@@ -7,7 +7,7 @@ import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 
 public class RefreshMovieSuggestionExecutor extends TaskExecutor<RefreshMovieSuggestionTask> implements ReportProgress {

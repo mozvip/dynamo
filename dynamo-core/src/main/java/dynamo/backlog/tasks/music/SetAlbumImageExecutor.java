@@ -6,15 +6,15 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MusicDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.music.MusicFile;
+import dynamo.music.jdbi.MusicAlbumDAO;
 
 public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 	
-	private MusicDAO musicDAO;
+	private MusicAlbumDAO musicDAO;
 
-	public SetAlbumImageExecutor(SetAlbumImageTask task, MusicDAO musicDAO) {
+	public SetAlbumImageExecutor(SetAlbumImageTask task, MusicAlbumDAO musicDAO) {
 		super(task);
 		this.musicDAO = musicDAO;
 	}

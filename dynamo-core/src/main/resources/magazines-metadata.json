@@ -9,6 +9,21 @@
 			"language": "SL"
 		}
 		,{
+			"name": "Elite Magazine",
+			"actualName": "Elite",
+			"language": "EN"
+		}
+		,{
+			"name": "Cosmopolitan SA",
+			"actualName": "Cosmopolitan South Africa",
+			"language": "EN"
+		}
+		,{
+			"name": "Cosmopolitan Germany",
+			"actualName": "Cosmopolitan",
+			"language": "DE"
+		}
+		,{
 			"name": "Us Weekly",
 			"actualName" : "US Weekly",
 			"language": "EN"

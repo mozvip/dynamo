@@ -2,7 +2,7 @@ package dynamo.suggesters;
 
 import java.util.Collection;
 
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
 import dynamo.manager.MusicManager;
@@ -12,9 +12,9 @@ import dynamo.suggesters.music.MusicAlbumSuggester;
 
 public class RefreshMusicSuggestionsExecutor extends TaskExecutor<RefreshMusicSuggestionsTask> implements ReportProgress {
 	
-	private DownloadableDAO downloadableDAO;
+	private DownloadableUtilsDAO downloadableDAO;
 
-	public RefreshMusicSuggestionsExecutor(RefreshMusicSuggestionsTask item, DownloadableDAO downloadableDAO) {
+	public RefreshMusicSuggestionsExecutor(RefreshMusicSuggestionsTask item, DownloadableUtilsDAO downloadableDAO) {
 		super(item);
 		this.downloadableDAO = downloadableDAO;
 	}

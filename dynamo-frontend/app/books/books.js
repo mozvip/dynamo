@@ -9,7 +9,7 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
   });
 }])
 
-.controller('BooksCtrl', ['$scope', '$routeParams', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', function( $scope, $routeParams, downloadableService, fileListService, $uibModal, filterFilter ) {
+.controller('BooksCtrl', ['$scope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', function( $scope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, filterFilter ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
@@ -40,6 +40,10 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
     $scope.pageChanged();
   }
 
+  $scope.openSearchResults = function( downloadable ) {
+    searchResultsService.openModal( downloadable );
+  }
+
   $scope.pageChanged = function() {
     var start = ($scope.currentPage - 1) * 24;
     $scope.pageContents = $scope.filteredList.slice( start, start + 24);
@@ -53,18 +57,7 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
 
   $scope.openFileList = function ( downloadable) {
 
-    var modalInstance = $uibModal.open({
-      animation: false,
-      templateUrl: 'fileList.html',
-      controller: 'FileListCtrl',
-      size: 'lg',
-      resolve: {
-        fileList: function () {
-          return fileListService.get( downloadable.id );
-        }
-      }
-    });
-
+    var modalInstance = fileListService.openModal( downloadable );
     modalInstance.result.then(function (selectedItem) {
       $scope.selected = selectedItem;
     });

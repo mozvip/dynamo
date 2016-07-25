@@ -17,8 +17,8 @@ import javax.ws.rs.core.MediaType;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.core.model.DownloableCount;
+import dynamo.core.model.DownloadableDAO;
 import dynamo.manager.DownloadableManager;
-import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 
@@ -27,14 +27,16 @@ import dynamo.model.DownloadableStatus;
 public class DownloadableService {
 
 	@GET
-	public List<DownloadInfo> get(@QueryParam("type") String type, @QueryParam("status") String allStatus) {
+	public List<Downloadable> get(@QueryParam("type") String type, @QueryParam("status") String allStatus) {
 		Class<? extends Downloadable> klass = DownloadableManager.getInstance().getDownloadableTypeBySimpleName( type );
+		
+		DownloadableDAO daoInstance = DownloadableManager.getInstance().getDAOInstance( klass );
 		String[] statuses = allStatus.split(",");
-		List<DownloadInfo> downloads = new ArrayList<>();
+		List<Downloadable> downloads = new ArrayList<>();
 		for (String status : statuses) {
-			downloads.addAll( DownloadableManager.getInstance().findByStatus( klass, DownloadableStatus.valueOf( status ) ) );
+			downloads.addAll( daoInstance.findByStatus( DownloadableStatus.valueOf( status ) ) );
 		}
-		Collections.sort(downloads, (DownloadInfo d1, DownloadInfo d2) -> d1.getName().compareTo(d2.getName()));
+		Collections.sort(downloads, (Downloadable d1, Downloadable d2) -> d1.getName().compareTo(d2.getName()));
 		return downloads;
 	}
 	

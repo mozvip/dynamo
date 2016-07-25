@@ -8,8 +8,8 @@ import dynamo.backlog.tasks.files.FileUtils;
 import dynamo.core.model.TaskExecutor;
 import dynamo.manager.FolderManager;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.movies.Movie;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.Movie;
+import dynamo.movies.model.MovieManager;
 
 public class ImportMovieFileTaskExecutor extends TaskExecutor< ImportMovieFileTask > {
 	

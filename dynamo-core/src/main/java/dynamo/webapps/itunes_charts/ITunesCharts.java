@@ -8,7 +8,7 @@ import core.WebDocument;
 import core.WebResource;
 import dynamo.core.Language;
 import dynamo.manager.MusicManager;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 import dynamo.suggesters.music.MusicAlbumSuggester;
 import hclient.HTTPClient;

@@ -12,8 +12,8 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.jdbi.SearchResultDAO;
 import dynamo.magazines.MagazineManager;
 import dynamo.magazines.MagazineProvider;
-import dynamo.model.magazines.Magazine;
-import dynamo.model.magazines.MagazineIssue;
+import dynamo.magazines.model.Magazine;
+import dynamo.magazines.model.MagazineIssue;
 import dynamo.model.result.SearchResult;
 
 public class FindMagazineIssueExecutor extends FindDownloadableExecutor<MagazineIssue> {

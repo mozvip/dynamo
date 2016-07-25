@@ -10,7 +10,7 @@ import dynamo.core.Enableable;
 import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.DAOManager;
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadSuggestion;
 import dynamo.model.DownloadableStatus;
@@ -32,7 +32,7 @@ public class BookManager implements Enableable {
 	@Configurable(category="Books", name="Download Providers", contentsClass=BookFinder.class, disabled="#{!BookManager.enabled}")
 	private List<BookFinder> providers = null;
 	
-	private DownloadableDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableDAO.class );
+	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 	
 	public List<BookFinder> getProviders() {
 		return providers;

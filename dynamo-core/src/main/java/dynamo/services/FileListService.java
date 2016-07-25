@@ -14,13 +14,13 @@ import javax.ws.rs.core.MediaType;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteFileTask;
 import dynamo.core.manager.DAOManager;
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.DownloadableFile;
 
 @Path("file-list")
 public class FileListService {
 	
-	private static final DownloadableDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableDAO.class );
+	private static final DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 	
 	@GET
 	@Path("{id}")

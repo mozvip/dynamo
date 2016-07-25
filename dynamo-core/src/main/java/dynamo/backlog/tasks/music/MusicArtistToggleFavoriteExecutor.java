@@ -1,13 +1,13 @@
 package dynamo.backlog.tasks.music;
 
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MusicDAO;
+import dynamo.music.jdbi.MusicAlbumDAO;
 
 public class MusicArtistToggleFavoriteExecutor extends TaskExecutor<MusicArtistToggleFavoriteTask> {
 	
-	private MusicDAO musicDAO;
+	private MusicAlbumDAO musicDAO;
 
-	public MusicArtistToggleFavoriteExecutor(MusicArtistToggleFavoriteTask task, MusicDAO musicDAO) {
+	public MusicArtistToggleFavoriteExecutor(MusicArtistToggleFavoriteTask task, MusicAlbumDAO musicDAO) {
 		super(task);
 		this.musicDAO = musicDAO;
 	}

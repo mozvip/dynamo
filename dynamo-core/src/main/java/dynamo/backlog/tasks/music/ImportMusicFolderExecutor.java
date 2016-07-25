@@ -9,17 +9,17 @@ import java.util.List;
 import dynamo.backlog.tasks.core.AbstractNewFolderExecutor;
 import dynamo.backlog.tasks.core.AudioFileFilter;
 import dynamo.core.manager.ErrorManager;
-import dynamo.jdbi.MusicDAO;
 import dynamo.manager.MusicManager;
 import dynamo.model.music.MusicFile;
+import dynamo.music.jdbi.MusicAlbumDAO;
 
 public class ImportMusicFolderExecutor extends AbstractNewFolderExecutor<ImportMusicFolderTask> {
 
 	boolean keepSourceFiles = false;
 
-	private MusicDAO musicDAO;
+	private MusicAlbumDAO musicDAO;
 
-	public ImportMusicFolderExecutor(ImportMusicFolderTask item, MusicDAO musicDAO) {
+	public ImportMusicFolderExecutor(ImportMusicFolderTask item, MusicAlbumDAO musicDAO) {
 		super(item);
 		keepSourceFiles = item.isKeepSourceFiles();
 		this.musicDAO = musicDAO;

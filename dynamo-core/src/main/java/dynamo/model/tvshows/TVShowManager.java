@@ -27,18 +27,20 @@ import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.model.DownloadableDAO;
 import dynamo.core.model.DownloadableFile;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.TVShowSeasonProvider;
 import dynamo.httpclient.YAMJHttpClient;
-import dynamo.jdbi.TVShowDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.LocalImageCache;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.Video;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
+import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
+import dynamo.tvshows.jdbi.TVShowDAO;
+import dynamo.tvshows.jdbi.TVShowSeasonDAO;
 import hclient.HTTPClient;
 import hclient.RegExpMatcher;
 import model.ManagedEpisode;
@@ -88,7 +90,9 @@ public class TVShowManager implements Reconfigurable {
 	private String seasonFolderPattern;
 
 	private TVShowDAO tvShowDAO = DAOManager.getInstance().getDAO( TVShowDAO.class );
-	private DownloadableDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableDAO.class );
+	private ManagedEpisodeDAO managedEpisodeDAO = DAOManager.getInstance().getDAO( ManagedEpisodeDAO.class );
+	private TVShowSeasonDAO tvShowSeasonDAO = DAOManager.getInstance().getDAO( TVShowSeasonDAO.class );
+	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 	
 	private TheTVDBApi api;
 
@@ -422,7 +426,7 @@ public class TVShowManager implements Reconfigurable {
 	}
 
 	public void saveEpisode(ManagedEpisode episode) {
-		tvShowDAO.saveEpisode( episode.getId(), episode.getEpisodeNumber(), episode.getFirstAired(), episode.getQuality(), episode.getReleaseGroup(),  
+		managedEpisodeDAO.saveEpisode( episode.getId(), episode.getEpisodeNumber(), episode.getFirstAired(), episode.getQuality(), episode.getReleaseGroup(),  
 			 	episode.getSource(), episode.isSubtitled(),  episode.getSubtitlesPath(), episode.isWatched(), episode.getSeasonId() );
 	}
 
@@ -431,11 +435,11 @@ public class TVShowManager implements Reconfigurable {
 	}
 
 	public List<TVShowSeason> getSeasons(String seriesId) {
-		return tvShowDAO.findSeasons( seriesId );
+		return tvShowSeasonDAO.findSeasons( seriesId );
 	}
 
 	public List<ManagedEpisode> findEpisodes( ManagedSeries series ) {
-		List<ManagedEpisode> episodes = tvShowDAO.findEpisodesForTVShow( series.getId() );
+		List<ManagedEpisode> episodes = managedEpisodeDAO.findEpisodesForTVShow( series.getId() );
 		if (episodes == null) {
 			BackLogProcessor.getInstance().schedule( new RefreshTVShowTask( series ) );
 		}
@@ -443,11 +447,11 @@ public class TVShowManager implements Reconfigurable {
 	}
 
 	public List<ManagedEpisode> findEpisodesForSeason(long seasonId) {
-		return tvShowDAO.findEpisodesForSeason(seasonId);
+		return managedEpisodeDAO.findEpisodesForSeason(seasonId);
 	}
 
 	public TVShowSeason findSeason(long seasonId) {
-		return tvShowDAO.findSeason(seasonId);
+		return tvShowSeasonDAO.find(seasonId);
 	}
 	
 	public ManagedSeries findTVShow( String id ) {

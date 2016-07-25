@@ -9,14 +9,14 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
 import dynamo.core.Language;
+import dynamo.core.model.DownloadableDAO;
 import dynamo.jdbi.core.BindContains;
 import dynamo.jdbi.core.BindEnum;
 import dynamo.jdbi.core.BindUpper;
 import dynamo.jdbi.core.DAO;
 import dynamo.model.DownloadableStatus;
 
-@DAO(databaseId="dynamo")
-public interface BookDAO {
+public interface BookDAO extends DownloadableDAO<Book> {
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, BOOK.* FROM BOOK INNER JOIN DOWNLOADABLE ON BOOK.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.ID = :id")
 	@Mapper(BookMapper.class)
@@ -28,11 +28,7 @@ public interface BookDAO {
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, BOOK.* FROM BOOK INNER JOIN DOWNLOADABLE ON BOOK.ID = DOWNLOADABLE.ID AND DOWNLOADABLE.STATUS = :status")
 	@Mapper(BookMapper.class)
-	public List<Book> findAll( @BindEnum("status") DownloadableStatus status );
-
-	@SqlQuery("SELECT DOWNLOADABLE.*, BOOK.* FROM BOOK INNER JOIN DOWNLOADABLE ON BOOK.ID = DOWNLOADABLE.ID AND DOWNLOADABLE.STATUS IN ('WANTED', 'SNATCHED')")
-	@Mapper(BookMapper.class)
-	public List<Book> findWantedAndSnatched();
+	public List<Book> findByStatus( @BindEnum("status") DownloadableStatus status );
 
 	@SqlUpdate("MERGE INTO BOOK(ID, AUTHOR, LANGUAGE) VALUES (:id, :author, :language)")
 	void save(@Bind("id") long id, @Bind("author") String author, @BindEnum("language") Language language);

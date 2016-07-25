@@ -10,7 +10,7 @@ import com.omertron.themoviedbapi.MovieDbException;
 import dynamo.core.Enableable;
 import dynamo.core.Language;
 import dynamo.core.manager.ErrorManager;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 
 public class TraktMovieSuggester implements MovieSuggester, Enableable {

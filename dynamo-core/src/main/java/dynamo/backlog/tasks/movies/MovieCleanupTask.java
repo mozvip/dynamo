@@ -2,7 +2,7 @@ package dynamo.backlog.tasks.movies;
 
 import dynamo.core.configuration.Configurable;
 import dynamo.core.model.DaemonTask;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.MovieManager;
 
 public class MovieCleanupTask extends DaemonTask {
 	

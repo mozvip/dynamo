@@ -4,12 +4,12 @@ import java.util.List;
 
 import dynamo.core.manager.DAOManager;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MusicDAO;
 import dynamo.model.music.MusicFile;
+import dynamo.music.jdbi.MusicAlbumDAO;
 
 public class SynchronizeTagsExecutor extends TaskExecutor<SynchronizeTagsTask> {
 	
-	private static MusicDAO musicDAO = DAOManager.getInstance().getDAO( MusicDAO.class );
+	private static MusicAlbumDAO musicDAO = DAOManager.getInstance().getDAO( MusicAlbumDAO.class );
 
 	public SynchronizeTagsExecutor(SynchronizeTagsTask task) {
 		super(task);

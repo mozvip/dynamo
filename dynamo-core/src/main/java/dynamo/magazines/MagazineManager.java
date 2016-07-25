@@ -14,13 +14,13 @@ import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.model.DownloadableDAO;
-import dynamo.jdbi.magazines.MagazineDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
+import dynamo.magazines.jdbi.MagazineDAO;
+import dynamo.magazines.model.Magazine;
+import dynamo.magazines.model.MagazineIssue;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadSuggestion;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.magazines.Magazine;
-import dynamo.model.magazines.MagazineIssue;
 import dynamo.parsers.magazines.MagazineIssueInfo;
 import dynamo.parsers.magazines.MagazineNameParser;
 import dynamo.webapps.googleimages.GoogleImages;
@@ -72,7 +72,7 @@ public class MagazineManager implements Reconfigurable {
 	}
 	
 	private MagazineDAO magazineDAO = DAOManager.getInstance().getDAO( MagazineDAO.class );
-	private DownloadableDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableDAO.class );
+	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
 	private MagazineManager() {
 	}

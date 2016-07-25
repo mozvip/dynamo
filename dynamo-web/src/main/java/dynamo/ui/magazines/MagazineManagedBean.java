@@ -6,9 +6,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import dynamo.magazines.MagazineManager;
+import dynamo.magazines.model.Magazine;
+import dynamo.magazines.model.MagazineIssue;
 import dynamo.manager.DownloadableManager;
-import dynamo.model.magazines.Magazine;
-import dynamo.model.magazines.MagazineIssue;
 import dynamo.ui.DynamoManagedBean;
 
 @ManagedBean(name="magazine")
@@ -21,7 +21,7 @@ public class MagazineManagedBean extends DynamoManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private String searchName;
-	private dynamo.model.magazines.Magazine magazine;
+	private dynamo.magazines.model.Magazine magazine;
 
 	public String getSearchName() {
 		return searchName;

@@ -13,9 +13,9 @@ import dynamo.core.VideoQuality;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.MovieProvider;
-import dynamo.model.movies.MovieManager;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
+import dynamo.movies.model.MovieManager;
 import hclient.HTTPClient;
 import hclient.SimpleResponse;
 

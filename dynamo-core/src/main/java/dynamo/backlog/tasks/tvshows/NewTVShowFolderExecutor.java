@@ -11,10 +11,11 @@ import com.omertron.thetvdbapi.model.Series;
 import dynamo.backlog.tasks.core.AbstractNewFolderExecutor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.Language;
-import dynamo.jdbi.TVShowDAO;
 import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.tvshows.TVShowManager;
+import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
+import dynamo.tvshows.jdbi.TVShowDAO;
 import model.ManagedEpisode;
 import model.ManagedSeries;
 import model.backlog.NewTVShowFolderTask;
@@ -23,10 +24,12 @@ import model.backlog.RefreshTVShowTask;
 public class NewTVShowFolderExecutor extends AbstractNewFolderExecutor<NewTVShowFolderTask> {
 	
 	private TVShowDAO tvShowDAO;
+	private ManagedEpisodeDAO managedEpisodeDAO;
 
-	public NewTVShowFolderExecutor( NewTVShowFolderTask item, TVShowDAO tvShowDAO ) {
+	public NewTVShowFolderExecutor( NewTVShowFolderTask item, TVShowDAO tvShowDAO, ManagedEpisodeDAO managedEpisodeDAO ) {
 		super(item);
 		this.tvShowDAO = tvShowDAO;
+		this.managedEpisodeDAO = managedEpisodeDAO;
 	}
 	
 	@Override
@@ -65,7 +68,7 @@ public class NewTVShowFolderExecutor extends AbstractNewFolderExecutor<NewTVShow
 				nextMonthCal.add(Calendar.MONTH, 1);
 				nextRefreshDate = nextMonthCal.getTime();
 
-				List<ManagedEpisode> futureEpisodes = tvShowDAO.findEpisodesForTVShowAndStatus( managed.getId(), DownloadableStatus.FUTURE );
+				List<ManagedEpisode> futureEpisodes = managedEpisodeDAO.findEpisodesForTVShowAndStatus( managed.getId(), DownloadableStatus.FUTURE );
 				if (futureEpisodes != null && futureEpisodes.size() > 0) {
 					mustRefresh = true;
 					nextRefreshDate = null;

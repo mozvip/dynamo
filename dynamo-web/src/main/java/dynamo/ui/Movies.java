@@ -18,8 +18,8 @@ import dynamo.backlog.tasks.movies.RenameMovieFileTask;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.manager.DownloadableManager;
-import dynamo.model.movies.Movie;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.Movie;
+import dynamo.movies.model.MovieManager;
 import dynamo.video.VideoManager;
 
 @ManagedBean

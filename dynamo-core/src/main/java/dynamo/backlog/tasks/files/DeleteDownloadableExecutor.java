@@ -3,28 +3,28 @@ package dynamo.backlog.tasks.files;
 import java.util.List;
 
 import dynamo.backlog.BackLogProcessor;
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.LogSuccess;
 import dynamo.core.model.TaskExecutor;
+import dynamo.games.model.VideoGame;
 import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.Video;
 import dynamo.model.backlog.find.FindSeasonTask;
-import dynamo.model.games.VideoGame;
-import dynamo.model.movies.Movie;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.tvshows.TVShowManager;
+import dynamo.movies.model.Movie;
 import model.ManagedEpisode;
 
 public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableTask> implements LogSuccess {
 	
-	private DownloadableDAO downloadableDAO;
+	private DownloadableUtilsDAO downloadableDAO;
 	private SearchResultDAO searchResultDAO;	
 
-	public DeleteDownloadableExecutor( DeleteDownloadableTask task, DownloadableDAO downloadableDAO, SearchResultDAO searchResultDAO ) {
+	public DeleteDownloadableExecutor( DeleteDownloadableTask task, DownloadableUtilsDAO downloadableDAO, SearchResultDAO searchResultDAO ) {
 		super(task);
 		this.downloadableDAO = downloadableDAO;
 		this.searchResultDAO = searchResultDAO;

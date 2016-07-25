@@ -5,7 +5,7 @@ import java.util.List;
 import dynamo.core.Language;
 import dynamo.core.model.TaskExecutor;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.MovieManager;
 import dynamo.trakt.TraktManager;
 import dynamo.trakt.TraktWatchedEntry;
 

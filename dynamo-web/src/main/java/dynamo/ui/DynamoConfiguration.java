@@ -7,8 +7,8 @@ import dynamo.magazines.MagazineManager;
 import dynamo.manager.MusicManager;
 import dynamo.manager.games.GamesManager;
 import dynamo.model.ebooks.books.BookManager;
-import dynamo.model.movies.MovieManager;
 import dynamo.model.tvshows.TVShowManager;
+import dynamo.movies.model.MovieManager;
 
 @ManagedBean
 @ApplicationScoped

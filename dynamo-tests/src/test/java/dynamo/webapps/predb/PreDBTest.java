@@ -8,7 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import core.WebDocument;
-import dynamo.model.movies.MovieManager;
+import dynamo.movies.model.MovieManager;
 
 public class PreDBTest {
 	

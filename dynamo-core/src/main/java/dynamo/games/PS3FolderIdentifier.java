@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.FolderIdentifier;
 import dynamo.core.tasks.MoveFolderTask;
+import dynamo.games.model.GamePlatform;
 import dynamo.manager.games.GamesManager;
-import dynamo.model.games.GamePlatform;
 
 public class PS3FolderIdentifier implements FolderIdentifier {
 	

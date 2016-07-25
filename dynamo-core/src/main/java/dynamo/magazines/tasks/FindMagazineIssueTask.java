@@ -1,9 +1,9 @@
 package dynamo.magazines.tasks;
 
+import dynamo.magazines.model.MagazineIssue;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.core.FindDownloadableTask;
-import dynamo.model.magazines.MagazineIssue;
 
 public class FindMagazineIssueTask extends FindDownloadableTask<MagazineIssue> {
 	

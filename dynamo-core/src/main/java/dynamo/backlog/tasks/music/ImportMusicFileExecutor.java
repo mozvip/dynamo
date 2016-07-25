@@ -20,19 +20,19 @@ import dynamo.backlog.tasks.files.MoveFileTask;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.MusicDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.LocalImageCache;
 import dynamo.manager.MusicManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicQuality;
+import dynamo.music.jdbi.MusicAlbumDAO;
 import dynamo.webapps.acoustid.AcoustId;
 
 public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 	
 	protected String[] intermediateFolders = new String[] {"Disc 1", "CD 1", "CD1", "Disc 2", "CD 2", "CD2"};
-	private MusicDAO musicDAO = DAOManager.getInstance().getDAO( MusicDAO.class );
+	private MusicAlbumDAO musicDAO = DAOManager.getInstance().getDAO( MusicAlbumDAO.class );
 
 	public ImportMusicFileExecutor(ImportMusicFileTask task) {
 		super(task);

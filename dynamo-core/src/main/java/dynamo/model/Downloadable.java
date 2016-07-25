@@ -16,6 +16,8 @@ public abstract class Downloadable {
 	private String aka;
 	protected int year;
 	private Date creationDate;
+	
+	private String simpleClassName;
 
 	public Downloadable(Long id, String name, String label, DownloadableStatus status, String aka, int year, Date creationDate) {
 		this.id = id;
@@ -25,6 +27,8 @@ public abstract class Downloadable {
 		this.aka = aka;
 		this.year = year;
 		this.creationDate = creationDate;
+		
+		this.simpleClassName = getClass().getSimpleName();
 	}
 
 	public long getId() {
@@ -96,6 +100,11 @@ public abstract class Downloadable {
 	public Date getCreationDate() {
 		return creationDate;
 	}
+	
+	public String getImage() throws ClassNotFoundException {
+		return String.format("/data/%s/%d.jpg", simpleClassName, getId());
+	}
+	
 
 	
 }

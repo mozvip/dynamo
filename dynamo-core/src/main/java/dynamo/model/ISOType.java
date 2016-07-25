@@ -1,6 +1,6 @@
 package dynamo.model;
 
-import dynamo.model.games.GamePlatform;
+import dynamo.games.model.GamePlatform;
 
 public enum ISOType {
 	

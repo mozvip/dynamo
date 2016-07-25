@@ -48,6 +48,14 @@ public class DAOManager {
 	LoadingCache<Class<?>, Object> daoInstances = CacheBuilder.newBuilder().build(new CacheLoader<Class<?>, Object>() {
 		public Object load(Class<?> daoInterface) throws ExecutionException {
 			DAO daoAnnotation = daoInterface.getAnnotation(DAO.class);
+			if (daoAnnotation == null && daoInterface.getInterfaces() != null) {
+				for (Class<?> interf : daoInterface.getInterfaces()) {
+					daoAnnotation = interf.getAnnotation(DAO.class);
+					if (daoAnnotation != null) {
+						break;
+					}
+				}
+			}
 			String databaseId = daoAnnotation.databaseId();
 			try {
 				DBI dbi = dbiInstances.get(databaseId);

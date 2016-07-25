@@ -3,7 +3,7 @@ package dynamo.model.backlog.subtitles;
 import dynamo.core.DynamoTask;
 import dynamo.core.Language;
 import dynamo.core.model.Task;
-import dynamo.model.movies.Movie;
+import dynamo.movies.model.Movie;
 
 @DynamoTask(queueClass=FindSubtitlesQueue.class)
 public class FindMovieSubtitleTask extends Task {

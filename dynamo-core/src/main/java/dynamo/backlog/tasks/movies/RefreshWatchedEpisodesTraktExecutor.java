@@ -4,23 +4,26 @@ import java.util.List;
 
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.core.model.TaskExecutor;
-import dynamo.jdbi.TVShowDAO;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.tvshows.TVShowManager;
 import dynamo.trakt.TraktManager;
 import dynamo.trakt.TraktShowEpisode;
 import dynamo.trakt.TraktShowSeason;
 import dynamo.trakt.TraktWatchedEntry;
+import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
+import dynamo.tvshows.jdbi.TVShowDAO;
 import model.ManagedEpisode;
 import model.ManagedSeries;
 
 public class RefreshWatchedEpisodesTraktExecutor extends TaskExecutor<RefreshWatchedEpisodesTask> {
 	
-	private TVShowDAO tvShowDAO = null;
+	private ManagedEpisodeDAO managedEpisodeDAO = null;
+	private TVShowDAO tvshowDAO = null;
 
-	public RefreshWatchedEpisodesTraktExecutor(RefreshWatchedEpisodesTask item, TVShowDAO tvShowDAO) {
+	public RefreshWatchedEpisodesTraktExecutor(RefreshWatchedEpisodesTask item, ManagedEpisodeDAO managedEpisodeDAO, TVShowDAO tvshowDAO) {
 		super(item);
-		this.tvShowDAO = tvShowDAO;
+		this.managedEpisodeDAO = managedEpisodeDAO;
+		this.tvshowDAO = tvshowDAO;
 	}
 
 	@Override
@@ -35,16 +38,16 @@ public class RefreshWatchedEpisodesTraktExecutor extends TaskExecutor<RefreshWat
 				
 				String imdbId = watchedEntry.getShow().getIds().get("imdb");
 				
-				ManagedSeries series = tvShowDAO.findTVShowByImdbId( imdbId );
+				ManagedSeries series = tvshowDAO.findTVShowByImdbId( imdbId );
 				if (series == null) {
 					continue;
 				}
 				for (TraktShowSeason season : watchedEntry.getSeasons()) {
-					List<ManagedEpisode> episodes = tvShowDAO.findEpisodesForTVShowAndSeason(series.getId(), season.getNumber());
+					List<ManagedEpisode> episodes = managedEpisodeDAO.findEpisodesForTVShowAndSeason(series.getId(), season.getNumber());
 					for (TraktShowEpisode episode : season.getEpisodes()) {
 						for (ManagedEpisode managedEpisode : episodes) {
 							if (managedEpisode.getEpisodeNumber() == episode.getNumber()) {
-								tvShowDAO.setWatched( managedEpisode.getId() ) ;
+								managedEpisodeDAO.setWatched( managedEpisode.getId() ) ;
 								if (TVShowManager.getInstance().isDeleteWatched()) {
 									if (managedEpisode.getStatus() == DownloadableStatus.DOWNLOADED) {
 										queue( new DeleteDownloadableTask( managedEpisode ));

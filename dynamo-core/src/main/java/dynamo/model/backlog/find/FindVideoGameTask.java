@@ -1,7 +1,7 @@
 package dynamo.model.backlog.find;
 
+import dynamo.games.model.VideoGame;
 import dynamo.model.backlog.core.FindDownloadableTask;
-import dynamo.model.games.VideoGame;
 
 public class FindVideoGameTask extends FindDownloadableTask<VideoGame> {
 

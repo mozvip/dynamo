@@ -17,11 +17,11 @@ import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.ConfigValueManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.finders.core.GameFinder;
+import dynamo.games.model.GamePlatform;
+import dynamo.games.model.VideoGame;
+import dynamo.games.model.VideoGameDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.games.GamePlatform;
-import dynamo.model.games.VideoGame;
-import dynamo.model.games.VideoGameDAO;
 import dynamo.webapps.googleimages.GoogleImages;
 import dynamo.webapps.thegamesdb.net.GetArtResponse;
 import dynamo.webapps.thegamesdb.net.TheGamesDB;
@@ -95,7 +95,7 @@ public class GamesManager implements Reconfigurable {
 		
 		if (platform == null) {
 			if (status2 == null) {
-				return videoGameDAO.findAll( status1 );
+				return videoGameDAO.findByStatus( status1 );
 			} else {
 				return videoGameDAO.findAll( status1, status2 );
 			}

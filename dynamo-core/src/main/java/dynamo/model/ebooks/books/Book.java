@@ -5,9 +5,9 @@ import java.util.Date;
 
 import dynamo.backlog.tasks.files.FileUtils;
 import dynamo.core.Language;
+import dynamo.ebooks.model.EBook;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.ebooks.EBook;
 
 public class Book extends Downloadable implements EBook {
 

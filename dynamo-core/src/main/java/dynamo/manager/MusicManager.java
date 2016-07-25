@@ -31,14 +31,14 @@ import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DAOManager;
-import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.finders.music.MusicAlbumFinder;
-import dynamo.jdbi.MusicDAO;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicArtist;
 import dynamo.model.music.MusicFile;
 import dynamo.model.music.MusicQuality;
+import dynamo.music.jdbi.MusicAlbumDAO;
 import dynamo.suggesters.RefreshMusicSuggestionsTask;
 import dynamo.suggesters.music.MusicAlbumSuggester;
 import hclient.HTTPClient;
@@ -69,8 +69,8 @@ public class MusicManager implements Reconfigurable {
 	@Configurable( category="Music", name="Music Album Suggesters", required="#{MusicManager.enabled}", disabled="#{!MusicManager.enabled}", contentsClass=MusicAlbumSuggester.class, ordered=false )
 	private Collection<MusicAlbumSuggester> suggesters;
 
-	private MusicDAO musicDAO = DAOManager.getInstance().getDAO( MusicDAO.class );
-	private DownloadableDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableDAO.class );
+	private MusicAlbumDAO musicDAO = DAOManager.getInstance().getDAO( MusicAlbumDAO.class );
+	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
 	public boolean isEnabled() {
 		return enabled;
