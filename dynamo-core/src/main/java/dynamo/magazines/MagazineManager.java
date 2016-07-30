@@ -178,7 +178,7 @@ public class MagazineManager implements Reconfigurable {
 		return magazineDAO.getWantedContents( language, filter );
 	}
 	
-	public synchronized void suggest( DownloadSuggestion suggestion ) throws IOException {
+	public synchronized void suggest( DownloadSuggestion suggestion ) {
 		MagazineIssueInfo issueInfo = MagazineNameParser.getInstance().getIssueInfo( suggestion.getTitle() );
 		
 		if ( issueInfo == null || issueInfo.getMagazineName() == null ) {
@@ -214,13 +214,17 @@ public class MagazineManager implements Reconfigurable {
 			DownloadableManager.getInstance().saveSuggestionURL(downloadableId, suggestion.getSuggestionURL());
 		}
 		
-		if (suggestion.getImageURL() == null) {
-			WebResource imageResource = GoogleImages.findImage(suggestion.getTitle(), 0.7f);
-			if (imageResource != null) {
-				DownloadableManager.downloadImage(MagazineIssue.class, downloadableId, imageResource.getUrl(), imageResource.getReferer() );
+		try {
+			if (suggestion.getImageURL() == null) {
+				WebResource imageResource = GoogleImages.findImage(suggestion.getTitle(), 0.7f);
+				if (imageResource != null) {
+					DownloadableManager.downloadImage(MagazineIssue.class, downloadableId, imageResource.getUrl(), imageResource.getReferer() );
+				}
+			} else {
+				DownloadableManager.downloadImage(MagazineIssue.class, downloadableId, suggestion.getImageURL(), suggestion.getReferer() );
 			}
-		} else {
-			DownloadableManager.downloadImage(MagazineIssue.class, downloadableId, suggestion.getImageURL(), suggestion.getReferer() );
+		} catch (IOException e) {
+			ErrorManager.getInstance().reportThrowable( e );
 		}
 
 		int issueNumber = existingIssue.getIssue() > 0 ? existingIssue.getIssue() : issueInfo.getIssueNumber();

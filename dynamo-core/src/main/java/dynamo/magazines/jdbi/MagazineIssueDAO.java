@@ -8,7 +8,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
 import dynamo.core.model.DownloadableDAO;
 import dynamo.jdbi.core.BindEnum;
-import dynamo.jdbi.core.DAO;
 import dynamo.magazines.model.MagazineIssue;
 import dynamo.model.DownloadableStatus;
 

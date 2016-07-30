@@ -35,13 +35,7 @@ public class PDFMagazinesOrg implements KioskIssuesSuggester {
 				// String genres
 				
 				String infoURL = magazineElement.select(".info a").first().absUrl("href");
-				
-				try {
-					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, null, -1.0f, toString(), null, false, infoURL));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, null, -1.0f, toString(), null, false, infoURL));
 			}
 		}
 	}

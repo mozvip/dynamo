@@ -1,6 +1,8 @@
 package dynamo.providers.magazines;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -8,10 +10,13 @@ import org.jsoup.select.Elements;
 import core.RegExp;
 import core.WebDocument;
 import dynamo.core.Language;
+import dynamo.core.manager.ErrorManager;
 import dynamo.magazines.KioskIssuesSuggester;
 import dynamo.magazines.KioskIssuesSuggesterException;
 import dynamo.magazines.MagazineManager;
+import dynamo.model.DownloadLocation;
 import dynamo.model.DownloadSuggestion;
+import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
 
 public class TelechargerMagazineCOM implements KioskIssuesSuggester {
@@ -39,10 +44,16 @@ public class TelechargerMagazineCOM implements KioskIssuesSuggester {
 				String title = RegExp.extract( image.attr("title"), "télécharger (.*)" );
 				
 				try {
-					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, Language.FR, -1.0f, toString(), null, false, link.absUrl("href")));
+					
+					WebDocument magazinePage = HTTPClient.getInstance().getDocument( link.absUrl("href"), url, HTTPClient.REFRESH_ONE_WEEK );
+					Elements downloadLinks = magazinePage.jsoup("a:contains(Télécharger)");
+					Set<DownloadLocation> downloadLocations = new HashSet<>();
+					for (Element element : downloadLinks) {
+						downloadLocations.add( new DownloadLocation(SearchResultType.HTTP, element.absUrl("href")));
+					}
+					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, downloadLocations, Language.FR, -1.0f, toString(), null, false, link.absUrl("href")));
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					ErrorManager.getInstance().reportThrowable( e );
 				}
 			}
 		}
