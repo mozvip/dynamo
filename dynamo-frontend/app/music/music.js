@@ -9,7 +9,7 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
   });
 }])
 
-.controller('MusicCtrl', ['$scope', '$routeParams', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', function( $scope, $routeParams, downloadableService, fileListService, $uibModal, filterFilter ) {
+.controller('MusicCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', function( $scope, $rootScope, $routeParams, downloadableService, fileListService, $uibModal, filterFilter ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
@@ -27,6 +27,9 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     $scope.allItems = filterFilter($scope.allItems, {'id': '!' + downloadable.id });
     $scope.filteredList = filterFilter($scope.filteredList, {'id': '!' + downloadable.id });
     $scope.pageChanged();
+
+    $rootScope.musicAlbumsSuggestionCount = $scope.allItems.length;
+    $rootScope.musicAlbumsWantedCount ++;   
   }
 
   $scope.updateImage = function( downloadable ) {

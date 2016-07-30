@@ -56,7 +56,7 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('MoviesCtrl', ['$scope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'movieDbSearchService', 'filterFilter', function( $scope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, movieDbSearchService, filterFilter ) {
+.controller('MoviesCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'movieDbSearchService', 'filterFilter', function( $scope, $rootScope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, movieDbSearchService, filterFilter ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
@@ -79,6 +79,9 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
     $scope.allItems = filterFilter($scope.allItems, {'id': '!' + downloadable.id });
     $scope.filteredList = filterFilter($scope.filteredList, {'id': '!' + downloadable.id });
     $scope.pageChanged();
+
+    $rootScope.moviesSuggestionCount = $scope.allItems.length;
+    $rootScope.moviesWantedCount ++;    
   }
 
   $scope.filterChanged = function() {

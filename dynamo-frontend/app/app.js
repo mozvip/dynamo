@@ -15,7 +15,8 @@ angular.module('dynamo', [
   'dynamo.music',
   'dynamo.books',
   'dynamo.magazines',
-  'dynamo.tvshows'
+  'dynamo.tvshows',
+  'dynamo.games'
 ])
 
 .constant('backendHostAndPort', 'localhost:8081')
@@ -23,27 +24,27 @@ angular.module('dynamo', [
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/welcome'});
 }])
-.controller('MenuCtrl', ['$scope', 'eventDataService', 'downloadableService', function($scope, eventDataService, downloadableService) {
+.controller('MenuCtrl', ['$scope', '$rootScope', 'eventDataService', 'downloadableService', function($scope, $rootScope, eventDataService, downloadableService) {
 
-  $scope.moviesCollectionCount = 0;
-  $scope.moviesWantedCount = 0;
-  $scope.moviesSuggestionCount = 0;
+  $rootScope.moviesCollectionCount = 0;
+  $rootScope.moviesWantedCount = 0;
+  $rootScope.moviesSuggestionCount = 0;
 
-  $scope.magazinesCollectionCount = 0;
-  $scope.magazinesWantedCount = 0;
-  $scope.magazinesSuggestionCount = 0;
+  $rootScope.magazinesCollectionCount = 0;
+  $rootScope.magazinesWantedCount = 0;
+  $rootScope.magazinesSuggestionCount = 0;
 
-  $scope.booksCollectionCount = 0;
-  $scope.booksWantedCount = 0;
-  $scope.booksSuggestionCount = 0;
+  $rootScope.booksCollectionCount = 0;
+  $rootScope.booksWantedCount = 0;
+  $rootScope.booksSuggestionCount = 0;
 
-  $scope.gamesCollectionCount = 0;
-  $scope.gamesWantedCount = 0;
-  $scope.gamesSuggestionCount = 0;
+  $rootScope.gamesCollectionCount = 0;
+  $rootScope.gamesWantedCount = 0;
+  $rootScope.gamesSuggestionCount = 0;
 
-  $scope.musicAlbumsCollectionCount = 0;
-  $scope.musicAlbumsWantedCount = 0;
-  $scope.musicAlbumsSuggestionCount = 0;
+  $rootScope.musicAlbumsCollectionCount = 0;
+  $rootScope.musicAlbumsWantedCount = 0;
+  $rootScope.musicAlbumsSuggestionCount = 0;
 
   downloadableService.counts().then( function(response) {
 
@@ -51,47 +52,47 @@ angular.module('dynamo', [
     for(var i=0; i<counts.length; i++) {
       if (counts[i].type == 'Movie') {
         if (counts[i].status == 'DOWNLOADED') {
-          $scope.moviesCollectionCount = counts[i].count;
+          $rootScope.moviesCollectionCount = counts[i].count;
         } else if (counts[i].status == 'SNATCHED' || counts[i].status == 'WANTED') {
-          $scope.moviesWantedCount += counts[i].count;
+          $rootScope.moviesWantedCount += counts[i].count;
         } else if (counts[i].status == 'SUGGESTED') {
-          $scope.moviesSuggestionCount = counts[i].count;
+          $rootScope.moviesSuggestionCount = counts[i].count;
         }
       }
       if (counts[i].type == 'MagazineIssue') {
         if (counts[i].status == 'DOWNLOADED') {
-          $scope.magazinesCollectionCount = counts[i].count;
+          $rootScope.magazinesCollectionCount = counts[i].count;
         } else if (counts[i].status == 'SNATCHED' || counts[i].status == 'WANTED') {
-          $scope.magazinesWantedCount += counts[i].count;
+          $rootScope.magazinesWantedCount += counts[i].count;
         } else if (counts[i].status == 'SUGGESTED') {
-          $scope.magazinesSuggestionCount = counts[i].count;
+          $rootScope.magazinesSuggestionCount = counts[i].count;
         }
       }
       if (counts[i].type == 'Book') {
         if (counts[i].status == 'DOWNLOADED') {
-          $scope.booksCollectionCount = counts[i].count;
+          $rootScope.booksCollectionCount = counts[i].count;
         } else if (counts[i].status == 'SNATCHED' || counts[i].status == 'WANTED') {
-          $scope.booksWantedCount += counts[i].count;
+          $rootScope.booksWantedCount += counts[i].count;
         } else if (counts[i].status == 'SUGGESTED') {
-          $scope.booksSuggestionCount = counts[i].count;
+          $rootScope.booksSuggestionCount = counts[i].count;
         }
       }
       if (counts[i].type == 'VideoGame') {
         if (counts[i].status == 'DOWNLOADED') {
-          $scope.gamesCollectionCount = counts[i].count;
+          $rootScope.gamesCollectionCount = counts[i].count;
         } else if (counts[i].status == 'SNATCHED' || counts[i].status == 'WANTED') {
-          $scope.gamesWantedCount += counts[i].count;
+          $rootScope.gamesWantedCount += counts[i].count;
         } else if (counts[i].status == 'SUGGESTED') {
-          $scope.gamesSuggestionCount = counts[i].count;
+          $rootScope.gamesSuggestionCount = counts[i].count;
         }
       }
       if (counts[i].type == 'MusicAlbum') {
         if (counts[i].status == 'DOWNLOADED') {
-          $scope.musicAlbumsCollectionCount = counts[i].count;
+          $rootScope.musicAlbumsCollectionCount = counts[i].count;
         } else if (counts[i].status == 'SNATCHED' || counts[i].status == 'WANTED') {
-          $scope.musicAlbumsWantedCount += counts[i].count;
+          $rootScope.musicAlbumsWantedCount += counts[i].count;
         } else if (counts[i].status == 'SUGGESTED') {
-          $scope.musicAlbumsSuggestionCount = counts[i].count;
+          $rootScope.musicAlbumsSuggestionCount = counts[i].count;
         }
       }
       

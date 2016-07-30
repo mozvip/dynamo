@@ -14,7 +14,7 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
   });
 }])
 
-.controller('MagazinesCtrl', ['$scope', '$routeParams', 'downloadableService', 'languages', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', function( $scope, $routeParams, downloadableService, languages, fileListService, searchResultsService, $uibModal, filterFilter ) {
+.controller('MagazinesCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'languages', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', function( $scope, $rootScope, $routeParams, downloadableService, languages, fileListService, searchResultsService, $uibModal, filterFilter ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
@@ -34,6 +34,9 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
     $scope.allItems = filterFilter($scope.allItems, {'id': '!' + downloadable.id });
     $scope.filteredList = filterFilter($scope.filteredList, {'id': '!' + downloadable.id });
     $scope.pageChanged();
+
+    $rootScope.magazinesSuggestionCount = $scope.allItems.length;
+    $rootScope.magazinesWantedCount ++;
   }
 
   $scope.redownload = function( downloadable ) {
