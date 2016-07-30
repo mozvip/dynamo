@@ -5,20 +5,22 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/magazines/:status', {
     templateUrl: 'magazines/magazines.html',
-    controller: 'MagazinesCtrl'
+    controller: 'MagazinesCtrl',
+    resolve: {
+      languages: ['languageService', function(  languageService  ) {
+        return languageService.find();
+      }]
+    }    
   });
 }])
 
-.controller('MagazinesCtrl', ['$scope', '$routeParams', 'downloadableService', 'languageService', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', function( $scope, $routeParams, downloadableService, languageService, fileListService, searchResultsService, $uibModal, filterFilter ) {
+.controller('MagazinesCtrl', ['$scope', '$routeParams', 'downloadableService', 'languages', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', function( $scope, $routeParams, downloadableService, languages, fileListService, searchResultsService, $uibModal, filterFilter ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
   $scope.filteredList = [];
 
-  $scope.languages = [];
-  languageService.find().then( function(response) {
-    $scope.languages = response.data;
-  });
+  $scope.languages = languages.data;
 
   $scope.pageContents = [];
   downloadableService.find( 'MAGAZINEISSUE', $routeParams.status ).then( function( response ) {

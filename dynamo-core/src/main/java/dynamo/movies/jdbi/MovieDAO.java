@@ -14,7 +14,6 @@ import dynamo.core.VideoSource;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.jdbi.core.BindEnum;
 import dynamo.jdbi.core.BindPath;
-import dynamo.jdbi.core.DAO;
 import dynamo.model.DownloadableStatus;
 import dynamo.movies.model.Movie;
 
@@ -22,12 +21,10 @@ public interface MovieDAO extends DownloadableDAO<Movie>{
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE MOVIE.ID = :movieId")
 	@Mapper(MovieMapper.class)
-	@Override
 	Movie find(@Bind("movieId") long movieId);
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = :status ORDER BY NAME")
 	@Mapper(MovieMapper.class)
-	@Override
 	List<Movie> findByStatus( @BindEnum("status") DownloadableStatus status );
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, MOVIE.* FROM MOVIE INNER JOIN DOWNLOADABLE ON MOVIE.ID=DOWNLOADABLE.ID WHERE MOVIEDBID = :movieDbId")

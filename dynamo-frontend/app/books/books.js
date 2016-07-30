@@ -5,19 +5,22 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/books/:status', {
     templateUrl: 'books/books.html',
-    controller: 'BooksCtrl'
+    controller: 'BooksCtrl',
+    resolve: {
+      languages: ['languageService', function(  languageService  ) {
+        return languageService.find();
+      }]
+    }    
   });
 }])
 
-.controller('BooksCtrl', ['$scope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', function( $scope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, filterFilter ) {
+.controller('BooksCtrl', ['$scope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', 'languages', function( $scope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, filterFilter, languages ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
   $scope.filteredList = [];
 
-  $scope.image = function( imageURL ) {
-    return BackendService.getImageURL( imageURL );
-  }
+  $scope.languages = languages.data;
 
   $scope.pageContents = [];
   downloadableService.find( 'BOOK', $routeParams.status ).then( function( response ) {

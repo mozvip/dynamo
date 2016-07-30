@@ -74,10 +74,11 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
     $scope.pageContents = $scope.filteredList.slice( start, start + 24);
   }
 
-  $scope.movieClicked = function( movie ) {
-    fileListService.get( movie.id ).success = function() {
-      alert('test');
-    }
+  $scope.want = function( downloadable ) {
+    downloadableService.want( downloadable.id );
+    $scope.allItems = filterFilter($scope.allItems, {'id': '!' + downloadable.id });
+    $scope.filteredList = filterFilter($scope.filteredList, {'id': '!' + downloadable.id });
+    $scope.pageChanged();
   }
 
   $scope.filterChanged = function() {

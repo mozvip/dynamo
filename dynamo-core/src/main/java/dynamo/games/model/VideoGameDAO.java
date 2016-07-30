@@ -15,12 +15,10 @@ public interface VideoGameDAO extends DownloadableDAO<VideoGame> {
 	
 	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID WHERE VIDEOGAME.ID = :videoGameId")
 	@Mapper(VideoGameMapper.class)
-	@Override
 	public VideoGame find(@Bind("videoGameId") long videoGameId);
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID AND DOWNLOADABLE.STATUS = :status")
 	@Mapper(VideoGameMapper.class)
-	@Override
 	public List<VideoGame> findByStatus( @BindEnum("status") DownloadableStatus status );
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, VIDEOGAME.* FROM VIDEOGAME INNER JOIN DOWNLOADABLE ON VIDEOGAME.ID = DOWNLOADABLE.ID AND DOWNLOADABLE.STATUS = :status AND PLATFORM = :platform")

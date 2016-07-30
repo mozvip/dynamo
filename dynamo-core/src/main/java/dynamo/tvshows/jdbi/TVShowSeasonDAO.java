@@ -16,12 +16,10 @@ public interface TVShowSeasonDAO extends DownloadableDAO<TVShowSeason> {
 	
 	@SqlQuery("SELECT TVSHOWSEASON.*, DOWNLOADABLE.* FROM TVSHOWSEASON INNER JOIN DOWNLOADABLE ON TVSHOWSEASON.ID = DOWNLOADABLE.ID WHERE TVSHOWSEASON.ID = :seasonId")
 	@Mapper(TVShowSeasonMapper.class)
-	@Override
 	public TVShowSeason find(@Bind("seasonId") long seasonId);
 
 	@SqlQuery("SELECT TVSHOWSEASON.*, DOWNLOADABLE.* FROM TVSHOWSEASON INNER JOIN DOWNLOADABLE ON TVSHOWSEASON.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = :status")
 	@Mapper(TVShowSeasonMapper.class)
-	@Override
 	public List<TVShowSeason> findByStatus( @BindEnum("status") DownloadableStatus status );
 
 	@SqlUpdate("INSERT INTO TVSHOWSEASON (ID, SERIES_ID, SEASON) VALUES( :id, :seriesId, :season )")

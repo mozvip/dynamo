@@ -13,7 +13,6 @@ import dynamo.jdbi.core.BindContains;
 import dynamo.jdbi.core.BindEnum;
 import dynamo.jdbi.core.BindPath;
 import dynamo.jdbi.core.BindUpper;
-import dynamo.jdbi.core.DAO;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicArtist;
@@ -24,12 +23,10 @@ public interface MusicAlbumDAO extends DownloadableDAO<MusicAlbum> {
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, MUSICALBUM.* FROM MUSICALBUM INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE MUSICALBUM.ID=:musicAlbumId")
 	@Mapper(MusicAlbumMapper.class)
-	@Override
 	MusicAlbum find( @Bind("musicAlbumId") long musicAlbumId );
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, MUSICALBUM.* FROM MUSICALBUM INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS= :status ORDER BY MUSICALBUM.ARTIST_NAME ASC")
 	@Mapper(MusicAlbumMapper.class)
-	@Override
 	List<MusicAlbum> findByStatus(@BindEnum("status") DownloadableStatus status);
 
 	@SqlQuery("SELECT * FROM MUSICFILE WHERE TAGSMODIFIED=true")

@@ -15,7 +15,10 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     resolve: {
       tvshow: ['tvShowsService', '$route', function(  tvShowsService, $route  ) {
         return tvShowsService.getTVShow( $route.current.params.tvShowId );
-      }]
+      }],
+      languages: ['languageService', function(  languageService  ) {
+        return languageService.find();
+      }]      
     }
   });
 }])
@@ -45,11 +48,13 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('TVShowsCtrl', ['$scope', '$routeParams', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', function( $scope, $routeParams, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter ) {
+.controller('TVShowsCtrl', ['$scope', '$routeParams', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'languages', function( $scope, $routeParams, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter, languages ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
   $scope.filteredList = [];
+
+  $scope.languages = languages.data;
 
   $scope.pageContents = [];
   tvShowsService.find().then( function( response ) {

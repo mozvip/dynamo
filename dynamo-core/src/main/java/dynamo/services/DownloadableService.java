@@ -2,6 +2,7 @@ package dynamo.services;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,14 +28,14 @@ import dynamo.model.DownloadableStatus;
 public class DownloadableService {
 
 	@GET
-	public List<Downloadable> get(@QueryParam("type") String type, @QueryParam("status") String allStatus) {
+	public List<Downloadable> get(@QueryParam("type") String type, @QueryParam("status") String allStatus) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		Class<? extends Downloadable> klass = DownloadableManager.getInstance().getDownloadableTypeBySimpleName( type );
 		
 		DownloadableDAO daoInstance = DownloadableManager.getInstance().getDAOInstance( klass );
 		String[] statuses = allStatus.split(",");
 		List<Downloadable> downloads = new ArrayList<>();
 		for (String status : statuses) {
-			downloads.addAll( daoInstance.findByStatus( DownloadableStatus.valueOf( status ) ) );
+			downloads.addAll( (Collection<? extends Downloadable>) daoInstance.getClass().getMethod("findByStatus", DownloadableStatus.class).invoke( daoInstance, DownloadableStatus.valueOf( status ) ) );
 		}
 		Collections.sort(downloads, (Downloadable d1, Downloadable d2) -> d1.getName().compareTo(d2.getName()));
 		return downloads;

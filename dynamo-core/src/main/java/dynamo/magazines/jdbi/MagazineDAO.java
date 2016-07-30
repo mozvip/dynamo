@@ -40,7 +40,7 @@ public interface MagazineDAO {
 	void saveIssue(@Bind("id") long id, @Bind("issue") int issue, @Bind("issueDate") Date issueDate, @Bind("special") boolean special, @BindEnum("language") Language language, @Bind("searchName") String searchName);
 
 	@SqlUpdate("UPDATE MAGAZINE SET PATH=:path, AKA=:aka, BLACKLIST=:wordsBlackList, LANGUAGE=:language WHERE SEARCHNAME=:searchName")
-	Object save(@Bind("searchName") String searchName, @BindPath("path") Path path, @BindStringList("aka") List<String> aka, @BindStringList("wordsBlackList") List<String> wordsBlackList, @BindEnum("language") Language language);
+	void save(@Bind("searchName") String searchName, @BindPath("path") Path path, @BindStringList("aka") List<String> aka, @BindStringList("wordsBlackList") List<String> wordsBlackList, @BindEnum("language") Language language);
 	
 	@SqlQuery("SELECT DOWNLOADABLE.*, MAGAZINEISSUE.* FROM MAGAZINEISSUE INNER JOIN DOWNLOADABLE ON MAGAZINEISSUE.ID = DOWNLOADABLE.ID INNER JOIN MAGAZINE ON MAGAZINEISSUE.MAGAZINE_SEARCHNAME = MAGAZINE.SEARCHNAME WHERE DOWNLOADABLE.STATUS='SUGGESTED' AND (MAGAZINE.LANGUAGE =:language OR :language IS NULL) AND UPPER(DOWNLOADABLE.NAME) LIKE :filter ORDER BY CREATION_DATE DESC")
 	@Mapper(MagazineIssueMapper.class)
