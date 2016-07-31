@@ -24,7 +24,7 @@ public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 		
 		long albumId = task.getMusicAlbum().getId();
 		
-		Path albumPath = null;
+		Path albumPath = task.getMusicAlbum().getPath();
 		
 		DownloadableManager.downloadImage( task.getMusicAlbum(), task.getLocalImagePath() );
 		List<MusicFile> files = musicDAO.findMusicFiles( albumId );
@@ -37,8 +37,10 @@ public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 			}
 		}
 
-		Path folderJpg = albumPath.resolve("folder.jpg");
-		Files.copy( task.getLocalImagePath(), folderJpg, StandardCopyOption.REPLACE_EXISTING );
+		if (albumPath != null) {
+			Path folderJpg = albumPath.resolve("folder.jpg");
+			Files.copy( task.getLocalImagePath(), folderJpg, StandardCopyOption.REPLACE_EXISTING );
+		}
 	}
 
 }

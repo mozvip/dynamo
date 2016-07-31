@@ -11,7 +11,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     if (event.type == 'info') {
       toastr.info( event.body, event.title );
     } else {
-      toastr.info( type );
+      toastr.info( event.type );
       toastr.info( event.body, event.title );
     }
   });

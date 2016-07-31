@@ -32,7 +32,7 @@ import hclient.HTTPClient;
 
 public class CPasBienProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, TVShowSeasonProvider, MagazineProvider, MovieSuggester {
 
-	private static final String BASE_URL = "http://www.cpasbien.pw";
+	private static final String BASE_URL = "http://www.cpasbien.cm";
 	
 	private List<SearchResult> extractResults( WebDocument document, String urlMatchRegexp ) throws IOException, URISyntaxException {
 		List<SearchResult> results = new ArrayList<SearchResult>();

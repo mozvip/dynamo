@@ -5,10 +5,20 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/tvshows', {
     templateUrl: 'tvshows/tvshows.html',
-    controller: 'TVShowsCtrl'
+    controller: 'TVShowsCtrl',
+    resolve: {
+      languages: ['languageService', function(  languageService  ) {
+        return languageService.find();
+      }]      
+    }
   }).when('/tvshows-add', {
     templateUrl: 'tvshows/tvshows-add.html',
-    controller: 'TVShowsCtrl'
+    controller: 'TVShowsCtrl',
+    resolve: {
+      languages: ['languageService', function(  languageService  ) {
+        return languageService.find();
+      }]      
+    }
   }).when('/tvshow-detail/:tvShowId', {
     templateUrl: 'tvshows/tvshow-detail.html',
     controller: 'TVShowDetailsCtrl',
