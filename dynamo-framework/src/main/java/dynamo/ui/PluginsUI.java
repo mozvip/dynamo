@@ -26,9 +26,9 @@ public class PluginsUI extends DynamoManagedBean {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Map<Class<? extends Task>, Class<? extends TaskExecutor<?>>> activePlugins = ConfigurationManager.getInstance().getActivePlugins();
+	private Map<Class<? extends Task>, Class<? extends TaskExecutor>> activePlugins = ConfigurationManager.getInstance().getActivePlugins();
 
-	public Map<Class<? extends Task>, Class<? extends TaskExecutor<?>>> getActivePlugins() {
+	public Map<Class<? extends Task>, Class<? extends TaskExecutor>> getActivePlugins() {
 		return activePlugins;
 	}
 	
@@ -37,7 +37,7 @@ public class PluginsUI extends DynamoManagedBean {
 	}
 	
 	public void save() throws JsonGenerationException, JsonMappingException, IOException {
-		for (Map.Entry<Class<? extends Task>, Class<? extends TaskExecutor<?>>> entry : activePlugins.entrySet()) {
+		for (Map.Entry<Class<? extends Task>, Class<? extends TaskExecutor>> entry : activePlugins.entrySet()) {
 			ConfigurationManager.getInstance().setActivePlugin(entry.getKey(), entry.getValue());
 			ConfigValueManager.getInstance().persistConfiguration();
 		}

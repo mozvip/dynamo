@@ -10,6 +10,8 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     var event = JSON.parse(message.data);
     if (event.type == 'info') {
       toastr.info( event.body, event.title );
+    } else if (event.type == 'error') {
+      toastr.error( event.body, event.title );
     } else {
       toastr.info( event.type );
       toastr.info( event.body, event.title );

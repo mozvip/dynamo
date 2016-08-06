@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
@@ -29,14 +32,14 @@ import dynamo.core.configuration.items.TextConfigurationItem;
 
 public class ConfigAnnotationManager {
 	public final static String DYNAMO_PACKAGE_PREFIX = "dynamo";
+	
+	private final static Logger LOGGER = LoggerFactory.getLogger(ConfigAnnotationManager.class);
 
 	private List<AbstractConfigurationItem> items = null;
 	private Map<String, AbstractConfigurationItem> itemMap = new HashMap<>();
 	private Set<Class<?>> configuredClasses = new HashSet<>();
-	private static DynamoObjectFactory<Object> discoverer;
 
 	private ConfigAnnotationManager() {
-		discoverer = new DynamoObjectFactory<Object>(DYNAMO_PACKAGE_PREFIX, (String) null);
 		buildItemsList();
 	}
 
@@ -55,14 +58,25 @@ public class ConfigAnnotationManager {
 		return items;
 	}
 
-	protected void buildItemsList() {
+	protected synchronized void buildItemsList() {
 		items = new ArrayList<AbstractConfigurationItem>();
-		Set<Class<?>> classes = discoverer.getMatchingClasses(false, false);
-
-		List<Class<?>> configurableClasses = new ArrayList<>();
-		for (Class<?> klass : classes) {
-			if (extractAnnotations(klass, klass)) {
-				configurableClasses.add(klass);
+		Reflections reflections = DynamoObjectFactory.getReflections();
+		Set<Field> configurableFields = reflections.getFieldsAnnotatedWith( Configurable.class );
+		
+		Set<Class<?>> scannedClasses = new HashSet<>();
+		
+		for (Field field : configurableFields) {
+			
+			Class<?> declaringClass = field.getDeclaringClass();
+			if (Modifier.isAbstract( declaringClass.getModifiers() ) || declaringClass.isInterface() ) {
+				continue;
+			}
+			
+			if (!scannedClasses.contains( declaringClass )) {
+				if (extractAnnotations(declaringClass, declaringClass)) {
+					configuredClasses.add( declaringClass );
+				}
+				scannedClasses.add( declaringClass );
 			}
 		}
 	}
@@ -76,12 +90,15 @@ public class ConfigAnnotationManager {
 	}
 
 	private boolean extractAnnotations(Class<?> configuredClass, Class<?> currentClass) {
+		
+		LOGGER.info("Introspecting configuration data from {}", currentClass.getName());
 
 		boolean configurable = Reconfigurable.class.isAssignableFrom( currentClass );
 
-		if (currentClass.getSuperclass() != null) {
+		Class<?> superclass = currentClass.getSuperclass();
+		if (!superclass.equals(Object.class)) {
 			// check super class
-			boolean superClassConfigurable = extractAnnotations(configuredClass, currentClass.getSuperclass());
+			boolean superClassConfigurable = extractAnnotations(configuredClass, superclass);
 			configurable = configurable | superClassConfigurable;
 		}
 

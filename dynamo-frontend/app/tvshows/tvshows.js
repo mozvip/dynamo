@@ -26,6 +26,9 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
       tvshow: ['tvShowsService', '$route', function(  tvShowsService, $route  ) {
         return tvShowsService.getTVShow( $route.current.params.tvShowId );
       }],
+      episodes: ['tvShowsService', '$route', function(  tvShowsService, $route  ) {
+        return tvShowsService.getEpisodes( $route.current.params.tvShowId );
+      }],
       languages: ['languageService', function(  languageService  ) {
         return languageService.find();
       }]      
@@ -49,16 +52,20 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   tvShowsService.getTVShow = function( tvshowId ) {
     return BackendService.get('tvshows/' + tvshowId);
   }
+  tvShowsService.getEpisodes = function( tvshowId ) {
+    return BackendService.get('tvshows/' + tvshowId + '/episodes');
+  }
   return tvShowsService;
 }])
 
 .controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter ) {
 
-  $scope.tvshow = tvshow;
+  $scope.tvshow = tvshow.data;
+  $scope.episodes = episodes.data;
 
 }])
 
-.controller('TVShowsCtrl', ['$scope', '$routeParams', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'languages', function( $scope, $routeParams, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter, languages ) {
+.controller('TVShowsCtrl', ['$scope', '$routeParams', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'BackendService', 'languages', function( $scope, $routeParams, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal,  filterFilter, BackendService, languages ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
@@ -106,7 +113,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   }
 
   $scope.addTVShow = function( id ) {
-    BackendService.post("tvshow/add", {"id": id});
+    BackendService.post("tvshows/add", {"id": id});
   }
 
   $scope.openFileList = function ( downloadable) {

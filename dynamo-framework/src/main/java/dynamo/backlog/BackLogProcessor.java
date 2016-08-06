@@ -280,7 +280,7 @@ public class BackLogProcessor extends Thread {
 	}	
 
 	public void runSync(Task task, boolean reportQueued) throws Exception {
-		Class<? extends TaskExecutor<?>> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
+		Class<? extends TaskExecutor> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
 		if (backLogTaskClass != null) {
 			TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
 			executor.execute();

@@ -30,6 +30,7 @@ import dynamo.core.EventManager;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.DownloadableFactory;
+import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloableCount;
 import dynamo.core.model.DownloadableDAO;
@@ -108,9 +109,7 @@ public class DownloadableManager {
 	
 	private DownloadableManager() {
 
-		Reflections reflections = new Reflections("dynamo");
-		
-		Set<Class<? extends FindDownloadableTask>> findDownloadableTypes = reflections.getSubTypesOf( FindDownloadableTask.class );
+		Set<Class<? extends FindDownloadableTask>> findDownloadableTypes = DynamoObjectFactory.getReflections().getSubTypesOf( FindDownloadableTask.class );
 		
 		findDownloadableTaskContructors = new HashMap<>();
 		for (Class<? extends FindDownloadableTask> klass : findDownloadableTypes) {
@@ -123,9 +122,9 @@ public class DownloadableManager {
 			}
 		}
 		
-		downloadableTypes = reflections.getSubTypesOf(Downloadable.class);
+		downloadableTypes = DynamoObjectFactory.getReflections().getSubTypesOf(Downloadable.class);
 		downloadableDaos = new HashMap<>();
-		Set<Class<? extends DownloadableDAO>> daos = reflections.getSubTypesOf(DownloadableDAO.class);
+		Set<Class<? extends DownloadableDAO>> daos = DynamoObjectFactory.getReflections().getSubTypesOf(DownloadableDAO.class);
 		for (Class<? extends DownloadableDAO> dao : daos) {
 			try {
 				Class<? extends Downloadable> downloadableType = (Class<? extends Downloadable>) dao.getDeclaredMethod("find", long.class).getReturnType();

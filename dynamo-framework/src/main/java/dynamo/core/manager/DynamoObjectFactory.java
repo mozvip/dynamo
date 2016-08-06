@@ -1,27 +1,23 @@
 package dynamo.core.manager;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.reflections.Reflections;
+import org.reflections.scanners.FieldAnnotationsScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -30,8 +26,8 @@ import com.google.common.cache.LoadingCache;
 import core.RegExp;
 
 public class DynamoObjectFactory<T> {
-
-	private static Map<String, Set<String>> classNamesForPackage = new HashMap<>();
+	
+	private static Reflections reflections = new Reflections("dynamo", new FieldAnnotationsScanner(), new SubTypesScanner( true ), new TypeAnnotationsScanner());
 
     private Class<T> interfaceToImplement = null;
 	private String packageName;
@@ -68,6 +64,10 @@ public class DynamoObjectFactory<T> {
 		this.interfaceToImplement = null;
 		this.packageName = packageName;
 		this.nameRegExp = nameRegExp;
+	}
+	
+	public static Reflections getReflections() {
+		return reflections;
 	}
 	
 	public DynamoObjectFactory( String packageName, Class<T> interfaceToImplement ) {
@@ -149,132 +149,22 @@ public class DynamoObjectFactory<T> {
 		}
 	}
 
-    /**
-     * Scans all classes accessible from the class loader which belong to the given package and implements the given Interface.
-     *
-     * @return The classes
-     * @throws ClassNotFoundException
-     * @throws IOException
-     */
-    public Set<Class<? extends T>> getMatchingClasses( boolean includeAbstracts, boolean includeInterfaces ) {
-    	
-    	Set<Class<? extends T>> classes = new HashSet<>();
-    	
-    	if ( packageName != null ) {
-    		
-    		String currentPackagePrefix = null;
-    		for (String packagePrefix : classNamesForPackage.keySet()) {
-				if (packageName.startsWith( packagePrefix )) {
-					if (currentPackagePrefix == null || currentPackagePrefix.length() < packagePrefix.length() ) {
-						currentPackagePrefix = packagePrefix;
-					}
-				}
+	public static <T> T getInstance( Class<T> klass ) {
+		try {
+			Object object = instancesCache.get( klass );
+			if (object instanceof String && object.equals( NO_INSTANCE_MARKER )) {
+				return null;
 			}
-    		
-    		if (currentPackagePrefix != null) {
-	    		Set<String> classesToTest = classNamesForPackage.get( currentPackagePrefix );
-	    		for (String className : classesToTest) {
-	    			testClass(classes, className, includeAbstracts, includeInterfaces, null );
-				}
-	    		return classes;
-    		}
-    	}
-    	
-    	Set<String> testedClassNames = new HashSet<>();
-    	
-    	synchronized ( this ) {
-        	if (classLoaderURLs == null) {
-        		initClassLoaderURLs();
-        	}
+			return (T) object;
+		} catch (ExecutionException e) {
+			ErrorManager.getInstance().reportThrowable( e );
 		}
-
-		for (URL url : classLoaderURLs) {
-
-			String file = url.getFile();
-
-			if (File.separator.equals("\\") && file.startsWith("/")) {
-				file = file.substring(1);
-			}
-			
-			boolean mustDeleteFile = false;
-			if (file.endsWith(".jar") || file.endsWith(".jar!/")) {
-				
-				Path pathToFile = Paths.get( file );
-				if (!Files.isRegularFile( pathToFile )) {
-					try {
-						pathToFile = Files.createTempFile("dynamo", ".jar");
-					} catch (IOException e) {
-						ErrorManager.getInstance().reportThrowable(e);
-						continue;
-					}
-	
-					try (OutputStream output = Files.newOutputStream( pathToFile )) {
-						IOUtils.copy(url.openStream(), output);
-					} catch (IOException e) {
-						ErrorManager.getInstance().reportThrowable(e);
-						continue;
-					}
-					
-					mustDeleteFile = true;
-				}
-				
-				try (JarFile jarFile = new JarFile(pathToFile.toFile())) { // FIXME : issue with spaces in file paths ?
-					Enumeration<JarEntry> enumJar = jarFile.entries();
-					while (enumJar.hasMoreElements()) {
-						JarEntry entry = enumJar.nextElement();
-						if (!entry.isDirectory() && entry.getName().endsWith(".class")) {
-							String className = entry.getName().substring(0, entry.getName().length() - 6);
-							className = className.replace('/', '.');
-
-							testClass( classes, className, includeAbstracts, includeInterfaces, testedClassNames );
-						}
-					}
-				} catch (FileNotFoundException e) {
-					// ignored silently
-				} catch (IOException e) {
-					ErrorManager.getInstance().reportThrowable(e);
-				} finally {
-					if (mustDeleteFile) {
-						try {
-							Files.delete( pathToFile );
-						} catch (IOException e) {
-						}
-					}
-				}
-
-			} else {
-
-				Path path = Paths.get(file);
-				if (Files.isDirectory(path)) {
-	
-					String currentPackageName = "";
-					parseFolder( classes, currentPackageName, path, includeAbstracts, includeInterfaces, testedClassNames);
-	
-				}
-
-			}
-		}
-		
-		classNamesForPackage.put( packageName, testedClassNames );
-
-        return classes;
+		return null;
     }
 
-	public static <T> T getInstance( Class<T> klass ) throws Exception {
-		Object object = instancesCache.get( klass );
-		if (object instanceof String && object.equals( NO_INSTANCE_MARKER )) {
-			return null;
-		}
-		return (T) object;
-    }
-
-    public Set<T> getInstances() throws Exception {
-		Set<Class<? extends T>> classes = getMatchingClasses( false, false );
-		Set<T> instances = new HashSet<T>( classes.size() ); 
-		for (Class<? extends T> klass : classes) {
-			instances.add( (T) getInstance( klass ) );
-		}
-		return instances;
+    public Set<T> getInstances() {
+		Set<Class<? extends T>> classes = reflections.getSubTypesOf( interfaceToImplement );
+		return classes.stream().filter( klass -> !Modifier.isAbstract( klass.getModifiers() )).map( klass -> getInstance(klass)).collect( Collectors.toSet());
     }
   
 }

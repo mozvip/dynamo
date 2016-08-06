@@ -89,7 +89,7 @@ public abstract class AbstractDynamoQueue {
 	
 	public boolean executeTask( Task task ) throws NoSuchMethodException, SecurityException, ClassNotFoundException {
 		synchronized (submittedExecutors) {
-			Class<? extends TaskExecutor<?>> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
+			Class<? extends TaskExecutor> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
 			if (backLogTaskClass != null) {
 				TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
 				if (!isExecuting(task)) {

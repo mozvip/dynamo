@@ -13,12 +13,10 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
-import org.h2.jdbcx.JdbcConnectionPool;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import core.RegExp;
 import dynamo.backlog.BackLogProcessor;
-import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.DynamoObjectFactory;
@@ -31,7 +29,7 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.ValidationFailedException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
-public abstract class DynamoApplication implements Reconfigurable {
+public abstract class DynamoApplication {
 	
 	private DynamoServer server = null;
 	private static DynamoApplication instance = null;
@@ -91,8 +89,15 @@ public abstract class DynamoApplication implements Reconfigurable {
 		DynamoApplication.instance = this;
 	}
 	
-	public void init() throws Exception {
+	public synchronized void init() throws Exception {
 		ConfigurationManager.getInstance().configureApplication();
+		
+		try {
+			server.start( getApplicationName(), getCustomServletsInfo() );
+		} catch (InstantiationException | IllegalAccessException
+				| ServletException | IOException | IllegalArgumentException e) {
+			ErrorManager.getInstance().reportThrowable( e );
+		}
 	}
 
 	protected void determineIPAdress() {
@@ -132,16 +137,6 @@ public abstract class DynamoApplication implements Reconfigurable {
 		// startup speed comes with a cost
 		return "dynamo";
 	}	
-	
-	@Override
-	public void reconfigure() {
-		try {
-			server.start( getApplicationName(), getCustomServletsInfo() );
-		} catch (InstantiationException | IllegalAccessException
-				| ServletException | IOException | IllegalArgumentException e) {
-			ErrorManager.getInstance().reportThrowable( e );
-		}
-	}
 	
 	protected abstract String getApplicationName();	
 	protected abstract List<ServletInfo> getCustomServletsInfo();

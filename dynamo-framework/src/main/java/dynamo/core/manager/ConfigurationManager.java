@@ -14,10 +14,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import dynamo.backlog.BackLogProcessor;
+import dynamo.core.DynamoApplication;
 import dynamo.core.Enableable;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
@@ -29,6 +31,7 @@ import dynamo.core.model.InitTask;
 import dynamo.core.model.ServiceTask;
 import dynamo.core.model.Task;
 import dynamo.core.model.TaskExecutor;
+import javassist.Modifier;
 
 public class ConfigurationManager {
 	
@@ -58,22 +61,22 @@ public class ConfigurationManager {
 		configureApplication();
 	}
 	
-	private Map<Class<? extends Task>, Collection<Class<? extends TaskExecutor<?>>>> pluginOptions = new HashMap<>();
-	private Map<Class<? extends Task>, Class<? extends TaskExecutor<?>>> activePlugins = new HashMap<>();
+	private Map<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> pluginOptions = new HashMap<>();
+	private Map<Class<? extends Task>, Class<? extends TaskExecutor>> activePlugins = new HashMap<>();
 
-	public Map<Class<? extends Task>, Collection<Class<? extends TaskExecutor<?>>>> getPluginOptions() {
+	public Map<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> getPluginOptions() {
 		return pluginOptions;
 	}
 
-	public Map<Class<? extends Task>, Class<? extends TaskExecutor<?>>> getActivePlugins() {
+	public Map<Class<? extends Task>, Class<? extends TaskExecutor>> getActivePlugins() {
 		return activePlugins;
 	}
 
-	public Class<? extends TaskExecutor<?>> getActivePlugin(Class<? extends Task> klass) {
+	public Class<? extends TaskExecutor> getActivePlugin(Class<? extends Task> klass) {
 		return activePlugins.get( klass );
 	}
 	
-	public void setActivePlugin(Class<? extends Task> task, Class<? extends TaskExecutor<?>> executorClass) {
+	public void setActivePlugin(Class<? extends Task> task, Class<? extends TaskExecutor> executorClass) {
 		activePlugins.put(task, executorClass);
 		ConfigValueManager.getInstance().setConfigString("ConfigurationManager." + task.getName(), executorClass != null ? executorClass.getName() : "" );
 	}
@@ -83,11 +86,12 @@ public class ConfigurationManager {
 	}
 
 	private void initPlugins() {
-		DynamoObjectFactory<? extends TaskExecutor> executorDiscoverer = new DynamoObjectFactory(DYNAMO_PACKAGE_PREFIX, TaskExecutor.class);
-		
-		Set<?> matchingClasses = executorDiscoverer.getMatchingClasses(false, false);
-		for (Object object : matchingClasses) {
-			Class<? extends TaskExecutor<Task>> executorClass = (Class<? extends TaskExecutor<Task>>) object;
+		Reflections r = DynamoObjectFactory.getReflections();
+		Set<Class<? extends TaskExecutor>> matchingClasses = r.getSubTypesOf( TaskExecutor.class );
+		for (Class<? extends TaskExecutor> executorClass : matchingClasses) {
+			if (executorClass.isInterface() || Modifier.isAbstract( executorClass.getModifiers() )) {
+				continue;
+			}
 			Constructor[] constructors = executorClass.getConstructors();
 			for (Constructor constructor : constructors) {
 				Class[] types = constructor.getParameterTypes();
@@ -95,20 +99,20 @@ public class ConfigurationManager {
 					Class<Task> taskType = types[0];
 					
 					if (!pluginOptions.containsKey( taskType)) {
-						pluginOptions.put( taskType, new ArrayList<Class<? extends TaskExecutor<?>>>() );
+						pluginOptions.put( taskType, new ArrayList<Class<? extends TaskExecutor>>() );
 					}
 					pluginOptions.get( taskType ).add( executorClass );
 				}
 			}
 		}
 		
-		for (Entry<Class<? extends Task>, Collection<Class<? extends TaskExecutor<?>>>> entry : pluginOptions.entrySet()) {
+		for (Entry<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> entry : pluginOptions.entrySet()) {
 			Class<? extends Task> taskType = entry.getKey();
-			Collection<Class<? extends TaskExecutor<?>>> options = entry.getValue();
+			Collection<Class<? extends TaskExecutor>> options = entry.getValue();
 
 			String className = ConfigValueManager.getInstance().getConfigString( String.format("ConfigurationManager.%s", taskType.getName()) );
 
-			Class<? extends TaskExecutor<?>> activePlugin = null;
+			Class<? extends TaskExecutor> activePlugin = null;
 			if (StringUtils.isNotBlank(className)) {
 				try {
 					activePlugin = (Class<? extends TaskExecutor<?>>) Class.forName(className);
@@ -244,8 +248,7 @@ public class ConfigurationManager {
 			Object instance = null;
 			try {
 				instance = DynamoObjectFactory.getInstance(klass);
-			} catch (IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e) {
+			} catch ( IllegalArgumentException e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
 
@@ -260,8 +263,7 @@ public class ConfigurationManager {
 			Object instance = null;
 			try {
 				instance = DynamoObjectFactory.getInstance(klass);
-			} catch (IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e) {
+			} catch (IllegalArgumentException e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
 			if (instance instanceof Reconfigurable) {
@@ -297,6 +299,7 @@ public class ConfigurationManager {
 				BackLogProcessor.getInstance().cancel( daemonTask );
 			}
 		}
+
 	}
 
 }

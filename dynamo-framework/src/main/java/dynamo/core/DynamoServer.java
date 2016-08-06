@@ -80,13 +80,7 @@ public class DynamoServer {
 		HandlesTypes handlesTypesAnnotation = klass.getAnnotation(HandlesTypes.class);
 		Set<Class<?>> handlesTypes = new HashSet<>();
 		for (Class k : handlesTypesAnnotation.value()) {
-			DynamoObjectFactory<Class<?>> factory = new DynamoObjectFactory<Class<?>>( "dynamo" );
-			Set<Class<? extends Class<?>>> matchingClasses = factory.getMatchingClasses(false, false);
-			for (Class c : matchingClasses) {
-				if (c.getAnnotation(k) != null || c.isAssignableFrom(k)) {
-					handlesTypes.add(c);
-				}
-			}
+			handlesTypes.addAll( DynamoObjectFactory.getReflections().getTypesAnnotatedWith( k ) );
 		}
 
 		ServletContainerInitializerInfo i = new ServletContainerInitializerInfo(FacesInitializer.class, new ImmediateInstanceFactory<ServletContainerInitializer>(klass.newInstance()), handlesTypes);
