@@ -1,19 +1,66 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3>{{tvshow.name}}</h3>
+        <h4>{{tvshow.name}}</h4>
     </div>
 
     <div class="panel-body">
-        <img src="http://localhost:8081/data/{{tvshow.poster}}" />
+        <div class="row">
+            <div class="col-md-4">
+                <img class="img-responsive" alt="{{tvshow.name}}" src="http://localhost:8081/data/{{tvshow.poster}}" />
+            </div>
+            <div class="col-md-8">
+                <form>
+                    <div class="form-group">
+                        <span class="control-label">Folder</span>
+                        <p>
+                            {{tvshow.folder}}
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <span class="control-label">Quality Profile</span>
+                        <select class="form-control" />
+                    </div>                        
+                    <div class="form-group">
+                        <span class="control-label">Audio Language</span>
+                        <select ng-model="tvshow.audioLanguage" class="form-control" ng-options="item.key as item.value for item in languages"/>
+                    </div>                        
+                    <div class="form-group">
+                        <span class="control-label">Subtitles Language</span>
+                        <select ng-model="tvshow.subtitlesLanguage" class="form-control" ng-options="item.key as item.value for item in languages"/>
+                    </div>                        
+                    <div class="form-group">
+                    </div>                        
+                    <div class="form-group">
+                    </div>                        
+                </form>
+            </div>
+        </div>
 
-        <table class="table">
-            <tr ng-repeat="episode in episodes">
-                <td>{{episode.name}}</td>
-            </tr>
-        </table>
+        <div ng-repeat="(seasonNumber, seasonEpisodes) in episodes | groupBy: 'seasonNumber'">
+            <h3>Season {{seasonNumber}}</h3>
+            <table class="table table-condensed table-striped">
+                <tr ng-repeat="episode in seasonEpisodes | orderBy:'episodeNumber'" ng-class="{success: episode.status=='DOWNLOADED', danger:episode.status=='WANTED', info:episode.status=='FUTURE'}">
+                    <td>{{episode.episodeNumber}}</td>
+                    <td>
+                        <div ng-show="episode.status != 'FUTURE'">
+                            <button ng-show="episode.status != 'DOWNLOADED' && episode.status != 'WANTED'" class="btn btn-sm btn-default" ng-click="want(episode)"><span class="glyphicon glyphicon-heart" /></button>
+                            <button ng-show="episode.status == 'DOWNLOADED'" class="btn btn-sm btn-default" ng-click="openFileList(episode)"><span class="glyphicon glyphicon-list" /></button>
+                        </div>
+                    </td>
+                    <td>{{episode.name}}</td>
+                    <td>{{episode.firstAired|date}}</td>
+                    <td>
+                        <span class="glyphicon glyphicon-sd-video" ng-show="episode.quality == 'SD'" />
+                        <span class="glyphicon glyphicon-hd-video" ng-show="episode.quality == '_720p' || episode.quality == '_1080p'" />
+                    </td>
+                </tr>
+            </table>
+        </div>
 
     </div>
 
     <div class="panel-footer">
     </div>
 </div>
+
+<ng-include src="'common/templates.html'" />

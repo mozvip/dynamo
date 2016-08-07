@@ -1,9 +1,9 @@
 <div class="form-inline">
   <div class="form-group">
-    <input type="text" ng-model="title" class="form-control" placeholder="Search for ..."/>
+    <input type="text" ng-model="title" class="form-control" placeholder="Search for ..." />
   </div>
   <div class="form-group">
-    <input type="number" size="4" ng-model="year" class="form-control" placeholder="Year ..."/>
+    <input type="number" size="4" ng-model="year" class="form-control" placeholder="Year ..." />
   </div>
   <div class="form-group">
     <label class="control-label">Language</label>
@@ -19,11 +19,34 @@
     <h4 class="text-center">{{tvshow.seriesName}}</h4>
   </div>
   <div class="panel-body">
-    <div style="width: 100%; text-align: center">
-      <img ng-show="{{tvshow.banner != null}}" ng-src="{{tvshow.banner}}" alt="{{tvshow.seriesName}}" title="{{tvshow.seriesName}}" />
+    <div ng-show="{{tvshow.banner != null}}" style="width: 100%; text-align: center">
+      <img ng-src="{{tvshow.banner}}" alt="{{tvshow.seriesName}}" title="{{tvshow.seriesName}}" />
     </div>
     <p ng-show="{{tvshow.firstAired != undefined}}">First aired on <strong>{{tvshow.firstAired}}</strong></p>
     <p>{{tvshow.overview}}</p>
   </div>
-  <div class="panel-footer"><button class="btn btn-primary btn-block" ng-click="addTVShow(tvshow.id)"><span class="glyphicon glyphicon-download"/> Add {{tvshow.seriesName}} to my collection</button></div>
+  <div class="panel-footer">
+      <button class="btn btn-default btn-block" ng-click="selectTVShow(tvshow)"><span class="glyphicon glyphicon-download"/> Add {{tvshow.seriesName}} to my collection</button>
+      <form class="form-inline" ng-show="selectedTVShow && selectedTVShow.id === tvshow.id">
+        <div class="form-group">
+          <label class="control-label">Quality Profile</label>
+          <select ng-model="quality" class="form-control" ng-options="item.key as item.value for item in qualities">
+            <option value="" />
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="control-label">Audio Language</label>
+          <select ng-model="audioLanguage" class="form-control" ng-options="item.key as item.value for item in languages">
+            <option value="" />
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="control-label">SubTitles Language</label>
+          <select ng-model="subTitlesLanguages" class="form-control" ng-options="item.key as item.value for item in languages">
+            <option value="" />
+          </select>
+        </div>
+        <button class="btn btn-primary btn-block" ng-click="addTVShow(tvshow.id)"><span class="glyphicon glyphicon-ok"/> Confirm</button>
+    </form>
+  </div>
 </div>

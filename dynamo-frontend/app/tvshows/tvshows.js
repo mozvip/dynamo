@@ -13,7 +13,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     }
   }).when('/tvshows-add', {
     templateUrl: 'tvshows/tvshows-add.html',
-    controller: 'TVShowsCtrl',
+    controller: 'TVShowsAddCtrl',
     resolve: {
       languages: ['languageService', function(  languageService  ) {
         return languageService.find();
@@ -41,6 +41,16 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   tvdbService.find = function( title ) {
     return BackendService.get('tvdb/search', {'title' : title, 'language' : 'EN'});
   }
+  tvdbService.find = function( title, year, language ) {
+    var searchData = { 'title' : title, 'language': 'EN' };
+    if (year) {
+      searchData.year = year;
+    }
+    if (language) {
+      searchData.language = language;
+    }
+    return BackendService.get('tvdb/search', searchData);
+  }
   return tvdbService;
 }])
 
@@ -52,16 +62,65 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   tvShowsService.getTVShow = function( tvshowId ) {
     return BackendService.get('tvshows/' + tvshowId);
   }
+  tvShowsService.getFolders = function() {
+    return BackendService.get('tvshows/folders');
+  }
   tvShowsService.getEpisodes = function( tvshowId ) {
     return BackendService.get('tvshows/' + tvshowId + '/episodes');
   }
   return tvShowsService;
 }])
 
-.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter ) {
+.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'languages', 'episodes', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter, languages, episodes ) {
 
   $scope.tvshow = tvshow.data;
   $scope.episodes = episodes.data;
+  $scope.languages = languages.data;
+
+  $scope.want = function( episode ) {
+    downloadableService.want( episode.id ).then( function( response ) {
+      episode.status = 'WANTED';
+    } );
+  }
+
+  $scope.openFileList = function ( downloadable) {
+    var modalInstance = fileListService.openModal( downloadable );
+    modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    });
+  };
+
+}])
+
+.controller('TVShowsAddCtrl', ['$scope', '$location', 'tvShowsService', 'tvdbService', 'BackendService', 'languages', function( $scope, $location, tvShowsService, tvdbService, BackendService, languages ) {
+
+  $scope.languages = languages.data;
+
+  $scope.language = 'EN';
+
+  $scope.results = [];
+  $scope.searchTVShow = function() {
+    tvdbService.find( $scope.title, $scope.year, $scope.language ).then( function( response ) {
+      $scope.results = response.data;
+    });
+  }
+
+  $scope.audioLanguage = 'EN';
+  $scope.subTitlesLanguage = 'FR';
+  $scope.selectedTVShow = undefined;
+
+  $scope.selectTVShow = function( tvshow ) {
+    $scope.audioLanguage = tvshow.language.toUpperCase();
+    $scope.selectedTVShow = tvshow;
+  }
+
+  $scope.addTVShow = function( id ) {
+    BackendService.post("tvshows/add", {"id": id, 'seriesName': $scope.selectedTVShow.seriesName, 'audioLanguage': $scope.audioLanguage, 'subtitlesLanguage': $scope.subtitlesLanguage}).then(
+      function( response ) {
+        $location.path("/tvshow-detail/" + response.data);
+      }
+    );
+  }
 
 }])
 
@@ -104,35 +163,5 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     $scope.currentPage = 1;
     $scope.pageChanged();
   }
-
-  $scope.results = [];
-  $scope.searchTVShow = function() {
-    tvdbService.find( $scope.title ).then( function( response ) {
-      $scope.results = response.data;
-    });
-  }
-
-  $scope.addTVShow = function( id ) {
-    BackendService.post("tvshows/add", {"id": id});
-  }
-
-  $scope.openFileList = function ( downloadable) {
-
-    var modalInstance = $uibModal.open({
-      animation: false,
-      templateUrl: 'fileList.html',
-      controller: 'FileListCtrl',
-      size: 'lg',
-      resolve: {
-        fileList: function () {
-          return fileListService.get( downloadable.id );
-        }
-      }
-    });
-
-    modalInstance.result.then(function (selectedItem) {
-      $scope.selected = selectedItem;
-    });
-  };
 
 }]);

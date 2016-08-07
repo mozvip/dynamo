@@ -272,7 +272,7 @@ public class TVShowManager implements Reconfigurable {
 		return tvShowDAO.findTVShow(id);
 	}
 
-	public void identifyFolder( Path path, String id, String language, Language audioLang, Language subsLang ) throws IOException, TvDbException {
+	public String identifyFolder( Path path, String id, String language, Language audioLang, Language subsLang ) throws IOException, TvDbException {
 		ManagedSeries series = tvShowDAO.getTVShowForFolder( path );
 		if ( series != null && !series.getId().equals( id ) ) {
 			BackLogProcessor.getInstance().unschedule( String.format( "this.episode.series_id == %s", series.getId() ));
@@ -284,7 +284,7 @@ public class TVShowManager implements Reconfigurable {
 
 		deleteUnrecognizedFolder(path);
 
-		newSeries( api.getSeries(id, language), path, Language.getByShortName( language ), audioLang, subsLang );
+		return newSeries( api.getSeries(id, language), path, Language.getByShortName( language ), audioLang, subsLang ).getId();
 	}
 
 	public Series getSeries(String id, Language language) throws TvDbException {

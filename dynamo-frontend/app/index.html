@@ -83,7 +83,13 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#/configuration">Configuration</a></li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Configuration <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#/configuration">Configuration</a></li>
+                <li><a href="#/quality-profiles">Quality Profiles</a></li>
+              </ul>
+            </li>
           </ul>
         </div>
         <!--/.nav-collapse -->
@@ -139,6 +145,7 @@
   <script src="bower_components/angular-messages/angular-messages.min.js"></script>
   <script src="bower_components/angular-route/angular-route.min.js"></script>
   <script src="bower_components/toastr/toastr.min.js"></script>
+  <script src="bower_components/angular-filter/dist/angular-filter.min.js"></script>
   <script src="bower_components/angular-resource/angular-resource.min.js"></script>
   <script src="bower_components/angular-websocket/angular-websocket.min.js"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>

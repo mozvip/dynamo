@@ -128,21 +128,6 @@ public class TVShows extends DynamoManagedBean {
 		
 		return null;
 	}
-	
-	public String newShow( String seriesName, String id, String language ) {
-		try {
-			Path targetFolder = newShowFolder.resolve( FileNameUtils.sanitizeFileName( seriesName ) );
-			TVShowManager.getInstance().identifyFolder( targetFolder, id, language, audioLanguage, subtitlesLanguage );
-			series = null;
-			unrecognizedFolders = null;
-			
-			return "tvshow?faces-redirect=true&id=" + id;
-		} catch (IOException | TvDbException e) {
-			ErrorManager.getInstance().reportThrowable( e );
-		}
-		
-		return null;
-	}	
 
 	public Language getSearchLanguage() {
 		return searchLanguage;
