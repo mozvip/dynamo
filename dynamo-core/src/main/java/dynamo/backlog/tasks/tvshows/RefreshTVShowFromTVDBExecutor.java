@@ -2,6 +2,7 @@ package dynamo.backlog.tasks.tvshows;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -141,12 +142,17 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 				 	existingEpisode.getSource(), existingEpisode.isSubtitled(),  existingEpisode.getSubtitlesPath(), existingEpisode.isWatched(), existingEpisode.getSeasonId() );
 		}
 		
-		if ( ( series.getBanner() == null && tvDbSeries.getBanner() != null ) || LocalImageCache.getInstance().missFile( series.getBanner() ) ) {
-			series.setBanner( LocalImageCache.getInstance().download( "banners", tvDbSeries.getSeriesName(), tvDbSeries.getBanner(), null ) );
+		Path banner = LocalImageCache.getInstance().resolveLocal( "banners/" + series.getId() + ".jpg" );
+		if ( !Files.exists(banner) || Files.size(banner) == 0 ) {
+			if (tvDbSeries.getBanner() != null) {
+				LocalImageCache.getInstance().download( "banners", series.getId(), tvDbSeries.getBanner(), null );
+			}
 		}
-
-		if ( ( series.getPoster() == null && tvDbSeries.getPoster() != null ) || LocalImageCache.getInstance().missFile( series.getPoster() ) ) {
-			series.setPoster( LocalImageCache.getInstance().download( "posters", tvDbSeries.getSeriesName(), tvDbSeries.getPoster(), null ) );
+		Path poster = LocalImageCache.getInstance().resolveLocal( "posters/" + series.getId() + ".jpg" );
+		if ( !Files.exists(poster) || Files.size(poster) == 0 ) {
+			if (tvDbSeries.getBanner() != null) {
+				LocalImageCache.getInstance().download( "posters", series.getId(), tvDbSeries.getPoster(), null );
+			}
 		}
 		
 		TVShowManager.getInstance().saveTVShow( series );

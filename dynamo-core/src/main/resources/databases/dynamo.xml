@@ -110,12 +110,10 @@
             <column name="AUDIOLANGUAGE" type="VARCHAR(50)"/>
             <column name="SUBTITLELANGUAGE" type="VARCHAR(50)"/>
             <column name="AUTODOWNLOAD" type="BOOLEAN(1)"/>
-            <column name="BANNER" type="VARCHAR(2147483647)"/>
             <column name="ENDED" type="BOOLEAN(1)"/>
             <column name="FOLDER" type="VARCHAR(2147483647)"/>
             <column name="IMDBID" type="VARCHAR(2147483647)"/>
             <column name="NETWORK" type="VARCHAR(2147483647)"/>
-            <column name="POSTER" type="VARCHAR(2147483647)"/>
             <column name="USEABSOLUTENUMBERING" type="BOOLEAN(1)"/>
             <column name="AKA" type="VARCHAR(2147483647)" />
             <column name="QUALITIES" type="VARCHAR(2147483647)" />

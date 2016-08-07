@@ -1,7 +1,6 @@
 package dynamo.tvshows.jdbi;
 
 import java.nio.file.Path;
-import java.util.Date;
 import java.util.List;
 
 import org.skife.jdbi.v2.sqlobject.Bind;
@@ -11,7 +10,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
-import dynamo.core.VideoSource;
 import dynamo.jdbi.UnrecognizedFileMapper;
 import dynamo.jdbi.UnrecognizedFolderMapper;
 import dynamo.jdbi.core.BindEnum;
@@ -19,9 +17,6 @@ import dynamo.jdbi.core.BindPath;
 import dynamo.jdbi.core.BindStringList;
 import dynamo.jdbi.core.BindUpper;
 import dynamo.jdbi.core.DAO;
-import dynamo.model.DownloadableStatus;
-import dynamo.model.tvshows.TVShowSeason;
-import model.ManagedEpisode;
 import model.ManagedSeries;
 import model.UnrecognizedFile;
 import model.UnrecognizedFolder;
@@ -54,14 +49,12 @@ public interface TVShowDAO {
 	public ManagedSeries findTVShowByImdbId(@Bind("imdbId") String imdbId);
 
 	@SqlUpdate("MERGE INTO MANAGEDSERIES"
-			+ "(ID, NAME, IMDBID, BANNER, POSTER, NETWORK, FOLDER, ORIGINAL_LANGUAGE, METADATALANGUAGE, AUDIOLANGUAGE, SUBTITLELANGUAGE, ENDED, USEABSOLUTENUMBERING, AUTODOWNLOAD, BLACKLIST, AKA, QUALITIES) VALUES"
-			+ "(:id, :name, :imdbId, :banner, :poster, :network, :folder, :originalLanguage, :metaDataLanguage, :audioLanguage, :subtitleLanguage, :ended, :useAbsoluteNumbering, :autoDownload, :blackList, :aka, :qualities )")
+			+ "(ID, NAME, IMDBID, NETWORK, FOLDER, ORIGINAL_LANGUAGE, METADATALANGUAGE, AUDIOLANGUAGE, SUBTITLELANGUAGE, ENDED, USEABSOLUTENUMBERING, AUTODOWNLOAD, BLACKLIST, AKA, QUALITIES) VALUES"
+			+ "(:id, :name, :imdbId, :network, :folder, :originalLanguage, :metaDataLanguage, :audioLanguage, :subtitleLanguage, :ended, :useAbsoluteNumbering, :autoDownload, :blackList, :aka, :qualities )")
 	public void saveTVShow(
 			@Bind("id") String id,
 			@Bind("name") String name,
 			@Bind("imdbId") String imdbId,
-			@Bind("banner") String banner,
-			@Bind("poster") String poster,
 			@Bind("network") String network,
 			@BindPath("folder") Path folder,
 			@BindEnum("originalLanguage") Language originalLanguage,

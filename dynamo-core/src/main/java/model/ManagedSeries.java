@@ -21,8 +21,6 @@ public class ManagedSeries implements Serializable {
 
 	private String name;
 	private String imdbId;
-	private String banner;
-	private String poster;
 	private String network;
 	private Path folder;
 
@@ -39,15 +37,13 @@ public class ManagedSeries implements Serializable {
 	private List<String> wordsBlackList;
 	private List<VideoQuality> qualities;
 
-	public ManagedSeries(String id, String name, String imdbId, String banner, String poster, String network, Path folder,
+	public ManagedSeries(String id, String name, String imdbId, String network, Path folder,
 			Language originalLanguage, Language metaDataLanguage, Language audioLanguage, Language subtitleLanguage, boolean ended,
 			boolean useAbsoluteNumbering, boolean autoDownload, List<String> aka, List<VideoQuality> qualities, List<String> wordsBlackList) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.imdbId = imdbId;
-		this.banner = banner;
-		this.poster = poster;
 		this.network = network;
 		this.folder = folder;
 		this.originalLanguage = originalLanguage;
@@ -117,22 +113,6 @@ public class ManagedSeries implements Serializable {
 
 	public Path getFolder() {
 		return folder;
-	}
-
-	public String getBanner() {
-		return banner;
-	}
-
-	public void setBanner(String banner) {
-		this.banner = banner;
-	}
-
-	public String getPoster() {
-		return poster;
-	}
-
-	public void setPoster(String poster) {
-		this.poster = poster;
 	}
 
 	public boolean isAutoDownload() {

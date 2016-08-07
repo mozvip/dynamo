@@ -29,7 +29,6 @@ public class ManagedSeriesMapper implements ResultSetMapper<ManagedSeries> {
 	
 		ManagedSeries m = new ManagedSeries(r.getString("ID"),
 				r.getString("NAME"), r.getString("IMDBID"),
-				r.getString("BANNER"), r.getString("POSTER"),
 				r.getString("NETWORK"), Paths.get(r.getString("FOLDER")),
 				MapperUtils.getEnum(r, "ORIGINAL_LANGUAGE", Language.class),
 				MapperUtils.getEnum(r, "METADATALANGUAGE", Language.class),

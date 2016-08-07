@@ -11,7 +11,6 @@ import com.omertron.thetvdbapi.model.Series;
 import dynamo.backlog.tasks.core.AbstractNewFolderExecutor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.Language;
-import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.tvshows.TVShowManager;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
@@ -58,27 +57,20 @@ public class NewTVShowFolderExecutor extends AbstractNewFolderExecutor<NewTVShow
 			boolean mustRefresh = !managed.isEnded(); 
 			Date nextRefreshDate = null;
 
-			if (managed.getBanner() == null || LocalImageCache.getInstance().missFile( managed.getBanner() ) ) {
-				mustRefresh = true;
-			} else if ( managed.getPoster() == null || LocalImageCache.getInstance().missFile( managed.getPoster() ) ) {
-				mustRefresh = true;
-			} else {
-				
-				Calendar nextMonthCal = Calendar.getInstance();
-				nextMonthCal.add(Calendar.MONTH, 1);
-				nextRefreshDate = nextMonthCal.getTime();
+			Calendar nextMonthCal = Calendar.getInstance();
+			nextMonthCal.add(Calendar.MONTH, 1);
+			nextRefreshDate = nextMonthCal.getTime();
 
-				List<ManagedEpisode> futureEpisodes = managedEpisodeDAO.findEpisodesForTVShowAndStatus( managed.getId(), DownloadableStatus.FUTURE );
-				if (futureEpisodes != null && futureEpisodes.size() > 0) {
-					mustRefresh = true;
-					nextRefreshDate = null;
-					for (ManagedEpisode managedEpisode : futureEpisodes) {
-						if (managedEpisode.getFirstAired() == null) {
-							nextRefreshDate = null;
-							break;
-						} else if ( nextRefreshDate == null || managedEpisode.getFirstAired().before( nextRefreshDate )) {
-							nextRefreshDate = managedEpisode.getFirstAired();
-						}
+			List<ManagedEpisode> futureEpisodes = managedEpisodeDAO.findEpisodesForTVShowAndStatus( managed.getId(), DownloadableStatus.FUTURE );
+			if (futureEpisodes != null && futureEpisodes.size() > 0) {
+				mustRefresh = true;
+				nextRefreshDate = null;
+				for (ManagedEpisode managedEpisode : futureEpisodes) {
+					if (managedEpisode.getFirstAired() == null) {
+						nextRefreshDate = null;
+						break;
+					} else if ( nextRefreshDate == null || managedEpisode.getFirstAired().before( nextRefreshDate )) {
+						nextRefreshDate = managedEpisode.getFirstAired();
 					}
 				}
 			}

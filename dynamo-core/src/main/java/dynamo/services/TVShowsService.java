@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -12,11 +13,14 @@ import javax.ws.rs.core.MediaType;
 
 import com.omertron.thetvdbapi.TvDbException;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.FileUtils;
 import dynamo.core.manager.ErrorManager;
 import dynamo.model.tvshows.TVShowManager;
 import model.ManagedEpisode;
 import model.ManagedSeries;
+import model.UnrecognizedFolder;
+import model.backlog.ScanTVShowTask;
 
 @Path("tvshows")
 @Produces(MediaType.APPLICATION_JSON)
@@ -33,6 +37,19 @@ public class TVShowsService {
 		return TVShowManager.getInstance().getManagedSeries( id );
 	}
 	
+	@GET
+	@Path("/unrecognized")
+	public List<UnrecognizedFolder> getUnrecognizedFolders() {
+		return TVShowManager.getInstance().getUnrecognizedFolders();
+	}
+	
+	
+	@POST
+	@Path("/rescan/{id}")
+	public void rescan(@PathParam("id") String id) {
+		BackLogProcessor.getInstance().runNow( new ScanTVShowTask( TVShowManager.getInstance().getManagedSeries( id ) ), true );
+	}
+
 	@GET
 	@Path("/{id}/episodes")
 	public List<ManagedEpisode> getEpisodes(@PathParam("id") String id) {

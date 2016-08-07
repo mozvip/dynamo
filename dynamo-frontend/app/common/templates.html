@@ -7,7 +7,7 @@
         <tr ng-repeat="item in files">
           <td>
             <div class="button-list">
-              <button class="btn btn-sm btn-danger" confirmed-click="delete(item)" ng-confirm-click="Are you sure you want to delete {{item.filePath}} ?">
+              <button class="btn btn-sm btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{item.filePath}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No,  cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="delete(item)">
                 <span class="glyphicon glyphicon-trash" />
               </button>
               <button class="btn btn-sm btn-default">

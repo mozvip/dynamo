@@ -163,6 +163,8 @@ public class VideoNameParser {
 					".*(\\d{1,2})X(\\d{2})(.*)",
 					".*\\.(\\d{2})(\\d{2})(.*)",
 					".*[^x](\\d{1})(\\d{2})[^\\dp](.*)",
+					".*Ep(\\d{2})(.*)",
+					".*Ep\\.(\\d{2})(.*)"
 			};
 			
 		}
@@ -180,8 +182,10 @@ public class VideoNameParser {
 					if (groups.length > 3) {
 						// multiple episodes
 						return new TVShowEpisodeInfo( series.getName(), Integer.parseInt( groups[0]), Integer.parseInt( groups[1]), Integer.parseInt( groups[2]), groups[3] );
-					} else {
+					} else if (groups.length > 2) {
 						return new TVShowEpisodeInfo( series.getName(), Integer.parseInt( groups[0]), Integer.parseInt( groups[1]), groups[2] );
+					} else {
+						return new TVShowEpisodeInfo( series.getName(), 1, Integer.parseInt( groups[0]), groups[1] );
 					}
 				}
 			}

@@ -6,33 +6,36 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-4">
-                <img class="img-responsive" alt="{{tvshow.name}}" src="http://localhost:8081/data/{{tvshow.poster}}" />
+                <img class="img-responsive" alt="{{tvshow.name}}" src="http://localhost:8081/data/posters/{{tvshow.id}}.jpg" />
             </div>
             <div class="col-md-8">
                 <form>
                     <div class="form-group">
-                        <span class="control-label">Folder</span>
-                        <p>
+                        <label class="control-label">Folder</label >
+                        <p class="form-control-static" style="font-family: 'Lucida Console'">
                             {{tvshow.folder}}
                         </p>
                     </div>
                     <div class="form-group">
-                        <span class="control-label">Quality Profile</span>
+                        <label class="control-label">Quality Profile</label>
                         <select class="form-control" />
                     </div>                        
                     <div class="form-group">
-                        <span class="control-label">Audio Language</span>
-                        <select ng-model="tvshow.audioLanguage" class="form-control" ng-options="item.key as item.value for item in languages"/>
+                        <label class="control-label">Audio Language</label>
+                        <select ng-model="tvshow.audioLanguage" class="form-control" ng-options="item.key as item.value for item in languages | orderBy: 'value'"/>
                     </div>                        
                     <div class="form-group">
-                        <span class="control-label">Subtitles Language</span>
-                        <select ng-model="tvshow.subtitlesLanguage" class="form-control" ng-options="item.key as item.value for item in languages"/>
+                        <label class="control-label">Subtitles Language</label>
+                        <select ng-model="tvshow.subtitlesLanguage" class="form-control" ng-options="item.key as item.value for item in languages | orderBy: 'value'"/>
                     </div>                        
                     <div class="form-group">
                     </div>                        
                     <div class="form-group">
                     </div>                        
                 </form>
+                <button class="btn btn-block btn-default"><span class="glyphicon glyphicon-exclamation-sign" /> Wrong Show</button>
+                <button class="btn btn-block btn-default" ng-click="rescan(tvshow)"><span class="glyphicon glyphicon-refresh" /> Rescan Files</button>
+                <button class="btn btn-block btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{tvshow.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="deleteTVShow(tvshow)"><span class="glyphicon glyphicon-trash" /> Delete {{tvshow.name}}</button>
             </div>
         </div>
 
@@ -44,7 +47,8 @@
                     <td>
                         <div ng-show="episode.status != 'FUTURE'">
                             <button ng-show="episode.status != 'DOWNLOADED' && episode.status != 'WANTED'" class="btn btn-sm btn-default" ng-click="want(episode)"><span class="glyphicon glyphicon-heart" /></button>
-                            <button ng-show="episode.status == 'DOWNLOADED'" class="btn btn-sm btn-default" ng-click="openFileList(episode)"><span class="glyphicon glyphicon-list" /></button>
+                            <button title="Redownload" ng-show="episode.status == 'DOWNLOADED' || episode.status == 'SNATCHED'" class="btn btn-sm btn-default" ng-click="redownload(episode)"><span class="glyphicon glyphicon-refresh" /></button>
+                            <button title="File List" ng-show="episode.status == 'DOWNLOADED'" class="btn btn-sm btn-default" ng-click="openFileList(episode)"><span class="glyphicon glyphicon-list" /></button>
                         </div>
                     </td>
                     <td>{{episode.name}}</td>

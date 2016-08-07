@@ -252,7 +252,7 @@ public class TVShowManager implements Reconfigurable {
 			Language originalLanguage = Language.getByShortName( series.getLanguage() );
 
 			managed = new ManagedSeries(
-					series.getId(), series.getSeriesName(), series.getImdbId(), banner, poster, series.getNetwork(), folder, originalLanguage, metaLang, audioLang, subsLang, ended, false, false, aka, tvShowQualities, null );
+					series.getId(), series.getSeriesName(), series.getImdbId(), series.getNetwork(), folder, originalLanguage, metaLang, audioLang, subsLang, ended, false, false, aka, tvShowQualities, null );
 		}
 
 		saveSeries( managed );
@@ -334,7 +334,7 @@ public class TVShowManager implements Reconfigurable {
 
 	public void saveTVShow(ManagedSeries series) {
 		tvShowDAO.saveTVShow(
-				series.getId(), series.getName(), series.getImdbId(), series.getBanner(), series.getPoster(), series.getNetwork(), series.getFolder(),
+				series.getId(), series.getName(), series.getImdbId(), series.getNetwork(), series.getFolder(),
 				series.getOriginalLanguage(), series.getMetaDataLanguage(), series.getAudioLanguage(), series.getSubtitleLanguage(), series.isEnded(), series.isUseAbsoluteNumbering(), series.isAutoDownload(),
 				series.getWordsBlackList(), series.getAka(), series.getQualities() );
 	}
