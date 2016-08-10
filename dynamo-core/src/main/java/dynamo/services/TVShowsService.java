@@ -19,6 +19,7 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.model.tvshows.TVShowManager;
 import model.ManagedEpisode;
 import model.ManagedSeries;
+import model.UnrecognizedFile;
 import model.UnrecognizedFolder;
 import model.backlog.ScanTVShowTask;
 
@@ -43,7 +44,12 @@ public class TVShowsService {
 		return TVShowManager.getInstance().getUnrecognizedFolders();
 	}
 	
-	
+	@GET
+	@Path("/{id}/unrecognized")
+	public List<UnrecognizedFile> getUnrecognizedFiles(@PathParam("id") String id) {
+		return TVShowManager.getInstance().getUnrecognizedFiles(id);
+	}
+
 	@POST
 	@Path("/rescan/{id}")
 	public void rescan(@PathParam("id") String id) {

@@ -45,6 +45,9 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
       }],
       languages: ['languageService', function(  languageService  ) {
         return languageService.find();
+      }],
+      unrecognizedFiles: ['tvShowsService', '$route', function(  tvShowsService, $route  ) {
+        return tvShowsService.getUnrecognizedFiles( $route.current.params.tvShowId );
       }]      
     }
   });
@@ -88,14 +91,18 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   tvShowsService.getUnrecognized = function() {
     return BackendService.get('tvshows/unrecognized');
   }
+  tvShowsService.getUnrecognizedFiles = function( tvshowId ) {
+    return BackendService.get('tvshows/' + tvshowId + '/unrecognized');
+  }
   return tvShowsService;
 }])
 
-.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'languages', 'episodes', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter, languages, episodes ) {
+.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'languages', 'episodes', 'unrecognizedFiles', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter, languages, episodes, unrecognizedFiles ) {
 
   $scope.tvshow = tvshow.data;
   $scope.episodes = episodes.data;
   $scope.languages = languages.data;
+  $scope.unrecognizedFiles = unrecognizedFiles.data;
 
   $scope.want = function( episode ) {
     downloadableService.want( episode.id ).then( function( response ) {
