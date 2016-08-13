@@ -61,6 +61,8 @@ public class CoverImageFinder {
 			Path p;
 			try {
 				p = HTTPClient.getInstance().download( url, null, tempFolder, HTTPClient.REFRESH_ONE_MONTH );
+			} catch (org.apache.http.conn.HttpHostConnectException e) {
+				continue;
 			} catch (IOException e) {
 				ErrorManager.getInstance().reportThrowable(String.format("Error downloading URL %s", url ), e);
 				continue;

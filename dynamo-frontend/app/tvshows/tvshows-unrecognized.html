@@ -1,9 +1,13 @@
-<table class="table">
+<h4>Unrecognized TV Show Folders</h4>
+<table class="table table-striped">
   <tr ng-repeat="folder in unrecognizeds">
     <td>
-      <span style="font-family: 'Lucida Console'">{{folder.path}}</span>
+      <div class="btn-group">
+        <button class="btn btn-default"><span class="glyphicon glyphicon-search" /></button>
+      </div>
     </td>
     <td>
+      <span style="font-family: 'Lucida Console'">{{folder.path}}</span>
     </td>
   </tr>
 </table>

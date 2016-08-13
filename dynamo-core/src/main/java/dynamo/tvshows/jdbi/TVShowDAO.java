@@ -47,6 +47,9 @@ public interface TVShowDAO {
 	@SqlQuery("SELECT * FROM MANAGEDSERIES WHERE IMDBID = :imdbId")
 	@Mapper(ManagedSeriesMapper.class)
 	public ManagedSeries findTVShowByImdbId(@Bind("imdbId") String imdbId);
+	
+	@SqlUpdate("DELETE FROM MANAGEDSERIES WHERE ID=:seriesId")
+	public void deleteTVShow(@Bind("seriesId") String seriesId);
 
 	@SqlUpdate("MERGE INTO MANAGEDSERIES"
 			+ "(ID, NAME, IMDBID, NETWORK, FOLDER, ORIGINAL_LANGUAGE, METADATALANGUAGE, AUDIOLANGUAGE, SUBTITLELANGUAGE, ENDED, USEABSOLUTENUMBERING, AUTODOWNLOAD, BLACKLIST, AKA, QUALITIES) VALUES"
@@ -67,35 +70,5 @@ public interface TVShowDAO {
 			@BindStringList("blackList") List<String> blackList,
 			@BindStringList("aka") List<String> aka,
 			@BindStringList("qualities") List<VideoQuality> qualities);
-
-	@SqlQuery("SELECT * FROM UNRECOGNIZEDFOLDER ORDER BY PATH")
-	@Mapper(UnrecognizedFolderMapper.class)
-	public List<UnrecognizedFolder> getUnrecognizedFolders();
-
-	@SqlUpdate("DELETE FROM UNRECOGNIZEDFILE WHERE PATH=:path")
-	public void deleteUnrecognizedFile(@BindPath("path") Path path);
-
-	@SqlUpdate("DELETE FROM UNRECOGNIZEDFOLDER WHERE PATH=:path")
-	public void deleteUnrecognizedFolder(@BindPath("path") Path path);
-
-	@SqlUpdate("DELETE FROM UNRECOGNIZEDFILE WHERE SERIES_ID=:seriesId")
-	public void deleteUnrecognizedFiles(@Bind("seriesId") String seriesId);
-
-	@SqlUpdate("DELETE FROM MANAGEDSERIES WHERE ID=:seriesId")
-	public void deleteTVShow(@Bind("seriesId") String seriesId);
-
-	@SqlQuery("SELECT * FROM UNRECOGNIZEDFOLDER WHERE PATH=:path")
-	@Mapper(UnrecognizedFolderMapper.class)
-	public UnrecognizedFolder findUnrecognizedFolder(@BindPath("path") Path p);
-
-	@SqlUpdate("INSERT INTO UNRECOGNIZEDFOLDER(PATH) VALUES(:path)")
-	public void createUnrecognizedFolder(@BindPath("path") Path path);
-
-	@SqlUpdate("INSERT INTO UNRECOGNIZEDFILE(PATH, SERIES_ID) VALUES(:path, :seriesId)")
-	public void createUnrecognizedFile(@BindPath("path") Path path, @Bind("seriesId") String seriesId);
-
-	@SqlQuery("SELECT * FROM UNRECOGNIZEDFILE WHERE SERIES_ID=:seriesId")
-	@Mapper(UnrecognizedFileMapper.class)
-	public List<UnrecognizedFile> getUnrecognizedFiles(@Bind("seriesId") String seriesId);
 
 }

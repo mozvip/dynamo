@@ -14,7 +14,7 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
   });
 }])
 
-.controller('MagazinesCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'languages', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', function( $scope, $rootScope, $routeParams, downloadableService, languages, fileListService, searchResultsService, $uibModal, filterFilter ) {
+.controller('MagazinesCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'languages', 'fileListService', 'searchResultsService', '$filter', '$uibModal', 'filterFilter', function( $scope, $rootScope, $routeParams, downloadableService, languages, fileListService, searchResultsService, $filter, $uibModal, filterFilter ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
@@ -24,7 +24,7 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
 
   $scope.pageContents = [];
   downloadableService.find( 'MAGAZINEISSUE', $routeParams.status ).then( function( response ) {
-    $scope.allItems = response.data;
+    $scope.allItems = $filter('orderBy')(response.data, '-creationDate');
     $scope.pageContents = $scope.allItems.slice( 0, 24 );
     $scope.filteredList = $scope.allItems.slice( 0 );
   });

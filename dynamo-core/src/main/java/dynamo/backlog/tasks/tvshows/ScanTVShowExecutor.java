@@ -27,6 +27,7 @@ import dynamo.parsers.VideoNameParser;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowDAO;
 import dynamo.tvshows.jdbi.TVShowSeasonDAO;
+import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import dynamo.video.VideoManager;
 import model.ManagedEpisode;
 import model.ManagedSeries;
@@ -38,13 +39,15 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 	private TVShowSeasonDAO tvShowSeasonDAO;
 	private DownloadableUtilsDAO downloadableDAO;
 	private ManagedEpisodeDAO managedEpisodeDAO;
+	private UnrecognizedDAO unrecognizedDAO;
 
-	public ScanTVShowExecutor(ScanTVShowTask item, TVShowDAO tvShowDAO, TVShowSeasonDAO tvShowSeasonDAO, DownloadableUtilsDAO downloadableDAO, ManagedEpisodeDAO managedEpisodeDAO) {
+	public ScanTVShowExecutor(ScanTVShowTask item, TVShowDAO tvShowDAO, TVShowSeasonDAO tvShowSeasonDAO, DownloadableUtilsDAO downloadableDAO, ManagedEpisodeDAO managedEpisodeDAO, UnrecognizedDAO unrecognizedDAO) {
 		super(item);
 		this.tvShowDAO = tvShowDAO;
 		this.tvShowSeasonDAO = tvShowSeasonDAO;
 		this.downloadableDAO = downloadableDAO;
 		this.managedEpisodeDAO = managedEpisodeDAO;
+		this.unrecognizedDAO = unrecognizedDAO;
 	}
 
 	private void parseFolder( ManagedSeries series, List<TVShowSeason> seasons, List<ManagedEpisode> existingEpisodes, Path folder ) throws IOException, InterruptedException {
@@ -97,8 +100,7 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 						if (!managedEpisode.isDownloaded()) {
 							// cancel search for this episode
 							BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("this.episode.id == %d", managedEpisode.getId()) );
-							downloadableDAO.updateStatus( managedEpisode.getId(), DownloadableStatus.DOWNLOADED );
-							DownloadableManager.getInstance().addFile( managedEpisode.getId(), p, 0);
+							DownloadableManager.getInstance().addFile( managedEpisode, p );
 						}
 
 						if ( episodeInfo != null ) {
@@ -129,7 +131,7 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 				}
 				
 				if (!episodeInfoFound) {
-					tvShowDAO.createUnrecognizedFile(p, task.getSeries().getId() );
+					unrecognizedDAO.createUnrecognizedFile(p, task.getSeries().getId() );
 				}
 			}
 		}
@@ -139,7 +141,7 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 	public void execute() throws IOException, InterruptedException {
 
 		// cleanup
-		tvShowDAO.deleteUnrecognizedFiles( task.getSeries().getId() );
+		unrecognizedDAO.deleteUnrecognizedFiles( task.getSeries().getId() );
 
 		List<ManagedEpisode> managedEpisodes = managedEpisodeDAO.findEpisodesForTVShow( task.getSeries().getId() );
 		List<TVShowSeason> seasons = tvShowSeasonDAO.findSeasons( task.getSeries().getId() );

@@ -20,8 +20,8 @@ import dynamo.core.Language;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.DownloadableFile;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
@@ -172,7 +172,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 				}
 			}
 		}
-		DownloadableManager.getInstance().addFile(movie.getId(), movieFile, 0);
+		DownloadableManager.getInstance().addFile( movie, movieFile );
 
 		if (movie.getRating() <= 0 || movie.getYear() <=0 && movie.getImdbID() != null ) {
 			IMDBTitle imdbInfo = IMDBWatchListSuggester.extractIMDBTitle( movie.getImdbID() );

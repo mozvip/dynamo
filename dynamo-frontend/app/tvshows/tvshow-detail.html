@@ -1,14 +1,11 @@
 <div class="panel panel-default">
-    <div class="panel-heading">
-        <h4>{{tvshow.name}}</h4>
-    </div>
 
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <img class="img-responsive" alt="{{tvshow.name}}" src="http://localhost:8081/data/posters/{{tvshow.id}}.jpg" />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <form>
                     <div class="form-group">
                         <label class="control-label">Folder</label >
@@ -23,20 +20,24 @@
                     </div>
                     <div class="checkbox" ng-show="{{!tvshow.ended}}">
                         <label>
-                            <input type="checkbox" ng-model="tvshow.autoDownload"> Automatically download new episodes
+                            <input type="checkbox" ng-model="tvshow.autoDownload" ng-change="saveTVShow()"> Automatically download new episodes
                         </label>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Quality Profile</label>
-                        <select class="form-control" />
+                        <select class="form-control" ng-model="tvshow.qualityProfile" ng-change="saveTVShow()" />
+                    </div>                        
+                    <div class="form-group">
+                        <label class="control-label">Metadata Language</label>
+                        <select ng-model="tvshow.metaDataLanguage" ng-change="saveTVShow()" class="form-control" ng-options="item.key as item.value for item in languages | orderBy: 'value'"/>
                     </div>                        
                     <div class="form-group">
                         <label class="control-label">Audio Language</label>
-                        <select ng-model="tvshow.audioLanguage" class="form-control" ng-options="item.key as item.value for item in languages | orderBy: 'value'"/>
+                        <select ng-model="tvshow.audioLanguage" ng-change="saveTVShow()" class="form-control" ng-options="item.key as item.value for item in languages | orderBy: 'value'"/>
                     </div>                        
                     <div class="form-group">
                         <label class="control-label">Subtitles Language</label>
-                        <select ng-model="tvshow.subtitlesLanguage" class="form-control" ng-options="item.key as item.value for item in languages | orderBy: 'value'"/>
+                        <select ng-model="tvshow.subtitlesLanguage" ng-change="saveTVShow()" class="form-control" ng-options="item.key as item.value for item in languages | orderBy: 'value'"/>
                     </div>                        
                     <div class="form-group">
                     </div>                        
@@ -53,7 +54,18 @@
             <table class="table">
                 <tr class="danger" ng-repeat="file in unrecognizedFiles | orderBy: 'path'">
                     <td>
-                        <span style="font-family: 'Lucida Console'">{{file.path}}</span>
+                        <div class="btn-group" role="group">
+                        <button class="btn btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{file.path | limitTo:255:tvshow.folder.length+1}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No,  cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="delete(item)">
+                            <span class="glyphicon glyphicon-trash" />
+                        </button>
+                        <button class="btn btn-default">
+                            <span class="glyphicon glyphicon-download" />
+                        </button>
+                        </div>                        
+                    </td>
+                    <td>
+                        <span style="font-family: 'Lucida Console'">{{file.path | limitTo:255:tvshow.folder.length+1}}</span>
+                        <select ng-change="assignEpisode(file)" class="form-control" ng-model="selectedEpisode[file.id]" ng-options="episode.episodeNumber + ' - ' + episode.name group by episode.seasonNumber for episode in availableEpisodes"/>
                     </td>
                 </tr>
             </table>
@@ -65,13 +77,15 @@
                 <tr ng-repeat="episode in seasonEpisodes | orderBy:'episodeNumber'" ng-class="{success: episode.status=='DOWNLOADED', danger:episode.status=='WANTED', info:episode.status=='FUTURE'}">
                     <td>{{episode.episodeNumber}}</td>
                     <td>
-                        <div ng-show="episode.status != 'FUTURE'">
+                        <div ng-show="episode.status != 'FUTURE'" class="btn-group" role="group">
                             <button ng-show="episode.status != 'DOWNLOADED' && episode.status != 'WANTED'" class="btn btn-sm btn-default" ng-click="want(episode)"><span class="glyphicon glyphicon-heart" /></button>
-                            <button title="Redownload" ng-show="episode.status == 'DOWNLOADED' || episode.status == 'SNATCHED'" class="btn btn-sm btn-default" ng-click="redownload(episode)"><span class="glyphicon glyphicon-refresh" /></button>
                             <button title="File List" ng-show="episode.status == 'DOWNLOADED'" class="btn btn-sm btn-default" ng-click="openFileList(episode)"><span class="glyphicon glyphicon-list" /></button>
+                            <button title="Redownload" ng-show="episode.status == 'DOWNLOADED' || episode.status == 'SNATCHED'" class="btn btn-sm btn-warning" sweetalert sweet-options='{"title":"Confirm Redownload","text":"Are you sure you want to redownload {{episode.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, redownload!","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="redownload(episode)"><span class="glyphicon glyphicon-refresh" /></button>
+                            <button title="Delete" ng-show="episode.status == 'DOWNLOADED'" class="btn btn-sm btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{episode.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="delete(episode)"><span class="glyphicon glyphicon-trash" /></button>
                         </div>
                     </td>
                     <td>{{episode.name}}</td>
+                    <td><span style="font-family: 'Lucida Console'">{{episode.label}}</span></td>
                     <td>{{episode.firstAired|date}}</td>
                     <td>
                         <span class="glyphicon glyphicon-sd-video" ng-show="episode.quality == 'SD'" />

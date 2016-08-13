@@ -34,6 +34,10 @@ public interface LogDAO {
 	@Mapper(LogItemMapper.class)
 	public List<LogItem> findLogItems(@Bind("concatenatedSeverities") String concatenatedSeverities);
 
+	@SqlQuery("SELECT * FROM LOGITEM ORDER BY DATE DESC")
+	@Mapper(LogItemMapper.class)
+	public List<LogItem> findLogItems();
+
 	@SqlQuery("SELECT * FROM LOGSTACKTRACEELEMENT WHERE LOGITEM_ID = :id")
 	@Mapper(StackTraceElementMapper.class)
 	public List<StackTraceElement> getStackTrace(@Bind("id") long id);

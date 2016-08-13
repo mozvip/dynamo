@@ -262,6 +262,9 @@ public class MusicManager implements Reconfigurable {
 	
 	public void suggest( String artistName, String albumName, String genre, String imageURL, String referer, String suggestionURL) throws ExecutionException, IOException {
 		MusicAlbum album = getAlbum(artistName, albumName, genre, DownloadableStatus.SUGGESTED, null, musicQuality, true);
+		if (imageURL != null) {
+			DownloadableManager.downloadImage(album, imageURL, referer);
+		}
 		if (suggestionURL != null) {
 			DownloadableManager.getInstance().saveSuggestionURL(album.getId(), suggestionURL);
 		}

@@ -125,7 +125,7 @@ public class ScanGamesFolderExecutor extends AbstractNewFolderExecutor<ScanGames
 					game = GamesManager.getInstance().createGame(title, platform.getLabel(), currentGame.getId(), DownloadableStatus.DOWNLOADED);
 					games.put( currentGame.getId(), game );
 				}
-				DownloadableManager.getInstance().addFile(game.getId(), p, Files.size(p), fileIndex);
+				DownloadableManager.getInstance().addFile(game, p, fileIndex);
 			} catch (IOException e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}

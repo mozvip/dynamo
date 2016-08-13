@@ -23,7 +23,6 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.tvshows.TVShowManager;
 import dynamo.model.tvshows.TVShowSeason;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
-import dynamo.tvshows.jdbi.TVShowDAO;
 import dynamo.tvshows.jdbi.TVShowSeasonDAO;
 import model.ManagedEpisode;
 import model.ManagedSeries;
@@ -34,13 +33,11 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 	
 	private	Date nextRefreshDate = null;
 	
-	private TVShowDAO tvShowDAO;
 	private TVShowSeasonDAO tvShowSeasonDAO;
 	private ManagedEpisodeDAO managedEpisodeDAO;
 
-	public RefreshTVShowFromTVDBExecutor( RefreshTVShowTask item, TVShowDAO tvShowDAO, ManagedEpisodeDAO managedEpisodeDAO, TVShowSeasonDAO tvShowSeasonDAO ) {
+	public RefreshTVShowFromTVDBExecutor( RefreshTVShowTask item, ManagedEpisodeDAO managedEpisodeDAO, TVShowSeasonDAO tvShowSeasonDAO ) {
 		super( item );
-		this.tvShowDAO = tvShowDAO;
 		this.tvShowSeasonDAO = tvShowSeasonDAO;
 		this.managedEpisodeDAO = managedEpisodeDAO;
 	}

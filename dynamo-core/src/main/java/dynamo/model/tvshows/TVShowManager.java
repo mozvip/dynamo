@@ -33,14 +33,13 @@ import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.TVShowSeasonProvider;
 import dynamo.httpclient.YAMJHttpClient;
 import dynamo.manager.DownloadableManager;
-import dynamo.manager.LocalImageCache;
 import dynamo.model.Downloadable;
-import dynamo.model.DownloadableStatus;
 import dynamo.model.Video;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowDAO;
 import dynamo.tvshows.jdbi.TVShowSeasonDAO;
+import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import hclient.HTTPClient;
 import hclient.RegExpMatcher;
 import model.ManagedEpisode;
@@ -93,6 +92,7 @@ public class TVShowManager implements Reconfigurable {
 	private ManagedEpisodeDAO managedEpisodeDAO = DAOManager.getInstance().getDAO( ManagedEpisodeDAO.class );
 	private TVShowSeasonDAO tvShowSeasonDAO = DAOManager.getInstance().getDAO( TVShowSeasonDAO.class );
 	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
+	private UnrecognizedDAO unrecognizedDAO = DAOManager.getInstance().getDAO( UnrecognizedDAO.class );	
 	
 	private TheTVDBApi api;
 
@@ -236,9 +236,6 @@ public class TVShowManager implements Reconfigurable {
 		ManagedSeries managed = TVShowManager.getInstance().getManagedSeries( series.getId() );
 		if (managed == null) {
 			
-			String banner = LocalImageCache.getInstance().download( "banners", series.getSeriesName(), series.getBanner(), null );
-			String poster = series.getPoster() != null ? LocalImageCache.getInstance().download( "posters", series.getSeriesName(), series.getPoster(), null ) : null;
-			
 			boolean ended = StringUtils.equalsIgnoreCase( series.getStatus(), "Ended" );
 			
 			List<String> aka = new ArrayList<>();
@@ -253,6 +250,8 @@ public class TVShowManager implements Reconfigurable {
 
 			managed = new ManagedSeries(
 					series.getId(), series.getSeriesName(), series.getImdbId(), series.getNetwork(), folder, originalLanguage, metaLang, audioLang, subsLang, ended, false, false, aka, tvShowQualities, null );
+		} else {
+			managed.setFolder( folder );
 		}
 
 		saveSeries( managed );
@@ -265,7 +264,7 @@ public class TVShowManager implements Reconfigurable {
 	}
 
 	public List<UnrecognizedFolder> getUnrecognizedFolders() {
-		return tvShowDAO.getUnrecognizedFolders();
+		return unrecognizedDAO.getUnrecognizedFolders();
 	}
 
 	public ManagedSeries getManagedSeries(String id) {
@@ -278,7 +277,7 @@ public class TVShowManager implements Reconfigurable {
 			BackLogProcessor.getInstance().unschedule( String.format( "this.episode.series_id == %s", series.getId() ));
 			BackLogProcessor.getInstance().unschedule( String.format( "this.series_id == %s", series.getId() ));
 
-			tvShowDAO.deleteUnrecognizedFiles( series.getId() );
+			unrecognizedDAO.deleteUnrecognizedFiles( series.getId() );
 			tvShowDAO.deleteTVShow( series.getId() );
 		}
 
@@ -337,14 +336,6 @@ public class TVShowManager implements Reconfigurable {
 				series.getId(), series.getName(), series.getImdbId(), series.getNetwork(), series.getFolder(),
 				series.getOriginalLanguage(), series.getMetaDataLanguage(), series.getAudioLanguage(), series.getSubtitleLanguage(), series.isEnded(), series.isUseAbsoluteNumbering(), series.isAutoDownload(),
 				series.getWordsBlackList(), series.getAka(), series.getQualities() );
-	}
-
-	public void assignEpisodes( Path path, List<ManagedEpisode> episodes ) {
-		for (ManagedEpisode managedEpisode : episodes) {
-			DownloadableManager.getInstance().addFile(managedEpisode.getId(), path, 0);
-			downloadableDAO.updateStatus( managedEpisode.getId(), DownloadableStatus.DOWNLOADED );
-		}
-		deleteUnrecognizedFile( path );
 	}
 	
 	public void ignoreOrDeleteEpisode( ManagedEpisode episode ) {
@@ -418,11 +409,7 @@ public class TVShowManager implements Reconfigurable {
 	}
 
 	public void deleteUnrecognizedFolder( Path folder ) {
-		tvShowDAO.deleteUnrecognizedFolder( folder );
-	}
-
-	public void deleteUnrecognizedFile(Path file) {
-		tvShowDAO.deleteUnrecognizedFile( file );
+		unrecognizedDAO.deleteUnrecognizedFolder( folder );
 	}
 
 	public void saveEpisode(ManagedEpisode episode) {
@@ -431,7 +418,7 @@ public class TVShowManager implements Reconfigurable {
 	}
 
 	public List<UnrecognizedFile> getUnrecognizedFiles( String seriesId ) {
-		return tvShowDAO.getUnrecognizedFiles( seriesId );
+		return unrecognizedDAO.getUnrecognizedFiles( seriesId );
 	}
 
 	public List<TVShowSeason> getSeasons(String seriesId) {

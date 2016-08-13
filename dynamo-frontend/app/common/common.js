@@ -126,7 +126,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   return languageService;
 }])
 
-.factory('downloadableService', ['backendHostAndPort', '$http', function(backendHostAndPort, $http){
+.factory('downloadableService', ['BackendService', 'backendHostAndPort', '$http', function(BackendService, backendHostAndPort, $http){
   var downloadableService = {};
   downloadableService.find = function( type, status ) {
     return $http.get('http://' + backendHostAndPort + '/services/downloadable?type=' + type + '&status=' + status);
@@ -135,16 +135,19 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     return $http.get('http://' + backendHostAndPort + '/services/downloadable/counts');
   }
   downloadableService.want = function( downloadableId ) {
-    return $http.post('http://' + backendHostAndPort + '/services/downloadable/want/' + downloadableId);
+    return BackendService.post('downloadable/want/' + downloadableId);
+  }
+  downloadableService.assign = function( fileId, downloadableId ) {
+    return BackendService.post('downloadable/assign/' + fileId + '/' + downloadableId);
   }
   downloadableService.redownload = function( downloadableId ) {
-    return $http.post('http://' + backendHostAndPort + '/services/downloadable/redownload/' + downloadableId);
+    return BackendService.post('downloadable/redownload/' + downloadableId);
   }
   downloadableService.delete = function( downloadableId ) {
     return $http.delete('http://' + backendHostAndPort + '/services/downloadable/' + downloadableId);
   }
   downloadableService.updateImage = function( downloadableId ) {
-    return $http.post('http://' + backendHostAndPort + '/services/downloadable/updateImage?id=' + downloadableId);
+    return BackendService.post('downloadable/updateImage?id=' + downloadableId);
   }
 
   return downloadableService;

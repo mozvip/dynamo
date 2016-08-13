@@ -29,7 +29,7 @@ public class CopyFileExecutor extends TaskExecutor<CopyFileTask> {
 			Files.createDirectories( destination.getParent() );
 			Files.copy( source, destination, StandardCopyOption.REPLACE_EXISTING );
 		}
-		DownloadableManager.getInstance().newFile( task, task.getDownloadable(), destination );
+		DownloadableManager.getInstance().addFile( task.getDownloadable(), destination );
 	}
 	
 	@Override

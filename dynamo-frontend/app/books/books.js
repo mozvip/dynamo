@@ -34,6 +34,9 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
     $scope.allItems = filterFilter($scope.allItems, {'id': '!' + downloadable.id });
     $scope.filteredList = filterFilter($scope.filteredList, {'id': '!' + downloadable.id });
     $scope.pageChanged();
+
+    $rootScope.booksSuggestionCount = $scope.allItems.length;
+    $rootScope.booksWantedCount ++;
   }
 
   $scope.redownload = function( downloadable ) {

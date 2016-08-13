@@ -22,6 +22,9 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
         return languageService.find();
       }]      
     }
+  }).when('/tvshows-wanted', {
+    templateUrl: 'tvshows/episodes.html',
+    controller: 'EpisodesCtrl'
   }).when('/tvshows-unrecognized', {
     templateUrl: 'tvshows/tvshows-unrecognized.html',
     controller: 'TVShowsUnrecognizedCtrl',
@@ -103,6 +106,30 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   $scope.episodes = episodes.data;
   $scope.languages = languages.data;
   $scope.unrecognizedFiles = unrecognizedFiles.data;
+
+  $scope.availableEpisodes = [];
+
+  $scope.episodes.forEach(function(episode) {
+    if (episode.status == 'IGNORED') {
+      $scope.availableEpisodes.push( episode );
+    }    
+  }, this);
+
+  $scope.saveTVShow = function() {
+    alert('TODO : save TV Show');
+  }
+
+  $scope.selectedEpisode = {};
+
+  $scope.assignEpisode = function( file ) {
+    downloadableService.assign( file.id, $scope.selectedEpisode[file.id].id ).then(
+      function( response ) {
+        $scope.selectedEpisode[file.id].status = 'DOWNLOADED';
+        $scope.availableEpisodes = filterFilter($scope.availableEpisodes, {'id': '!' + $scope.selectedEpisode[file.id].id });
+        $scope.unrecognizedFiles = filterFilter($scope.unrecognizedFiles, {'id': '!' + file.id });
+      }
+    );
+  }
 
   $scope.want = function( episode ) {
     downloadableService.want( episode.id ).then( function( response ) {

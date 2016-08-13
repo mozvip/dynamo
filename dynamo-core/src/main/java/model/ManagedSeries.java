@@ -114,6 +114,10 @@ public class ManagedSeries implements Serializable {
 	public Path getFolder() {
 		return folder;
 	}
+	
+	public void setFolder(Path folder) {
+		this.folder = folder;
+	}
 
 	public boolean isAutoDownload() {
 		return autoDownload;

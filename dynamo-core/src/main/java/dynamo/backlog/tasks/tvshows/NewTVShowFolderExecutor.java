@@ -15,6 +15,7 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.tvshows.TVShowManager;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowDAO;
+import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import model.ManagedEpisode;
 import model.ManagedSeries;
 import model.backlog.NewTVShowFolderTask;
@@ -24,11 +25,13 @@ public class NewTVShowFolderExecutor extends AbstractNewFolderExecutor<NewTVShow
 	
 	private TVShowDAO tvShowDAO;
 	private ManagedEpisodeDAO managedEpisodeDAO;
+	private UnrecognizedDAO unrecognizedDAO;
 
-	public NewTVShowFolderExecutor( NewTVShowFolderTask item, TVShowDAO tvShowDAO, ManagedEpisodeDAO managedEpisodeDAO ) {
+	public NewTVShowFolderExecutor( NewTVShowFolderTask item, TVShowDAO tvShowDAO, ManagedEpisodeDAO managedEpisodeDAO, UnrecognizedDAO unrecognizedDAO ) {
 		super(item);
 		this.tvShowDAO = tvShowDAO;
 		this.managedEpisodeDAO = managedEpisodeDAO;
+		this.unrecognizedDAO = unrecognizedDAO;
 	}
 	
 	@Override
@@ -41,19 +44,21 @@ public class NewTVShowFolderExecutor extends AbstractNewFolderExecutor<NewTVShow
 		ManagedSeries managed = tvShowDAO.getTVShowForFolder( folder );
 
 		if (managed == null) {
+
 			String name = folder.getFileName().toString();
 
-			Series tvdbSeries = TVShowManager.getInstance().searchTVShow( name );;
+			Series tvdbSeries = TVShowManager.getInstance().searchTVShow( name );
 			if (tvdbSeries != null) {
 				managed = TVShowManager.getInstance().newSeries( tvdbSeries, folder, metaDataLanguage, audioLang, subLang );
 			} else {
 
-				if ( tvShowDAO.findUnrecognizedFolder( folder ) == null) {
-					tvShowDAO.createUnrecognizedFolder( folder );
+				if ( unrecognizedDAO.findUnrecognizedFolder( folder ) == null) {
+					unrecognizedDAO.createUnrecognizedFolder( folder );
 				}				
 			}
+
 		} else {
-			
+
 			boolean mustRefresh = !managed.isEnded(); 
 			Date nextRefreshDate = null;
 

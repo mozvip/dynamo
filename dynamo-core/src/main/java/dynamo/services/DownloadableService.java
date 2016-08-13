@@ -1,5 +1,6 @@
 package dynamo.services;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,11 +18,15 @@ import javax.ws.rs.core.MediaType;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
+import dynamo.core.manager.DAOManager;
+import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.model.DownloableCount;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
+import dynamo.tvshows.jdbi.UnrecognizedDAO;
+import model.UnrecognizedFile;
 
 @Path("downloadable")
 @Produces(MediaType.APPLICATION_JSON)
@@ -51,6 +56,15 @@ public class DownloadableService {
 	@Path("/redownload/{id}")
 	public void redownload(@PathParam("id") long id) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException  {
 		DownloadableManager.getInstance().redownload(id);
+	}
+	
+	@POST
+	@Path("/assign/{fileId}/{downloadableId}")
+	public void assign(@PathParam("fileId") long fileId, @PathParam("downloadableId") long downloadableId) throws IOException {
+		UnrecognizedDAO unrecognizedDAO = DAOManager.getInstance().getDAO( UnrecognizedDAO.class );
+		UnrecognizedFile file = unrecognizedDAO.getUnrecognizedFile( fileId );
+		Downloadable downloadable = DownloadableFactory.getInstance().createInstance(downloadableId);
+		DownloadableManager.getInstance().addFile( downloadable, file.getPath() );
 	}
 	
 	@POST

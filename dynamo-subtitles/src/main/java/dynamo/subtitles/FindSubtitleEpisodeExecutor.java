@@ -88,7 +88,7 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 				EventManager.getInstance().reportSuccess( message );
 				
 				// add subtitles to the list of files for this downloadable
-				DownloadableManager.getInstance().addFile( episode.getId(), destinationSRT, 1 );
+				DownloadableManager.getInstance().addFile( episode, destinationSRT, 1 );
 
 				break;				
 			}

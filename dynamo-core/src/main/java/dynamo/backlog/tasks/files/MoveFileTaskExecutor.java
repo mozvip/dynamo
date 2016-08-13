@@ -28,7 +28,7 @@ public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask
 		if (Files.isWritable(source.getParent()) && !source.toAbsolutePath().equals( destination.toAbsolutePath() )) {
 			Files.createDirectories( destination.getParent() );
 			Files.move( source, destination, StandardCopyOption.REPLACE_EXISTING);
-			DownloadableManager.getInstance().newFile( task, task.getDownloadable(), destination );
+			DownloadableManager.getInstance().addFile( task.getDownloadable(), destination );
 		}
 		boolean parentFolderEmpty = FileUtils.isDirEmpty( source.getParent() );
 		if (parentFolderEmpty) {

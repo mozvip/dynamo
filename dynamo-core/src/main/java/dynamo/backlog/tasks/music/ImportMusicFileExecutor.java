@@ -168,7 +168,7 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 			songTitle = StringUtils.capitalize( songTitle ).trim();
 		}
 		musicDAO.createMusicFile( targetPath, musicAlbum.getId(), songTitle, songArtist, track, year, Files.size(musicFilePath), false );
-		DownloadableManager.getInstance().addFile( musicAlbum.getId(), musicFilePath, track );
+		DownloadableManager.getInstance().addFile( musicAlbum, musicFilePath, track );
 	}	
 
 }
