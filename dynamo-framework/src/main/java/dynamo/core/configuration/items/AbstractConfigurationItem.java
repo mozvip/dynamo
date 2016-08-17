@@ -27,8 +27,6 @@ public abstract class AbstractConfigurationItem {
 
 	private Class configuredClass;
 	
-	private boolean bold;
-	
 	public String getViewId() {
 		return getKey().replace('.', '_');
 	}
@@ -40,7 +38,6 @@ public abstract class AbstractConfigurationItem {
 		String defaultValue = null;
 
 		if (configurable != null) {
-			this.bold = configurable.bold();
 			this.label = configurable.name();
 			this.category = configurable.category();
 			this.requiredExpr = configurable.required();
@@ -156,14 +153,6 @@ public abstract class AbstractConfigurationItem {
 
 	public void setValue( Object value ) {
 		setStringValue( toStringValue(value) );
-	}
-
-	public boolean isBold() {
-		return bold;
-	}
-	
-	public void setBold(boolean bold) {
-		this.bold = bold;
 	}
 
 	public String getDefaultLabel() {

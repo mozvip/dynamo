@@ -46,9 +46,6 @@ import hclient.HTTPClient;
 
 public class MovieManager implements Reconfigurable {
 	
-	@Configurable( category="Movies", name="Enable Movies", bold=true )
-	private boolean enabled;	
-	
 	@Configurable( category="Movies", name="Default Quality to Download", defaultValue="_1080p", disabled="#{!MovieManager.enabled}" )
 	private VideoQuality defaultQuality;
 
@@ -330,11 +327,7 @@ public class MovieManager implements Reconfigurable {
 	}
 
 	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+		return folders != null && folders.size() > 0;
 	}
 	
 	public List<Path> getFolders() {
@@ -357,7 +350,7 @@ public class MovieManager implements Reconfigurable {
 
 	@Override
 	public void reconfigure() {
-		if (enabled) {
+		if ( isEnabled() ) {
 			if (getFolders() != null) {
 				for (Path path : getFolders()) {
 					if (Files.isReadable( path )) {

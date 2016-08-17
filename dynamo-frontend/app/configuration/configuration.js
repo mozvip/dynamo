@@ -9,7 +9,21 @@ angular.module('dynamo.configuration', ['ngRoute'])
         }).when('/quality-profiles', {
             templateUrl: 'configuration/quality-profiles.html',
             controller: 'QualityProfilesCtrl'
+        }).when('/plugins', {
+            templateUrl: 'configuration/plugins.html',
+            controller: 'PluginsCtrl',
+            resolve: {
+                pluginOptions: ['BackendService', function(  BackendService  ) {
+                    return BackendService.get('configuration/plugin-options');
+                }]
+            }
         });
+    }])
+
+    .controller('PluginsCtrl', ['$scope', 'configurationService', '$filter', 'pluginOptions', function ($scope, configurationService, $filter, pluginOptions) {
+
+        $scope.pluginOptions = pluginOptions.data;
+
     }])
 
     .controller('ConfigurationCtrl', ['$scope', 'configurationService', '$filter', function ($scope, configurationService, $filter) {

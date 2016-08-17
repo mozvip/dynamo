@@ -1,7 +1,6 @@
 package dynamo.manager;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.file.DirectoryStream;
@@ -31,7 +30,6 @@ import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DAOManager;
-import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.finders.music.MusicAlbumFinder;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
@@ -47,9 +45,6 @@ public class MusicManager implements Reconfigurable {
 
 	public final static String VARIOUS_ARTISTS = "Various Artists";
 	public final static String ORIGINAL_SOUNDTRACK = "Original Soundtrack";
-
-	@Configurable( category="Music", name="Enable Music", bold=true )
-	private boolean enabled;
 
 	@Configurable( category="Music", name="Default Metadata Language", defaultValue="EN", required="#{MusicManager.enabled}", disabled="#{!MusicManager.enabled}" )
 	private Language metaDataLanguage;
@@ -70,14 +65,9 @@ public class MusicManager implements Reconfigurable {
 	private Collection<MusicAlbumSuggester> suggesters;
 
 	private MusicAlbumDAO musicDAO = DAOManager.getInstance().getDAO( MusicAlbumDAO.class );
-	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
 	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+		return folders != null && folders.size() > 0;
 	}
 
 	public Language getMetaDataLanguage() {
@@ -426,7 +416,7 @@ public class MusicManager implements Reconfigurable {
 
 	@Override
 	public void reconfigure() {
-		if (enabled) {
+		if (isEnabled()) {
 			for (Path path : getFolders()) {
 				BackLogProcessor.getInstance().schedule( new ImportMusicFolderTask( path, true ) );
 			}

@@ -501,7 +501,7 @@ public class DownloadableManager {
 	
 	public static void downloadImage( Class<? extends Downloadable> downloadableClass, long downloadableId, String url, String referer ) throws IOException {
 		Path localFile = resolveImage(downloadableClass, downloadableId);
-		BackLogProcessor.getInstance().schedule( new HTTPDownloadTask(url, referer, localFile) );
+		BackLogProcessor.getInstance().schedule( new HTTPDownloadTask(url, referer, localFile), false );
 	}	
 
 }

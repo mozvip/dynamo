@@ -30,7 +30,7 @@ import dynamo.webapps.thegamesdb.net.images.TheGamesDBBoxArt;
 
 public class GamesManager implements Reconfigurable {
 	
-	@Configurable(category="Games", name="Enable Games", bold=true)
+	@Configurable(category="Games", name="Enable Games")
 	private boolean enabled;
 	
 	@Configurable(category="Games", name="Platforms", disabled="#{!GamesManager.enabled}", contentsClass=GamePlatform.class)

@@ -281,7 +281,7 @@ public class ConfigurationManager {
 				BackLogProcessor.getInstance().cancel( initTask );
 			}
 		}
-		
+
 		Set<ServiceTask> serviceTasks = new DynamoObjectFactory<>( DYNAMO_PACKAGE_PREFIX, ServiceTask.class ).getInstances();
 		for (ServiceTask serviceTask : serviceTasks) {
 			if ( serviceTask.isEnabled() ) {

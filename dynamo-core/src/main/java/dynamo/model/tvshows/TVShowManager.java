@@ -55,9 +55,6 @@ public class TVShowManager implements Reconfigurable {
 
 	private static final String TVDBAPI_KEY = "2805AD2873519EC5";
 
-	@Configurable( category="TV Shows", name="Enable TV Shows", bold=true )
-	private boolean enabled;
-
 	@Configurable( category="TV Shows", name="Default Metadata Language", defaultValue="EN", required="#{TVShowManager.enabled}", disabled="#{!TVShowManager.enabled}" )
 	private Language metaDataLanguage;
 
@@ -129,11 +126,7 @@ public class TVShowManager implements Reconfigurable {
 	}
 
 	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+		return folders != null && folders.size() > 0;
 	}
 
 	public List<Path> getFolders() {
@@ -395,7 +388,7 @@ public class TVShowManager implements Reconfigurable {
 
 	@Override
 	public void reconfigure() {
-		if (enabled) {
+		if (isEnabled()) {
 			api = new TheTVDBApi( TVDBAPI_KEY, new YAMJHttpClient( HTTPClient.getInstance() ) );
 			if (getFolders() != null) {
 				for (Path path : getFolders()) {

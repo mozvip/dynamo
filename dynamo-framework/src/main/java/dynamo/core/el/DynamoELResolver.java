@@ -5,8 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.el.ELContext;
 import javax.el.ELException;
@@ -16,13 +16,25 @@ import javax.el.PropertyNotWritableException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import dynamo.core.configuration.items.AbstractConfigurationItem;
-import dynamo.core.manager.ConfigAnnotationManager;
-import dynamo.core.manager.ConfigurationManager;
+import dynamo.core.manager.ConfigValueManager;
+import dynamo.core.manager.DynamoObjectFactory;
+import dynamo.core.manager.ErrorManager;
 
 public class DynamoELResolver extends ELResolver {
+	
+	private Map<String, Class<?>> shortNameClass = new HashMap<>();
 
 	private DynamoELResolver() {
+		Set<String> allTypes = DynamoObjectFactory.getReflections().getAllTypes();
+		for (String className : allTypes) {
+			Class<?> klass;
+			try {
+				klass = Class.forName(className);
+				shortNameClass.put(klass.getSimpleName(), klass);
+			} catch (ClassNotFoundException e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}
+		}
 	}
 
 	static class SingletonHolder {
@@ -37,76 +49,41 @@ public class DynamoELResolver extends ELResolver {
 	public Object getValue(ELContext context, Object base, Object property)
 			throws NullPointerException, PropertyNotFoundException, ELException {
 
-		Map<String, AbstractConfigurationItem> values = new HashMap<String, AbstractConfigurationItem>();
-
 		if (base == null) {
-			List<AbstractConfigurationItem> items = ConfigAnnotationManager.getInstance().getItems();
-			for (AbstractConfigurationItem item : items) {
-				if ( item.getPrefix().equals( property )) {
-					String name = item.getKey().substring( item.getKey().indexOf('.') + 1);
-					values.put( name, item );
-				}
-			}
-		}
-
-		if ( base instanceof Map ) {
-
-			Map<String, AbstractConfigurationItem> map = ((Map<String, AbstractConfigurationItem>) base);
-			
-			AbstractConfigurationItem item = map.get( property );
-			
-			if (item != null ) {
+			Class<?> klass = shortNameClass.get( (String) property );
+			if (klass != null) {
 				context.setPropertyResolved( true );
-				try {
-					return item.getValue();
-				} catch (ClassNotFoundException e) {
-					throw new ELException( e );
-				}				
-			} else {
-				
-				for (Map.Entry<String, AbstractConfigurationItem> entry : map.entrySet()) {
-					if (entry.getKey().startsWith( (String) property )) {
-						values.put( entry.getKey().substring( entry.getKey().indexOf('.') + 1), entry.getValue());
-					}
-				}
-				
+				return DynamoObjectFactory.getInstance( klass );
 			}
-			
-		} else if ( base != null ){
-			
-			Method propertyGetterMethod = null;
-			String capitalizedProperty = StringUtils.capitalize(property.toString());
-
-			try {
-				propertyGetterMethod = base.getClass().getMethod("get"+capitalizedProperty);
-			} catch (NoSuchMethodException e) {
-				try {
-					propertyGetterMethod = base.getClass().getMethod("is"+capitalizedProperty);
-				} catch (NoSuchMethodException e1) {
-				}
-			}
-
-			// default case
-			if (propertyGetterMethod != null) {
-				Object value;
-				try {
-					value = propertyGetterMethod.invoke( base );
-					context.setPropertyResolved(true);
-					return value;
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					throw new ELException( e );
-				}
-			}
-			
-		}
-
-		if (values.isEmpty()) {
-			return null;
 		}
 		
-		context.setPropertyResolved(true);
+		String configKey = String.format("%s.%s", base.getClass().getSimpleName(), property);
+		if (ConfigValueManager.getInstance().getConfigString( configKey ) != null) {
+			context.setPropertyResolved(true);
+			return ConfigValueManager.getInstance().getConfigString( configKey );
+		}
 
-		return values;
+		Method getterPropertyMethod = null;
+		String capitalizedPropertyName = StringUtils.capitalize( (String) property );
+		try {
+			getterPropertyMethod = base.getClass().getMethod("get" + capitalizedPropertyName );
+		} catch (NoSuchMethodException | SecurityException e) {
+			try {
+				getterPropertyMethod = base.getClass().getMethod("is" + capitalizedPropertyName );
+			} catch (NoSuchMethodException | SecurityException | IllegalArgumentException e1) {
+			}
+		}
+		
+		if (getterPropertyMethod != null) {
+			try {
+				Object value = getterPropertyMethod.invoke(base);
+				context.setPropertyResolved(true);
+				return value;
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			}
+		}
+
+		return null;
 	}
 
 	@Override

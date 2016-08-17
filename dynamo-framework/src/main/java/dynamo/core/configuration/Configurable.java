@@ -16,8 +16,6 @@ public @interface Configurable {
 	
 	String defaultLabel() default "None";
 	
-	boolean bold() default false;
-	
 	boolean folder() default true;
 
 	boolean ordered() default false;

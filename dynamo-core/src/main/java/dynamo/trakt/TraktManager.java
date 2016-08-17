@@ -20,7 +20,7 @@ import retrofit.RestAdapter;
 
 public class TraktManager implements Reconfigurable, MovieSuggester, Enableable {
 	
-	@Configurable(category="Trakt", name="Enable Trakt Support", bold=true)
+	@Configurable(category="Trakt", name="Enable Trakt Support")
 	private boolean enabled;
 	
 	@Configurable(category="Trakt", name="Trakt Username", required="#{TraktManager.enabled}", disabled="#{!TraktManager.enabled}")

@@ -27,7 +27,7 @@ import core.RegExp;
 
 public class DynamoObjectFactory<T> {
 	
-	private static Reflections reflections = new Reflections("dynamo", new FieldAnnotationsScanner(), new SubTypesScanner( true ), new TypeAnnotationsScanner());
+	private static Reflections reflections = new Reflections("dynamo", new FieldAnnotationsScanner(), new SubTypesScanner( false ), new TypeAnnotationsScanner());
 
     private Class<T> interfaceToImplement = null;
 	private String packageName;

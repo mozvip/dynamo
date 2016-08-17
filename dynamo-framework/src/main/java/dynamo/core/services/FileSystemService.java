@@ -10,8 +10,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.google.common.collect.Lists;
+
 import dynamo.backlog.tasks.files.FileUtils;
-import jersey.repackaged.com.google.common.collect.Lists;
+
 
 @Path("file-system")
 @Produces(MediaType.APPLICATION_JSON)

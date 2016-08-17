@@ -21,7 +21,7 @@ import dynamo.video.VideoManager;
 
 public class SubTitleDownloader implements Reconfigurable {
 	
-	@Configurable(category="Subtitles Finders", name="Enable Subtitles", bold=true)
+	@Configurable(category="Subtitles Finders", name="Enable Subtitles")
 	private boolean enabled;
 	
 	private Set<SubtitlesFinder> finders;

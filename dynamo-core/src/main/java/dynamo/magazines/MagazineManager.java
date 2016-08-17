@@ -27,7 +27,7 @@ import dynamo.webapps.googleimages.GoogleImages;
 
 public class MagazineManager implements Reconfigurable {
 
-	@Configurable(category="Magazines", name="Enable Magazines", bold=true)
+	@Configurable(category="Magazines", name="Enable Magazines")
 	private boolean enabled;
 
 	@Configurable(category="Magazines", name="Magazines Default Language", disabled="#{!MagazineManager.enabled}", required="#{MagazineManager.enabled}")
