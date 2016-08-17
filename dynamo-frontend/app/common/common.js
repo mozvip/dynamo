@@ -41,7 +41,13 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
       return $http.post('http://' + backendHostAndPort + '/services/configuration', { 'key' : key, 'value' : value});
     },
     'setFolders' : function( key, value ) {
-      return $http.post('http://' + backendHostAndPort + '/services/configuration', { 'key' : key, 'folders' : value});
+
+      var submittedValue = '';
+      value.forEach(function(folder) {
+        submittedValue += folder.path;
+        submittedValue += ';';
+      }, this);
+      return $http.post('http://' + backendHostAndPort + '/services/configuration', { 'key' : key, 'value' : submittedValue});
     }
 
   }

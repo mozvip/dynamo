@@ -1,13 +1,15 @@
 package dynamo.core.services;
 
+import java.nio.file.Path;
+
 public class ConfigItemPath {
 	
-	private String path;
+	private Path path;
 	
-	public String getPath() {
+	public Path getPath() {
 		return path;
 	}
-	public void setPath(String path) {
+	public void setPath(Path path) {
 		this.path = path;
 	}
 

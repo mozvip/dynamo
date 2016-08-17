@@ -4,10 +4,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,12 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import dynamo.backlog.BackLogProcessor;
-import dynamo.core.DynamoApplication;
 import dynamo.core.Enableable;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
-import dynamo.core.configuration.items.AbstractConfigurationItem;
-import dynamo.core.configuration.items.ListConfigurationItem;
 import dynamo.core.model.AbstractDynamoQueue;
 import dynamo.core.model.DaemonTask;
 import dynamo.core.model.InitTask;
@@ -49,14 +49,8 @@ public class ConfigurationManager {
 	public static ConfigurationManager getInstance() {
 		return SingletonHolder.instance;
 	}
-	
+
 	public void save() throws Exception {
-		for (AbstractConfigurationItem configurationItem : ConfigAnnotationManager.getInstance().getItems()) {
-			if (configurationItem instanceof ListConfigurationItem) {
-				((ListConfigurationItem)configurationItem).updateValue();
-			}
-			ConfigValueManager.getInstance().setConfigString( configurationItem.getKey(), configurationItem.getStringValue() );
-		}
 		ConfigValueManager.getInstance().persistConfiguration();
 		configureApplication();
 	}
@@ -181,6 +175,59 @@ public class ConfigurationManager {
 		}
     	return null;		
 	}
+	
+	private Object toValue( Class fieldType, Configurable annotation, String stringValue ) {
+		Object value = stringValue;
+		
+		if (stringValue != null) {
+			if (fieldType.equals( boolean.class )) {
+				value = Boolean.valueOf( stringValue );
+			} else if (fieldType.equals( int.class )) {
+				value = Integer.valueOf( stringValue );
+			} else if (fieldType.equals( Path.class )) {
+				value = Paths.get( stringValue );
+			} else if (fieldType.isEnum()) {
+				value = Enum.valueOf(fieldType, stringValue);
+			} else if (Collection.class.isAssignableFrom( fieldType )) {
+				String[] values = stringValue.split(";");
+				Class contentsClass = annotation.contentsClass();
+				if (Set.class.isAssignableFrom( fieldType )) {
+					value = new HashSet();
+				} else {
+					value = new ArrayList();
+				}
+				int i = 0;
+				for (String string : values) {
+					if (StringUtils.isNotBlank( string )) {
+						((Collection)value).add( toValue( contentsClass, null, string ) );
+					}
+				}
+			} else if (!fieldType.equals( String.class )) {
+				try {
+					value = DynamoObjectFactory.getInstance( Class.forName( stringValue ));
+				} catch (ClassNotFoundException e) {
+					System.out.println( fieldType );
+				}
+			}
+		}
+		
+		return value;
+	}
+	
+	public void configureField( final Object instance, Field field, String configurationValue ) {
+		Configurable annotation = field.getAnnotation( Configurable.class );
+
+		Object value = toValue( field.getType(), annotation, configurationValue );
+
+		String setterMethodName = "set" + StringUtils.capitalize( field.getName() );
+		Method setterMethod = null;
+		try {
+			setterMethod = instance.getClass().getMethod( setterMethodName, field.getType() );
+			setterMethod.invoke( instance, value );
+		} catch (java.lang.IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			ErrorManager.getInstance().reportThrowable(e);
+		}
+	}
 
     public Object configureInstance( final Object instance ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
 
@@ -197,41 +244,9 @@ public class ConfigurationManager {
     	}
 
 		for (Field field : fields) {
-			Configurable annotation = field.getAnnotation( Configurable.class );
-
 			String key = String.format( "%s.%s", instance.getClass().getSimpleName(), field.getName() );
-			
-			Object value = null;
-			
-			AbstractConfigurationItem configurationItem = ConfigAnnotationManager.getInstance().getConfigurationItem(key);
-			value = configurationItem != null ? configurationItem.getValue() : null;
-			if (configurationItem != null && field.getType().isPrimitive() && value == null) { 
-				Method getterMethod = null;
-				try {
-					getterMethod = instance.getClass().getMethod( "get" + StringUtils.capitalize( field.getName() ) );
-				} catch (java.lang.IllegalArgumentException | NoSuchMethodException e) {
-					try {
-						getterMethod = instance.getClass().getMethod( "is" + StringUtils.capitalize( field.getName() ) );
-					} catch (NoSuchMethodException | SecurityException e1) {
-						ErrorManager.getInstance().reportThrowable( e );
-					}
-				}
-				if (getterMethod != null) {
-					configurationItem.setValue( getterMethod.invoke( instance ) );
-				}
-				continue;
-			}
-
-			String setterMethodName = "set" + StringUtils.capitalize( field.getName() );
-			Method setterMethod = null;
-			try {
-				setterMethod = instance.getClass().getMethod( setterMethodName, field.getType() );
-				setterMethod.invoke( instance, value );
-			} catch (java.lang.IllegalArgumentException | NoSuchMethodException e) {
-				ErrorManager.getInstance().reportError(
-						String.format( "Unable to set configuration item %s on class %s : method %s was not found or is not correctly defined", annotation.name(), instance.getClass().getName(), setterMethodName)
-					);
-			}
+			String configurationValue = ConfigValueManager.getInstance().getConfigString(key);
+			configureField(instance, field, configurationValue);
 		}
 		
 		return instance;

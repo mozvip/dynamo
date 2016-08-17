@@ -7,7 +7,7 @@
       <td><input ng-required="true" class="form-control" type="text" ng-model="folder.path" /></td>
     </tr>
   </table>
-  <button class="btn btn-default" ng-click="addFolder()"><span class="glyphicon glyphicon-plus" /> Add Folder</button>
+  <button ng-disabled="!settingsForm.$valid" class="btn btn-default" ng-click="addFolder()"><span class="glyphicon glyphicon-plus" /> Add Folder</button>
 
   <button ng-disabled="!settingsForm.$valid" class="btn btn-primary" ng-click="saveSettings()"><span class="glyphicon glyphicon-save" /> Save Settings</button>
 
