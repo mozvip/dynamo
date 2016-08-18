@@ -31,6 +31,7 @@ import dynamo.core.model.InitTask;
 import dynamo.core.model.ServiceTask;
 import dynamo.core.model.Task;
 import dynamo.core.model.TaskExecutor;
+import dynamo.core.services.ConfigurationItem;
 import javassist.Modifier;
 
 public class ConfigurationManager {
@@ -51,7 +52,7 @@ public class ConfigurationManager {
 	}
 
 	public void save() throws Exception {
-		ConfigValueManager.getInstance().persistConfiguration();
+		ConfigAnnotationManager.getInstance().persistConfiguration();
 		configureApplication();
 	}
 	
@@ -72,7 +73,7 @@ public class ConfigurationManager {
 	
 	public void setActivePlugin(Class<? extends Task> task, Class<? extends TaskExecutor> executorClass) {
 		activePlugins.put(task, executorClass);
-		ConfigValueManager.getInstance().setConfigString("ConfigurationManager." + task.getName(), executorClass != null ? executorClass.getName() : "" );
+		ConfigAnnotationManager.getInstance().setConfigString("ConfigurationManager." + task.getName(), executorClass != null ? executorClass.getName() : "" );
 	}
 	
 	public boolean isActive(Class<? extends TaskExecutor<?>> executorClass) {
@@ -104,7 +105,7 @@ public class ConfigurationManager {
 			Class<? extends Task> taskType = entry.getKey();
 			Collection<Class<? extends TaskExecutor>> options = entry.getValue();
 
-			String className = ConfigValueManager.getInstance().getConfigString( String.format("ConfigurationManager.%s", taskType.getName()) );
+			String className = ConfigAnnotationManager.getInstance().getConfigString( String.format("ConfigurationManager.%s", taskType.getName()) );
 
 			Class<? extends TaskExecutor> activePlugin = null;
 			if (StringUtils.isNotBlank(className)) {
@@ -245,7 +246,7 @@ public class ConfigurationManager {
 
 		for (Field field : fields) {
 			String key = String.format( "%s.%s", instance.getClass().getSimpleName(), field.getName() );
-			String configurationValue = ConfigValueManager.getInstance().getConfigString(key);
+			String configurationValue = ConfigAnnotationManager.getInstance().getConfigString(key);
 			configureField(instance, field, configurationValue);
 		}
 		

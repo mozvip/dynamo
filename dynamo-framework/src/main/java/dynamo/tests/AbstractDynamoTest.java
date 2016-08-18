@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 
 import org.junit.BeforeClass;
 
-import dynamo.core.manager.ConfigValueManager;
+import dynamo.core.manager.ConfigAnnotationManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.manager.LocalImageCache;
@@ -35,12 +35,12 @@ public abstract class AbstractDynamoTest {
 			Enumeration<String> keys = privateData.getKeys();
 			while (keys.hasMoreElements()) {
 				String key = keys.nextElement();
-				ConfigValueManager.mockConfiguration(key, privateData.getString(key));
+				ConfigAnnotationManager.mockConfiguration(key, privateData.getString(key));
 			}
 		} catch (MissingResourceException e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}
-		ConfigValueManager.mockConfiguration("test", "test");
+		ConfigAnnotationManager.mockConfiguration("test", "test");
 		LocalImageCache.getInstance().init(Paths.get("temp"));
 	}
 

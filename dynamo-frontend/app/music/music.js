@@ -8,7 +8,12 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     controller: 'MusicCtrl'
   }).when('/music-configuration', {
     templateUrl: 'music/music-configuration.html',
-    controller: 'MusicConfigCtrl'
+    controller: 'MusicConfigCtrl',
+    resolve: {
+      configuration: ['configurationService', function(  configurationService  ) {
+        return configurationService.getItems();
+      }]
+    }
   });
 }])
 
@@ -78,17 +83,15 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('MusicConfigCtrl', ['$scope', '$rootScope', 'configurationService', function( $scope, $rootScope, configurationService ) {
+.controller('MusicConfigCtrl', ['$scope', '$rootScope', 'configurationService', 'configuration', function( $scope, $rootScope, configurationService, configuration ) {
 
   $scope.folders = [];
 
-  $scope.addFolder = function() {
-    $scope.folders.push({});
-  }
+  $scope.config = configuration.data;
 
-  $scope.removeFolder = function( index ) {
-    $scope.folders.splice( index, 1 );
-  }
+  $scope.musicFolders = $scope.config['MusicManager.folders'];
+  $scope.musicProviders = $scope.config['MusicManager.musicDownloadProviders'];
+  $scope.musicSuggesters = $scope.config['MusicManager.suggesters'];
 
   $scope.saveSettings = function() {
     configurationService.setFolders('MusicManager.folders', $scope.folders);

@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 
 import dynamo.core.EventManager;
 import dynamo.core.configuration.ClassDescription;
-import dynamo.core.manager.ConfigValueManager;
+import dynamo.core.manager.ConfigAnnotationManager;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.model.Task;
 import dynamo.core.model.TaskExecutor;
@@ -39,7 +39,7 @@ public class PluginsUI extends DynamoManagedBean {
 	public void save() throws JsonGenerationException, JsonMappingException, IOException {
 		for (Map.Entry<Class<? extends Task>, Class<? extends TaskExecutor>> entry : activePlugins.entrySet()) {
 			ConfigurationManager.getInstance().setActivePlugin(entry.getKey(), entry.getValue());
-			ConfigValueManager.getInstance().persistConfiguration();
+			ConfigAnnotationManager.getInstance().persistConfiguration();
 		}
 		EventManager.getInstance().reportSuccess("Plugins set successfully");
 	}

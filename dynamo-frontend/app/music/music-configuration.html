@@ -1,13 +1,8 @@
 <form name="settingsForm" novalidate>
 
-  <h3>Folders</h3>
-  <table class="table table-striped">
-    <tr ng-repeat="folder in folders">
-      <td><button class="btn btn-danger" ng-click="removeFolder($index)"><span class="glyphicon glyphicon-trash" /></button></td>
-      <td><input ng-required="true" class="form-control" type="text" ng-model="folder.path" /></td>
-    </tr>
-  </table>
-  <button ng-disabled="!settingsForm.$valid" class="btn btn-default" ng-click="addFolder()"><span class="glyphicon glyphicon-plus" /> Add Folder</button>
+  <configuration-list item="musicFolders" />
+  <configuration-list item="musicProviders" />
+  <configuration-list item="musicSuggesters" />
 
   <button ng-disabled="!settingsForm.$valid" class="btn btn-primary" ng-click="saveSettings()"><span class="glyphicon glyphicon-save" /> Save Settings</button>
 

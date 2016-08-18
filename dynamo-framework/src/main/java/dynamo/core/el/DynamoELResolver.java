@@ -16,7 +16,7 @@ import javax.el.PropertyNotWritableException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import dynamo.core.manager.ConfigValueManager;
+import dynamo.core.manager.ConfigAnnotationManager;
 import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
 
@@ -58,9 +58,9 @@ public class DynamoELResolver extends ELResolver {
 		}
 		
 		String configKey = String.format("%s.%s", base.getClass().getSimpleName(), property);
-		if (ConfigValueManager.getInstance().getConfigString( configKey ) != null) {
+		if (ConfigAnnotationManager.getInstance().getConfigString( configKey ) != null) {
 			context.setPropertyResolved(true);
-			return ConfigValueManager.getInstance().getConfigString( configKey );
+			return ConfigAnnotationManager.getInstance().getConfigString( configKey );
 		}
 
 		Method getterPropertyMethod = null;

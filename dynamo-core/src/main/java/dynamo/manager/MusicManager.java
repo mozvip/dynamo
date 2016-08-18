@@ -26,7 +26,6 @@ import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.backlog.tasks.files.FileUtils;
 import dynamo.backlog.tasks.music.FindMusicAlbumImageTask;
 import dynamo.backlog.tasks.music.ImportMusicFolderTask;
-import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DAOManager;
@@ -46,36 +45,25 @@ public class MusicManager implements Reconfigurable {
 	public final static String VARIOUS_ARTISTS = "Various Artists";
 	public final static String ORIGINAL_SOUNDTRACK = "Original Soundtrack";
 
-	@Configurable( category="Music", name="Default Metadata Language", defaultValue="EN", required="#{MusicManager.enabled}", disabled="#{!MusicManager.enabled}" )
-	private Language metaDataLanguage;
-
-	@Configurable( category="Music", name="Music Quality", required="#{MusicManager.enabled}", disabled="#{!MusicManager.enabled}" )
+	@Configurable( category="Music", name="Music Quality" )
 	private MusicQuality musicQuality = MusicQuality.COMPRESSED;
 
-	@Configurable( category="Music", name="Music Folders", required="#{MusicManager.enabled}", disabled="#{!MusicManager.enabled}", contentsClass=Path.class )
+	@Configurable( category="Music", name="Music Folders", contentsClass=Path.class )
 	private List<Path> folders;
 
-	@Configurable(category="Music", name="Music Providers", required="#{MusicManager.enabled}", disabled="#{!MusicManager.enabled}", contentsClass=MusicAlbumFinder.class )
+	@Configurable(category="Music", name="Music Providers", contentsClass=MusicAlbumFinder.class )
 	private List<MusicAlbumFinder> musicDownloadProviders;	
 
-	@Configurable( category="Music", name="Clean music folders during scan (remove useless files like *.nfo, ...)", required="#{MusicManager.enabled}", disabled="#{!MusicManager.enabled}" )
+	@Configurable( category="Music", name="Clean music folders during scan (remove useless files like *.nfo, ...)" )
 	private boolean cleanDuringImport;
 	
-	@Configurable( category="Music", name="Music Album Suggesters", required="#{MusicManager.enabled}", disabled="#{!MusicManager.enabled}", contentsClass=MusicAlbumSuggester.class, ordered=false )
+	@Configurable( category="Music", name="Music Album Suggesters", contentsClass=MusicAlbumSuggester.class, ordered=false )
 	private Collection<MusicAlbumSuggester> suggesters;
 
 	private MusicAlbumDAO musicDAO = DAOManager.getInstance().getDAO( MusicAlbumDAO.class );
 
 	public boolean isEnabled() {
 		return folders != null && folders.size() > 0;
-	}
-
-	public Language getMetaDataLanguage() {
-		return metaDataLanguage;
-	}
-
-	public void setMetaDataLanguage(Language metaDataLanguage) {
-		this.metaDataLanguage = metaDataLanguage;
 	}
 
 	public MusicQuality getMusicQuality() {
@@ -458,11 +446,6 @@ public class MusicManager implements Reconfigurable {
 
 	public MusicArtist findArtist(String name) {
 		return musicDAO.findArtist( name );
-	}
-
-	public void save(MusicArtist artist) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public List<MusicArtist> getArtists(String filter) {

@@ -78,7 +78,7 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 				
 				if (Files.notExists(downloadableFile.getFilePath())) {
 
-					BackLogProcessor.getInstance().schedule( new DeleteFileTask( downloadableFile.getFilePath() ));
+					BackLogProcessor.getInstance().schedule( new DeleteFileTask( downloadableFile.getFilePath() ), false );
 
 					if (downloadable instanceof ManagedEpisode) {
 						queue(new ScanTVShowTask(((ManagedEpisode) downloadable).getSeries()));

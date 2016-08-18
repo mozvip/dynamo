@@ -1,0 +1,13 @@
+<h3>{{item.name}}</h3>
+<table class="table table-striped table-condensed">
+<tr ng-repeat="row in item.values">
+    <td><button class="btn btn-danger" ng-click="removeRow($index)"><span class="glyphicon glyphicon-trash" /></button></td>
+    <td>
+        <input ng-if="item.type=='java.nio.file.Path'" ng-required="true" valid-folder class="form-control" type="text" ng-model="row.value" />
+        <input ng-if="item.type=='java.lang.String'" ng-required="true" class="form-control" type="text" ng-model="row.value" />
+        <select ng-if="item.type=='dynamo.suggesters.music.MusicAlbumSuggester'" ng-required="true" class="form-control" type="text" ng-model="row.value"></select>
+        <select ng-if="item.type=='dynamo.finders.music.MusicAlbumFinder'" ng-required="true" class="form-control" type="text" ng-model="row.value"></select>
+    </td>
+</tr>
+</table>
+<button class="btn btn-default" ng-click="addRow()"><span class="glyphicon glyphicon-plus" /> Add</button>

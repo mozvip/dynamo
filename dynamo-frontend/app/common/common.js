@@ -35,7 +35,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
       return $http.get('http://' + backendHostAndPort + '/services/configuration/' + key);
     },
     'getItems' : function() {
-      return $http.get('http://' + backendHostAndPort + '/services/configuration');
+      return $http.get('http://' + backendHostAndPort + '/services/configuration/items');
     },
     'set' : function( key, value ) {
       return $http.post('http://' + backendHostAndPort + '/services/configuration', { 'key' : key, 'value' : value});
@@ -134,6 +134,40 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   }
   return languageService;
 }])
+
+.directive('configurationList', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      item: '='
+    },
+    templateUrl: 'common/configuration-list.html',
+    link: function(scope, element, attr) {
+      scope.removeRow = function( index ) {
+        scope.item.values.splice( index, 1 );
+      }
+      scope.addRow = function() {
+        scope.item.values.push({});
+      }
+    }
+  }
+})
+
+.directive('validFolder', function($q, BackendService) {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+
+      ctrl.$asyncValidators.validFolder = function(modelValue, viewValue) {
+        if (ctrl.$isEmpty(modelValue)) {
+          // consider empty model valid
+          return $q.when();
+        }
+        return BackendService.post('configuration/validFolder', modelValue);
+      };
+    }
+  };
+})
 
 .factory('downloadableService', ['BackendService', 'backendHostAndPort', '$http', function(BackendService, backendHostAndPort, $http){
   var downloadableService = {};

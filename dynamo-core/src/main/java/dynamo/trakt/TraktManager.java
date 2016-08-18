@@ -11,7 +11,7 @@ import dynamo.core.Enableable;
 import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
-import dynamo.core.manager.ConfigValueManager;
+import dynamo.core.manager.ConfigAnnotationManager;
 import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 import hclient.RetrofitClient;
@@ -80,7 +80,7 @@ public class TraktManager implements Reconfigurable, MovieSuggester, Enableable 
 		if (!enabled) {
 			return;
 		}
-		access_token = ConfigValueManager.getInstance().getConfigString("TraktManager.access_token");
+		access_token = ConfigAnnotationManager.getInstance().getConfigString("TraktManager.access_token");
 		if (access_token != null) {
 			RestAdapter restAdapter = new RestAdapter.Builder()
 			.setEndpoint("https://api-v2launch.trakt.tv")
@@ -131,7 +131,7 @@ public class TraktManager implements Reconfigurable, MovieSuggester, Enableable 
 	public void auth( String oauth ) {
 		tokenResponse = service.token( new TraktTokenRequest( oauth, clientId, clientSecret) );
 		Date expirationDate = new Date( tokenResponse.getCreated_at() + tokenResponse.getExpires_in() );
-		ConfigValueManager.getInstance().setConfigString("TraktManager.access_token", tokenResponse.getAccess_token());
+		ConfigAnnotationManager.getInstance().setConfigString("TraktManager.access_token", tokenResponse.getAccess_token());
 		reconfigure();
 	}
 

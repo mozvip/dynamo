@@ -169,10 +169,6 @@ public class Music extends DynamoManagedBean {
 		return items;
 	}
 
-	public void updateArtist( MusicArtist artist ) {
-		MusicManager.getInstance().save( artist );
-	}
-
 	public void reloadArtists() {
 		for (MusicArtist artist : getArtists()) {
 			BackLogProcessor.getInstance().schedule( new LookupMusicArtistTask(artist), true );

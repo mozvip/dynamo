@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import dynamo.backlog.tasks.nzb.DownloadNZBBlackHoleBackLogTask;
 import dynamo.backlog.tasks.torrent.DownloadTorrentBlackHoleExecutor;
 import dynamo.core.configuration.Reconfigurable;
-import dynamo.core.manager.ConfigValueManager;
+import dynamo.core.manager.ConfigAnnotationManager;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.model.backlog.core.PostProcessFolderTask;
@@ -31,7 +31,7 @@ public class PostProcessorManager implements Reconfigurable {
 		try {
 			Path torrentIncomingFolder = null;
 			if (ConfigurationManager.getInstance().isActive( DownloadTorrentBlackHoleExecutor.class)) {
-				String incomingFolder = ConfigValueManager.getInstance().getConfigString("DownloadTorrentBlackHoleExecutor.torrentIncomingFolder");
+				String incomingFolder = ConfigAnnotationManager.getInstance().getConfigString("DownloadTorrentBlackHoleExecutor.torrentIncomingFolder");
 				if ( incomingFolder != null ) {
 					torrentIncomingFolder = Paths.get( incomingFolder );
 					if (torrentIncomingFolder != null) {
@@ -42,7 +42,7 @@ public class PostProcessorManager implements Reconfigurable {
 
 			Path nzbIncomingFolder = null;
 			if (ConfigurationManager.getInstance().isActive(DownloadNZBBlackHoleBackLogTask.class)) {
-				String incomingFolder = ConfigValueManager.getInstance().getConfigString("DownloadNZBBlackHoleBackLogTask.nzbIncomingFolder");
+				String incomingFolder = ConfigAnnotationManager.getInstance().getConfigString("DownloadNZBBlackHoleBackLogTask.nzbIncomingFolder");
 				if ( incomingFolder != null ) {
 					nzbIncomingFolder = Paths.get( incomingFolder );
 					if (nzbIncomingFolder != null) {
