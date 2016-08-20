@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 
-public enum Language {
+public enum Language implements Labelized {
 
 	EN("en", Locale.ENGLISH, 	new String[] { "English" }, new String[] {"Spring", "Summer", "Fall", "Winter"}, null, new String[] { "(.*) English", "(.*) UK" }),
 	BG("bg", new Locale("bg"),	new String[] { "Bulgarian" }, null, null, new String[] { "(.*) Bulgaria" }),
@@ -59,6 +59,7 @@ public enum Language {
 		return seasons;
 	}
 	
+	@Override
 	public String getLabel() {
 		return getFullNames()[0];
 	}

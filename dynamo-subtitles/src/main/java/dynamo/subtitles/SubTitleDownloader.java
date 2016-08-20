@@ -49,7 +49,7 @@ public class SubTitleDownloader implements Reconfigurable {
 	@Override
 	public void reconfigure() {
 		try {
-			finders = new DynamoObjectFactory<SubtitlesFinder>("dynamo", SubtitlesFinder.class).getInstances();
+			finders = new DynamoObjectFactory<SubtitlesFinder>(SubtitlesFinder.class).getInstances();
 		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}

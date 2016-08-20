@@ -1,8 +1,10 @@
 <form name="settingsForm" novalidate>
 
-  <configuration-list item="musicFolders" />
-  <configuration-list item="musicProviders" />
-  <configuration-list item="musicSuggesters" />
+  <configuration-item item="config['MusicManager.folders']" />
+  <configuration-item item="config['MusicManager.cleanDuringImport']" />
+  <configuration-item item="config['MusicManager.musicDownloadProviders']" />
+  <configuration-item item="config['MusicManager.musicQuality']" />
+  <configuration-item item="config['MusicManager.suggesters']" />
 
   <button ng-disabled="!settingsForm.$valid" class="btn btn-primary" ng-click="saveSettings()"><span class="glyphicon glyphicon-save" /> Save Settings</button>
 

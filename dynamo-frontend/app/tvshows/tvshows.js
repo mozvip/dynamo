@@ -22,6 +22,14 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
         return languageService.find();
       }]      
     }
+  }).when('/tvshows-configuration', {
+    templateUrl: 'tvshows/tvshows-configuration.html',
+    controller: 'TVShowsConfigCtrl',
+    resolve: {
+      configuration: ['configurationService', function(  configurationService  ) {
+        return configurationService.getItems();
+      }]
+    }
   }).when('/tvshows-wanted', {
     templateUrl: 'tvshows/episodes.html',
     controller: 'EpisodesCtrl'
@@ -185,6 +193,17 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
         $location.path("/tvshow-detail/" + response.data);
       }
     );
+  }
+
+}])
+
+.controller('TVShowsConfigCtrl', ['$scope', '$rootScope', 'configurationService', 'configuration', function( $scope, $rootScope, configurationService, configuration ) {
+
+  $scope.folders = [];
+
+  $scope.config = configuration.data;
+
+  $scope.saveSettings = function() {
   }
 
 }])

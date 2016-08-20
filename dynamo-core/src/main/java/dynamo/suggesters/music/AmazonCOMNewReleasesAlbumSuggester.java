@@ -10,7 +10,7 @@ public class AmazonCOMNewReleasesAlbumSuggester extends AbstractAmazonRSSMusicSu
 	}
 
 	@Override
-	public String toString() {
+	public String getLabel() {
 		return "Amazon.com new releases";
 	}
 	

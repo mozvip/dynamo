@@ -31,13 +31,11 @@ import dynamo.core.model.InitTask;
 import dynamo.core.model.ServiceTask;
 import dynamo.core.model.Task;
 import dynamo.core.model.TaskExecutor;
-import dynamo.core.services.ConfigurationItem;
 import javassist.Modifier;
 
 public class ConfigurationManager {
 	
 	private final static Logger LOGGER = LoggerFactory.getLogger( ConfigurationManager.class );
-	public final static String DYNAMO_PACKAGE_PREFIX = "dynamo";
 	
 	private ConfigurationManager() {
 		initPlugins();
@@ -289,7 +287,7 @@ public class ConfigurationManager {
 			}
 		}
 
-		Set<InitTask> initTasks = new DynamoObjectFactory<>(DYNAMO_PACKAGE_PREFIX, InitTask.class).getInstances();
+		Set<InitTask> initTasks = new DynamoObjectFactory<>(InitTask.class).getInstances();
 		for (InitTask initTask : initTasks) {
 			if ( initTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( initTask, false );
@@ -298,7 +296,7 @@ public class ConfigurationManager {
 			}
 		}
 
-		Set<ServiceTask> serviceTasks = new DynamoObjectFactory<>( DYNAMO_PACKAGE_PREFIX, ServiceTask.class ).getInstances();
+		Set<ServiceTask> serviceTasks = new DynamoObjectFactory<>(ServiceTask.class ).getInstances();
 		for (ServiceTask serviceTask : serviceTasks) {
 			if ( serviceTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( serviceTask, false );
@@ -307,7 +305,7 @@ public class ConfigurationManager {
 			}
 		}
 
-		Set<DaemonTask> daemonTasks = new DynamoObjectFactory<>( DYNAMO_PACKAGE_PREFIX, DaemonTask.class ).getInstances();
+		Set<DaemonTask> daemonTasks = new DynamoObjectFactory<>(DaemonTask.class ).getInstances();
 		for (DaemonTask daemonTask : daemonTasks) {
 			if ( daemonTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( daemonTask, false );

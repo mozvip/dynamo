@@ -1,0 +1,40 @@
+<div ng-if="item.list">
+  <div class="form-group">
+    <label>{{item.name}}</label>
+    <div class="row" ng-repeat="row in item.values">
+        <div class="col-md-1 btn-group" role="group">
+          <button class="btn btn-sm btn-danger" ng-click="removeRow($index)"><span class="glyphicon glyphicon-trash" /></button>
+          <button class="btn btn-sm btn-default" ng-show="!$first" ng-click="removeRow($index)"><span class="glyphicon glyphicon-chevron-up" /></button>
+          <button class="btn btn-sm btn-default" ng-show="!$last" ng-click="removeRow($index)"><span class="glyphicon glyphicon-chevron-down" /></button>
+        </div>
+        <div class="col-md-11">
+          <input ng-if="item.type=='java.nio.file.Path'" ng-required="true" valid-folder class="form-control" type="text" ng-model="row.value" />
+          <input ng-if="item.type=='java.lang.String'" ng-required="true" class="form-control" type="text" ng-model="row.value" />
+          <select ng-if="item.allowedValues" ng-required="true" class="form-control" ng-model="row.value" ng-options="key as label for (key, label) in item.allowedValues" />
+        </div>
+    </div>
+    <button ng-if="hasRemainingValues()" class="btn btn-default" ng-click="addRow()"><span class="glyphicon glyphicon-plus" /> Add</button>
+  </div>
+</div>
+
+<div ng-if="!item.list && item.allowedValues">
+  <div class="form-group">
+    <label>{{item.name}}</label>
+    <select ng-required="true" class="form-control" ng-model="item.value" ng-options="key as label for (key, label) in item.allowedValues" />
+  </div>
+</div>
+
+<div ng-if="item.type == 'java.lang.String'">
+  <div class="form-group">
+    <label>{{item.name}}</label>
+    <input type="text" ng-required="true" class="form-control" ng-model="item.value" />
+  </div>
+</div>
+
+<div ng-if="item.type == 'boolean'">
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" ng-model="item.value"> {{item.name}}
+    </label>
+  </div>
+</div>

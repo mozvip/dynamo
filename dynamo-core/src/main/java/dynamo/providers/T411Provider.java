@@ -15,6 +15,7 @@ import core.RegExp;
 import core.WebDocument;
 import core.WebResource;
 import dynamo.core.DownloadFinder;
+import dynamo.core.Labelized;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.core.configuration.Configurable;

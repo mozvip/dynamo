@@ -10,7 +10,7 @@ public class AmazonCOMBestSellersAlbumSuggester extends AbstractAmazonRSSMusicSu
 	}
 	
 	@Override
-	public String toString() {
+	public String getLabel() {
 		return "Amazon.com best sellers";
 	}
 

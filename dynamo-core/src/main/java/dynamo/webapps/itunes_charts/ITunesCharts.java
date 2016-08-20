@@ -43,7 +43,7 @@ public class ITunesCharts implements MusicAlbumSuggester, MovieSuggester {
 	}
 	
 	@Override
-	public String toString() {
+	public String getLabel() {
 		return "iTunes Chart";
 	}
 

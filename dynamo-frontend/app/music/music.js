@@ -89,10 +89,6 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
 
   $scope.config = configuration.data;
 
-  $scope.musicFolders = $scope.config['MusicManager.folders'];
-  $scope.musicProviders = $scope.config['MusicManager.musicDownloadProviders'];
-  $scope.musicSuggesters = $scope.config['MusicManager.suggesters'];
-
   $scope.saveSettings = function() {
     configurationService.setFolders('MusicManager.folders', $scope.folders);
   }

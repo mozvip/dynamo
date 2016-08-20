@@ -135,19 +135,44 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   return languageService;
 }])
 
-.directive('configurationList', function() {
+.directive('configurationItem', function() {
   return {
     restrict: 'E',
     scope: {
       item: '='
     },
-    templateUrl: 'common/configuration-list.html',
+    templateUrl: 'common/configuration-item.html',
     link: function(scope, element, attr) {
-      scope.removeRow = function( index ) {
-        scope.item.values.splice( index, 1 );
-      }
-      scope.addRow = function() {
-        scope.item.values.push({});
+      if (scope.item.list) {
+        var values = scope.item.value.split(';');
+        if (values[values.length-1] == '') {
+          values.splice( values.length - 1, 1);
+        }
+        scope.item.values = values.map( function( element ) {
+          return {'value': element};
+        });
+        if (scope.item.allowedValues) {
+          scope.item.remainingValues = scope.item.allowedValues;          
+        }
+
+        scope.hasRemainingValues = function() {
+          if (scope.item.allowedValues && scope.item.values.length == scope.item.allowedValues.length) {
+            return false;
+          }
+          return true;
+        }
+
+        scope.selectValue = function() {
+          if (scope.item.allowedValues) {
+
+          }
+        }
+        scope.removeRow = function( index ) {
+          scope.item.values.splice( index, 1 );
+        }
+        scope.addRow = function() {
+          scope.item.values.push({});
+        }
       }
     }
   }

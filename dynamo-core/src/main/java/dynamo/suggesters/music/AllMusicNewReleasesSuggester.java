@@ -16,7 +16,7 @@ import hclient.HTTPClient;
 public class AllMusicNewReleasesSuggester implements MusicAlbumSuggester {
 	
 	@Override
-	public String toString() {
+	public String getLabel() {
 		return "AllMusic.com New Releases";
 	}
 

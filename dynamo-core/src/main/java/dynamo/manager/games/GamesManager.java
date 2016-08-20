@@ -29,24 +29,16 @@ import dynamo.webapps.thegamesdb.net.TheGamesDBGame;
 import dynamo.webapps.thegamesdb.net.images.TheGamesDBBoxArt;
 
 public class GamesManager implements Reconfigurable {
-	
-	@Configurable(category="Games", name="Enable Games")
-	private boolean enabled;
-	
-	@Configurable(category="Games", name="Platforms", disabled="#{!GamesManager.enabled}", contentsClass=GamePlatform.class)
+
+	@Configurable(category="Games", name="Platforms", contentsClass=GamePlatform.class)
 	private List<GamePlatform> platforms;	
 	
-	@Configurable(category="Games", name="Game Providers", required="#{GamesManager.enabled}", disabled="#{!GamesManager.enabled}", contentsClass=GameFinder.class, ordered=true )
+	@Configurable(category="Games", name="Game Providers", contentsClass=GameFinder.class, ordered=true )
 	private List<GameFinder> providers;
 
 	public boolean isEnabled() {
-		return enabled;
+		return platforms != null && platforms.size() > 0;
 	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
 
 	public List<GamePlatform> getPlatforms() {
 		return platforms;
@@ -158,7 +150,7 @@ public class GamesManager implements Reconfigurable {
 
 	@Override
 	public void reconfigure() {
-		if (enabled) {
+		if (isEnabled()) {
 			if (platforms != null) {
 				for (GamePlatform platform : platforms) {
 					Path path = getFolder(platform);

@@ -1,6 +1,8 @@
 package dynamo.model.music;
 
-public enum MusicQuality {
+import dynamo.core.Labelized;
+
+public enum MusicQuality implements Labelized {
 	
 	COMPRESSED("Compressed"),
 	LOSSLESS("Lossless");
@@ -11,6 +13,7 @@ public enum MusicQuality {
 		this.label = label;
 	}
 	
+	@Override
 	public String getLabel() {
 		return label;
 	}

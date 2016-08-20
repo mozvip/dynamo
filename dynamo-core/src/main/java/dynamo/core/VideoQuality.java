@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.StringUtils;
 
-public enum VideoQuality implements Serializable {
+public enum VideoQuality implements Serializable, Labelized {
 	
 	SD( new String[] {" SD ", "DVDRIP", "dvd9"} ),
 	_720p(new String[] {"720p"}),
@@ -40,6 +40,7 @@ public enum VideoQuality implements Serializable {
 		return null;
 	}
 	
+	@Override
 	public String getLabel() {
 		return identifiers[0];
 	}

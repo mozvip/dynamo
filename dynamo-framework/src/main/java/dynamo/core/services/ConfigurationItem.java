@@ -1,23 +1,52 @@
 package dynamo.core.services;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import dynamo.core.Labelized;
+import dynamo.core.manager.DynamoObjectFactory;
+
+@JsonInclude(Include.NON_NULL)
 public class ConfigurationItem {
 
 	private String category;
 	private String name;
-	private String key;
 	private Class<?> type;
 	private String value;
 	private boolean list;
 	private boolean set;
+	private Map<String, String> allowedValues;
 
-	public ConfigurationItem(String category, String name, String key, Class<?> type, boolean list, boolean set) {
+	public ConfigurationItem(String category, String name, Class<?> type, boolean list, boolean set) {
 		super();
 		this.category = category;
 		this.name = name;
-		this.key = key;
 		this.type = type;
 		this.list = list;
 		this.set = set;
+		
+		if (type.isEnum()) {
+			allowedValues = new HashMap<>();
+			
+			Enum[] enumValArr = (Enum[]) type.getEnumConstants();
+			for (Enum enumValue : enumValArr) {
+				String label = enumValue instanceof Labelized ? ((Labelized)enumValue).getLabel() : enumValue.name();
+				allowedValues.put( enumValue.name(), label );
+			}
+		} else if (type.getName().startsWith("dynamo.")) {
+			
+			allowedValues = new HashMap<>();
+			Set<?> instances = new DynamoObjectFactory<>( type ).getInstances();
+			for (Object instance: instances) {
+				String label = instance instanceof Labelized ? ((Labelized)instance).getLabel() : instance.getClass().getName();
+				allowedValues.put( instance.getClass().getName(), label );
+			}
+			
+		}
 	}
 
 	public String getCategory() {
@@ -34,14 +63,6 @@ public class ConfigurationItem {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public void setKey(String key) {
-		this.key = key;
 	}
 
 	public void setType(Class<?> type) {
@@ -75,7 +96,9 @@ public class ConfigurationItem {
 	public void setSet(boolean set) {
 		this.set = set;
 	}
-	
-	
+
+	public Map<String, String> getAllowedValues() {
+		return allowedValues;
+	}	
 
 }

@@ -27,7 +27,7 @@ public class FolderIdentifierManager {
 	public synchronized Set<FolderIdentifier> getFolderIdentifiers() {
 		if (folderIdentifiers == null) {
 			try {
-				folderIdentifiers = new DynamoObjectFactory<>("dynamo", FolderIdentifier.class).getInstances();
+				folderIdentifiers = new DynamoObjectFactory<>(FolderIdentifier.class).getInstances();
 			} catch (Exception e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
