@@ -152,19 +152,26 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
           return {'value': element};
         });
         if (scope.item.allowedValues) {
-          scope.item.remainingValues = scope.item.allowedValues;          
+          scope.item.remainingValues = Object.keys( scope.item.allowedValues ).filter( function(value) {
+            return !scope.item.values.find( function(item) {
+              return item.value == value;
+          })});
         }
-
         scope.hasRemainingValues = function() {
-          if (scope.item.allowedValues && scope.item.values.length == scope.item.allowedValues.length) {
+          if (scope.item.remainingValues && scope.item.remainingValues.length == 0) {
             return false;
           }
           return true;
         }
-
+        scope.refreshRemaningValues = function() {
+          scope.item.remainingValues = Object.keys( scope.item.allowedValues ).filter( function(value) {
+            return !scope.item.values.find( function(item) {
+              return item.value == value;
+          })});
+        }
         scope.selectValue = function() {
-          if (scope.item.allowedValues) {
-
+          if (scope.item.remainingValues) {
+            scope.refreshRemaningValues();
           }
         }
         scope.removeRow = function( index ) {
