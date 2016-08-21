@@ -12,7 +12,8 @@ import dynamo.core.manager.DynamoObjectFactory;
 
 @JsonInclude(Include.NON_NULL)
 public class ConfigurationItem {
-
+	
+	private String key;
 	private String category;
 	private String name;
 	private Class<?> type;
@@ -21,8 +22,8 @@ public class ConfigurationItem {
 	private boolean set;
 	private Map<String, String> allowedValues;
 
-	public ConfigurationItem(String category, String name, Class<?> type, boolean list, boolean set) {
-		super();
+	public ConfigurationItem(String key, String category, String name, Class<?> type, boolean list, boolean set) {
+		this.key = key;
 		this.category = category;
 		this.name = name;
 		this.type = type;
@@ -48,25 +49,17 @@ public class ConfigurationItem {
 			
 		}
 	}
+	
+	public String getKey() {
+		return key;
+	}
 
 	public String getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setType(Class<?> type) {
-		this.type = type;
 	}
 
 	public Class<?> getType() {

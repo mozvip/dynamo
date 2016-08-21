@@ -229,7 +229,7 @@ public class MovieManager implements Reconfigurable {
 			movieDb = getMovieInfo(movieDb.getId());
 		}
 
-		if (movie.getName().equals(movieDb.getTitle())) {
+		if (!movie.getName().equals(movieDb.getTitle())) {
 			DownloadableManager.getInstance().updateName( movie.getId(), movieDb.getTitle());
 			movie.setName( movieDb.getTitle() );
 		}
@@ -239,9 +239,12 @@ public class MovieManager implements Reconfigurable {
 		if (!DownloadableManager.hasImage( movie ) && movieDb.getPosterPath() != null) {
 			DownloadableManager.downloadImage(movie, getImageURL( movieDb.getPosterPath()), null);
 		}
-		if ( movie.getYear() <= 0 && StringUtils.isNotBlank( movieDb.getReleaseDate() )) {
-			movie.setYear( Integer.parseInt( RegExp.extract( movieDb.getReleaseDate(), "(\\d{4}).*") ) );
-			DownloadableManager.getInstance().updateYear( movie.getId(), movie.getYear());
+		if ( StringUtils.isNotBlank( movieDb.getReleaseDate() )) {
+			int year = Integer.parseInt( RegExp.extract( movieDb.getReleaseDate(), "(\\d{4}).*") );
+			if (movie.getYear() != year) {
+				movie.setYear( year );
+				DownloadableManager.getInstance().updateYear( movie.getId(), movie.getYear());
+			}
 		}
 	}
 

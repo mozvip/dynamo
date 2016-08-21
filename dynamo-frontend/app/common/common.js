@@ -37,19 +37,13 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     'getItems' : function() {
       return $http.get('http://' + backendHostAndPort + '/services/configuration/items');
     },
-    'set' : function( key, value ) {
-      return $http.post('http://' + backendHostAndPort + '/services/configuration', { 'key' : key, 'value' : value});
-    },
-    'setFolders' : function( key, value ) {
-
-      var submittedValue = '';
-      value.forEach(function(folder) {
-        submittedValue += folder.path;
-        submittedValue += ';';
+    'saveItems': function( items ) {
+      var itemsToSave = {};
+      items.forEach(function(element) {
+        itemsToSave[element.key] = element.value;
       }, this);
-      return $http.post('http://' + backendHostAndPort + '/services/configuration', { 'key' : key, 'value' : submittedValue});
+      return $http.post('http://' + backendHostAndPort + '/services/configuration', itemsToSave);
     }
-
   }
 
   return configurationService;
@@ -107,7 +101,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   return fileListService;
 }])
 
-. controller('FileListCtrl', ['$scope', '$uibModalInstance', 'fileList', function($scope, $uibModalInstance, fileList) {
+.controller('FileListCtrl', ['$scope', '$uibModalInstance', 'fileList', function($scope, $uibModalInstance, fileList) {
 
   $scope.files = fileList.data;
 
@@ -117,7 +111,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
 
 }])
 
-. controller('SearchResultsCtrl', ['$scope', '$uibModalInstance', 'searchResultsList', function($scope, $uibModalInstance, searchResultsList) {
+.controller('SearchResultsCtrl', ['$scope', '$uibModalInstance', 'searchResultsList', function($scope, $uibModalInstance, searchResultsList) {
 
   $scope.searchResults = searchResultsList.data;
 
@@ -143,6 +137,11 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     },
     templateUrl: 'common/configuration-item.html',
     link: function(scope, element, attr) {
+
+      if (scope.item.type == 'boolean') {
+        scope.item.value = ( scope.item.value === 'true' );
+      }
+
       if (scope.item.list) {
         var values = scope.item.value.split(';');
         if (values[values.length-1] == '') {
@@ -169,13 +168,26 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
               return item.value == value;
           })});
         }
-        scope.selectValue = function() {
+        scope.changeValue = function() {
           if (scope.item.remainingValues) {
             scope.refreshRemaningValues();
           }
+          var itemValues = scope.item.values.map( function( element ) {
+            return element.value;
+          });          
+          scope.item.value = itemValues.reduceRight( function(previousValue, currentValue, currentIndex, array) {
+            return currentValue + ';' + previousValue;
+          } );
+        }
+        scope.moveUp = function( index ) {
+          
+        }
+        scope.moveDown = function( index ) {
+
         }
         scope.removeRow = function( index ) {
           scope.item.values.splice( index, 1 );
+          scope.changeValue();
         }
         scope.addRow = function() {
           scope.item.values.push({});

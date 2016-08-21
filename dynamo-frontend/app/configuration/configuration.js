@@ -5,7 +5,12 @@ angular.module('dynamo.configuration', ['ngRoute'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/configuration', {
             templateUrl: 'configuration/configuration.html',
-            controller: 'ConfigurationCtrl'
+            controller: 'ConfigurationCtrl',
+            resolve: {
+                configuration: ['configurationService', function (configurationService) {
+                    return configurationService.getItems();
+                }]
+            }
         }).when('/quality-profiles', {
             templateUrl: 'configuration/quality-profiles.html',
             controller: 'QualityProfilesCtrl'
@@ -13,6 +18,9 @@ angular.module('dynamo.configuration', ['ngRoute'])
             templateUrl: 'configuration/plugins.html',
             controller: 'PluginsCtrl',
             resolve: {
+                configuration: ['configurationService', function (configurationService) {
+                    return configurationService.getItems();
+                }],
                 pluginOptions: ['BackendService', function(  BackendService  ) {
                     return BackendService.get('configuration/plugin-options');
                 }]
@@ -26,16 +34,27 @@ angular.module('dynamo.configuration', ['ngRoute'])
 
     }])
 
-    .controller('ConfigurationCtrl', ['$scope', 'configurationService', '$filter', function ($scope, configurationService, $filter) {
+    .controller('ConfigurationCtrl', ['$scope', 'configurationService', 'configuration', function ($scope, configurationService, configuration) {
 
-        $scope.items = {};
+        $scope.config = configuration.data;
 
-        configurationService.getItems().then(function (response) {
-            $scope.items = response.data;
-        });
+        $scope.itemsToConfigure = [
+            $scope.config['EZTVProvider.enabled'],
+            $scope.config['EZTVProvider.baseURL'],
+            $scope.config['KATProvider.enabled'],
+            $scope.config['KATProvider.baseURL'],
+            $scope.config['T411Provider.enabled'],
+            $scope.config['T411Provider.baseURL'],
+            $scope.config['T411Provider.login'],
+            $scope.config['T411Provider.password'],
+            $scope.config['UsenetCrawlerProvider.enabled'],
+            $scope.config['UsenetCrawlerProvider.login'],
+            $scope.config['UsenetCrawlerProvider.password']
+            
+        ];
 
-        $scope.configurationChanged = function (key) {
-            configurationService.set(key, $scope.items[key].value);
+        $scope.saveSettings = function () {
+        configurationService.saveItems( $scope.itemsToConfigure );
         }
 
     }])

@@ -12,6 +12,7 @@ import core.WebDocument;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
+import dynamo.core.configuration.Configurable;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
@@ -27,12 +28,21 @@ import hclient.HTTPClient;
 
 public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicAlbumFinder, TVShowSeasonProvider, MovieProvider, MagazineProvider, GameFinder {
 
-	private static final String BASE_URL = "https://kat.cr";
+	@Configurable(category="Providers", name="KAT Base URL", defaultValue="http://kat.am")
+	private String baseURL = "http://kat.am";
 	
+	public String getBaseURL() {
+		return baseURL;
+	}
+
+	public void setBaseURL(String baseURL) {
+		this.baseURL = baseURL;
+	}
+
 	private WebDocument getDocument( String searchParams, int pageNumber ) throws IOException, URISyntaxException {
 		searchParams = searchParams.replace("!", "");
-		String searchURL = BASE_URL + "/usearch/" + searchParams + "/" + pageNumber + "?field=seeders&sorder=desc";
-		return client.getDocument( searchURL, BASE_URL + "/", HTTPClient.REFRESH_ONE_HOUR );
+		String searchURL = baseURL + "/usearch/" + searchParams + "/" + pageNumber + "?field=seeders&sorder=desc";
+		return client.getDocument( searchURL, baseURL + "/", HTTPClient.REFRESH_ONE_HOUR );
 	}
 
 	private List<SearchResult> findDownloadsForURL( String searchParams ) throws IOException, URISyntaxException {

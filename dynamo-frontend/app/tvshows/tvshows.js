@@ -187,6 +187,10 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     $scope.selectedTVShow = tvshow;
   }
 
+  $scope.cancelSelection = function() {
+    $scope.selectedTVShow = undefined;
+  }
+
   $scope.addTVShow = function( id ) {
     BackendService.post("tvshows/add", {"id": id, 'seriesName': $scope.selectedTVShow.seriesName, 'audioLanguage': $scope.audioLanguage, 'subtitlesLanguage': $scope.subtitlesLanguage}).then(
       function( response ) {
@@ -199,12 +203,21 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
 .controller('TVShowsConfigCtrl', ['$scope', '$rootScope', 'configurationService', 'configuration', function( $scope, $rootScope, configurationService, configuration ) {
 
-  $scope.folders = [];
-
   $scope.config = configuration.data;
 
-  $scope.saveSettings = function() {
-  }
+  $scope.itemsToConfigure = [
+    $scope.config['TVShowManager.folders'],
+    $scope.config['TVShowManager.seasonFolderPattern'],
+    $scope.config['TVShowManager.audioLanguage'],
+    $scope.config['TVShowManager.metaDataLanguage'],
+    $scope.config['TVShowManager.subtitlesLanguage'],
+    $scope.config['TVShowManager.tvshowEpisodeProviders'],
+    $scope.config['TVShowManager.tvShowQualities']
+  ];
+
+    $scope.saveSettings = function () {
+      configurationService.saveItems( $scope.itemsToConfigure );
+    }
 
 }])
 

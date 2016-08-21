@@ -1,10 +1,6 @@
 <form name="settingsForm" novalidate>
 
-  <configuration-item item="config['MusicManager.folders']" />
-  <configuration-item item="config['MusicManager.cleanDuringImport']" />
-  <configuration-item item="config['MusicManager.musicDownloadProviders']" />
-  <configuration-item item="config['MusicManager.musicQuality']" />
-  <configuration-item item="config['MusicManager.suggesters']" />
+  <configuration-item ng-repeat="item in itemsToConfigure" item="item" />
 
   <button ng-disabled="!settingsForm.$valid" class="btn btn-primary" ng-click="saveSettings()"><span class="glyphicon glyphicon-save" /> Save Settings</button>
 

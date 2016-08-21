@@ -18,7 +18,7 @@ import dynamo.model.result.SearchResultType;
 
 public class EZTVProvider extends DownloadFinder implements EpisodeFinder {
 	
-	@Configurable(category="Providers", name="EZTV Base URL", disabled="#{!EZTVProvider.enabled}", required="#{EZTVProvider.enabled}", defaultValue="https://eztv.ag")
+	@Configurable(category="Providers", name="EZTV Base URL", defaultValue="https://eztv.ag")
 	private String baseURL = "https://eztv.ag";
 
 	public String getBaseURL() {

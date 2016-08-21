@@ -42,11 +42,7 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
   $scope.select = function( selectedMovie ) {
     movieDbSearchService.associate( movie.id, selectedMovie.movieDbId ).then( function( response ) {
       movie = response.data;
-
-      movie.name = selectedMovie.name;
-      movie.year = selectedMovie.year;
-
-      $uibModalInstance.dismiss();
+      $uibModalInstance.close( movie );
     });
   };
 
@@ -123,7 +119,9 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
     });
 
     modalInstance.result.then(function (selectedItem) {
-      $scope.selected = selectedItem;
+      movie.name = selectedItem.name;
+      movie.year = selectedItem.year;
+      movie.image = selectedItem.image;
     });
   };
 

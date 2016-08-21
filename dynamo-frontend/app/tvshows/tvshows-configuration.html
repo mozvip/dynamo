@@ -1,12 +1,6 @@
 <form name="settingsForm" novalidate>
 
-  <configuration-item item="config['TVShowManager.folders']" />
-  <configuration-item item="config['TVShowManager.audioLanguage']" />
-  <configuration-item item="config['TVShowManager.metaDataLanguage']" />
-  <configuration-item item="config['TVShowManager.subtitlesLanguage']" />
-  <configuration-item item="config['TVShowManager.seasonFolderPattern']" />
-  <configuration-item item="config['TVShowManager.tvshowEpisodeProviders']" />
-  <configuration-item item="config['TVShowManager.tvShowQualities']" />
+  <configuration-item ng-repeat="item in itemsToConfigure" item="item" />
 
   <button ng-disabled="!settingsForm.$valid" class="btn btn-primary" ng-click="saveSettings()"><span class="glyphicon glyphicon-save" /> Save Settings</button>
 

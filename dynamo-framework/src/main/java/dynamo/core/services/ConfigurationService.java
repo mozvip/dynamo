@@ -30,8 +30,10 @@ public class ConfigurationService {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void setParameter(ConfigItem item) throws Exception {
-		ConfigAnnotationManager.getInstance().setConfigString( item.getKey(), item.getValue() );
+	public void saveItems(Map<String, String> items) throws Exception {
+		for (Map.Entry<String, String> item : items.entrySet()) {
+			ConfigAnnotationManager.getInstance().setConfigString( item.getKey(), item.getValue() );
+		}
 		ConfigurationManager.getInstance().save();
 	}
 	

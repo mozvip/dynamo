@@ -14,7 +14,7 @@
   <button class="btn btn-primary" ng-click="searchTVShow()"><span class="glyphicon glyphicon-search"/> Search</button>
 </div>
 
-<div class="panel panel-default" ng-repeat="tvshow in results">
+<div class="panel panel-default" ng-repeat="tvshow in results" ng-show="!selectedTVShow || selectedTVShow.id === tvshow.id">
   <div class="panel-heading">
     <h4 class="text-center">{{tvshow.seriesName}}</h4>
   </div>
@@ -26,14 +26,8 @@
     <p>{{tvshow.overview}}</p>
   </div>
   <div class="panel-footer">
-      <button class="btn btn-default btn-block" ng-click="selectTVShow(tvshow)"><span class="glyphicon glyphicon-download"/> Add {{tvshow.seriesName}} to my collection</button>
+      <button class="btn btn-success btn-block" ng-show="!selectedTVShow" ng-click="selectTVShow(tvshow)"><span class="glyphicon glyphicon-download"/> Add {{tvshow.seriesName}} to my collection</button>
       <form class="form-inline" ng-show="selectedTVShow && selectedTVShow.id === tvshow.id">
-        <div class="form-group">
-          <label class="control-label">Quality Profile</label>
-          <select ng-model="quality" class="form-control" ng-options="item.key as item.value for item in qualities">
-            <option value="" />
-          </select>
-        </div>
         <div class="form-group">
           <label class="control-label">Audio Language</label>
           <select ng-model="audioLanguage" class="form-control" ng-options="item.key as item.value for item in languages">
@@ -46,7 +40,10 @@
             <option value="" />
           </select>
         </div>
-        <button class="btn btn-primary btn-block" ng-click="addTVShow(tvshow.id)"><span class="glyphicon glyphicon-ok"/> Confirm</button>
+        <div class="btn-group">
+          <button class="btn btn-primary" ng-click="addTVShow(tvshow.id)"><span class="glyphicon glyphicon-ok"/> Confirm</button>
+          <button class="btn btn-default" ng-click="cancelSelection()"><span class="glyphicon glyphicon-ok"/> Cancel</button>
+        </div>
     </form>
   </div>
 </div>
