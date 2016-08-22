@@ -34,36 +34,40 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="dropdown" ng-show="moviesCollectionCount > 0 || moviesWantedCount > 0 || moviesSuggestionCount > 0">
+            <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Movies <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a ng-show="moviesCollectionCount > 0" href="#/movies/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{moviesCollectionCount}}</span></a></li>
                 <li><a ng-show="moviesWantedCount > 0" href="#/movies/WANTED,SNATCHED">Wanted <span class="badge">{{moviesWantedCount}}</span></a></li>
                 <li><a ng-show="moviesSuggestionCount > 0" href="#/movies/SUGGESTED">Suggestions <span class="badge">{{moviesSuggestionCount}}</span></a></li>
+                <li><a href="#/movies-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
               </ul>
             </li>
-            <li class="dropdown" ng-show="magazinesCollectionCount > 0 || magazinesWantedCount > 0 || magazinesSuggestionCount > 0">
+            <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Magazines <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a ng-show="magazinesCollectionCount > 0" href="#/magazines/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{magazinesCollectionCount}}</span></a></li>
                 <li><a ng-show="magazinesWantedCount > 0" href="#/magazines/WANTED,SNATCHED">Wanted <span class="badge">{{magazinesWantedCount}}</span></a></li>
                 <li><a ng-show="magazinesSuggestionCount > 0" href="#/magazines/SUGGESTED">Suggestions <span class="badge">{{magazinesSuggestionCount}}</span></a></li>
+                <li><a href="#/magazines-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
               </ul>
             </li>
-            <li class="dropdown" ng-show="booksCollectionCount > 0 || booksWantedCount > 0 || booksSuggestionCount > 0">
+            <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Books <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a ng-show="booksCollectionCount > 0" href="#/books/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{booksCollectionCount}}</span></a></li>
                 <li><a ng-show="booksWantedCount > 0" href="#/books/WANTED,SNATCHED">Wanted <span class="badge">{{booksWantedCount}}</span></a></li>
                 <li><a ng-show="booksSuggestionCount > 0" href="#/books/SUGGESTED">Suggestions <span class="badge">{{booksSuggestionCount}}</span></a></li>
+                <li><a href="#/books-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
               </ul>
             </li>
-            <li class="dropdown" ng-show="gamesCollectionCount > 0 || gamesWantedCount > 0 || gamesSuggestionCount > 0">
+            <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Games <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a ng-show="gamesCollectionCount > 0" href="#/games/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{gamesCollectionCount}}</span></a></li>
                 <li><a ng-show="gamesWantedCount > 0" href="#/games/WANTED,SNATCHED">Wanted <span class="badge">{{gamesWantedCount}}</span></a></li>
                 <li><a ng-show="gamesSuggestionCount > 0" href="#/games/SUGGESTED">Suggestions <span class="badge">{{gamesSuggestionCount}}</span></a></li>
+                <li><a href="#/games-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
               </ul>
             </li>
             <li class="dropdown">

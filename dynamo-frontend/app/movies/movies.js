@@ -6,6 +6,14 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
   $routeProvider.when('/movies/:status', {
     templateUrl: 'movies/movies.html',
     controller: 'MoviesCtrl'
+  }).when('/movies-configuration', {
+    templateUrl: 'movies/movies-configuration.html',
+    controller: 'MoviesConfigCtrl',
+    resolve: {
+      configuration: ['configurationService', function(  configurationService  ) {
+        return configurationService.getItems();
+      }]
+    }    
   });
 }])
 
@@ -49,6 +57,20 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel');
   };
+
+}])
+
+.controller('MoviesConfigCtrl', ['$scope', '$rootScope', 'configurationService', 'configuration', function( $scope, $rootScope, configurationService, configuration ) {
+
+  $scope.config = configuration.data;
+
+  $scope.itemsToConfigure = [
+    $scope.config['MovieManager.folders']
+  ];
+
+    $scope.saveSettings = function () {
+      configurationService.saveItems( $scope.itemsToConfigure );
+    }
 
 }])
 

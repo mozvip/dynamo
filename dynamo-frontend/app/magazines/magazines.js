@@ -11,6 +11,9 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
         return languageService.find();
       }]
     }    
+  }).when('/magazines-configuration', {
+    templateUrl: 'magazines/magazines-configuration.html',
+    controller: 'MagazinesConfigCtrl'
   });
 }])
 

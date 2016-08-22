@@ -6,6 +6,9 @@ angular.module('dynamo.games', ['ngRoute', 'ngResource'])
   $routeProvider.when('/games/:status', {
     templateUrl: 'games/games.html',
     controller: 'GamesCtrl'
+  }).when('/games-configuration', {
+    templateUrl: 'games/games-configuration.html',
+    controller: 'GamesConfigCtrl'
   });
 }])
 
