@@ -143,6 +143,18 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
       }
 
       if (scope.item.list) {
+
+        scope.refreshRemainingValues = function() {
+          var remainingProperties = Object.keys( scope.item.allowedValues ).filter( function(value) {
+            return !scope.item.values.find( function(item) {
+              return item.value == value;
+          })});
+          scope.item.remainingValues = {};
+          remainingProperties.forEach(function(property) {
+            scope.item.remainingValues[property] = scope.item.allowedValues[property];
+          }, this);
+        }
+
         var values = scope.item.value.split(';');
         if (values[values.length-1] == '') {
           values.splice( values.length - 1, 1);
@@ -151,26 +163,17 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
           return {'value': element};
         });
         if (scope.item.allowedValues) {
-          scope.item.remainingValues = Object.keys( scope.item.allowedValues ).filter( function(value) {
-            return !scope.item.values.find( function(item) {
-              return item.value == value;
-          })});
+          scope.refreshRemainingValues();
         }
         scope.hasRemainingValues = function() {
-          if (scope.item.remainingValues && scope.item.remainingValues.length == 0) {
+          if (scope.item.remainingValues && Object.keys(scope.item.remainingValues).length == 0) {
             return false;
           }
           return true;
         }
-        scope.refreshRemaningValues = function() {
-          scope.item.remainingValues = Object.keys( scope.item.allowedValues ).filter( function(value) {
-            return !scope.item.values.find( function(item) {
-              return item.value == value;
-          })});
-        }
         scope.changeValue = function() {
           if (scope.item.remainingValues) {
-            scope.refreshRemaningValues();
+            scope.refreshRemainingValues();
           }
           var itemValues = scope.item.values.map( function( element ) {
             return element.value;

@@ -2,12 +2,12 @@
   <div class="form-group">
     <label>{{item.name}}</label>
     <div class="row" ng-repeat="row in item.values">
-        <div class="col-md-1 btn-group" role="group">
+        <div class="col-md-2 btn-group" role="group">
           <button class="btn btn-sm btn-danger" ng-click="removeRow($index)"><span class="glyphicon glyphicon-trash" /></button>
           <button class="btn btn-sm btn-default" ng-show="!$first" ng-click="moveUp($index)"><span class="glyphicon glyphicon-chevron-up" /></button>
           <button class="btn btn-sm btn-default" ng-show="!$last" ng-click="moveDown($index)"><span class="glyphicon glyphicon-chevron-down" /></button>
         </div>
-        <div class="col-md-11">
+        <div class="col-md-10">
           <input ng-if="item.type=='java.nio.file.Path'" ng-required="true" ng-change="changeValue()" valid-folder class="form-control" type="text" ng-model="row.value" />
           <input ng-if="item.type=='java.lang.String'" ng-required="true" ng-change="changeValue()" class="form-control" type="text" ng-model="row.value" />
           <select ng-if="item.allowedValues" ng-required="true" ng-change="changeValue()" class="form-control" ng-model="row.value" ng-options="key as label for (key, label) in item.allowedValues" />
