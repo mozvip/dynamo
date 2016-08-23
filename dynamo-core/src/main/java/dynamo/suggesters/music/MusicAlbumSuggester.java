@@ -1,8 +1,6 @@
 package dynamo.suggesters.music;
 
-import dynamo.core.Labelized;
-
-public interface MusicAlbumSuggester extends Labelized {
+public interface MusicAlbumSuggester {
 
 	public void suggestAlbums() throws Exception;
 

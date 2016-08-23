@@ -13,6 +13,7 @@ import dynamo.backlog.tasks.nzb.DownloadNZBTask;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.EpisodeFinder;
@@ -29,6 +30,7 @@ import dynamo.model.result.SearchResultType;
 import dynamo.movies.model.MovieManager;
 import hclient.HTTPClient;
 
+@ClassDescription(label="NZBIndex.nl")
 public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, MagazineProvider, GameFinder {
 
 	private static final String BASE_URL = "http://nzbindex.nl";
@@ -49,11 +51,6 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 			setEnabled( false );
 		}
 	}
-
-	@Override
-	public String getLabel() {
-		return "NZBIndex";
-	}	
 
 	private List<SearchResult> extractResults( String searchURL ) throws IOException, URISyntaxException {
 		List<SearchResult> results = new ArrayList<SearchResult>();

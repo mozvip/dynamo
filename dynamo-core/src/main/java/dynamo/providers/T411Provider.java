@@ -15,9 +15,9 @@ import core.RegExp;
 import core.WebDocument;
 import core.WebResource;
 import dynamo.core.DownloadFinder;
-import dynamo.core.Labelized;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.EpisodeFinder;
@@ -47,6 +47,7 @@ import dynamo.utils.images.CoverImageFinder;
 import dynamo.webapps.googleimages.GoogleImages;
 import hclient.HTTPClient;
 
+@ClassDescription(label="Torrent 411")
 public class T411Provider extends DownloadFinder implements BookFinder, EpisodeFinder, TVShowSeasonProvider, MusicAlbumFinder, MovieProvider, MagazineProvider, GameFinder, KioskIssuesSuggester, BookSuggester, MovieSuggester {
 
 	@Configurable(category="Providers", name="T411 Login")
@@ -221,11 +222,6 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		String searchURL = String.format( baseURL + "/torrents/search/?search=%s&submit=Recherche&subcat=410&order=added&type=desc", issueSearchString );
 
 		return extractResults( searchURL, 1 );
-	}
-
-	@Override
-	public String getLabel() {
-		return "Torrent 411";
 	}
 
 	@Override

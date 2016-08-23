@@ -11,11 +11,13 @@ import org.jsoup.select.Elements;
 
 import core.WebDocument;
 import dynamo.core.DownloadFinder;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.magazines.MagazineProvider;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
 
+@ClassDescription(label="BTDigg.org")
 public class BTDigg extends DownloadFinder implements MagazineProvider {
 
 	private static final String BASE_URL = "http://btdigg.org";
@@ -51,11 +53,6 @@ public class BTDigg extends DownloadFinder implements MagazineProvider {
 
 	@Override
 	public void configureProvider() throws Exception {
-	}
-	
-	@Override
-	public String getLabel() {
-		return "BTDigg.org";
 	}
 	
 	@Override

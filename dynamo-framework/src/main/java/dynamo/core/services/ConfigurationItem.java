@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import dynamo.core.Labelized;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.manager.DynamoObjectFactory;
+import dynamo.core.model.TaskExecutor;
 
 @JsonInclude(Include.NON_NULL)
 public class ConfigurationItem {
@@ -41,10 +43,11 @@ public class ConfigurationItem {
 		} else if (type.getName().startsWith("dynamo.")) {
 			
 			allowedValues = new HashMap<>();
-			Set<?> instances = new DynamoObjectFactory<>( type ).getInstances();
-			for (Object instance: instances) {
-				String label = instance instanceof Labelized ? ((Labelized)instance).getLabel() : instance.getClass().getName();
-				allowedValues.put( instance.getClass().getName(), label );
+			Set<?> klasses = DynamoObjectFactory.getReflections().getSubTypesOf( type );
+			for (Class<?> klass: (Set<Class<?>>) klasses) {
+				ClassDescription annotation = klass.getAnnotation( ClassDescription.class );
+				String label = annotation != null ? annotation.label() : klass.getName();
+				allowedValues.put( klass.getName(), label );
 			}
 			
 		}

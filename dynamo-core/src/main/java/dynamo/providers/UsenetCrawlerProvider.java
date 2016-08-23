@@ -10,6 +10,7 @@ import core.WebDocument;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.MovieProvider;
@@ -19,6 +20,7 @@ import dynamo.movies.model.MovieManager;
 import hclient.HTTPClient;
 import hclient.SimpleResponse;
 
+@ClassDescription(label="Usenet Crawler")
 public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvider {
 
 	private static final String BASE_URL = "https://www.usenet-crawler.com";
@@ -90,11 +92,6 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 		}
 	}
 	
-	@Override
-	public String getLabel() {
-		return "Usenet Crawler";
-	}
-
 	@Override
 	public boolean needsLanguageInSearchString() {
 		return true;

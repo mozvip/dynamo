@@ -14,6 +14,7 @@ import core.WebDocument;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.MovieProvider;
@@ -30,6 +31,7 @@ import dynamo.parsers.VideoNameParser;
 import dynamo.suggesters.movies.MovieSuggester;
 import hclient.HTTPClient;
 
+@ClassDescription(label="CPasBien")
 public class CPasBienProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, TVShowSeasonProvider, MagazineProvider, MovieSuggester {
 
 	private static final String BASE_URL = "http://www.cpasbien.cm";
@@ -88,11 +90,6 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 
 	@Override
 	public void configureProvider() {
-	}
-
-	@Override
-	public String getLabel() {
-		return "CPasBien";
 	}
 
 	@Override

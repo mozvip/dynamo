@@ -12,6 +12,7 @@ import core.WebDocument;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
@@ -21,6 +22,7 @@ import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
 
+@ClassDescription(label="The Pirate Bay")
 public class PirateBayProvider extends DownloadFinder implements MovieProvider, MagazineProvider, GameFinder {
 
 	@Configurable(category="Providers", name="Pirate Bay Base URL", disabled="#{!PirateBayProvider.enabled}", required="#{PirateBayProvider.enabled}", defaultValue="https://pirateproxy.sx")
@@ -32,11 +34,6 @@ public class PirateBayProvider extends DownloadFinder implements MovieProvider, 
 	
 	public void setBaseURL(String baseURL) {
 		this.baseURL = baseURL;
-	}
-
-	@Override
-	public String getLabel() {
-		return "The Pirate Bay";
 	}
 
 	@Override

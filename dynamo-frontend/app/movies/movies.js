@@ -92,14 +92,23 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
     $scope.pageContents = $scope.filteredList.slice( start, start + 24);
   }
 
-  $scope.want = function( downloadable ) {
-    downloadableService.want( downloadable.id );
+  $scope.removeFromList = function( downloadable ) {
     $scope.allItems = filterFilter($scope.allItems, {'id': '!' + downloadable.id });
     $scope.filteredList = filterFilter($scope.filteredList, {'id': '!' + downloadable.id });
     $scope.pageChanged();
+  }
+
+  $scope.want = function( downloadable ) {
+    downloadableService.want( downloadable.id );
+    $scope.removeFromList( downloadable );
 
     $rootScope.moviesSuggestionCount = $scope.allItems.length;
     $rootScope.moviesWantedCount ++;    
+  }
+
+  $scope.delete = function( downloadable ) {
+    downloadableService.delete( downloadable.id );
+    $scope.removeFromList( downloadable );
   }
 
   $scope.filterChanged = function() {

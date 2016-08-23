@@ -28,9 +28,14 @@ angular.module('dynamo.configuration', ['ngRoute'])
         });
     }])
 
-    .controller('PluginsCtrl', ['$scope', 'configurationService', '$filter', 'pluginOptions', function ($scope, configurationService, $filter, pluginOptions) {
+    .controller('PluginsCtrl', ['$scope', 'configurationService', '$filter', 'pluginOptions', 'configuration', function ($scope, configurationService, $filter, pluginOptions, configuration) {
 
         $scope.pluginOptions = pluginOptions.data;
+        $scope.config = configuration.data;
+
+        $scope.selectPlugin = function(pluginOption) {
+            alert(pluginOption.value.klass);
+        }
 
     }])
 
@@ -54,7 +59,7 @@ angular.module('dynamo.configuration', ['ngRoute'])
         ];
 
         $scope.saveSettings = function () {
-        configurationService.saveItems( $scope.itemsToConfigure );
+            configurationService.saveItems( $scope.itemsToConfigure );
         }
 
     }])

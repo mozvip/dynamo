@@ -15,7 +15,7 @@ import dynamo.core.manager.ErrorManager;
 import hclient.HTTPClient;
 import hclient.RegExpMatcher;
 
-public abstract class DownloadFinder implements Labelized, Reconfigurable, Enableable, NotAlwaysReady {
+public abstract class DownloadFinder implements Reconfigurable, Enableable, NotAlwaysReady {
 	
 	protected final static Logger logger = LoggerFactory.getLogger( DownloadFinder.class );
 
@@ -92,10 +92,5 @@ public abstract class DownloadFinder implements Labelized, Reconfigurable, Enabl
 	}
 	
 	public abstract void configureProvider() throws Exception;
-	
-	@Override
-	public String toString() {
-		return getLabel();
-	}
 
 }

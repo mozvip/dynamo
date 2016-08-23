@@ -1,3 +1,6 @@
-<div ng-repeat="pluginOption in pluginOptions">
-    {{pluginOption}}
-</div>
+<form>
+    <div ng-repeat="pluginOption in pluginOptions">
+        <label>{{pluginOption.taskClass.label}}</label>
+        <select class="form-control" ng-model="pluginOption.value" ng-change="selectPlugin(pluginOption)" ng-options="option as option.label for option in pluginOption.executorOptions" />
+    </div>
+</form>

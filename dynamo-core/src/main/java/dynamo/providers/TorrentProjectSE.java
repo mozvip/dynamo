@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 
 import core.WebDocument;
 import dynamo.core.DownloadFinder;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.finders.core.GameFinder;
 import dynamo.finders.music.MusicAlbumFinder;
 import dynamo.finders.music.MusicAlbumSearchException;
@@ -20,6 +21,7 @@ import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
 
+@ClassDescription(label="torrentproject.se")
 public class TorrentProjectSE extends DownloadFinder implements MagazineProvider, MusicAlbumFinder, GameFinder {
 
 	private static final String BASE_URL = "http://torrentproject.se";
@@ -57,11 +59,6 @@ public class TorrentProjectSE extends DownloadFinder implements MagazineProvider
 	@Override
 	public List<SearchResult> findDownloadsForMagazine(String issueSearchString) throws Exception {
 		return extractResults( client.getDocument(String.format("%s/?s=%s&filter=3000", BASE_URL, plus(issueSearchString)), HTTPClient.REFRESH_ONE_DAY));
-	}
-	
-	@Override
-	public String getLabel() {
-		return "torrentproject.se";
 	}
 
 	@Override

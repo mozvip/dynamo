@@ -12,6 +12,7 @@ import core.WebDocument;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.GameFinder;
@@ -26,6 +27,7 @@ import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
 
+@ClassDescription(label="KickAssTorrents")
 public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicAlbumFinder, TVShowSeasonProvider, MovieProvider, MagazineProvider, GameFinder {
 
 	@Configurable(category="Providers", name="KAT Base URL", defaultValue="http://kat.am")
@@ -96,11 +98,6 @@ public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicA
 
 	@Override
 	public void configureProvider() {
-	}
-
-	@Override
-	public String getLabel() {
-		return "KickAssTorrents";
 	}
 
 	@Override

@@ -11,11 +11,13 @@ import core.RegExp;
 import core.WebDocument;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 
+@ClassDescription(label="EZTV")
 public class EZTVProvider extends DownloadFinder implements EpisodeFinder {
 	
 	@Configurable(category="Providers", name="EZTV Base URL", defaultValue="https://eztv.ag")
@@ -27,11 +29,6 @@ public class EZTVProvider extends DownloadFinder implements EpisodeFinder {
 	
 	public void setBaseURL(String eztvDomain) {
 		this.baseURL = eztvDomain;
-	}
-
-	@Override
-	public String getLabel() {
-		return "EZTV";
 	}
 
 	@Override

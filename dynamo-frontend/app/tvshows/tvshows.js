@@ -18,6 +18,9 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     templateUrl: 'tvshows/tvshows-add.html',
     controller: 'TVShowsAddCtrl',
     resolve: {
+      configuration: ['configurationService', function (configurationService) {
+          return configurationService.getItems();
+      }],      
       languages: ['languageService', function(  languageService  ) {
         return languageService.find();
       }]      
@@ -165,11 +168,11 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('TVShowsAddCtrl', ['$scope', '$location', 'tvShowsService', 'tvdbService', 'BackendService', 'languages', function( $scope, $location, tvShowsService, tvdbService, BackendService, languages ) {
+.controller('TVShowsAddCtrl', ['$scope', '$location', 'tvShowsService', 'tvdbService', 'BackendService', 'languages', 'configuration', function( $scope, $location, tvShowsService, tvdbService, BackendService, languages, configuration ) {
 
   $scope.languages = languages.data;
 
-  $scope.language = 'EN';
+  $scope.language = configuration.data['TVShowManager.metaDataLanguage'].value;
 
   $scope.results = [];
   $scope.searchTVShow = function() {
@@ -178,8 +181,8 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     });
   }
 
-  $scope.audioLanguage = 'EN';
-  $scope.subTitlesLanguage = 'FR';
+  $scope.audioLanguage = configuration.data['TVShowManager.audioLanguage'].value;
+  $scope.subtitlesLanguage = configuration.data['TVShowManager.subtitlesLanguage'].value;
   $scope.selectedTVShow = undefined;
 
   $scope.selectTVShow = function( tvshow ) {

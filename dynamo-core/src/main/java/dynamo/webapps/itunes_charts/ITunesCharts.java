@@ -7,12 +7,14 @@ import core.RegExp;
 import core.WebDocument;
 import core.WebResource;
 import dynamo.core.Language;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.manager.MusicManager;
 import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 import dynamo.suggesters.music.MusicAlbumSuggester;
 import hclient.HTTPClient;
 
+@ClassDescription(label="iTunes Chart")
 public class ITunesCharts implements MusicAlbumSuggester, MovieSuggester {
 	
 	public String getBaseURL() {
@@ -40,11 +42,6 @@ public class ITunesCharts implements MusicAlbumSuggester, MovieSuggester {
 
 			MusicManager.getInstance().suggest(artistName, albumName, null, imageURL, referer, suggestionURL);
 		}
-	}
-	
-	@Override
-	public String getLabel() {
-		return "iTunes Chart";
 	}
 
 	@Override

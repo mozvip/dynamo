@@ -9,18 +9,15 @@ import org.jsoup.select.Elements;
 
 import core.WebDocument;
 import dynamo.core.DownloadFinder;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.magazines.MagazineProvider;
 import dynamo.model.result.SearchResult;
 import hclient.SimpleResponse;
 
+@ClassDescription(label="BinnewZ France")
 public class BinNewzFranceProvider extends DownloadFinder implements MagazineProvider {
 
 	private static final String BASE_URL = "http://www.binnews.in/";
-
-	@Override
-	public String getLabel() {
-		return "BinnewZ France";
-	}
 
 	@Override
 	public void configureProvider() {

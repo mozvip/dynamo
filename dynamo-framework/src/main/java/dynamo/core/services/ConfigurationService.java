@@ -2,7 +2,9 @@ package dynamo.core.services;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -24,8 +26,22 @@ public class ConfigurationService {
 	
 	@GET
 	@Path("/plugin-options")
-	public Map<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> getPluginOptions() {
-		return ConfigurationManager.getInstance().getPluginOptions();
+	public List<PluginOption> getPluginOptions() {
+		Map<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> pluginOptions = ConfigurationManager.getInstance().getPluginOptions();
+		
+		List<PluginOption> result = new ArrayList<>();
+		for (Map.Entry<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> entry : pluginOptions.entrySet()) {
+			if (entry.getValue() != null && entry.getValue().size() > 1) {
+				LabelledClass task = new LabelledClass( entry.getKey() );
+				List<LabelledClass> options = new ArrayList<>();
+				for (Class<? extends TaskExecutor> executorClass : entry.getValue()) {
+					options.add(new LabelledClass( executorClass ));
+				}
+				result.add( new PluginOption( task, options ) );
+			}
+		}
+		
+		return result;
 	}
 	
 	@POST

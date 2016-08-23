@@ -7,19 +7,16 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import core.WebDocument;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.manager.ErrorManager;
 import dynamo.manager.MusicManager;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicArtist;
 import hclient.HTTPClient;
 
+@ClassDescription(label="AllMusic.com New Releases")
 public class AllMusicNewReleasesSuggester implements MusicAlbumSuggester {
 	
-	@Override
-	public String getLabel() {
-		return "AllMusic.com New Releases";
-	}
-
 	@Override
 	public void suggestAlbums() {
 

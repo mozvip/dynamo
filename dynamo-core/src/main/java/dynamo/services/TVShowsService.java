@@ -55,6 +55,13 @@ public class TVShowsService {
 	public void rescan(@PathParam("id") String id) {
 		BackLogProcessor.getInstance().runNow( new ScanTVShowTask( TVShowManager.getInstance().getManagedSeries( id ) ), true );
 	}
+	
+	@POST
+	@Path("/save/{id}")
+	public void save(@PathParam("id") String id) {
+		// TODO
+	}
+	
 
 	@GET
 	@Path("/{id}/episodes")
