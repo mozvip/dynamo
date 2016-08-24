@@ -12,6 +12,8 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
       toastr.info( event.body, event.title );
     } else if (event.type == 'error') {
       toastr.error( event.body, event.title );
+    } else if (event.type == 'success') {
+      toastr.success( event.body, event.title );
     } else {
       toastr.info( event.type );
       toastr.info( event.body, event.title );
