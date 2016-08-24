@@ -3,6 +3,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/app"/>
         <property name="java-output-path" value="/dynamo-web/bin"/>
         <property name="context-root" value="dynamo"/>
     </wb-module>

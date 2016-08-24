@@ -15,14 +15,10 @@ import retrofit.mime.TypedString;
 
 public class SabNzbd implements Reconfigurable, Enableable {
 
-	@Configurable(category="NZB", name="SabNzbd API Key",
-			disabled="#{!dynamo:isActive('dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor')}",
-			required="#{dynamo:isActive('dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor')}")
+	@Configurable(category="NZB", name="SabNzbd API Key")
 	private String apiKey;
 
-	@Configurable(category="NZB", name="SabNzbd URL (http//host:port)",
-			disabled="#{!dynamo:isActive('dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor')}",
-			required="#{dynamo:isActive('dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor')}")
+	@Configurable(category="NZB", name="SabNzbd URL (http//host:port)")
 	private String sabnzbdUrl;
 
 	public String getApiKey() {

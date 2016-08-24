@@ -11,16 +11,10 @@ import dynamo.jdbi.SearchResultDAO;
 @ClassDescription(label="Blackhole")
 public class DownloadNZBBlackHoleBackLogTask extends AbstractNZBDownloadExecutor {
 	
-	@Configurable(category="NZB",
-			required="#{dynamo:isActiveClass(thisClass)}",
-			disabled="#{!dynamo:isActiveClass(thisClass)}",
-			name="Blackhole Folder" )
+	@Configurable(category="NZB", name="Blackhole Folder" )
 	private Path blackHoleFolder;
 	
-	@Configurable(category="NZB",
-			name="Completed files folder",
-			required="#{dynamo:isActiveClass(thisClass)}",
-			disabled="#{!dynamo:isActiveClass(thisClass)}")
+	@Configurable(category="NZB", name="Completed files folder")
 	private Path nzbIncomingFolder;
 	
 	public Path getBlackHoleFolder() {

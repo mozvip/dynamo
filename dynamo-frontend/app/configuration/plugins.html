@@ -3,4 +3,7 @@
         <label>{{pluginOption.taskClass.label}}</label>
         <select class="form-control" ng-model="pluginOption.value" ng-change="selectPlugin(pluginOption)" ng-options="option as option.label for option in pluginOption.executorOptions" />
     </div>
+
+    <configuration-item ng-repeat="item in itemsToConfigure" item="item" />
+
 </form>

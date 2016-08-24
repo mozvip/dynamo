@@ -7,3 +7,4 @@
 /dynamo-create-ddl.sql
 /{java.io.tmpdir}
 /httpclient-cache.mv.db
+/src/main/app
