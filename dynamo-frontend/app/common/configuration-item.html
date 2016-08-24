@@ -27,7 +27,7 @@
   </div>
 </div>
 
-<div ng-if="item.type == 'java.nio.file.Path'">
+<div ng-if="!item.list && item.type == 'java.nio.file.Path'">
   <div class="form-group">
     <label>{{item.name}}</label>
     <div class="input-group">

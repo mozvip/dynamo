@@ -33,19 +33,30 @@ angular.module('dynamo.configuration', ['ngRoute'])
         $scope.pluginOptions = pluginOptions.data;
         $scope.config = configuration.data;
 
-        $scope.itemsToConfigure = [
-            $scope.config['SabNzbd.apiKey'],
-            $scope.config['SabNzbd.sabnzbdUrl'],
-            $scope.config['DownloadNZBBlackHoleBackLogTask.blackHoleFolder'],
-            $scope.config['DownloadNZBBlackHoleBackLogTask.nzbIncomingFolder'],
-            $scope.config['Transmission.transmissionURL'],
-            $scope.config['DownloadTorrentBlackHoleExecutor.blackHoleFolder'],
-            $scope.config['DownloadTorrentBlackHoleExecutor.torrentIncomingFolder']
-        ];        
-
-        $scope.selectPlugin = function(pluginOption) {
-            alert(pluginOption.value.klass);
+        $scope.pluginChanged = function() {
+            $scope.pluginOptions.forEach(function(plugin) {
+                plugin.itemsToConfigure = [];
+                var configurationKeys = Object.keys($scope.config).filter( function( key ) {
+                    return plugin.value && $scope.config[key].category == plugin.value;
+                });
+                configurationKeys.forEach(function(key) {
+                    plugin.itemsToConfigure.push( $scope.config[key] );  
+                }, this);
+            }, this);
         }
+
+        $scope.saveSettings = function () {
+            var itemsToSave = [];
+            $scope.pluginOptions.forEach(function(plugin) {
+                itemsToSave.push({'key':'Plugin.' + plugin.taskClass.klass, 'value': plugin.value});
+                if (plugin.itemsToConfigure) {
+                    itemsToSave = itemsToSave.concat(plugin.itemsToConfigure);
+                }
+            }, this);
+            configurationService.saveItems( itemsToSave );
+        }        
+
+        $scope.pluginChanged();
 
     }])
 

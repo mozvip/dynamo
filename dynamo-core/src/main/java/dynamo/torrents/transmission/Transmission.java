@@ -17,7 +17,7 @@ import retrofit.RestAdapter;
 
 public class Transmission implements Reconfigurable, Enableable {
 	
-	@Configurable(category="Torrents", name="Transmission URL (http://server:9091/transmission)")
+	@Configurable(category="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor", name="Transmission URL (http://server:9091/transmission)")
 	private String transmissionURL;
 	
 	@Override

@@ -18,10 +18,7 @@ import dynamo.model.result.SearchResultType;
 
 public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCheckDaemonTask> implements Enableable {
 
-	@Configurable(category="Torrents",
-		name="Stop torrent when upload ratio reaches",  defaultValue="2.0", 
-		required="#{dynamo:isActive('dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor')}",
-		disabled="#{!dynamo:isActive('dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor')}")
+	@Configurable(category="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor", name="Stop torrent when upload ratio reaches",  defaultValue="2.0")
 	private float limitUploadRatio = 1.2f;
 
 	public float getLimitUploadRatio() {

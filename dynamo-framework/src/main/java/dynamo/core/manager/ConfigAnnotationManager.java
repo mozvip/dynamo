@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Configurable.DEFAULT;
 import dynamo.core.configuration.Reconfigurable;
+import dynamo.core.model.Task;
 import dynamo.core.services.ConfigurationItem;
 
 public class ConfigAnnotationManager {
@@ -130,6 +131,15 @@ public class ConfigAnnotationManager {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
 
+		}
+		
+		Set<Class<? extends Task>> taskClasses = reflections.getSubTypesOf( Task.class );
+		for (Class<? extends Task> taskClass : taskClasses) {
+			
+			String key = String.format("Plugin.%s", taskClass.getName());
+			String name = String.format("Plugin for %s", taskClass.getName());
+			
+			items.put(key, new ConfigurationItem( key, "Plugins", name, String.class, false, false ));
 		}
 		
 	}

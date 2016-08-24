@@ -32,12 +32,13 @@ public class ConfigurationService {
 		List<PluginOption> result = new ArrayList<>();
 		for (Map.Entry<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> entry : pluginOptions.entrySet()) {
 			if (entry.getValue() != null && entry.getValue().size() > 1) {
-				LabelledClass task = new LabelledClass( entry.getKey() );
+				Class<? extends Task> taskClass = entry.getKey();
+				LabelledClass task = new LabelledClass( taskClass );
 				List<LabelledClass> options = new ArrayList<>();
 				for (Class<? extends TaskExecutor> executorClass : entry.getValue()) {
 					options.add(new LabelledClass( executorClass ));
 				}
-				result.add( new PluginOption( task, options ) );
+				result.add( new PluginOption( task, options, ConfigurationManager.getInstance().getActivePlugin( taskClass ) ) );
 			}
 		}
 		

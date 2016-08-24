@@ -1,9 +1,10 @@
-<form>
-    <div ng-repeat="pluginOption in pluginOptions">
+<form name="settingsForm" novalidate>
+    <div class="well" ng-repeat="pluginOption in pluginOptions">
         <label>{{pluginOption.taskClass.label}}</label>
-        <select class="form-control" ng-model="pluginOption.value" ng-change="selectPlugin(pluginOption)" ng-options="option as option.label for option in pluginOption.executorOptions" />
+        <select class="form-control" ng-model="pluginOption.value" ng-change="pluginChanged()" ng-options="option.klass as option.label for option in pluginOption.executorOptions" />
+        <configuration-item ng-repeat="item in pluginOption.itemsToConfigure" item="item" />
     </div>
 
-    <configuration-item ng-repeat="item in itemsToConfigure" item="item" />
+    <button ng-disabled="!settingsForm.$valid" class="btn btn-primary" ng-click="saveSettings()"><span class="glyphicon glyphicon-save" /> Save</button>
 
 </form>

@@ -9,12 +9,12 @@ import dynamo.core.configuration.Configurable;
 import dynamo.jdbi.SearchResultDAO;
 
 @ClassDescription(label="Blackhole")
-public class DownloadNZBBlackHoleBackLogTask extends AbstractNZBDownloadExecutor {
+public class DownloadNZBBlackHoleExecutor extends AbstractNZBDownloadExecutor {
 	
-	@Configurable(category="NZB", name="Blackhole Folder" )
+	@Configurable(category="dynamo.backlog.tasks.nzb.DownloadNZBBlackHoleExecutor", name="Blackhole Folder" )
 	private Path blackHoleFolder;
 	
-	@Configurable(category="NZB", name="Completed files folder")
+	@Configurable(category="dynamo.backlog.tasks.nzb.DownloadNZBBlackHoleExecutor", name="Completed files folder")
 	private Path nzbIncomingFolder;
 	
 	public Path getBlackHoleFolder() {
@@ -33,7 +33,7 @@ public class DownloadNZBBlackHoleBackLogTask extends AbstractNZBDownloadExecutor
 		this.nzbIncomingFolder = nzbIncomingFolder;
 	}
 
-	public DownloadNZBBlackHoleBackLogTask(DownloadNZBTask task, SearchResultDAO searchResultDAO) {
+	public DownloadNZBBlackHoleExecutor(DownloadNZBTask task, SearchResultDAO searchResultDAO) {
 		super(task,searchResultDAO);
 	}
 

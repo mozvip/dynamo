@@ -66,12 +66,16 @@ public class ConfigurationManager {
 	}
 
 	public Class<? extends TaskExecutor> getActivePlugin(Class<? extends Task> klass) {
+		String key = String.format("Plugin.%s", klass.getName());
+		String configuredPlugin = ConfigAnnotationManager.getInstance().getConfigString(key);
+		if (configuredPlugin != null) {
+			try {
+				return (Class<? extends TaskExecutor>) Class.forName( configuredPlugin );
+			} catch (ClassNotFoundException e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}
+		}
 		return activePlugins.get( klass );
-	}
-	
-	public void setActivePlugin(Class<? extends Task> task, Class<? extends TaskExecutor> executorClass) {
-		activePlugins.put(task, executorClass);
-		ConfigAnnotationManager.getInstance().setConfigString("ConfigurationManager." + task.getName(), executorClass != null ? executorClass.getName() : "" );
 	}
 	
 	public boolean isActive(Class<? extends TaskExecutor<?>> executorClass) {
@@ -103,7 +107,7 @@ public class ConfigurationManager {
 			Class<? extends Task> taskType = entry.getKey();
 			Collection<Class<? extends TaskExecutor>> options = entry.getValue();
 
-			String className = ConfigAnnotationManager.getInstance().getConfigString( String.format("ConfigurationManager.%s", taskType.getName()) );
+			String className = ConfigAnnotationManager.getInstance().getConfigString( String.format("Plugin.%s", taskType.getName()) );
 
 			Class<? extends TaskExecutor> activePlugin = null;
 			if (StringUtils.isNotBlank(className)) {
@@ -119,7 +123,7 @@ public class ConfigurationManager {
 			}
 			if (activePlugin == null && options != null && options.size() == 1) {
 				activePlugin = options.iterator().next();
-				setActivePlugin(taskType, activePlugin);
+				activePlugins.put( taskType, activePlugin );
 			}
 			if (activePlugin != null) {
 				activePlugins.put( taskType, activePlugin );
@@ -183,6 +187,8 @@ public class ConfigurationManager {
 				value = Boolean.valueOf( stringValue );
 			} else if (fieldType.equals( int.class )) {
 				value = Integer.valueOf( stringValue );
+			} else if (fieldType.equals( float.class )) {
+				value = Float.valueOf( stringValue );
 			} else if (fieldType.equals( Path.class )) {
 				value = Paths.get( stringValue );
 			} else if (fieldType.isEnum()) {
