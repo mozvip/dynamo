@@ -24,10 +24,10 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/classes</outputDirectory>
+							<outputDirectory>${basedir}/src/main/resources</outputDirectory>
 							<resources>
 								<resource>
-									<directory>../dynamo-frontend</directory>
+									<directory>../dynamo-frontend/app</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>

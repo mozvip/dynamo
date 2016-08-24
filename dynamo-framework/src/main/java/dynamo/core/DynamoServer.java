@@ -37,6 +37,7 @@ import dynamo.core.server.DynamoResourceManager;
 import dynamo.ui.servlets.ExternalDataServlet;
 import dynamo.websocket.DynamoMessagesEndpoint;
 import io.undertow.Undertow;
+import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletContainerInitializerInfo;
@@ -102,13 +103,14 @@ public class DynamoServer {
 			.setClassLoader(getClass().getClassLoader())
 			.setContextPath("")
 			.setDeploymentName("dynamo.war")
-			.setResourceManager( new DynamoResourceManager( getClass().getClassLoader() ) )
+			.setResourceManager( new ClassPathResourceManager( getClass().getClassLoader() ) )
+			// .setResourceManager( new DynamoResourceManager( getClass().getClassLoader() ) )
 			.addInitParameter("com.sun.faces.forceLoadConfiguration", "true")
 			.addInitParameter("com.sun.faces.expressionFactory", "com.sun.el.ExpressionFactoryImpl")
 			.addInitParameter("javax.faces.STATE_SAVING_METHOD", "server")
 			.addInitParameter("javax.faces.PROJECT_STAGE", "Production")
 			.addInitParameter("javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE", "true")
-			.addWelcomePage("welcome.jsf")
+			.addWelcomePage("index.html")
 			.addServlets(
 					new ServletInfo("ExternalDataServlet", ExternalDataServlet.class)
 							.addMapping("/data/*")
@@ -158,7 +160,7 @@ public class DynamoServer {
 	protected void openWelcomePage() {
 		if (Desktop.isDesktopSupported()) {
 			try {
-				Desktop.getDesktop().browse(new URI( String.format("http://localhost:%d/welcome.jsf", port )));
+				Desktop.getDesktop().browse(new URI( String.format("http://localhost:%d/", port )));
 			} catch (IOException | URISyntaxException e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
@@ -174,7 +176,7 @@ public class DynamoServer {
 
         final PopupMenu popup = new PopupMenu();
         
-        URL icon = this.getClass().getClassLoader().getResource("dynamo.gif");	// TODO: externalize image name
+        URL icon = this.getClass().getClassLoader().getResource("dynamo.png");	// TODO: externalize image name
         final TrayIcon trayIcon = new TrayIcon( new ImageIcon( icon ).getImage() );
 
         trayIcon.setImageAutoSize( true );

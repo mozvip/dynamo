@@ -214,6 +214,10 @@ public class ConfigurationManager {
 	}
 	
 	public void configureField( final Object instance, Field field, String configurationValue ) {
+		if (field.getType().isPrimitive() && configurationValue == null) {
+			return ;
+		}
+
 		Configurable annotation = field.getAnnotation( Configurable.class );
 
 		Object value = toValue( field.getType(), annotation, configurationValue );
@@ -224,7 +228,7 @@ public class ConfigurationManager {
 			setterMethod = instance.getClass().getMethod( setterMethodName, field.getType() );
 			setterMethod.invoke( instance, value );
 		} catch (java.lang.IllegalArgumentException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-			ErrorManager.getInstance().reportThrowable(e);
+			ErrorManager.getInstance().reportThrowable(String.format("Error Configuring field %s.%s, value = '%s'", instance.getClass().getName(), field.getName(), configurationValue), e);
 		}
 	}
 
