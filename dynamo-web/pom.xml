@@ -24,7 +24,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/src/main/app</outputDirectory>
+							<outputDirectory>${basedir}/src/main/resources</outputDirectory>
 							<resources>
 								<resource>
 									<directory>../dynamo-frontend/app</directory>
