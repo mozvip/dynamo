@@ -25,7 +25,7 @@ import hclient.HTTPClient;
 @ClassDescription(label="The Pirate Bay")
 public class PirateBayProvider extends DownloadFinder implements MovieProvider, MagazineProvider, GameFinder {
 
-	@Configurable(category="Providers", name="Pirate Bay Base URL", disabled="#{!PirateBayProvider.enabled}", required="#{PirateBayProvider.enabled}", defaultValue="https://pirateproxy.sx")
+	@Configurable(category="Providers", name="Pirate Bay Base URL", defaultValue="https://pirateproxy.sx")
 	private String baseURL;
 	
 	public String getBaseURL() {

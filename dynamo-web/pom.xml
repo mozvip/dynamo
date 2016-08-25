@@ -29,6 +29,20 @@
 								<resource>
 									<directory>../dynamo-frontend/app</directory>
 									<filtering>true</filtering>
+						            <excludes>
+						                <exclude>**/*.woff</exclude>
+						                <exclude>**/*.ttf</exclude>
+						            </excludes>								
+								</resource>
+							</resources>
+							<resources>
+								<resource>
+									<directory>../dynamo-frontend/app</directory>
+									<filtering>false</filtering>
+						            <includes>
+						                <include>**/*.woff</include>
+						                <include>**/*.ttf</include>
+						            </includes>								
 								</resource>
 							</resources>
 						</configuration>
@@ -109,11 +123,6 @@
 					<groupId>org.jboss.spec.javax.annotation</groupId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>co.paralleluniverse</groupId>
-			<artifactId>capsule</artifactId>
-			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
 	<parent>

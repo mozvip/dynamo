@@ -28,12 +28,9 @@ import org.xnio.OptionMap;
 import org.xnio.Xnio;
 import org.xnio.XnioWorker;
 
-import com.sun.faces.config.FacesInitializer;
-
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.server.DynamoResourceManager;
 import dynamo.ui.servlets.ExternalDataServlet;
 import dynamo.websocket.DynamoMessagesEndpoint;
 import io.undertow.Undertow;
@@ -49,7 +46,7 @@ public class DynamoServer {
 
 	protected static Path rootFolder;	
 	
-	@Configurable(category="Main Settings", name="Application listens on port", required="true")
+	@Configurable(category="Main Settings", name="Application listens on port", required=true)
 	protected int port = 8081;
 
 	public int getPort() {
@@ -84,7 +81,7 @@ public class DynamoServer {
 			handlesTypes.addAll( DynamoObjectFactory.getReflections().getTypesAnnotatedWith( k ) );
 		}
 
-		ServletContainerInitializerInfo i = new ServletContainerInitializerInfo(FacesInitializer.class, new ImmediateInstanceFactory<ServletContainerInitializer>(klass.newInstance()), handlesTypes);
+		ServletContainerInitializerInfo i = new ServletContainerInitializerInfo(klass, new ImmediateInstanceFactory<ServletContainerInitializer>(klass.newInstance()), handlesTypes);
 		servletDeploymentInfo.addServletContainerInitalizer( i );
 	}
 	
@@ -107,16 +104,12 @@ public class DynamoServer {
 			// .setResourceManager( new DynamoResourceManager( getClass().getClassLoader() ) )
 			.addInitParameter("com.sun.faces.forceLoadConfiguration", "true")
 			.addInitParameter("com.sun.faces.expressionFactory", "com.sun.el.ExpressionFactoryImpl")
-			.addInitParameter("javax.faces.STATE_SAVING_METHOD", "server")
-			.addInitParameter("javax.faces.PROJECT_STAGE", "Production")
-			.addInitParameter("javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE", "true")
 			.addWelcomePage("index.html")
 			.addServlets(
 					new ServletInfo("ExternalDataServlet", ExternalDataServlet.class)
 							.addMapping("/data/*")
 			);
-		
-		registerServlet( servletDeploymentInfo, FacesInitializer.class );
+
 		registerServlet( servletDeploymentInfo, JerseyServletContainerInitializer.class );
 
 		if (customServlets != null) {

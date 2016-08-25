@@ -14,11 +14,11 @@ public class DynamoNNTPClient implements Reconfigurable, Enableable {
 
 	@Configurable(category = "NNTP Client", name="Enable internal NNTP Client")
 	private boolean enabled = false;
-	@Configurable(category = "NNTP Client", name="NNTP Server Host", disabled="#{!DynamoNNTPClient.enabled}", required="#{DynamoNNTPClient.enabled}")
+	@Configurable(category = "NNTP Client", name="NNTP Server Host")
 	private String host;
-	@Configurable(category = "NNTP Client", name="NNTP Server Login", disabled="#{!DynamoNNTPClient.enabled}", required="#{DynamoNNTPClient.enabled}")
+	@Configurable(category = "NNTP Client", name="NNTP Server Login")
 	private String login;
-	@Configurable(category = "NNTP Client", name="NNTP Server Password", disabled="#{!DynamoNNTPClient.enabled}", required="#{DynamoNNTPClient.enabled}")
+	@Configurable(category = "NNTP Client", name="NNTP Server Password")
 	private String password;
 
 	public String getHost() {

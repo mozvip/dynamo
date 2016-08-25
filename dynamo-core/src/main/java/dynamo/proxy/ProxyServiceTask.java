@@ -12,7 +12,7 @@ public class ProxyServiceTask extends ServiceTask {
 	@Configurable(category="Main Settings", name="Enable Local Dynamo Proxy")
 	private boolean enabled;
 	
-	@Configurable(category="Main Settings", name="Listen on port", disabled="#{!ProxyServiceTask.enabled}", required="#{ProxyServiceTask.enabled}", defaultValue="3128")
+	@Configurable(category="Main Settings", name="Listen on port", defaultValue="3128")
 	private int port = 3128;
 
 	@Override

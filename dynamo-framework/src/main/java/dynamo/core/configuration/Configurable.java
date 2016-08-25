@@ -7,12 +7,12 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Configurable {
 	String category();
 	String name() default "";
+	
+	boolean required() default true;
 
 	Class contentsClass() default DEFAULT.class;
 
 	String defaultValue() default "__NULL__";
-	String required() default "false";
-	String disabled() default "false";
 	
 	String defaultLabel() default "None";
 	

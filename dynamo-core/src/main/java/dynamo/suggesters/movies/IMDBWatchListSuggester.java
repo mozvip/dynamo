@@ -32,7 +32,7 @@ import hclient.HTTPClient;
 
 public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, Enableable {
 	
-	@Configurable(category = "IMDB", name = "IMDB Watch List URLs", disabled = "#{!(MovieManager.enabled or TVShowManager.enabled)}", contentsClass=String.class)
+	@Configurable(category = "IMDB", name = "IMDB Watch List URLs", contentsClass=String.class)
 	private Set<String> urls;
 
 	@Override

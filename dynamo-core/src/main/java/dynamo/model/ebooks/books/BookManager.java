@@ -1,7 +1,6 @@
 package dynamo.model.ebooks.books;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +16,16 @@ import dynamo.model.DownloadableStatus;
 
 public class BookManager implements Enableable {
 
-	@Configurable(category = "Books", name = "Enable Books")
-	private boolean enabled = false;
-
-	@Configurable(category = "Books", name = "Book Folders", contentsClass=Path.class, folder=true, disabled="#{!BookManager.enabled}")
+	@Configurable(category = "Books", name = "Book Folders", contentsClass=Path.class, folder=true)
 	private List<Path> folders = new ArrayList<>();
 
-	@Configurable(category = "Books", name = "Default Language", disabled="#{!BookManager.enabled}")
+	@Configurable(category = "Books", name = "Default Language")
 	private Language defaultLanguage = null;
 	
-	@Configurable(category="Books", name="These words are black-listed in download names", disabled="#{!BookManager.enabled}")
+	@Configurable(category="Books", name="These words are black-listed in download names")
 	private List<String> blackList = null;
 	
-	@Configurable(category="Books", name="Download Providers", contentsClass=BookFinder.class, disabled="#{!BookManager.enabled}")
+	@Configurable(category="Books", name="Download Providers", contentsClass=BookFinder.class)
 	private List<BookFinder> providers = null;
 	
 	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
@@ -60,11 +56,7 @@ public class BookManager implements Enableable {
 
 	@Override
 	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+		return folders != null && folders.size() > 0;
 	}
 
 	public Language getDefaultLanguage() {

@@ -17,10 +17,10 @@ import hclient.HTTPClient;
 
 public class Podnapisi extends SubtitlesFinder {
 
-	@Configurable(category="Subtitles Finders", name="Podnapisi Login", disabled="#{!Podnapisi.enabled}")
+	@Configurable(category="Subtitles Finders", name="Podnapisi Login")
 	private String login;
 	
-	@Configurable(category="Subtitles Finders", name="Podnapisi Password", disabled="#{!Podnapisi.enabled}")
+	@Configurable(category="Subtitles Finders", name="Podnapisi Password")
 	private String password;
 
 	public String getLogin() {

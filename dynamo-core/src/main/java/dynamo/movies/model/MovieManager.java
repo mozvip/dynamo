@@ -46,43 +46,43 @@ import hclient.HTTPClient;
 
 public class MovieManager implements Reconfigurable {
 	
-	@Configurable( category="Movies", name="Default Quality to Download", defaultValue="_1080p", disabled="#{!MovieManager.enabled}" )
+	@Configurable( category="Movies", name="Default Quality to Download", defaultValue="_1080p" )
 	private VideoQuality defaultQuality;
 
-	@Configurable( category="Movies", name="Default Metadata Language", defaultValue="EN", disabled="#{!MovieManager.enabled}", required="#{MovieManager.enabled}", defaultLabel="Original Language" )
+	@Configurable( category="Movies", name="Default Metadata Language", defaultValue="EN", defaultLabel="Original Language" )
 	private Language metaDataLanguage;
 
-	@Configurable( category="Movies", name="Default Audio Language", defaultValue="", disabled="#{!MovieManager.enabled}", defaultLabel="Original Language" )
+	@Configurable( category="Movies", name="Default Audio Language", defaultValue="", defaultLabel="Original Language" )
 	private Language audioLanguage;
 
-	@Configurable( category="Movies", name="Default Subtitles Language", disabled="#{!MovieManager.enabled}" )
+	@Configurable( category="Movies", name="Default Subtitles Language" )
 	private Language subtitlesLanguage;
 
-	@Configurable( category="Movies", name="Movie folders", required="#{MovieManager.enabled}", disabled="#{!MovieManager.enabled}", contentsClass=Path.class )
+	@Configurable( category="Movies", name="Movie folders", contentsClass=Path.class )
 	private List<Path> folders;
 	
-	@Configurable(category="Movies", name="Movies Providers", required="#{MovieManager.enabled}", disabled="#{!MovieManager.enabled}", contentsClass=MovieProvider.class, ordered=true)
+	@Configurable(category="Movies", name="Movies Providers", contentsClass=MovieProvider.class, ordered=true)
 	private List<MovieProvider> movieDownloadProviders;
 	
-	@Configurable( category="Movies", name="Minimum size for a 1080p movie (Mb)", required="#{MovieManager.enabled}", disabled="#{!MovieManager.enabled}", defaultValue="5000" )
+	@Configurable( category="Movies", name="Minimum size for a 1080p movie (Mb)", defaultValue="5000" )
 	private int minimumSizeFor1080;
 
-	@Configurable( category="Movies", name="Minimum size for a 720p movie (Mb)", required="#{MovieManager.enabled}", disabled="#{!MovieManager.enabled}", defaultValue="3000" )
+	@Configurable( category="Movies", name="Minimum size for a 720p movie (Mb)", defaultValue="3000" )
 	private int minimumSizeFor720;
 
-	@Configurable( category="Movies", name="Maximum size for a 1080p movie (Mb)", required="#{MovieManager.enabled}", disabled="#{!MovieManager.enabled}", defaultValue="20000" )
+	@Configurable( category="Movies", name="Maximum size for a 1080p movie (Mb)", defaultValue="20000" )
 	private int maximumSizeFor1080;
 
-	@Configurable( category="Movies", name="Maximum size for a 720p movie (Mb)", required="#{MovieManager.enabled}", disabled="#{!MovieManager.enabled}", defaultValue="10000" )
+	@Configurable( category="Movies", name="Maximum size for a 720p movie (Mb)", defaultValue="10000" )
 	private int maximumSizeFor720;
 	
-	@Configurable( category="Movies", name="Only suggest movies whose rating is >=", required="#{MovieManager.enabled}", disabled="#{!MovieManager.enabled}", defaultValue="7" )
+	@Configurable( category="Movies", name="Only suggest movies whose rating is >=", defaultValue="7" )
 	private int minimumSuggestionRating;
 	
-	@Configurable(category="Movies", name="Don't suggest watched movies", defaultValue="true", disabled="#{!MovieManager.enabled}")
+	@Configurable(category="Movies", name="Don't suggest watched movies", defaultValue="true")
 	private boolean hideWatched;
 	
-	@Configurable( category="Movies", name="Words Black List", disabled="#{!MovieManager.enabled}", contentsClass=String.class )
+	@Configurable( category="Movies", name="Words Black List", contentsClass=String.class )
 	private Collection<String> wordsBlackList;	
 
 	private MovieDAO movieDAO = DAOManager.getInstance().getDAO( MovieDAO.class );

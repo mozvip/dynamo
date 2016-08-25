@@ -28,7 +28,6 @@ import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableFile;
-import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.TVShowSeasonProvider;
 import dynamo.httpclient.YAMJHttpClient;
@@ -55,40 +54,39 @@ public class TVShowManager implements Reconfigurable {
 
 	private static final String TVDBAPI_KEY = "2805AD2873519EC5";
 
-	@Configurable( category="TV Shows", name="Default Metadata Language", defaultValue="EN", required="#{TVShowManager.enabled}", disabled="#{!TVShowManager.enabled}" )
+	@Configurable( category="TV Shows", name="Default Metadata Language", defaultValue="EN" )
 	private Language metaDataLanguage;
 
-	@Configurable( category="TV Shows", name="Default Audio Language", disabled="#{!TVShowManager.enabled}", defaultLabel="Original" )
+	@Configurable( category="TV Shows", name="Default Audio Language", defaultLabel="Original" )
 	private Language audioLanguage;
 
-	@Configurable( category="TV Shows", name="Default Subtitles Language", disabled="#{!TVShowManager.enabled}" )
+	@Configurable( category="TV Shows", name="Default Subtitles Language" )
 	private Language subtitlesLanguage;
 
-	@Configurable( category="TV Shows", name="Video Qualities", required="#{TVShowManager.enabled}", disabled="#{!TVShowManager.enabled}", contentsClass=VideoQuality.class )
+	@Configurable( category="TV Shows", name="Video Qualities", contentsClass=VideoQuality.class )
 	private List<VideoQuality> tvShowQualities;
 	
-	@Configurable( category="TV Shows", name="TV Shows folders", required="#{TVShowManager.enabled}", disabled="#{!TVShowManager.enabled}", contentsClass=Path.class )
+	@Configurable( category="TV Shows", name="TV Shows folders", contentsClass=Path.class )
 	private List<Path> folders;	
 	
-	@Configurable( category="TV Shows", name="Automatically delete watched episodes", disabled="#{!TVShowManager.enabled}", defaultValue="false" )
+	@Configurable( category="TV Shows", name="Automatically delete watched episodes", defaultValue="false" )
 	private boolean deleteWatched;
 
-	@Configurable( category="TV Shows", name="Words Black List", disabled="#{!TVShowManager.enabled}", contentsClass=String.class )
+	@Configurable( category="TV Shows", name="Words Black List", contentsClass=String.class )
 	private Collection<String> wordsBlackList;
 
-	@Configurable(category="TV Shows", name="TV Shows Episode Providers", required="#{TVShowManager.enabled}", disabled="#{!TVShowManager.enabled}", contentsClass=EpisodeFinder.class, ordered=true )
+	@Configurable(category="TV Shows", name="TV Shows Episode Providers", contentsClass=EpisodeFinder.class, ordered=true )
 	private List<EpisodeFinder> tvshowEpisodeProviders;
 
-	@Configurable(category="TV Shows", name="TV Shows Full Season Providers", required="#{TVShowManager.enabled}", disabled="#{!TVShowManager.enabled}", contentsClass=TVShowSeasonProvider.class, ordered=true )
+	@Configurable(category="TV Shows", name="TV Shows Full Season Providers", contentsClass=TVShowSeasonProvider.class, ordered=true )
 	private List<TVShowSeasonProvider> tvShowSeasonProviders;
 
-	@Configurable(category="TV Shows", name="Season folder pattern", required="#{TVShowManager.enabled}", disabled="#{!TVShowManager.enabled}", defaultValue="Season %02d" )
+	@Configurable(category="TV Shows", name="Season folder pattern", defaultValue="Season %02d" )
 	private String seasonFolderPattern;
 
 	private TVShowDAO tvShowDAO = DAOManager.getInstance().getDAO( TVShowDAO.class );
 	private ManagedEpisodeDAO managedEpisodeDAO = DAOManager.getInstance().getDAO( ManagedEpisodeDAO.class );
 	private TVShowSeasonDAO tvShowSeasonDAO = DAOManager.getInstance().getDAO( TVShowSeasonDAO.class );
-	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 	private UnrecognizedDAO unrecognizedDAO = DAOManager.getInstance().getDAO( UnrecognizedDAO.class );	
 	
 	private TheTVDBApi api;

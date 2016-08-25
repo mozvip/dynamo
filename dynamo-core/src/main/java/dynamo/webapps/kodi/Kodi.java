@@ -15,10 +15,10 @@ public class Kodi implements Enableable, Reconfigurable {
 	@Configurable(category = "Notifiers", name = "Enable Kodi/XBMC")
 	private boolean enabled;
 
-	@Configurable(category = "Notifiers", name = "Kodi/XBMC IP Address", required = "#{Kodi.enabled}", disabled = "#{!Kodi.enabled}")
+	@Configurable(category = "Notifiers", name = "Kodi/XBMC IP Address")
 	private String kodiIPAddress = "127.0.0.1";
 
-	@Configurable(category = "Notifiers", name = "Kodi/XBMC port", required = "#{Kodi.enabled}", disabled = "#{!Kodi.enabled}")
+	@Configurable(category = "Notifiers", name = "Kodi/XBMC port")
 	private int kodiPort = 80;
 
 	public String getKodiIPAddress() {

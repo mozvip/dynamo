@@ -9,21 +9,14 @@ import hclient.HTTPClient;
 
 public class ProxyManager implements Reconfigurable {
 
-	@Configurable(category="Main Settings", name="Use HTTP Proxy for outbound HTTP connections")
-	private boolean proxyEnabled;
-
-	@Configurable(category="Main Settings", name="HTTP Proxy Host", disabled="#{!ProxyManager.proxyEnabled}", required="#{ProxyManager.proxyEnabled}")
+	@Configurable(category="Use HTTP Proxy for outbound HTTP connections", name="HTTP Proxy Host")
 	private String proxyHost;
 
-	@Configurable(category="Main Settings", name="HTTP Proxy Port", disabled="#{!ProxyManager.proxyEnabled}", required="#{ProxyManager.proxyEnabled}")
+	@Configurable(category="Use HTTP Proxy for outbound HTTP connections", name="HTTP Proxy Port")
 	private int proxyPort = 3128;
 	
 	public boolean isProxyEnabled() {
-		return proxyEnabled;
-	}
-
-	public void setProxyEnabled(boolean proxyEnabled) {
-		this.proxyEnabled = proxyEnabled;
+		return StringUtils.isNotEmpty( proxyHost ) && proxyPort > 0;
 	}
 
 	public String getProxyHost() {
@@ -44,7 +37,7 @@ public class ProxyManager implements Reconfigurable {
 
 	@Override
 	public void reconfigure() {
-		if ( proxyEnabled && StringUtils.isNotEmpty( proxyHost ) && proxyPort > 0 ) {
+		if ( isProxyEnabled() ) {
 			HTTPClient.getInstance().setProxy( new HttpHost( proxyHost, proxyPort ) );
 		} else {
 			HTTPClient.getInstance().setProxy( null );

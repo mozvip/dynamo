@@ -8,7 +8,7 @@ import hclient.HTTPClient;
 
 public abstract class SubtitlesFinder implements Reconfigurable, Enableable {
 	
-	@Configurable(category="Subtitles Finders", defaultValue="true", disabled="#{!SubTitleDownloader.enabled}")
+	@Configurable(category="Subtitles Finders", defaultValue="true")
 	private boolean enabled;
 	
 	private boolean ready;

@@ -30,13 +30,13 @@ public class MagazineManager implements Reconfigurable {
 	@Configurable(category="Magazines", name="Enable Magazines")
 	private boolean enabled;
 
-	@Configurable(category="Magazines", name="Magazines Default Language", disabled="#{!MagazineManager.enabled}", required="#{MagazineManager.enabled}")
+	@Configurable(category="Magazines", name="Magazines Default Language")
 	private Language defaultLanguage = Language.EN;
 
-	@Configurable(category="Magazines", name="Magazine Folders", contentsClass=Path.class, disabled="#{!MagazineManager.enabled}", required="#{MagazineManager.enabled}")
+	@Configurable(category="Magazines", name="Magazine Folders", contentsClass=Path.class)
 	private List<Path> folders;
 
-	@Configurable(category="Magazines", name="Download Providers", contentsClass=MagazineProvider.class, disabled="#{!MagazineManager.enabled}", required="#{MagazineManager.enabled}", ordered=true)
+	@Configurable(category="Magazines", name="Download Providers", contentsClass=MagazineProvider.class, ordered=true)
 	private List<MagazineProvider> providers;
 
 	public boolean isEnabled() {

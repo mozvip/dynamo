@@ -15,10 +15,10 @@ public class PushBullet implements Enableable {
 	@Configurable(category="Notifiers", name="Enable PushBullet notifications")
 	private boolean enabled;
 
-	@Configurable(category="Notifiers", name="PushBullet Access Token", required="#{PushBullet.enabled}", disabled="#{!PushBullet.enabled}")
+	@Configurable(category="Notifiers", name="PushBullet Access Token")
 	private String accessToken;
 	
-	@Configurable(category="Notifiers", name="PushBullet Device", required="#{PushBullet.enabled}", disabled="#{!PushBullet.enabled}")
+	@Configurable(category="Notifiers", name="PushBullet Device")
 	private String deviceIdent;
 	
 	public String getAccessToken() {
