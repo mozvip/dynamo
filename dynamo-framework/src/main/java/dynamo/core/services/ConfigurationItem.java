@@ -1,5 +1,6 @@
 package dynamo.core.services;
 
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -10,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import dynamo.core.Labelized;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.manager.DynamoObjectFactory;
-import dynamo.core.model.TaskExecutor;
 
 @JsonInclude(Include.NON_NULL)
 public class ConfigurationItem {
@@ -45,6 +45,9 @@ public class ConfigurationItem {
 			allowedValues = new HashMap<>();
 			Set<?> klasses = DynamoObjectFactory.getReflections().getSubTypesOf( type );
 			for (Class<?> klass: (Set<Class<?>>) klasses) {
+				if (Modifier.isAbstract( klass.getModifiers() )) {
+					continue;
+				}
 				ClassDescription annotation = klass.getAnnotation( ClassDescription.class );
 				String label = annotation != null ? annotation.label() : klass.getName();
 				allowedValues.put( klass.getName(), label );

@@ -9,10 +9,12 @@ import com.omertron.themoviedbapi.MovieDbException;
 
 import dynamo.core.Enableable;
 import dynamo.core.Language;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.manager.ErrorManager;
 import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 
+@ClassDescription(label="Trakt Recommendations")
 public class TraktMovieSuggester implements MovieSuggester, Enableable {
 	
 	@Override
@@ -35,11 +37,6 @@ public class TraktMovieSuggester implements MovieSuggester, Enableable {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
 		}
-	}
-	
-	@Override
-	public String toString() {
-		return "Trakt Recommendations";
 	}
 
 }

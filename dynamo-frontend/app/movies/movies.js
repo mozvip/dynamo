@@ -65,7 +65,8 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
   $scope.config = configuration.data;
 
   $scope.itemsToConfigure = [
-    $scope.config['MovieManager.folders']
+    $scope.config['MovieManager.folders'],
+    $scope.config['RefreshMovieSuggestionExecutor.movieSuggesters']
   ];
 
     $scope.saveSettings = function () {
