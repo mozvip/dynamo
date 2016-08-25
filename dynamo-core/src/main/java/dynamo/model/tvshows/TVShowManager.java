@@ -89,7 +89,7 @@ public class TVShowManager implements Reconfigurable {
 	private TVShowSeasonDAO tvShowSeasonDAO = DAOManager.getInstance().getDAO( TVShowSeasonDAO.class );
 	private UnrecognizedDAO unrecognizedDAO = DAOManager.getInstance().getDAO( UnrecognizedDAO.class );	
 	
-	private TheTVDBApi api;
+	private TheTVDBApi api = new TheTVDBApi( TVDBAPI_KEY, new YAMJHttpClient( HTTPClient.getInstance() ) );
 
 	public Language getMetaDataLanguage() {
 		return metaDataLanguage;
@@ -387,7 +387,6 @@ public class TVShowManager implements Reconfigurable {
 	@Override
 	public void reconfigure() {
 		if (isEnabled()) {
-			api = new TheTVDBApi( TVDBAPI_KEY, new YAMJHttpClient( HTTPClient.getInstance() ) );
 			if (getFolders() != null) {
 				for (Path path : getFolders()) {
 					BackLogProcessor.getInstance().schedule( new NewTVShowFolderTask( path ), false );

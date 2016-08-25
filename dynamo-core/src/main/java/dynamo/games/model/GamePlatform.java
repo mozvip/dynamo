@@ -4,8 +4,9 @@ import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Path;
 
 import dynamo.core.ExtensionsFileFilter;
+import dynamo.core.Labelized;
 
-public enum GamePlatform {
+public enum GamePlatform implements Labelized {
 	
 	UNKNOWN("Unknown", null),
 	PC("PC", null),
@@ -39,6 +40,7 @@ public enum GamePlatform {
 		this.maxSizeInMbs = maxSizeInMbs;
 	}
 	
+	@Override
 	public String getLabel() {
 		return label;
 	}
