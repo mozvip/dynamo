@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Enumeration;
-import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -22,7 +21,6 @@ import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
 import dynamo.manager.LocalImageCache;
-import io.undertow.servlet.api.ServletInfo;
 import liquibase.Liquibase;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.jvm.JdbcConnection;
@@ -93,7 +91,7 @@ public abstract class DynamoApplication {
 		ConfigurationManager.getInstance().configureApplication();
 		
 		try {
-			server.start( getApplicationName(), getCustomServletsInfo() );
+			server.start( getApplicationName() );
 		} catch (InstantiationException | IllegalAccessException
 				| ServletException | IOException | IllegalArgumentException e) {
 			ErrorManager.getInstance().reportThrowable( e );
@@ -133,12 +131,6 @@ public abstract class DynamoApplication {
 		return instance;
 	}
 	
-	public String getBasePackageName() {
-		// startup speed comes with a cost
-		return "dynamo";
-	}	
-	
 	protected abstract String getApplicationName();	
-	protected abstract List<ServletInfo> getCustomServletsInfo();
 
 }
