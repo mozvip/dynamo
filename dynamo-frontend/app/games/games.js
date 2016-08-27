@@ -7,7 +7,7 @@ angular.module('dynamo.games', ['ngRoute', 'ngResource'])
     templateUrl: 'games/games.html',
     controller: 'GamesCtrl'
   }).when('/games-configuration', {
-    templateUrl: 'games/games-configuration.html',
+    templateUrl: 'configuration/configuration-template.html',
     controller: 'GamesConfigCtrl'
   });
 }])

@@ -7,7 +7,7 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
       templateUrl: 'music/music.html',
       controller: 'MusicCtrl'
     }).when('/music-configuration', {
-      templateUrl: 'music/music-configuration.html',
+      templateUrl: 'configuration/configuration-template.html',
       controller: 'MusicConfigCtrl',
       resolve: {
         configuration: ['configurationService', function (configurationService) {

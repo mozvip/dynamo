@@ -7,7 +7,7 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
     templateUrl: 'movies/movies.html',
     controller: 'MoviesCtrl'
   }).when('/movies-configuration', {
-    templateUrl: 'movies/movies-configuration.html',
+    templateUrl: 'configuration/configuration-template.html',
     controller: 'MoviesConfigCtrl',
     resolve: {
       configuration: ['configurationService', function(  configurationService  ) {

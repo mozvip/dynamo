@@ -11,6 +11,9 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
         return languageService.find();
       }]
     }    
+  }).when('/books-configuration', {
+    templateUrl: 'configuration/configuration-template.html',
+    controller: 'BooksConfigCtrl'
   });
 }])
 
