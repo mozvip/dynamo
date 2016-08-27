@@ -2,15 +2,17 @@
 
 angular.module('dynamo')
 
-.factory('BackendService', ['backendHostAndPort', '$http', function(backendHostAndPort, $http){
+.factory('BackendService', ['backendHostAndPort', '$http', '$location', function(backendHostAndPort, $http, $location){
+
+    var frontendHostAndPort = $location.protocol() + '://' + $location.host() + ':' + location.port;
 
     return {
         getBackendURL : function() {
-            return 'http://' + backendHostAndPort + '/services/';
+            return backendHostAndPort + '/services/';
         },
 
         getImageURL : function( imageURL ) {
-            return 'http://' + backendHostAndPort + imageURL;
+            return backendHostAndPort + imageURL;
         },
 
         post: function( url, data ) {
