@@ -4,8 +4,9 @@ import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Path;
 
 import dynamo.core.ExtensionsFileFilter;
+import dynamo.core.Labelized;
 
-public enum GamePlatform {
+public enum GamePlatform implements Labelized {
 	
 	UNKNOWN("Unknown", null),
 	PC("PC", null),
@@ -18,7 +19,8 @@ public enum GamePlatform {
 	NINTENDO_DS("Nintendo DS", new ExtensionsFileFilter(".nds")),
 	NINTENDO_3DS("Nintendo 3DS", new ExtensionsFileFilter(".3ds")),
 	NINTENDO_GAMECUBE("Nintendo GameCube", new ExtensionsFileFilter(".gcz", ".wbfs", ".iso"), 0.70f, 6000),
-	NINTENDO_WII("Nintendo WII", new ExtensionsFileFilter(".gcz", ".wbfs", ".iso"), 0.70f, 10000);
+	NINTENDO_WII("Nintendo WII", new ExtensionsFileFilter(".gcz", ".wbfs", ".iso"), 0.70f, 10000),
+	NINTENDO_WIIU("Nintendo WIIU", new ExtensionsFileFilter(".iso"), 0.70f, 10000);
 
 	private String label;
 	private float coverImageRatio = 1.0f;
@@ -38,6 +40,7 @@ public enum GamePlatform {
 		this.maxSizeInMbs = maxSizeInMbs;
 	}
 	
+	@Override
 	public String getLabel() {
 		return label;
 	}

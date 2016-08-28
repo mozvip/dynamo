@@ -15,7 +15,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletContainerInitializer;
@@ -85,7 +84,7 @@ public class DynamoServer {
 		servletDeploymentInfo.addServletContainerInitalizer( i );
 	}
 	
-	public void start( String applicationName, List<ServletInfo> customServlets ) throws ServletException, IOException, InstantiationException, IllegalAccessException {
+	public void start( String applicationName ) throws ServletException, IOException, InstantiationException, IllegalAccessException {
 		
 		if (currentPort == port) {
 			// server already started on correct port
@@ -101,8 +100,6 @@ public class DynamoServer {
 			.setContextPath("")
 			.setDeploymentName("dynamo.war")
 			.setResourceManager( new ClassPathResourceManager( getClass().getClassLoader() ) )
-			// .setResourceManager( new DynamoResourceManager( getClass().getClassLoader() ) )
-			.addInitParameter("com.sun.faces.forceLoadConfiguration", "true")
 			.addInitParameter("com.sun.faces.expressionFactory", "com.sun.el.ExpressionFactoryImpl")
 			.addWelcomePage("index.html")
 			.addServlets(
@@ -111,12 +108,6 @@ public class DynamoServer {
 			);
 
 		registerServlet( servletDeploymentInfo, JerseyServletContainerInitializer.class );
-
-		if (customServlets != null) {
-			for (ServletInfo servletInfo : customServlets) {
-				servletDeploymentInfo.addServlet( servletInfo );
-			}
-		}
 		
 	    final Xnio xnio = Xnio.getInstance("nio", Undertow.class.getClassLoader());
 	    final XnioWorker xnioWorker = xnio.createWorker(OptionMap.builder().getMap());

@@ -82,11 +82,6 @@
   	</dependency>
   	<dependency>
   		<groupId>io.undertow</groupId>
-  		<artifactId>undertow-servlet</artifactId>
-  		<version>1.4.0.Final</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>io.undertow</groupId>
   		<artifactId>undertow-websockets-jsr</artifactId>
   		<version>1.4.0.Final</version>
   	</dependency>

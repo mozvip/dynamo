@@ -21,6 +21,7 @@ import core.WebDocument;
 import core.WebResource;
 import dynamo.core.Enableable;
 import dynamo.core.Language;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
 import dynamo.manager.DownloadableManager;
@@ -30,9 +31,10 @@ import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.TVShowSuggester;
 import hclient.HTTPClient;
 
+@ClassDescription(label="IMDB Watch Lists")
 public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, Enableable {
 	
-	@Configurable(category = "IMDB", name = "IMDB Watch List URLs", contentsClass=String.class)
+	@Configurable(category = "dynamo.suggesters.movies.IMDBWatchListSuggester", name = "IMDB Watch List URLs", contentsClass=String.class)
 	private Set<String> urls;
 
 	@Override
@@ -49,11 +51,6 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 	}
 
 	private HTTPClient client = HTTPClient.getInstance();
-
-	@Override
-	public String toString() {
-		return "IMDB Watch lists";
-	}
 	
 	private static void getMovieSuggestionFromIMDB( String imdbID, String suggestionURL ) throws IOException, URISyntaxException {
 		IMDBTitle title = extractIMDBTitle( imdbID );

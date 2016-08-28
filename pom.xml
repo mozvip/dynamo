@@ -13,23 +13,4 @@
 		<module>hclient/hclient</module>
 		<module>dynamo-framework</module>
 	</modules>
-	<profiles>
-		<profile>
-			<id>no-unit-tests</id>
-			<properties>
-		    	<maven.javadoc.skip>true</maven.javadoc.skip>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<skipTests>true</skipTests>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

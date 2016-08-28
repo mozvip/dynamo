@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 import core.RegExp;
 import core.WebDocument;
 import dynamo.core.Language;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.movies.model.MovieManager;
 import dynamo.parsers.ParsedMovieInfo;
 import dynamo.parsers.VideoNameParser;
@@ -18,6 +19,7 @@ import hclient.RetrofitClient;
 import retrofit.RestAdapter;
 import retrofit.client.Response;
 
+@ClassDescription(label="PreDB")
 public class PreDB implements MovieSuggester {
 	
 	private int MAX_PAGE_FOR_SUGGESTION = 3;
@@ -75,11 +77,6 @@ public class PreDB implements MovieSuggester {
 				}
 			}
 		}
-	}
-	
-	@Override
-	public String toString() {
-		return "PreDB";
 	}
 
 }

@@ -157,7 +157,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
           }, this);
         }
 
-        var values = scope.item.value.split(';');
+        var values = scope.item.value ? scope.item.value.split(';') : [];
         if (values[values.length-1] == '') {
           values.splice( values.length - 1, 1);
         }
