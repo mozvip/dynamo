@@ -2,9 +2,9 @@
 
 angular.module('dynamo.common', ['ngRoute', 'ngResource'])
 
-.factory('eventDataService', ['backendHostAndPort', '$websocket', function(backendHostAndPort, $websocket) {
+.factory('eventDataService', ['BackendService', function( BackendService ) {
   // Open a WebSocket connection
-  var dataStream = $websocket('ws://' + backendHostAndPort + '/websocket/messages');
+  var dataStream = BackendService.getWebSocket('messages');
 
   dataStream.onMessage(function(message) {
     var event = JSON.parse(message.data);
@@ -29,22 +29,22 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   return methods;
 }])
 
-.factory('configurationService', ['backendHostAndPort', '$http', '$filter', function(backendHostAndPort, $http, $filter){
+.factory('configurationService', ['BackendService', '$http', '$filter', function(BackendService, $http, $filter){
 
   var configurationService = {
 
     'get' : function( key ) {
-      return $http.get('http://' + backendHostAndPort + '/services/configuration/' + key);
+      return BackendService.get('configuration/' + key);
     },
     'getItems' : function() {
-      return $http.get('http://' + backendHostAndPort + '/services/configuration/items');
+      return BackendService.get('configuration/items');
     },
     'saveItems': function( items ) {
       var itemsToSave = {};
       items.forEach(function(element) {
         itemsToSave[element.key] = element.value;
       }, this);
-      return $http.post('http://' + backendHostAndPort + '/services/configuration', itemsToSave);
+      return BackendService.post('configuration', itemsToSave);
     }
   }
 
@@ -52,12 +52,12 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
 
 }])
 
-.factory('searchResultsService', ['backendHostAndPort', '$http', '$uibModal', function(backendHostAndPort, $http, $uibModal) {
+.factory('searchResultsService', ['BackendService', '$http', '$uibModal', function(BackendService, $http, $uibModal) {
 
   var searchResultsService = {};
 
   searchResultsService.get =  function( id ) {
-    return $http.get('http://' + backendHostAndPort + '/services/searchResults/' + id);
+    return BackendService.get('searchResults/' + id);
   }  
 
   searchResultsService.openModal = function( downloadable) {
@@ -79,13 +79,13 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
 
 }])
 
-.factory('fileListService', ['backendHostAndPort', '$http', '$uibModal', function(backendHostAndPort, $http, $uibModal){
+.factory('fileListService', ['BackendService', '$http', '$uibModal', function(BackendService, $http, $uibModal){
   var fileListService = {};
   fileListService.get =  function( id ) {
-    return $http.get('http://' + backendHostAndPort + '/services/file-list/' + id);
+    return BackendService.get('file-list/' + id);
   }
   fileListService.del = function( path ) {
-    return $http.delete('http://' + backendHostAndPort + '/services/file-list?path=' + path);
+    return BackendService.delete('file-list?path=' + path);
   }
   fileListService.openModal = function( downloadable ) {
     return $uibModal.open({
@@ -123,10 +123,10 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
 
 }])
 
-.factory('languageService', ['backendHostAndPort', '$http', function(backendHostAndPort, $http){
+.factory('languageService', ['BackendService', '$http', function(BackendService, $http){
   var languageService = {};
   languageService.find = function( type, status ) {
-    return $http.get('http://' + backendHostAndPort + '/services/languages');
+    return BackendService.get('languages');
   }
   return languageService;
 }])
@@ -218,13 +218,13 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   };
 })
 
-.factory('downloadableService', ['BackendService', 'backendHostAndPort', '$http', function(BackendService, backendHostAndPort, $http){
+.factory('downloadableService', ['BackendService', '$http', function(BackendService, $http){
   var downloadableService = {};
   downloadableService.find = function( type, status ) {
-    return $http.get('http://' + backendHostAndPort + '/services/downloadable?type=' + type + '&status=' + status);
+    return BackendService.get('downloadable?type=' + type + '&status=' + status);
   }
   downloadableService.counts = function() {
-    return $http.get('http://' + backendHostAndPort + '/services/downloadable/counts');
+    return BackendService.get('downloadable/counts');
   }
   downloadableService.want = function( downloadableId ) {
     return BackendService.post('downloadable/want/' + downloadableId);
@@ -236,7 +236,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     return BackendService.post('downloadable/redownload/' + downloadableId);
   }
   downloadableService.delete = function( downloadableId ) {
-    return $http.delete('http://' + backendHostAndPort + '/services/downloadable/' + downloadableId);
+    return BackendService.delete('services/downloadable/' + downloadableId);
   }
   downloadableService.updateImage = function( downloadableId ) {
     return BackendService.post('downloadable/updateImage?id=' + downloadableId);
