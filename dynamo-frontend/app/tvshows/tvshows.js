@@ -43,6 +43,9 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
       languages: ['languageService', function(  languageService  ) {
         return languageService.find();
       }],
+      configuration: ['configurationService', function (configurationService) {
+          return configurationService.getItems();
+      }],      
       unrecognizeds: ['tvShowsService', function( tvShowsService ) {
         return tvShowsService.getUnrecognized();
       }]
@@ -161,10 +164,37 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('TVShowsUnrecognizedCtrl', ['$scope', 'tvShowsService', 'tvdbService', '$uibModal', 'filterFilter', 'languages', 'unrecognizeds', function( $scope, tvShowsService, tvdbService, $uibModal, filterFilter, languages, unrecognizeds ) {
+.controller('TVShowsUnrecognizedCtrl', ['$scope', 'tvShowsService', 'tvdbService', 'configuration', 'languages', 'unrecognizeds', function( $scope, tvShowsService, tvdbService, configuration, languages, unrecognizeds ) {
 
   $scope.unrecognizeds = unrecognizeds.data;
   $scope.languages = languages.data;
+
+  $scope.searchLanguage = configuration.data['TVShowManager.metaDataLanguage'].value;
+
+  $scope.searchText = undefined;
+
+  $scope.selectFolder = function( folder ) {
+    $scope.selectedFolder = folder;
+
+    var folderElements = folder.path.split( new RegExp(/[\/\\]/));
+
+    $scope.searchText = folderElements[folderElements.length - 1];
+  }
+
+  $scope.cancelSelection = function() {
+    $scope.selectedFolder = undefined;
+    $scope.results = undefined;
+  }
+
+  $scope.searchTVShow = function() {
+    tvdbService.find( $scope.searchText, $scope.year, $scope.searchLanguage ).then( function( response ) {
+      $scope.results = response.data;
+    });
+  }
+
+  $scope.selectTVShow = function( tvshow ) {
+    
+  }
 
 }])
 

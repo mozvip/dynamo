@@ -1,4 +1,4 @@
-<div class="form-inline">
+<form name="searchTVShowForm" class="form-inline">
   <div class="form-group">
     <input type="text" ng-model="title" ng-required="true" class="form-control" placeholder="Search for ..." />
   </div>
@@ -11,8 +11,8 @@
       <option value="" />
     </select>
   </div>
-  <button class="btn btn-primary" ng-click="searchTVShow()"><span class="glyphicon glyphicon-search"/> Search</button>
-</div>
+  <button ng-disabled="!searchTVShowForm.$valid" class="btn btn-primary" ng-click="searchTVShow()"><span class="glyphicon glyphicon-search"/> Search</button>
+</form>
 
 <div class="panel panel-default" ng-repeat="tvshow in results" ng-show="!selectedTVShow || selectedTVShow.id === tvshow.id">
   <div class="panel-heading">

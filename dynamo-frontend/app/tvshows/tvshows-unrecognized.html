@@ -1,13 +1,40 @@
 <h4>Unrecognized TV Show Folders</h4>
-<table class="table table-striped">
-  <tr ng-repeat="folder in unrecognizeds">
-    <td>
-      <div class="btn-group">
-        <button class="btn btn-default"><span class="glyphicon glyphicon-search" /></button>
-      </div>
-    </td>
-    <td>
-      <span style="font-family: 'Lucida Console'">{{folder.path}}</span>
-    </td>
-  </tr>
-</table>
+
+<div class="panel panel-default" ng-repeat="folder in unrecognizeds" ng-show="!selectedFolder || selectedFolder.path === folder.path">
+  <div class="panel-body">
+    <h4 class="text-center" style="font-family:'Courier New'">{{folder.path}}</h4>
+    <button class="btn btn-success btn-block" ng-show="!selectedFolder" ng-click="selectFolder(folder)"><span class="glyphicon glyphicon-download"/> Search</button>
+  </div>
+</div>
+<form novalidate name="searchForm" ng-show="selectedFolder">
+  <div class="form-group">
+    <label class="control-label">Search Text</label>
+    <input ng-model="searchText" class="form-control" type="text" ng-required="true" />
+  </div>
+  <div class="form-group">
+    <label class="control-label">Year</label>
+    <input ng-model="year" class="form-control" type="number" ng-required="false" />
+  </div>
+  <div class="form-group">
+    <label class="control-label">Search Language</label>
+    <select ng-model="searchLanguage" class="form-control" ng-options="item.key as item.value for item in languages">
+            <option value="" />
+          </select>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-primary" ng-disabled="!searchForm.$valid" ng-click="searchTVShow()"><span class="glyphicon glyphicon-search"/> Search</button>
+    <button class="btn btn-default" ng-click="cancelSelection()"><span class="glyphicon glyphicon-ok"/> Cancel</button>
+  </div>
+</form>
+<div class="panel panel-default" ng-repeat="tvshow in results">
+  <div class="panel-body">
+    <div ng-show="{{tvshow.banner != null}}" style="width: 100%; text-align: center">
+      <img ng-src="{{tvshow.banner}}" alt="{{tvshow.seriesName}}" title="{{tvshow.seriesName}}" />
+    </div>
+    <p ng-show="{{tvshow.firstAired != undefined}}">First aired on <strong>{{tvshow.firstAired}}</strong></p>
+    <p>{{tvshow.overview}}</p>    
+  </div>
+  <div class="panel-footer">
+      <button class="btn btn-success btn-block" ng-click="selectTVShow(tvshow)"><span class="glyphicon glyphicon-download"/> Select <strong>"{{tvshow.seriesName}}"</strong></button>
+  </div>    
+</div>
