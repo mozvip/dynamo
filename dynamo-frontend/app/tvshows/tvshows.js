@@ -26,7 +26,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
       }]      
     }
   }).when('/tvshows-configuration', {
-    templateUrl: 'tvshows/tvshows-configuration.html',
+    templateUrl: 'configuration/configuration-template.html',
     controller: 'TVShowsConfigCtrl',
     resolve: {
       configuration: ['configurationService', function(  configurationService  ) {

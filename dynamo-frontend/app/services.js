@@ -8,11 +8,11 @@ angular.module('dynamo')
 
     return {
         getBackendURL : function() {
-            return backendHostAndPort + '/services/';
+            return 'http://' + backendHostAndPort + '/services/';
         },
 
         getImageURL : function( imageURL ) {
-            return backendHostAndPort + imageURL;
+            return 'http://' + backendHostAndPort + imageURL;
         },
 
         post: function( url, data ) {

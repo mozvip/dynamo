@@ -62,7 +62,4 @@ public interface MovieDAO extends DownloadableDAO<Movie>{
 	@SqlUpdate("UPDATE MOVIE SET SUBTITLED = true, SUBTITLESPATH=:subTitlesPath WHERE ID = :movieId")
 	public void setSubtitled(@Bind("movieId") long movieId, @BindPath("subTitlesPath") Path subTitlesPath);
 
-	@SqlUpdate("DELETE FROM MOVIE WHERE MOVIE.IMDBID=:imdbId AND (SELECT DOWNLOADABLE.STATUS FROM DOWNLOADABLE WHERE DOWNLOADABLE.ID = MOVIE.ID ) ='SUGGESTED'")
-	void deleteIfSuggested(@Bind("imdbId") String imdbId);
-
 }

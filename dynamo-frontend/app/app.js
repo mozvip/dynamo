@@ -20,7 +20,7 @@ angular.module('dynamo', [
   'dynamo.games'
 ])
 
-.constant('backendHostAndPort', 'http://localhost:8081')
+.constant('backendHostAndPort', 'localhost:8081')
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/welcome'});

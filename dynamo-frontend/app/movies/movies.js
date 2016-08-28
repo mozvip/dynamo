@@ -66,7 +66,18 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 
   $scope.itemsToConfigure = [
     $scope.config['MovieManager.folders'],
-    $scope.config['RefreshMovieSuggestionExecutor.movieSuggesters']
+    $scope.config['RefreshMovieSuggestionExecutor.movieSuggesters'],
+    $scope.config['MovieManager.movieDownloadProviders'],
+    $scope.config['MovieManager.defaultQuality'],
+    $scope.config['MovieManager.minimumSuggestionRating'],
+    $scope.config['MovieManager.metaDataLanguage'],
+    $scope.config['MovieManager.audioLanguage'],
+    $scope.config['MovieManager.subtitlesLanguage'],
+    $scope.config['MovieManager.minimumSizeFor720'],
+    $scope.config['MovieManager.maximumSizeFor720'],
+    $scope.config['MovieManager.minimumSizeFor1080'],
+    $scope.config['MovieManager.maximumSizeFor1080'],
+    $scope.config['MovieManager.wordsBlackList']
   ];
 
     $scope.saveSettings = function () {

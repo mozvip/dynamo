@@ -79,9 +79,6 @@ public class MovieManager implements Reconfigurable {
 	@Configurable( category="Movies", name="Only suggest movies whose rating is >=", defaultValue="7" )
 	private int minimumSuggestionRating;
 	
-	@Configurable(category="Movies", name="Don't suggest watched movies", defaultValue="true")
-	private boolean hideWatched;
-	
 	@Configurable( category="Movies", name="Words Black List", contentsClass=String.class )
 	private Collection<String> wordsBlackList;	
 
@@ -165,14 +162,6 @@ public class MovieManager implements Reconfigurable {
 
 	public void setMinimumSuggestionRating(int minimumSuggestionRating) {
 		this.minimumSuggestionRating = minimumSuggestionRating;
-	}
-
-	public boolean isHideWatched() {
-		return hideWatched;
-	}
-
-	public void setHideWatched(boolean hideWatched) {
-		this.hideWatched = hideWatched;
 	}
 
 	private TheMovieDbApi api;
@@ -526,10 +515,6 @@ public class MovieManager implements Reconfigurable {
 
 	public void setWatched(String imdbId) {
 		watchedImdbIds.add( imdbId );
-		if (hideWatched) {
-			// if movie is currently suggested, delete the suggestion
-			movieDAO.deleteIfSuggested( imdbId );
-		}
 	}
 
 }
