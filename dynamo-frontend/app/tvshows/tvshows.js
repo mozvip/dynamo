@@ -117,12 +117,16 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   return tvShowsService;
 }])
 
-.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'languages', 'episodes', 'unrecognizedFiles', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter, languages, episodes, unrecognizedFiles ) {
+.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'languages', 'episodes', 'unrecognizedFiles', 'BackendService', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter, languages, episodes, unrecognizedFiles, BackendService ) {
 
   $scope.tvshow = tvshow.data;
   $scope.episodes = episodes.data;
   $scope.languages = languages.data;
   $scope.unrecognizedFiles = unrecognizedFiles.data;
+
+  $scope.imageURL = function( url ) {
+    return BackendService.getImageURL( url );
+  }
 
   $scope.availableEpisodes = [];
 
@@ -270,6 +274,10 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   $scope.unrecognizeds = unrecognizeds.data;
 
   $scope.languages = languages.data;
+
+  $scope.imageURL = function( url ) {
+    return BackendService.getImageURL( url );
+  }  
 
   $scope.pageContents = [];
   tvShowsService.find().then( function( response ) {

@@ -66,7 +66,7 @@
 </div>
 
 <div class="thumbnail downloadable-thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents">
-  <img ng-src="http://localhost:8081{{downloadable.image}}" alt="{{downloadable.name}}" style="min-height: 280px;" />
+  <img ng-src="{{imageURL(downloadable.image)}}" alt="{{downloadable.name}}" style="min-height: 280px;" />
   <div class="buttons">
     <button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>  Show Files</button>
     <button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openMovieSearch(downloadable)" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>  Identify</button>

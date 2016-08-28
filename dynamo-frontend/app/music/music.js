@@ -17,11 +17,15 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     });
   }])
 
-  .controller('MusicCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', function ($scope, $rootScope, $routeParams, downloadableService, fileListService, $uibModal, filterFilter) {
+  .controller('MusicCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'BackendService', function ($scope, $rootScope, $routeParams, downloadableService, fileListService, $uibModal, filterFilter, BackendService) {
 
     $scope.currentPage = 1;
     $scope.allItems = [];
     $scope.filteredList = [];
+
+    $scope.imageURL = function( url ) {
+      return BackendService.getImageURL( url );
+    }
 
     $scope.pageContents = [];
     downloadableService.find('MUSICALBUM', $routeParams.status).then(function (response) {

@@ -3,7 +3,7 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-3">
-                <img class="img-responsive" alt="{{tvshow.name}}" src="http://localhost:8081/data/posters/{{tvshow.id}}.jpg" />
+                <img class="img-responsive" alt="{{tvshow.name}}" ng-src="{{imageURL('/data/posters/' + tvshow.id + '.jpg')}}" />
             </div>
             <div class="col-md-9">
                 <form>

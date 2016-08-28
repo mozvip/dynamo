@@ -17,11 +17,15 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
   });
 }])
 
-.controller('MagazinesCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'languages', 'fileListService', 'searchResultsService', '$filter', '$uibModal', 'filterFilter', function( $scope, $rootScope, $routeParams, downloadableService, languages, fileListService, searchResultsService, $filter, $uibModal, filterFilter ) {
+.controller('MagazinesCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'languages', 'fileListService', 'searchResultsService', '$filter', '$uibModal', 'filterFilter', 'BackendService', function( $scope, $rootScope, $routeParams, downloadableService, languages, fileListService, searchResultsService, $filter, $uibModal, filterFilter, BackendService ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
   $scope.filteredList = [];
+
+  $scope.imageURL = function( url ) {
+    return BackendService.getImageURL( url );
+  }
 
   $scope.languages = languages.data;
 

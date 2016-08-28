@@ -86,11 +86,15 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('MoviesCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'movieDbSearchService', 'filterFilter', function( $scope, $rootScope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, movieDbSearchService, filterFilter ) {
+.controller('MoviesCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'movieDbSearchService', 'filterFilter', 'BackendService', function( $scope, $rootScope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, movieDbSearchService, filterFilter, BackendService ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
   $scope.filteredList = [];
+
+  $scope.imageURL = function( url ) {
+    return BackendService.getImageURL( url );
+  }    
 
   $scope.pageContents = [];
   downloadableService.find( 'MOVIE', $routeParams.status ).then( function( response ) {

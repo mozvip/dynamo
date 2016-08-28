@@ -17,13 +17,17 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
   });
 }])
 
-.controller('BooksCtrl', ['$scope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', 'languages', function( $scope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, filterFilter, languages ) {
+.controller('BooksCtrl', ['$scope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', 'languages', 'BackendService', function( $scope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, filterFilter, languages, BackendService ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
   $scope.filteredList = [];
 
   $scope.languages = languages.data;
+
+  $scope.imageURL = function( url ) {
+    return BackendService.getImageURL( url );
+  }  
 
   $scope.pageContents = [];
   downloadableService.find( 'BOOK', $routeParams.status ).then( function( response ) {
