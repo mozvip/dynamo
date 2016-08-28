@@ -24,11 +24,12 @@ public class ConfigurationItem {
 	private boolean set;
 	private Map<String, String> allowedValues;
 
-	public ConfigurationItem(String key, String category, String name, Class<?> type, boolean list, boolean set) {
+	public ConfigurationItem(String key, String category, String name, Class<?> type, String defaultStringValue, boolean list, boolean set) {
 		this.key = key;
 		this.category = category;
 		this.name = name;
 		this.type = type;
+		this.value = defaultStringValue;
 		this.list = list;
 		this.set = set;
 		
@@ -42,15 +43,17 @@ public class ConfigurationItem {
 			}
 		} else if (type.getName().startsWith("dynamo.")) {
 			
-			allowedValues = new HashMap<>();
 			Set<?> klasses = DynamoObjectFactory.getReflections().getSubTypesOf( type );
-			for (Class<?> klass: (Set<Class<?>>) klasses) {
-				if (Modifier.isAbstract( klass.getModifiers() )) {
-					continue;
+			if (klasses != null && !klasses.isEmpty()) {
+				allowedValues = new HashMap<>();
+				for (Class<?> klass: (Set<Class<?>>) klasses) {
+					if (Modifier.isAbstract( klass.getModifiers() )) {
+						continue;
+					}
+					ClassDescription annotation = klass.getAnnotation( ClassDescription.class );
+					String label = annotation != null ? annotation.label() : klass.getName();
+					allowedValues.put( klass.getName(), label );
 				}
-				ClassDescription annotation = klass.getAnnotation( ClassDescription.class );
-				String label = annotation != null ? annotation.label() : klass.getName();
-				allowedValues.put( klass.getName(), label );
 			}
 			
 		}

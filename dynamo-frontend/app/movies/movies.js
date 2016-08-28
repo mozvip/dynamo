@@ -124,9 +124,15 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
   }
 
   $scope.filterChanged = function() {
+    // FIXME : optimize in one filter call
     $scope.filteredList = filterFilter($scope.allItems, {'name': $scope.filter });
     if ($scope.filterYear) {
       $scope.filteredList = filterFilter($scope.filteredList, {'year': $scope.filterYear });
+    }
+    if ($scope.filterRating) {
+      $scope.filteredList = $scope.filteredList.filter( function( element ) {
+        return element.rating >= $scope.filterRating;
+      });
     }
     $scope.currentPage = 1;
     $scope.pageChanged();

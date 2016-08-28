@@ -139,7 +139,7 @@ public class ConfigAnnotationManager {
 			String key = String.format("Plugin.%s", taskClass.getName());
 			String name = String.format("Plugin for %s", taskClass.getName());
 			
-			items.put(key, new ConfigurationItem( key, "Plugins", name, String.class, false, false ));
+			items.put(key, new ConfigurationItem( key, "Plugins", name, String.class, null, false, false ));
 		}
 		
 	}
@@ -173,7 +173,7 @@ public class ConfigAnnotationManager {
 				boolean list = Collection.class.isAssignableFrom( field.getType() );
 				boolean set = Set.class.isAssignableFrom( field.getType() );
 				
-				items.put(key, new ConfigurationItem( key, annotation.category(), name, !annotation.contentsClass().equals( DEFAULT.class ) ? annotation.contentsClass() : field.getType(), list, set ));
+				items.put(key, new ConfigurationItem( key, annotation.category(), name, !annotation.contentsClass().equals( DEFAULT.class ) ? annotation.contentsClass() : field.getType(), annotation.defaultValue(), list, set ));
 				
 				configurable = true;
 			}

@@ -54,6 +54,9 @@
 <div class="input-group">
   <input type="number" size="4" ng-model="filterYear" class="form-control" placeholder="Year ..." ng-change="filterChanged()"/>
 </div>
+<div class="input-group">
+  <input type="number" size="4" ng-model="filterRating" class="form-control" placeholder="Rating ..." ng-change="filterChanged()"/>
+</div>
 </form>
 
 <div class="row" ng-show="filteredList.length > 24">

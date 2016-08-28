@@ -34,8 +34,6 @@
 						                <exclude>**/*.ttf</exclude>
 						            </excludes>								
 								</resource>
-							</resources>
-							<resources>
 								<resource>
 									<directory>../dynamo-frontend/app</directory>
 									<filtering>false</filtering>

@@ -37,7 +37,7 @@
   </div>  
 </div>
 
-<div ng-if="item.type == 'java.lang.String'">
+<div ng-if="!item.list && item.type == 'java.lang.String'">
   <div class="form-group">
     <label>{{item.name}}</label>
     <input type="text" ng-required="true" class="form-control" ng-model="item.value" />
