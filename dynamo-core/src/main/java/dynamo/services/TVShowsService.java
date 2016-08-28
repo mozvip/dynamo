@@ -57,6 +57,12 @@ public class TVShowsService {
 	}
 	
 	@POST
+	@Path("/associate")
+	public String associate( TVShowRequest request ) throws TvDbException, IOException {
+		return TVShowManager.getInstance().identifyFolder( request.getFolder(), request.getId(), request.getMetadataLanguage(), request.getAudioLanguage(), request.getSubtitlesLanguage() );
+	}
+	
+	@POST
 	@Path("/save/{id}")
 	public void save(@PathParam("id") String id) {
 		// TODO
@@ -73,19 +79,13 @@ public class TVShowsService {
 	@javax.ws.rs.POST
 	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String addTVShow(TVShowRequest tvshow) {
+	public String addTVShow(TVShowRequest tvshow) throws TvDbException, IOException {
 		
 		java.nio.file.Path parentFolder = FileUtils.getFolderWithMostUsableSpace( TVShowManager.getInstance().getFolders() );
 		
 		java.nio.file.Path tvShowFolder = parentFolder.resolve( tvshow.getSeriesName() );
 		
-		try {
-			return TVShowManager.getInstance().identifyFolder(tvShowFolder, tvshow.getId(), TVShowManager.getInstance().getMetaDataLanguage().getShortName(), tvshow.getAudioLanguage(), tvshow.getSubtitlesLanguage());
-		} catch (TvDbException | IOException e) {
-			ErrorManager.getInstance().reportThrowable( e );
-		}
-		
-		return null;
+		return TVShowManager.getInstance().identifyFolder(tvShowFolder, tvshow.getId(), TVShowManager.getInstance().getMetaDataLanguage(), tvshow.getAudioLanguage(), tvshow.getSubtitlesLanguage());
 	}
 	
 	@GET

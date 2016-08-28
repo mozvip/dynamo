@@ -1,13 +1,33 @@
 package dynamo.services;
 
+import java.nio.file.Path;
+
 import dynamo.core.Language;
 
 public class TVShowRequest {
 
+	private Path folder;
 	private String id;
 	private String seriesName;
+	private Language metadataLanguage;
 	private Language audioLanguage;
 	private Language subtitlesLanguage;
+
+	public Path getFolder() {
+		return folder;
+	}
+
+	public void setFolder(Path folder) {
+		this.folder = folder;
+	}
+
+	public Language getMetadataLanguage() {
+		return metadataLanguage;
+	}
+
+	public void setMetadataLanguage(Language metadataLanguage) {
+		this.metadataLanguage = metadataLanguage;
+	}
 
 	public String getId() {
 		return id;

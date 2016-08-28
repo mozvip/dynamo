@@ -108,6 +108,9 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   tvShowsService.getUnrecognized = function() {
     return BackendService.get('tvshows/unrecognized');
   }
+  tvShowsService.associate = function( folder, tvdbId, language, audioLanguage, subtitlesLanguage ) {
+    return BackendService.post('tvshows/associate/');
+  }
   tvShowsService.getUnrecognizedFiles = function( tvshowId ) {
     return BackendService.get('tvshows/' + tvshowId + '/unrecognized');
   }
@@ -164,7 +167,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('TVShowsUnrecognizedCtrl', ['$scope', 'tvShowsService', 'tvdbService', 'configuration', 'languages', 'unrecognizeds', function( $scope, tvShowsService, tvdbService, configuration, languages, unrecognizeds ) {
+.controller('TVShowsUnrecognizedCtrl', ['$scope', 'BackendService', 'tvdbService', 'configuration', 'languages', 'unrecognizeds', '$location', function( $scope, BackendService, tvdbService, configuration, languages, unrecognizeds, $location ) {
 
   $scope.unrecognizeds = unrecognizeds.data;
   $scope.languages = languages.data;
@@ -193,7 +196,11 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   }
 
   $scope.selectTVShow = function( tvshow ) {
-    
+    BackendService.post("tvshows/associate", {"folder" : $scope.selectedFolder.path, "id": tvshow.id, 'metadataLanguage': $scope.searchLanguage, 'audioLanguage': tvshow.language.toUpperCase(), 'subtitlesLanguage': $scope.subtitlesLanguage}).then(
+      function( response ) {
+        $location.path("/tvshow-detail/" + response.data);
+      }
+    );    
   }
 
 }])
