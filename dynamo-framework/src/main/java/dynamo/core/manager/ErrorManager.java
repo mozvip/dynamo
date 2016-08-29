@@ -53,9 +53,8 @@ public class ErrorManager {
 		if (message == null && t != null) {
 			messageToLog = String.format("%s : %s", t.toString(), t.getMessage());
 		}
-		if ( task == null ) {
-			logger.error( messageToLog, t);
-		}
+		logger.error( messageToLog, t);
+
 		logThrowable(messageToLog, task, t);
 		if (task != null) {
 			EventManager.getInstance().reportError(String.format("%s failed", task.toString()), messageToLog);

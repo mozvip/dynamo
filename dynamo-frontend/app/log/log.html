@@ -1,6 +1,17 @@
+<form class="form-inline">
+    <select class="form-control" ng-model="filterSeverity" ng=change="filterChanged()">
+        <option value="">ALL</option>
+        <option value="INFO">INFO</option>
+        <option value="WARNING">WARNING</option>
+        <option value="ERROR">ERROR</option>
+    </select>
+    <input type="text" class="form-control" ng-model="filterMessage" ng=change="filterChanged()" />
+</form>
+<ul uib-pager total-items="totalItems" items-per-page="pageSize" ng-model="currentPage" ng-change="pageChanged()"></ul>
 <table class="table table-condensed">
     <tr ng-repeat="logItem in log | limitTo:100" ng-class="{warning: logItem.severity=='WARNING', danger:logItem.severity=='ERROR', info:logItem.severity=='INFO'}">
         <td>{{logItem.severity}}</td>
+        <td>{{logItem.taskName}}</td>
         <td>{{logItem.message}}</td>
     </tr>
 </table>

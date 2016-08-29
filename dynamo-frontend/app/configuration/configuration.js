@@ -5,7 +5,7 @@ angular.module('dynamo.configuration', ['ngRoute'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/configuration', {
             templateUrl: 'configuration/configuration.html',
-            controller: 'ConfigurationCtrl',
+            controller: 'ProvidersCtrl',
             resolve: {
                 configuration: ['configurationService', function (configurationService) {
                     return configurationService.getItems();
@@ -61,7 +61,17 @@ angular.module('dynamo.configuration', ['ngRoute'])
 
     }])
 
-    .controller('ConfigurationCtrl', ['$scope', 'configurationService', 'configuration', function ($scope, configurationService, configuration) {
+    .controller('ConfigurationCtrl', ['$scope', 'configurationService', 'itemsToConfigure', function ($scope, configurationService, itemsToConfigure) {
+
+        $scope.itemsToConfigure = itemsToConfigure.data;
+
+        $scope.saveSettings = function () {
+            configurationService.saveItems( $scope.itemsToConfigure );
+        }
+
+    }])
+
+    .controller('ProvidersCtrl', ['$scope', 'configurationService', 'configuration', function ($scope, configurationService, configuration) {
 
         $scope.config = configuration.data;
 
