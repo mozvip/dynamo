@@ -30,6 +30,9 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
       if ($scope.filterSeverity) {
         filterObject['severity'] = $scope.filterSeverity;
       }
+      if ($scope.filterTask) {
+        filterObject['taskName'] = $scope.filterTask;
+      }
       if ($scope.filterMessage) {
         filterObject['message'] = $scope.filterMessage;
       }
