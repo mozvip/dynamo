@@ -12,6 +12,7 @@ import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 
+import core.RegExp;
 import core.WebDocument;
 import dynamo.core.manager.ErrorManager;
 import hclient.HTTPClient;
@@ -44,6 +45,11 @@ public abstract class AmazonRSSSuggester {
 					String contributor = textNode.getWholeText().trim();
 	
 					String imageURL = document.evaluateSingleElementJSoup( ".url > img").attr("src");
+					
+					if ( imageURL != null ) {
+						imageURL = RegExp.keepOnlyGroups(imageURL, "(.*)\\._SL160_(\\.jpg)");
+					}
+					
 					String suggestionURL = document.evaluateSingleElementJSoup( ".url").attr("href");
 	
 					try {
