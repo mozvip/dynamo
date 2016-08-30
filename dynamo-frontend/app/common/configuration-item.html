@@ -2,28 +2,34 @@
   <div class="form-group">
     <label>{{item.name}}</label>
     <div class="row" ng-repeat="row in item.values">
-        <div class="col-md-2 btn-group" role="group">
-          <button class="btn btn-sm btn-danger" ng-click="removeRow($index)"><span class="glyphicon glyphicon-trash" /></button>
-          <button class="btn btn-sm btn-default" ng-show="!$first" ng-click="moveUp($index)"><span class="glyphicon glyphicon-chevron-up" /></button>
-          <button class="btn btn-sm btn-default" ng-show="!$last" ng-click="moveDown($index)"><span class="glyphicon glyphicon-chevron-down" /></button>
+      <div class="col-md-2 btn-group" role="group">
+        <button class="btn btn-sm btn-danger" ng-click="removeRow($index)"><span class="glyphicon glyphicon-trash" /></button>
+        <button class="btn btn-sm btn-default" ng-show="!$first" ng-click="moveUp($index)"><span class="glyphicon glyphicon-chevron-up" /></button>
+        <button class="btn btn-sm btn-default" ng-show="!$last" ng-click="moveDown($index)"><span class="glyphicon glyphicon-chevron-down" /></button>
+      </div>
+      <div class="col-md-10">
+        <div class="input-group" ng-if="item.type=='java.nio.file.Path'">
+          <span class="input-group-addon"><span class="glyphicon glyphicon-folder-open" /></span>
+          <input ng-required="true" ng-change="changeValue()" valid-folder class="form-control" type="text" ng-model="row.value" />
         </div>
-        <div class="col-md-10">
-          <div class="input-group" ng-if="item.type=='java.nio.file.Path'">
-            <span class="input-group-addon"><span class="glyphicon glyphicon-folder-open" /></span>
-            <input ng-required="true" ng-change="changeValue()" valid-folder class="form-control" type="text" ng-model="row.value" />
-          </div>
-          <input ng-if="item.type=='java.lang.String'" ng-required="true" ng-change="changeValue()" class="form-control" type="text" ng-model="row.value" />
-          <select ng-if="item.allowedValues" ng-required="true" ng-change="changeValue()" class="form-control" ng-model="row.value" ng-options="key as label for (key, label) in item.allowedValues" />
-        </div>
+        <input ng-if="item.type=='java.lang.String'" ng-required="true" ng-change="changeValue()" class="form-control" type="text" ng-model="row.value" />
+        <p ng-if="item.allowedValues" class="form-control-static">{{row.value}}</p>
+      </div>
     </div>
-    <button ng-if="hasRemainingValues()" class="btn btn-default" ng-click="addRow()"><span class="glyphicon glyphicon-plus" /> Add</button>
+    <div class="input-group" ng-if="hasRemainingValues()">
+      <select ng-if="item.remainingValues" class="form-control" ng-model="item.newValue" ng-options="key as label for (key, label) in item.remainingValues" />
+      <span class="input-group-btn">
+        <button class="btn btn-default" ng-click="addRow()"><span class="glyphicon glyphicon-plus" /> Add</button>
+      </span>
+    </div>
   </div>
 </div>
 
 <div ng-if="!item.list && item.allowedValues">
   <div class="form-group">
     <label>{{item.name}}</label>
-    <select ng-required="true" class="form-control" ng-model="item.value" ng-options="key as label for (key, label) in item.allowedValues" />
+    <select ng-required="true" class="form-control" ng-model="item.value" ng-options="key as label for (key, label) in item.allowedValues"
+    />
   </div>
 </div>
 
@@ -34,7 +40,7 @@
       <span class="input-group-addon"><span class="glyphicon glyphicon-folder-open" /></span>
       <input type="text" ng-required="true" valid-folder class="form-control" ng-model="item.value" />
     </div>
-  </div>  
+  </div>
 </div>
 
 <div ng-if="!item.list && item.type == 'java.lang.String'">
