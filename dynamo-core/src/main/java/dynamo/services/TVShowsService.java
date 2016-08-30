@@ -15,7 +15,6 @@ import com.omertron.thetvdbapi.TvDbException;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.FileUtils;
-import dynamo.core.manager.ErrorManager;
 import dynamo.model.tvshows.TVShowManager;
 import model.ManagedEpisode;
 import model.ManagedSeries;
@@ -59,13 +58,14 @@ public class TVShowsService {
 	@POST
 	@Path("/associate")
 	public String associate( TVShowRequest request ) throws TvDbException, IOException {
-		return TVShowManager.getInstance().identifyFolder( request.getFolder(), request.getId(), request.getMetadataLanguage(), request.getAudioLanguage(), request.getSubtitlesLanguage() );
+		return TVShowManager.getInstance().identifyFolder( request.getFolder(), request.getTvdbId(), request.getMetadataLanguage(), request.getAudioLanguage(), request.getSubtitlesLanguage() );
 	}
 	
 	@POST
-	@Path("/save/{id}")
-	public void save(@PathParam("id") String id) {
-		// TODO
+	@Path("/save")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void save( ManagedSeries series ) {
+		TVShowManager.getInstance().saveSeries( series);
 	}
 	
 
@@ -85,7 +85,7 @@ public class TVShowsService {
 		
 		java.nio.file.Path tvShowFolder = parentFolder.resolve( tvshow.getSeriesName() );
 		
-		return TVShowManager.getInstance().identifyFolder(tvShowFolder, tvshow.getId(), TVShowManager.getInstance().getMetaDataLanguage(), tvshow.getAudioLanguage(), tvshow.getSubtitlesLanguage());
+		return TVShowManager.getInstance().identifyFolder(tvShowFolder, tvshow.getTvdbId(), TVShowManager.getInstance().getMetaDataLanguage(), tvshow.getAudioLanguage(), tvshow.getSubtitlesLanguage());
 	}
 	
 	@GET

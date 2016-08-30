@@ -60,7 +60,6 @@ import dynamo.parsers.VideoNameParser;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import dynamo.webapps.pushbullet.PushBullet;
-import hclient.HTTPClient;
 import model.ManagedEpisode;
 import model.ManagedSeries;
 import model.backlog.ScanTVShowTask;
@@ -254,7 +253,7 @@ public class DownloadableManager {
 						} else {
 							if (downloadable instanceof ManagedEpisode) {
 								ManagedSeries series = TVShowManager.getInstance().getManagedSeries(((ManagedEpisode) downloadable).getSeriesId());
-								if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, series.getSubtitleLanguage() )) {
+								if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, series.getSubtitlesLanguage() )) {
 									managedEpisodeDAO.setSubtitled( id, ((ManagedEpisode) downloadable).getSubtitlesPath() );
 								}
 							} else if (downloadable instanceof Movie) {
@@ -500,8 +499,10 @@ public class DownloadableManager {
 	}
 	
 	public static void downloadImage( Class<? extends Downloadable> downloadableClass, long downloadableId, String url, String referer ) throws IOException {
-		Path localFile = resolveImage(downloadableClass, downloadableId);
-		BackLogProcessor.getInstance().schedule( new HTTPDownloadTask(url, referer, localFile), false );
+		if (url != null) {
+			Path localFile = resolveImage(downloadableClass, downloadableId);
+			BackLogProcessor.getInstance().schedule( new HTTPDownloadTask(url, referer, localFile), false );
+		}
 	}	
 
 }

@@ -108,8 +108,11 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   tvShowsService.getUnrecognized = function() {
     return BackendService.get('tvshows/unrecognized');
   }
-  tvShowsService.associate = function( folder, tvdbId, language, audioLanguage, subtitlesLanguage ) {
-    return BackendService.post('tvshows/associate/');
+  tvShowsService.associate = function( folder, tvdbId, metadataLanguage, audioLanguage, subtitlesLanguage ) {
+    return BackendService.post('tvshows/associate', {'folder': folder, 'tvdbId': tvdbId, 'metadataLanguage': metadataLanguage, 'audioLanguage': audioLanguage, 'subtitlesLanguage': subtitlesLanguage});
+  }
+  tvShowsService.save = function( folder, tvdbId, metadataLanguage, audioLanguage, subtitlesLanguage ) {
+    return BackendService.post('tvshows/save', {'folder': folder, 'tvdbId': tvdbId, 'metadataLanguage': metadataLanguage, 'audioLanguage': audioLanguage, 'subtitlesLanguage': subtitlesLanguage});
   }
   tvShowsService.getUnrecognizedFiles = function( tvshowId ) {
     return BackendService.get('tvshows/' + tvshowId + '/unrecognized');
@@ -137,7 +140,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   }, this);
 
   $scope.saveTVShow = function() {
-    alert('TODO : save TV Show');
+    BackendService.post('tvshows/save', $scope.tvshow );
   }
 
   $scope.selectedEpisode = {};
@@ -200,7 +203,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   }
 
   $scope.selectTVShow = function( tvshow ) {
-    BackendService.post("tvshows/associate", {"folder" : $scope.selectedFolder.path, "id": tvshow.id, 'metadataLanguage': $scope.searchLanguage, 'audioLanguage': tvshow.language.toUpperCase(), 'subtitlesLanguage': $scope.subtitlesLanguage}).then(
+    tvShowsService.associate( $scope.selectedFolder.path, tvshow.id, $scope.searchLanguage, tvshow.language.toUpperCase(), $scope.subtitlesLanguage ).then(
       function( response ) {
         $location.path("/tvshow-detail/" + response.data);
       }

@@ -17,7 +17,6 @@ import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.TaskExecutor;
 import dynamo.manager.DownloadableManager;
-import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import dynamo.model.tvshows.TVShowManager;
@@ -25,7 +24,6 @@ import dynamo.model.tvshows.TVShowSeason;
 import dynamo.parsers.TVShowEpisodeInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
-import dynamo.tvshows.jdbi.TVShowDAO;
 import dynamo.tvshows.jdbi.TVShowSeasonDAO;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import dynamo.video.VideoManager;
@@ -35,15 +33,13 @@ import model.backlog.ScanTVShowTask;
 
 public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 	
-	private TVShowDAO tvShowDAO;
 	private TVShowSeasonDAO tvShowSeasonDAO;
 	private DownloadableUtilsDAO downloadableDAO;
 	private ManagedEpisodeDAO managedEpisodeDAO;
 	private UnrecognizedDAO unrecognizedDAO;
 
-	public ScanTVShowExecutor(ScanTVShowTask item, TVShowDAO tvShowDAO, TVShowSeasonDAO tvShowSeasonDAO, DownloadableUtilsDAO downloadableDAO, ManagedEpisodeDAO managedEpisodeDAO, UnrecognizedDAO unrecognizedDAO) {
+	public ScanTVShowExecutor(ScanTVShowTask item, TVShowSeasonDAO tvShowSeasonDAO, DownloadableUtilsDAO downloadableDAO, ManagedEpisodeDAO managedEpisodeDAO, UnrecognizedDAO unrecognizedDAO) {
 		super(item);
-		this.tvShowDAO = tvShowDAO;
 		this.tvShowSeasonDAO = tvShowSeasonDAO;
 		this.downloadableDAO = downloadableDAO;
 		this.managedEpisodeDAO = managedEpisodeDAO;
@@ -113,8 +109,8 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 						managedEpisode.setSubtitled( false );
 						managedEpisode.setAbsoluteNumber( managedEpisode.getEpisodeNumber() );
 
-						if ( task.getSeries().getSubtitleLanguage() != null ) {
-							if ( TVShowManager.getInstance().isAlreadySubtitled( managedEpisode, task.getSeries().getSubtitleLanguage() )) {
+						if ( task.getSeries().getSubtitlesLanguage() != null ) {
+							if ( TVShowManager.getInstance().isAlreadySubtitled( managedEpisode, task.getSeries().getSubtitlesLanguage() )) {
 								managedEpisode.setSubtitled( true );
 								BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format("this.episode.id == %d", managedEpisode.getId()) );
 							} else {

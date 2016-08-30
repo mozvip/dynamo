@@ -24,7 +24,7 @@ import dynamo.services.MovieDBService.MovieResult;
 @Path("movie-db")
 public class MovieDBService {
 	
-	class MovieResult {
+	static class MovieResult {
 		public int movieDbId;
 		public String name;
 		public int year;

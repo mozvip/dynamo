@@ -17,8 +17,12 @@
 	</appender>
 	
 	<logger name="liquibase" level="INFO" />
+	
+	<logger name="org.apache.http" level="INFO" />
+	
+	<logger name="io.undertow.request" level="INFO" />
 
-	<root level="INFO">
+	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 	</root>

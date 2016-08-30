@@ -7,11 +7,12 @@ import dynamo.core.Language;
 public class TVShowRequest {
 
 	private Path folder;
-	private String id;
+	private String tvdbId;
 	private String seriesName;
 	private Language metadataLanguage;
 	private Language audioLanguage;
 	private Language subtitlesLanguage;
+	private boolean autoDownload;
 
 	public Path getFolder() {
 		return folder;
@@ -29,12 +30,12 @@ public class TVShowRequest {
 		this.metadataLanguage = metadataLanguage;
 	}
 
-	public String getId() {
-		return id;
+	public String getTvdbId() {
+		return tvdbId;
 	}
-
-	public void setId(String id) {
-		this.id = id;
+	
+	public void setTvdbId(String tvdbId) {
+		this.tvdbId = tvdbId;
 	}
 
 	public String getSeriesName() {
@@ -60,5 +61,15 @@ public class TVShowRequest {
 	public void setSubtitlesLanguage(Language subtitlesLanguage) {
 		this.subtitlesLanguage = subtitlesLanguage;
 	}
+
+	public boolean isAutoDownload() {
+		return autoDownload;
+	}
+
+	public void setAutoDownload(boolean autoDownload) {
+		this.autoDownload = autoDownload;
+	}
+	
+	
 
 }

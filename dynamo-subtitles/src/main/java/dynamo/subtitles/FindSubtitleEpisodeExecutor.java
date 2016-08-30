@@ -47,12 +47,12 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 			return;
 		}
 
-		if (episode.isSubtitled() || series.getSubtitleLanguage() == null) {
+		if (episode.isSubtitled() || series.getSubtitlesLanguage() == null) {
 			return;
 		}
 
 		VideoMetaData metaData = VideoManager.getInstance().getMetaData(episode, mainVideoFilePath);
-		if (metaData.getSubtitleLanguages() != null && metaData.getSubtitleLanguages().contains( series.getSubtitleLanguage() )) {
+		if (metaData.getSubtitleLanguages() != null && metaData.getSubtitleLanguages().contains( series.getSubtitlesLanguage() )) {
 			episodeDAO.setSubtitled(episode.getId());
 			return;
 		}
@@ -67,7 +67,7 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 					episode.getSource(),
 					episode.getReleaseGroup(),
 					episode.getSeasonNumber(), episode.getEpisodeNumber(),
-					series.getSubtitleLanguage() );
+					series.getSubtitlesLanguage() );
 			
 			if ( subtitles != null ) {
 				
@@ -101,7 +101,7 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 	@Override
 	public void rescheduleTask(FindSubtitleEpisodeTask item) {
 		ManagedEpisode episode = item.getEpisode();
-		if ( !TVShowManager.getInstance().isAlreadySubtitled( episode, series.getSubtitleLanguage() )) {
+		if ( !TVShowManager.getInstance().isAlreadySubtitled( episode, series.getSubtitlesLanguage() )) {
 			item.setMinDate( getNextDate( 60 * 24 ) );
 			BackLogProcessor.getInstance().schedule( item, false );
 		}

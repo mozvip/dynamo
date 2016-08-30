@@ -2,14 +2,14 @@ package model;
 
 import java.io.Serializable;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 
+@JsonIgnoreProperties({"relativeLink"})
 public class ManagedSeries implements Serializable {
 
 	/**
@@ -27,7 +27,7 @@ public class ManagedSeries implements Serializable {
 	private Language originalLanguage;
 	private Language metaDataLanguage;
 	private Language audioLanguage;
-	private Language subtitleLanguage;
+	private Language subtitlesLanguage;
 
 	private boolean ended;
 	private boolean useAbsoluteNumbering = false;
@@ -36,9 +36,12 @@ public class ManagedSeries implements Serializable {
 	private List<String> aka;
 	private List<String> wordsBlackList;
 	private List<VideoQuality> qualities;
+	
+	public ManagedSeries() {
+	}
 
 	public ManagedSeries(String id, String name, String imdbId, String network, Path folder,
-			Language originalLanguage, Language metaDataLanguage, Language audioLanguage, Language subtitleLanguage, boolean ended,
+			Language originalLanguage, Language metaDataLanguage, Language audioLanguage, Language subtitlesLanguage, boolean ended,
 			boolean useAbsoluteNumbering, boolean autoDownload, List<String> aka, List<VideoQuality> qualities, List<String> wordsBlackList) {
 		super();
 		this.id = id;
@@ -49,7 +52,7 @@ public class ManagedSeries implements Serializable {
 		this.originalLanguage = originalLanguage;
 		this.metaDataLanguage = metaDataLanguage;
 		this.audioLanguage = audioLanguage;
-		this.subtitleLanguage = subtitleLanguage;
+		this.subtitlesLanguage = subtitlesLanguage;
 		this.ended = ended;
 		this.useAbsoluteNumbering = useAbsoluteNumbering;
 		this.autoDownload = autoDownload;
@@ -69,30 +72,6 @@ public class ManagedSeries implements Serializable {
 
 	public List<String> getAka() {
 		return aka;
-	}
-
-	public String getAlternateNames() {
-		return aka != null ? StringUtils.join(aka, ';') : "";
-	}
-
-	public void setAlternateNames(String value) {
-		String[] split = StringUtils.split(value, ';');
-		aka = new ArrayList<String>();
-		for (String string : split) {
-			aka.add(string);
-		}
-	}
-
-	public String getBlackList() {
-		return wordsBlackList != null ? StringUtils.join(wordsBlackList, ';') : "";
-	}
-
-	public void setBlackList(String value) {
-		String[] split = StringUtils.split(value, ';');
-		wordsBlackList = new ArrayList<String>();
-		for (String string : split) {
-			wordsBlackList.add(string);
-		}
 	}
 
 	public List<VideoQuality> getQualities() {
@@ -151,12 +130,12 @@ public class ManagedSeries implements Serializable {
 		this.audioLanguage = audioLanguage;
 	}
 
-	public Language getSubtitleLanguage() {
-		return subtitleLanguage;
+	public Language getSubtitlesLanguage() {
+		return subtitlesLanguage;
 	}
 
-	public void setSubtitleLanguage(Language subtitleLanguage) {
-		this.subtitleLanguage = subtitleLanguage;
+	public void setSubtitlesLanguage(Language subtitlesLanguage) {
+		this.subtitlesLanguage = subtitlesLanguage;
 	}
 
 	public String getName() {

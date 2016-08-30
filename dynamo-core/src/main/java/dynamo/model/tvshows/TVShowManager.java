@@ -262,9 +262,9 @@ public class TVShowManager implements Reconfigurable {
 		return tvShowDAO.findTVShow(id);
 	}
 
-	public String identifyFolder( Path path, String id, Language metadataLanguage, Language audioLang, Language subsLang ) throws IOException, TvDbException {
+	public String identifyFolder( Path path, String tvdbId, Language metadataLanguage, Language audioLang, Language subsLang ) throws IOException, TvDbException {
 		ManagedSeries series = tvShowDAO.getTVShowForFolder( path );
-		if ( series != null && !series.getId().equals( id ) ) {
+		if ( series != null && !series.getId().equals( tvdbId ) ) {
 			BackLogProcessor.getInstance().unschedule( String.format( "this.episode.series_id == %s", series.getId() ));
 			BackLogProcessor.getInstance().unschedule( String.format( "this.series_id == %s", series.getId() ));
 
@@ -274,7 +274,7 @@ public class TVShowManager implements Reconfigurable {
 
 		deleteUnrecognizedFolder(path);
 
-		return newSeries( api.getSeries(id, metadataLanguage.getShortName()), path, metadataLanguage, audioLang, subsLang ).getId();
+		return newSeries( api.getSeries(tvdbId, metadataLanguage.getShortName()), path, metadataLanguage, audioLang, subsLang ).getId();
 	}
 
 	public Series getSeries(String id, Language language) throws TvDbException {
@@ -302,7 +302,7 @@ public class TVShowManager implements Reconfigurable {
 		}
 
 		// remvove tasks to obtain subtitles if applicable
-		if (series.getSubtitleLanguage() == null) {
+		if (series.getSubtitlesLanguage() == null) {
 			// remove existing subtitles
 			try {
 				for ( Path subtitle : Files.newDirectoryStream( series.getFolder(), SubtitlesFileFilter.getInstance() )) {
@@ -325,7 +325,7 @@ public class TVShowManager implements Reconfigurable {
 	public void saveTVShow(ManagedSeries series) {
 		tvShowDAO.saveTVShow(
 				series.getId(), series.getName(), series.getImdbId(), series.getNetwork(), series.getFolder(),
-				series.getOriginalLanguage(), series.getMetaDataLanguage(), series.getAudioLanguage(), series.getSubtitleLanguage(), series.isEnded(), series.isUseAbsoluteNumbering(), series.isAutoDownload(),
+				series.getOriginalLanguage(), series.getMetaDataLanguage(), series.getAudioLanguage(), series.getSubtitlesLanguage(), series.isEnded(), series.isUseAbsoluteNumbering(), series.isAutoDownload(),
 				series.getWordsBlackList(), series.getAka(), series.getQualities() );
 	}
 	

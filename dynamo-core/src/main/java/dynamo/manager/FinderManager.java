@@ -54,7 +54,7 @@ public class FinderManager {
 		
 		int score = 0;
 		
-		score = adjustVideoScoreForLanguage( score, searchResult, series.getAudioLanguage(), series.getSubtitleLanguage() );
+		score = adjustVideoScoreForLanguage( score, searchResult, series.getAudioLanguage(), series.getSubtitlesLanguage() );
 		
 		VideoQuality resultQuality = VideoNameParser.getQuality( searchResult.getTitle() );
 		for (VideoQuality quality : series.getQualities()) {
