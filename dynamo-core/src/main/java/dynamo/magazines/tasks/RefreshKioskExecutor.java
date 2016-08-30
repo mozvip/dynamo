@@ -31,6 +31,10 @@ public class RefreshKioskExecutor extends TaskExecutor<RefreshKioskTask> impleme
 	@Override
 	public void execute() throws Exception {
 		
+		if (suggesters == null) {
+			return;
+		}
+		
 		totalItems = suggesters.size();
 
 		for (KioskIssuesSuggester kioskIssuesSuggester : suggesters) {

@@ -160,7 +160,7 @@ public class DynamoServer {
 
         final PopupMenu popup = new PopupMenu();
         
-        URL icon = this.getClass().getClassLoader().getResource("dynamo.png");	// TODO: externalize image name
+        URL icon = this.getClass().getClassLoader().getResource("favicon.png");
         final TrayIcon trayIcon = new TrayIcon( new ImageIcon( icon ).getImage() );
 
         trayIcon.setImageAutoSize( true );
