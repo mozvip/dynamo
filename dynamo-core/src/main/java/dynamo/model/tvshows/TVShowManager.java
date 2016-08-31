@@ -316,9 +316,7 @@ public class TVShowManager implements Reconfigurable {
 			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "this.episode.seriesId == '%s'", series.getId() ) );
 		}
 
-		RefreshTVShowTask task = new RefreshTVShowTask( series );
-
-		BackLogProcessor.getInstance().runNow( task, false );
+		BackLogProcessor.getInstance().runNow( new RefreshTVShowTask( series ), false );
 
 	}
 
