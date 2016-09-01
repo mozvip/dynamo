@@ -137,7 +137,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   $scope.availableEpisodes = [];
 
   $scope.episodes.forEach(function(episode) {
-    if (episode.status == 'IGNORED') {
+    if (episode.status == 'IGNORED' || episode.status == 'WANTED' || episode.status == 'SNATCHED') {
       $scope.availableEpisodes.push( episode );
     }    
   }, this);
