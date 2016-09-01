@@ -23,11 +23,11 @@ public interface SABNzbdService {
 	@GET("/sabnzbd/api?mode=queue&output=json")
 	public SabNzbdResponse getQueue(@Query("apikey") String apiKey);
 
-	@GET("/sabnzbd/api?mode=queue&name=delete")
-	public String delete(@Query("value") String id, @Query("apikey") String apiKey);
+	@GET("/sabnzbd/api?mode=queue&name=delete&del_files=1")
+	public SabNzbdResponse delete(@Query("value") String id, @Query("apikey") String apiKey);
 
 	@GET("/sabnzbd/api?mode=history&name=delete&del_files=1")
-	public String deleteFromHistory(@Query("value") String id, @Query("apikey") String apiKey);
+	public SabNzbdResponse deleteFromHistory(@Query("value") String id, @Query("apikey") String apiKey);
 
 	@GET("/sabnzbd/api?mode=history&output=json")
 	public SabNzbdResponse getHistory(@Query("apikey") String apiKey);

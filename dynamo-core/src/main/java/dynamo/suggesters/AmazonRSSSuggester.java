@@ -47,7 +47,7 @@ public abstract class AmazonRSSSuggester {
 					String imageURL = document.evaluateSingleElementJSoup( ".url > img").attr("src");
 					
 					if ( imageURL != null ) {
-						imageURL = RegExp.keepOnlyGroups(imageURL, "(.*)\\._SL160_(\\.jpg)");
+						imageURL = RegExp.keepOnlyGroups(imageURL, "(.*)\\._SL\\d+_(\\.jpg)");
 					}
 					
 					String suggestionURL = document.evaluateSingleElementJSoup( ".url").attr("href");
