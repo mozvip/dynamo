@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
+import dynamo.backlog.tasks.music.FindMusicAlbumImageTask;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.model.DownloableCount;
@@ -25,6 +26,7 @@ import dynamo.core.model.DownloadableDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
+import dynamo.model.music.MusicAlbum;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import model.UnrecognizedFile;
 
@@ -56,6 +58,17 @@ public class DownloadableService {
 	@Path("/redownload/{id}")
 	public void redownload(@PathParam("id") long id) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException  {
 		DownloadableManager.getInstance().redownload(id);
+	}
+	
+	@POST
+	@Path("/updateImage/{id}")
+	public void updateImage(@PathParam("id") long id) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException  {
+		Downloadable downloadable = DownloadableFactory.getInstance().createInstance( id );
+		if (downloadable instanceof MusicAlbum) {
+			BackLogProcessor.getInstance().schedule( new FindMusicAlbumImageTask( (MusicAlbum) downloadable ), true );
+		} else {
+			// FIXME
+		}
 	}
 	
 	@POST

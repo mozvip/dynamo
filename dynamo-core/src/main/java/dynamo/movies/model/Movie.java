@@ -177,7 +177,8 @@ public class Movie extends Downloadable implements Video {
 
 	@Override
 	public String getRelativeLink() {
-		return "movies-collection.jsf"; // FIXME: improve
+		String urlSuffix = getStatus().name();
+		return "movies/" + urlSuffix;
 	}
 	@Override
 	public int hashCode() {
