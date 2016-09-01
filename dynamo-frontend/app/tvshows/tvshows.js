@@ -167,6 +167,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   $scope.redownload = function( episode ) {
     downloadableService.redownload( episode.id ).then( function( response ) {
       episode.status = 'WANTED';
+      episode.label = '';
     });
   }
 
