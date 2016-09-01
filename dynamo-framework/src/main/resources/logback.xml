@@ -21,6 +21,8 @@
 	<logger name="org.apache.http" level="INFO" />
 	
 	<logger name="io.undertow.request" level="INFO" />
+	
+	<logger name="org.reflections.Reflections" level="INFO" />
 
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />

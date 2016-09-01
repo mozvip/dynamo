@@ -75,13 +75,13 @@
         </div>
 
         <div ng-repeat="(seasonNumber, seasonEpisodes) in episodes | groupBy: 'seasonNumber'">
-            <h3>Season {{seasonNumber}}</h3>
+            <h3>Season {{seasonNumber}} <button title="Want complete season" class="btn btn-sm btn-default" ng-click="wantSeason(seasonNumber)"><span class="glyphicon glyphicon-heart" /></button></h3>
             <table class="table table-condensed table-striped">
-                <tr ng-repeat="episode in seasonEpisodes | orderBy:'episodeNumber'" ng-class="{success: episode.status=='DOWNLOADED', danger:episode.status=='WANTED', info:episode.status=='FUTURE'}">
+                <tr ng-repeat="episode in seasonEpisodes | orderBy:'episodeNumber'" ng-class="{success: episode.status=='DOWNLOADED', danger:episode.status=='WANTED', info:episode.status=='SNATCHED', warning:episode.status=='FUTURE'}">
                     <td>{{episode.episodeNumber}}</td>
                     <td>
                         <div ng-show="episode.status != 'FUTURE'" class="btn-group" role="group">
-                            <button ng-show="episode.status != 'DOWNLOADED' && episode.status != 'WANTED'" class="btn btn-sm btn-default" ng-click="want(episode)"><span class="glyphicon glyphicon-heart" /></button>
+                            <button title="Want episode" ng-show="episode.status != 'DOWNLOADED' && episode.status != 'SNATCHED' && episode.status != 'WANTED'" class="btn btn-sm btn-default" ng-click="want(episode)"><span class="glyphicon glyphicon-heart" /></button>
                             <button title="File List" ng-show="episode.status == 'DOWNLOADED'" class="btn btn-sm btn-default" ng-click="openFileList(episode)"><span class="glyphicon glyphicon-list" /></button>
                             <button title="Redownload" ng-show="episode.status == 'DOWNLOADED' || episode.status == 'SNATCHED'" class="btn btn-sm btn-warning" sweetalert sweet-options='{"title":"Confirm Redownload","text":"Are you sure you want to redownload {{episode.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, redownload!","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="redownload(episode)"><span class="glyphicon glyphicon-refresh" /></button>
                             <button title="Delete" ng-show="episode.status == 'DOWNLOADED'" class="btn btn-sm btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{episode.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="delete(episode)"><span class="glyphicon glyphicon-trash" /></button>
