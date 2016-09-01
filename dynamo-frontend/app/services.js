@@ -36,7 +36,7 @@ angular.module('dynamo')
             if (parameters) {
                 completeURL += ( '?' +  Object.keys(parameters).map(function(key) { return encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]); }).join('&') );
             }
-            return $http.get( completeURL );
+            return $http.delete( completeURL );
         },
 
         get: function( urlPrefix, parameters ) {

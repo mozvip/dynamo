@@ -105,6 +105,9 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   tvShowsService.rescan = function( tvshowId ) {
     return BackendService.post('tvshows/rescan/' + tvshowId);
   }
+  tvShowsService.delete = function( tvshowId ) {
+    return BackendService.delete('tvshows/' + tvshowId);
+  }
   tvShowsService.getUnrecognized = function() {
     return BackendService.get('tvshows/unrecognized');
   }
@@ -167,8 +170,8 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     });
   }
 
-  $scope.rescan = function( tvshow ) {
-    tvShowsService.rescan( tvshow.id );
+  $scope.rescan = function() {
+    tvShowsService.rescan( $scope.tvshow.id );
   }
 
   $scope.openFileList = function ( downloadable) {
@@ -178,9 +181,15 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     });
   };
 
+  $scope.deleteTVShow = function() {
+    tvShowsService.delete( $scope.tvshow.id ).then( function() {
+      $location.path("/tvshows");
+    });
+  }
+
 }])
 
-.controller('TVShowsUnrecognizedCtrl', ['$scope', 'BackendService', 'tvdbService', 'configuration', 'languages', 'unrecognizeds', '$location', function( $scope, BackendService, tvdbService, configuration, languages, unrecognizeds, $location ) {
+.controller('TVShowsUnrecognizedCtrl', ['$scope', 'BackendService', 'tvShowsService', 'tvdbService', 'configuration', 'languages', 'unrecognizeds', '$location', function( $scope, BackendService, tvShowsService, tvdbService, configuration, languages, unrecognizeds, $location ) {
 
   $scope.unrecognizeds = unrecognizeds.data;
   $scope.languages = languages.data;

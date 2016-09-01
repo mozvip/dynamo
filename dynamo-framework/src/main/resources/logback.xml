@@ -20,7 +20,9 @@
 	
 	<logger name="org.apache.http" level="INFO" />
 	
-	<logger name="io.undertow.request" level="INFO" />
+	<logger name="io.undertow" level="INFO" />
+	
+	<logger name="hclient" level="INFO" />
 	
 	<logger name="org.reflections.Reflections" level="INFO" />
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -15,6 +16,7 @@ import com.omertron.thetvdbapi.TvDbException;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.FileUtils;
+import dynamo.backlog.tasks.tvshows.DeleteShowTask;
 import dynamo.model.tvshows.TVShowManager;
 import model.ManagedEpisode;
 import model.ManagedSeries;
@@ -37,6 +39,12 @@ public class TVShowsService {
 		return TVShowManager.getInstance().getManagedSeries( id );
 	}
 	
+	@DELETE
+	@Path("/{id}")
+	public void deleteTVShow(@PathParam("id") String id) {
+		BackLogProcessor.getInstance().runNow( new DeleteShowTask( TVShowManager.getInstance().getManagedSeries( id ), true ), true );
+	}
+
 	@GET
 	@Path("/unrecognized")
 	public List<UnrecognizedFolder> getUnrecognizedFolders() {
