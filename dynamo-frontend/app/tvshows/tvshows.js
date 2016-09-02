@@ -188,6 +188,14 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     });
   }
 
+  $scope.wantSeason = function( seasonNumber ) {
+    $scope.episodes.forEach(function( episode ) {
+      if (episode.seasonNumber == seasonNumber) {
+        $scope.want( episode );
+      }
+    }, this);
+  }
+
 }])
 
 .controller('TVShowsUnrecognizedCtrl', ['$scope', 'BackendService', 'tvShowsService', 'tvdbService', 'configuration', 'languages', 'unrecognizeds', '$location', function( $scope, BackendService, tvShowsService, tvdbService, configuration, languages, unrecognizeds, $location ) {
@@ -255,9 +263,12 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   }
 
   $scope.addTVShow = function( id ) {
-    BackendService.post("tvshows/add", {"id": id, 'seriesName': $scope.selectedTVShow.seriesName, 'audioLanguage': $scope.audioLanguage, 'subtitlesLanguage': $scope.subtitlesLanguage}).then(
+    BackendService.post("tvshows/add", {"tvdbId": id, 'seriesName': $scope.selectedTVShow.seriesName, 'audioLanguage': $scope.audioLanguage, 'subtitlesLanguage': $scope.subtitlesLanguage}).then(
       function( response ) {
         $location.path("/tvshow-detail/" + response.data);
+      }, 
+      function( reponse ) {
+        alert(response.data);
       }
     );
   }

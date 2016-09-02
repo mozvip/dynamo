@@ -1,10 +1,7 @@
 package dynamo.model.music;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.file.Path;
 
-import dynamo.core.manager.ErrorManager;
 import dynamo.manager.MusicManager;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
@@ -67,12 +64,7 @@ public class MusicAlbum extends Downloadable {
 	
 	@Override
 	public String getRelativeLink() {
-		try {
-			return String.format("music-artist.jsf?name=%s#%d", URLEncoder.encode(artistName, "UTF-8"), getId());
-		} catch (UnsupportedEncodingException e) {
-			ErrorManager.getInstance().reportThrowable(e);
-		}
-		return "music.jsf";
+		return "/music/" + getStatus().name();
 	}
 	
 	@Override

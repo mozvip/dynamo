@@ -26,7 +26,13 @@ public abstract class AbstractFindTVShowExecutor<T extends Downloadable> extends
 	
 	@Override
 	public Collection<String> getWordsBlackList( T downloadable ) {
-		List<String> blackList = new ArrayList<>( TVShowManager.getInstance().getWordsBlackList() );
+		List<String> blackList = new ArrayList<>();
+
+		Collection<String> wordsBlackList = TVShowManager.getInstance().getWordsBlackList();
+		if (wordsBlackList != null) {
+			blackList.addAll( wordsBlackList );
+		}
+
 		if (series.getWordsBlackList() != null) {
 			blackList.addAll( series.getWordsBlackList() );
 		}

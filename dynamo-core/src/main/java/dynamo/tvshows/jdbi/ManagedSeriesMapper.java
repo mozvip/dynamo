@@ -21,8 +21,8 @@ public class ManagedSeriesMapper implements ResultSetMapper<ManagedSeries> {
 			throws SQLException {
 		
 		List<VideoQuality> qualities = (List<VideoQuality>) MapperUtils.getEnumList( r.getString("QUALITIES"), VideoQuality.class );
-		if (qualities.isEmpty()) {
-			qualities.addAll( Arrays.asList(VideoQuality.values()) );
+		if (qualities == null || qualities.isEmpty()) {
+			qualities = Arrays.asList(VideoQuality.values());
 		}
 		
 		String subtitleLanguage = r.getString("SUBTITLELANGUAGE");

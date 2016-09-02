@@ -31,7 +31,11 @@ public class FindSeasonExecutor extends AbstractFindTVShowExecutor<TVShowSeason>
 
 	@Override
 	public Collection<String> getWordsBlackList(TVShowSeason season) {
-		List<String> blackList = new ArrayList<>( TVShowManager.getInstance().getWordsBlackList() );
+		Collection<String> wordsBlackList = TVShowManager.getInstance().getWordsBlackList();
+		List<String> blackList = new ArrayList<>();
+		if (wordsBlackList != null) {
+			blackList.addAll( wordsBlackList );
+		}
 		if (series.getWordsBlackList() != null) {
 			blackList.addAll( series.getWordsBlackList() );
 		}

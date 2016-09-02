@@ -237,7 +237,7 @@ public class MovieManager implements Reconfigurable {
 		}
 	}
 
-	public Movie createMovieFromMovieDB( MovieInfo movieDb, Language language, WebResource defaultImage, DownloadableStatus status, boolean watched ) throws MovieDbException, IOException {
+	public Movie createMovieFromMovieDB( MovieInfo movieDb, Language language, WebResource defaultImage, DownloadableStatus status, float imdbRating, boolean watched ) throws MovieDbException, IOException {
 		Movie movie = movieDAO.findByMovieDbId( movieDb.getId() );
 		if (movie == null) {
 			if (movieDb.getImdbID() == null) {
@@ -270,7 +270,9 @@ public class MovieManager implements Reconfigurable {
 				}
 			}
 			
-			movie = new Movie( downloadableId, status, null, movieDb.getTitle(), null, null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, movieDb.getVoteAverage(), year, watched );
+			float rating = imdbRating <= 0 ? movieDb.getVoteAverage() : imdbRating;
+			
+			movie = new Movie( downloadableId, status, null, movieDb.getTitle(), null, null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, rating, year, watched );
 		}
 		associate( movie, movieDb );
 		save( movie );
@@ -302,20 +304,6 @@ public class MovieManager implements Reconfigurable {
 		movie.setQuality( movieInfo.getQuality() );
 		movie.setReleaseGroup( movieInfo.getRelease() );
 		movie.setSource( movieInfo.getSource() );
-	}
-	
-	public Movie wantMovie( MovieInfo movieDb, VideoQuality wantedQuality, Language wantedAudioLanguage, Language wantedSubtitlesLanguage ) throws IOException, MovieDbException {
-
-		Movie movie = createMovieFromMovieDB( movieDb, getMetaDataLanguage(), null, DownloadableStatus.WANTED, false );
-
-		movie.setWantedAudioLanguage(wantedAudioLanguage);
-		movie.setWantedSubtitlesLanguage(wantedSubtitlesLanguage);
-		movie.setWantedQuality(wantedQuality);
-		
-		DownloadableManager.getInstance().want( movie );
-		save( movie );
-
-		return movie;
 	}
 
 	public boolean isEnabled() {
@@ -449,10 +437,8 @@ public class MovieManager implements Reconfigurable {
 			if ( !imdbTitle.isReleased() ) {
 				return null;
 			}
-			if ( imdbTitle.getRating() > 0 && imdbTitle.getRating() <= getMinimumSuggestionRating() ) {
-				return null;
-			}
-			return createMovieFromMovieDB( api.getMovieInfoImdb(imdbId, language.getShortName()), language, defaultImage, status, watched );
+
+			return createMovieFromMovieDB( api.getMovieInfoImdb(imdbId, language.getShortName()), language, defaultImage, status, imdbTitle.getRating(), watched );
 		}
 	}
 	
