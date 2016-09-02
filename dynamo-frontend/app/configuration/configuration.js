@@ -84,18 +84,11 @@ angular.module('dynamo.configuration', ['ngRoute'])
         $scope.config = configuration.data;
 
         $scope.itemsToConfigure = [
-            $scope.config['EZTVProvider.enabled'],
-            $scope.config['EZTVProvider.baseURL'],
-            $scope.config['KATProvider.enabled'],
-            $scope.config['KATProvider.baseURL'],
-            $scope.config['T411Provider.enabled'],
-            $scope.config['T411Provider.baseURL'],
-            $scope.config['T411Provider.login'],
-            $scope.config['T411Provider.password'],
-            $scope.config['UsenetCrawlerProvider.enabled'],
-            $scope.config['UsenetCrawlerProvider.login'],
-            $scope.config['UsenetCrawlerProvider.password']
-            
+            $scope.config['DownloadableManager.notifyOnSnatch'],
+            $scope.config['DownloadableManager.notifyOnDownload'],
+            $scope.config['PushBullet.enabled'],
+            $scope.config['PushBullet.accessToken'],
+            $scope.config['PushBullet.deviceIdent']
         ];
 
         $scope.saveSettings = function () {
