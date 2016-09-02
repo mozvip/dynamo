@@ -3,9 +3,17 @@
 angular.module('dynamo.configuration', ['ngRoute'])
 
     .config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.when('/configuration', {
+        $routeProvider.when('/configuration-providers', {
             templateUrl: 'configuration/configuration.html',
             controller: 'ProvidersCtrl',
+            resolve: {
+                configuration: ['configurationService', function (configurationService) {
+                    return configurationService.getItems();
+                }]
+            }
+        }).when('/configuration-notifications', {
+            templateUrl: 'configuration/configuration.html',
+            controller: 'NotificationsConfigCtrl',
             resolve: {
                 configuration: ['configurationService', function (configurationService) {
                     return configurationService.getItems();
@@ -70,6 +78,31 @@ angular.module('dynamo.configuration', ['ngRoute'])
         }
 
     }])
+
+    .controller('NotificationsConfigCtrl', ['$scope', 'configurationService', 'configuration', function ($scope, configurationService, configuration) {
+
+        $scope.config = configuration.data;
+
+        $scope.itemsToConfigure = [
+            $scope.config['EZTVProvider.enabled'],
+            $scope.config['EZTVProvider.baseURL'],
+            $scope.config['KATProvider.enabled'],
+            $scope.config['KATProvider.baseURL'],
+            $scope.config['T411Provider.enabled'],
+            $scope.config['T411Provider.baseURL'],
+            $scope.config['T411Provider.login'],
+            $scope.config['T411Provider.password'],
+            $scope.config['UsenetCrawlerProvider.enabled'],
+            $scope.config['UsenetCrawlerProvider.login'],
+            $scope.config['UsenetCrawlerProvider.password']
+            
+        ];
+
+        $scope.saveSettings = function () {
+            configurationService.saveItems( $scope.itemsToConfigure );
+        }
+
+    }])    
 
     .controller('ProvidersCtrl', ['$scope', 'configurationService', 'configuration', function ($scope, configurationService, configuration) {
 
