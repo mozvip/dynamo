@@ -190,7 +190,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
   $scope.wantSeason = function( seasonNumber ) {
     $scope.episodes.forEach(function( episode ) {
-      if (episode.seasonNumber == seasonNumber && episode.status != 'DOWNLOADED') {
+      if (episode.seasonNumber == seasonNumber && episode.status != 'DOWNLOADED' && episode.status != 'FUTURE') {
         $scope.want( episode );
       }
     }, this);
