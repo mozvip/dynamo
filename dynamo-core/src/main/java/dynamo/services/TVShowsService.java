@@ -64,6 +64,12 @@ public class TVShowsService {
 	}
 	
 	@POST
+	@Path("/toggleAutoDownload/{id}")
+	public void toggleAutoDownload(@PathParam("id") String id) {
+		TVShowManager.getInstance().toggleAutoDownload( id );
+	}
+
+	@POST
 	@Path("/associate")
 	public String associate( TVShowRequest request ) throws TvDbException, IOException {
 		return TVShowManager.getInstance().identifyFolder( request.getFolder(), request.getTvdbId(), request.getMetadataLanguage(), request.getAudioLanguage(), request.getSubtitlesLanguage() );

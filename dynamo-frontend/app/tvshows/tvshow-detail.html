@@ -8,6 +8,12 @@
             <div class="col-md-9">
                 <form>
                     <div class="form-group">
+                        <label class="control-label">{{tvshow.name}}</label >
+                        <a target="_blank" ng-show="tvshow.imdbId" href="http://www.imdb.com/title/{{tvshow.imdbId}}">
+                            <img src="../imdb.png" />
+                        </a>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label">Folder</label >
                         <p class="form-control-static" style="font-family: 'Lucida Console'">
                             {{tvshow.folder}}

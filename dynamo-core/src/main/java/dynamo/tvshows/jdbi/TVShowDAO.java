@@ -10,16 +10,12 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
-import dynamo.jdbi.UnrecognizedFileMapper;
-import dynamo.jdbi.UnrecognizedFolderMapper;
 import dynamo.jdbi.core.BindEnum;
 import dynamo.jdbi.core.BindPath;
 import dynamo.jdbi.core.BindStringList;
 import dynamo.jdbi.core.BindUpper;
 import dynamo.jdbi.core.DAO;
 import model.ManagedSeries;
-import model.UnrecognizedFile;
-import model.UnrecognizedFolder;
 
 @DAO(databaseId="dynamo")
 public interface TVShowDAO {
@@ -70,5 +66,8 @@ public interface TVShowDAO {
 			@BindStringList("blackList") List<String> blackList,
 			@BindStringList("aka") List<String> aka,
 			@BindStringList("qualities") List<VideoQuality> qualities);
+
+	@SqlUpdate("UPDATE MANAGEDSERIES SET AUTODOWNLOAD = NOT AUTODOWNLOAD WHERE ID=:seriesId")
+	public void toggleAutoDownload(@Bind("seriesId") String seriesId);
 
 }

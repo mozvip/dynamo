@@ -327,4 +327,10 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     $scope.pageChanged();
   }
 
+  $scope.toggleAutoDownload = function( tvshow ) {
+    BackendService.post('tvshows/toggleAutoDownload/' + tvshow.id).then( function(response) {
+      tvshow.autoDownload = !tvshow.autoDownload; 
+    });
+  }
+
 }]);

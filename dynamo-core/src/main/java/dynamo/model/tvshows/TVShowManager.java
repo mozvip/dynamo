@@ -450,5 +450,9 @@ public class TVShowManager implements Reconfigurable {
 		DownloadableManager.getInstance().redownload( episode );
 		saveEpisode(episode);
 	}
+
+	public void toggleAutoDownload(String id) {
+		tvShowDAO.toggleAutoDownload( id );
+	}
 	
 }

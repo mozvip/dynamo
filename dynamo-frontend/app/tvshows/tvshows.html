@@ -17,14 +17,16 @@
 </div>
 
 <div class="thumbnail downloadable-thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents">
-  <img ng-src="{{imageURL('/data/posters/' + downloadable.id + '.jpg')}}" alt="{{downloadable.name}}" style="min-height: 280px;" />
-  <div class="buttons">
-    <a type="button" ng-href="#/tvshow-detail/{{downloadable.id}}" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-log-out"></span> Details</a>
-    <button type="button" ng-show="downloadable.status == 'DOWNLOADED' || downloadable.status == 'SNATCHED'" confirmed-click="redownload(downloadable)" ng-confirm-click="Are you sure you want to redownload {{downloadable.name}} ?" class="btn btn-danger btn-lg btn-block">Redownload</button>
-    <button type="button" ng-show="downloadable.status == 'SUGGESTED'" ng-click="want(downloadable)" class="btn btn-primary btn-lg btn-block">Want</button>
-    <a target="_blank" ng-show="downloadable.imdbId" class="btn btn-default btn-lg btn-block" href="http://www.imdb.com/title/{{downloadable.imdbId}}"><span class="glyphicon glyphicon-new-window" /> IMDB</a>
-  </div>
+  <a ng-href="#/tvshow-detail/{{downloadable.id}}">
+    <img ng-src="{{imageURL('/data/posters/' + downloadable.id + '.jpg')}}" alt="{{downloadable.name}}" style="max-height: 280px; min-height: 280px;" />
+  </a>
   <div class="caption">
+    <button type="button" ng-show="!downloadable.ended && !downloadable.autoDownload" ng-click="toggleAutoDownload( downloadable )" class="btn btn-primary btn-xs">
+      <span class="glyphicon glyphicon-star-empty" />
+    </button>
+    <button type="button" ng-show="!downloadable.ended && downloadable.autoDownload" ng-click="toggleAutoDownload( downloadable )" class="btn btn-primary btn-xs">
+      <span class="glyphicon glyphicon-star" />
+    </button>
     {{downloadable.name}}
   </div>
 </div>

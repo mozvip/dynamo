@@ -1,0 +1,3 @@
+delete tv show : must cancel pending downloads
+episodes deleted when show is initially refreshed ??
+fix notifications : pushbullet, ...
