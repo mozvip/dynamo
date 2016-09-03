@@ -84,7 +84,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   fileListService.get =  function( id ) {
     return BackendService.get('file-list/' + id);
   }
-  fileListService.del = function( path ) {
+  fileListService.delete = function( path ) {
     return BackendService.delete('file-list?path=' + path);
   }
   fileListService.openModal = function( downloadable ) {
@@ -103,13 +103,22 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   return fileListService;
 }])
 
-.controller('FileListCtrl', ['$scope', '$uibModalInstance', 'fileList', function($scope, $uibModalInstance, fileList) {
+.controller('FileListCtrl', ['$scope', '$uibModalInstance', 'filterFilter', 'fileList', 'fileListService', function($scope, $uibModalInstance, filterFilter, fileList, fileListService) {
 
   $scope.files = fileList.data;
 
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel');
   };
+
+  $scope.delete = function( file ) {
+    fileListService.delete( file.filePath ).then( function() {
+      $scope.files = filterFilter( $scope.files, {'filePath' : '!' + file.filePath}) ;
+      if ($scope.files.length == 0) {
+        $uibModalInstance.dismiss('cancel');
+      }
+    });
+  }
 
 }])
 
