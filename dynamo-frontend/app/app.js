@@ -5,6 +5,7 @@ angular.module('dynamo', [
   'angular.filter',
   'ngRoute',
   'ngResource',
+  'ngSanitize',
   'ngWebSocket',
   'ui.bootstrap',
   'ng-sweet-alert',

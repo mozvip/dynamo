@@ -8,9 +8,9 @@
 </form>
 <ul uib-pager total-items="totalItems" items-per-page="pageSize" ng-model="currentPage" ng-change="pageChanged()"></ul>
 <table class="table table-condensed">
-    <tr ng-repeat="historyItem in history | limitTo:100" ng-class="{success: historyItem.severity=='DEBUG', warning: historyItem.severity=='WARNING', danger:historyItem.severity=='ERROR', info:historyItem.severity=='INFO'}">
-        <td>{{historyItem.date | date}}</td>
+    <tr ng-repeat="historyItem in history | limitTo:100" ng-class="{success: historyItem.status=='DOWNLOADED', info:historyItem.status=='SNATCHED'}">
+        <td>{{historyItem.date | date:'medium'}}</td>
         <td>{{historyItem.status}}</td>
-        <td>{{historyItem.comment}}</td>
+        <td><span ng-bind-html="historyItem.comment" /></td>
     </tr>
 </table>

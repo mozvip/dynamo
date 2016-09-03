@@ -12,9 +12,9 @@
 <ul uib-pager total-items="totalItems" items-per-page="pageSize" ng-model="currentPage" ng-change="pageChanged()"></ul>
 <table class="table table-condensed">
     <tr ng-repeat="logItem in log | limitTo:100" ng-class="{success: logItem.severity=='DEBUG', warning: logItem.severity=='WARNING', danger:logItem.severity=='ERROR', info:logItem.severity=='INFO'}">
-        <td>{{logItem.date | date}}</td>
+        <td>{{logItem.date | date:'medium'}}</td>
         <td>{{logItem.severity}}</td>
-        <td>{{logItem.message}}</td>
-        <td>{{logItem.taskName}}</td>
+        <td><span ng-bind-html="logItem.message" /></td>
+        <td><span ng-bind-html="logItem.taskName" /></td>
     </tr>
 </table>
