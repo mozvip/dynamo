@@ -254,7 +254,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     return BackendService.post('downloadable/redownload/' + downloadableId);
   }
   downloadableService.delete = function( downloadableId ) {
-    return BackendService.delete('services/downloadable/' + downloadableId);
+    return BackendService.delete('downloadable/' + downloadableId);
   }
   downloadableService.updateImage = function( downloadableId ) {
     return BackendService.post('downloadable/updateImage/' + downloadableId);
