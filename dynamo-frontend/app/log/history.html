@@ -1,0 +1,16 @@
+<form class="form-inline">
+    <select class="form-control" ng-model="filterStatus" ng-change="filterChanged()">
+        <option value="">ALL</option>
+        <option value="DOWNLOADED">DOWNLOADED</option>
+        <option value="SNATCHED">SNATCHED</option>
+    </select>
+    <input type="text" class="form-control" ng-model="filterComment" ng-change="filterChanged()" />
+</form>
+<ul uib-pager total-items="totalItems" items-per-page="pageSize" ng-model="currentPage" ng-change="pageChanged()"></ul>
+<table class="table table-condensed">
+    <tr ng-repeat="historyItem in history | limitTo:100" ng-class="{success: historyItem.severity=='DEBUG', warning: historyItem.severity=='WARNING', danger:historyItem.severity=='ERROR', info:historyItem.severity=='INFO'}">
+        <td>{{historyItem.date | date}}</td>
+        <td>{{historyItem.status}}</td>
+        <td>{{historyItem.comment}}</td>
+    </tr>
+</table>

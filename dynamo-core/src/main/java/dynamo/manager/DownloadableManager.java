@@ -146,6 +146,7 @@ public class DownloadableManager {
 
 	public void want( Downloadable downloadable ) {
 		downloadableDAO.updateStatus(downloadable.getId(), DownloadableStatus.WANTED);
+		downloadableDAO.updateLabel(downloadable.getId(), "");
 		scheduleFind( downloadable );
 	}
 	

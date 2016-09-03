@@ -167,7 +167,7 @@ public class ManagedEpisode extends Downloadable implements Video {
 
 	@Override
 	public String getRelativeLink() {
-		return String.format( "tvshow.jsf?id=%s#season%d", seriesId, seasonNumber ); 
+		return String.format( "tvshow-detail/%s#season%d", seriesId, seasonNumber ); 
 	}
 	
 	private ManagedSeries series = null;

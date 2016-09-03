@@ -196,6 +196,20 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     }, this);
   }
 
+  $scope.delete = function( episode ) {
+    downloadableService.delete( episode.id ).then( function() {
+      episode.status = 'IGNORED';
+    });
+  }
+
+  $scope.deleteSeason = function( seasonNumber ) {
+    $scope.episodes.forEach(function( episode ) {
+      if (episode.seasonNumber == seasonNumber && episode.status != 'FUTURE') {
+        $scope.delete( episode );
+      }
+    }, this);
+  }
+
 }])
 
 .controller('TVShowsUnrecognizedCtrl', ['$scope', 'BackendService', 'tvShowsService', 'tvdbService', 'configuration', 'languages', 'unrecognizeds', '$location', function( $scope, BackendService, tvShowsService, tvdbService, configuration, languages, unrecognizeds, $location ) {
