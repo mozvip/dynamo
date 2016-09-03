@@ -10,6 +10,7 @@ angular.module('dynamo', [
   'ui.bootstrap',
   'ng-sweet-alert',
   'dynamo.common',
+  'dynamo.trakt',
   'dynamo.log',
   'dynamo.home',
   'dynamo.configuration',

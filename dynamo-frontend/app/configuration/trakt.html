@@ -1,7 +1,5 @@
-<form name="settingsForm" novalidate>
+<form name="traktForm" novalidate>
 
-  <configuration-item ng-repeat="item in itemsToConfigure" item="item" />
-
-  <button ng-disabled="!settingsForm.$valid" class="btn btn-primary" ng-click="saveSettings()"><span class="glyphicon glyphicon-save" /> Save Settings</button>
+<a class="btn btn-primary" ng-href="authorizeURL">Authorize application</a>
 
 </form>
