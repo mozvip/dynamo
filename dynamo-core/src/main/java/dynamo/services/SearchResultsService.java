@@ -22,7 +22,7 @@ public class SearchResultsService {
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<SearchResult> getSearchResultsFor( @PathParam("id") long id ) {
-		return searchResultsDAO.getSearchResults(id);
+		return searchResultsDAO.findSearchResults(id);
 	}
 
 }

@@ -67,7 +67,7 @@ public abstract class FindDownloadableExecutor<T extends Downloadable> extends T
 		SearchResult selectedResult = null;
 
 		Set<String> blackListedUrls = new HashSet<>();
-		List<SearchResult> existingResults = searchResultDAO.getSearchResults( getDownloadable().getId() );
+		List<SearchResult> existingResults = searchResultDAO.findSearchResults( getDownloadable().getId() );
 		for (SearchResult searchResult : existingResults) {
 			if (searchResult.isBlackListed()) {
 				blackListedUrls.add( searchResult.getUrl() );

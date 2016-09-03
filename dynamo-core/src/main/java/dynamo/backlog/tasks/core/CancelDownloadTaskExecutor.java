@@ -7,9 +7,12 @@ import dynamo.torrents.transmission.Transmission;
 import dynamo.webapps.sabnzbd.SabNzbd;
 
 public class CancelDownloadTaskExecutor extends TaskExecutor<CancelDownloadTask> {
+	
+	SearchResultDAO searchResultDAO;
 
 	public CancelDownloadTaskExecutor(CancelDownloadTask task, SearchResultDAO searchResultDAO) {
 		super(task);
+		this.searchResultDAO = searchResultDAO;
 	}
 
 	@Override
@@ -18,12 +21,10 @@ public class CancelDownloadTaskExecutor extends TaskExecutor<CancelDownloadTask>
 		if ( task.getResult().getType() == SearchResultType.TORRENT && Transmission.getInstance().isEnabled()) {
 			Transmission.getInstance().remove( Integer.parseInt( task.getResult().getClientId() ), true );
 		}
-		
 		else if ( task.getResult().getType() == SearchResultType.NZB && SabNzbd.getInstance().isEnabled()) {
-			
 			SabNzbd.getInstance().remove( task.getResult().getClientId() );
-			
 		}
+		searchResultDAO.freeClientId( task.getResult().getClientId() );
 	}
 
 }

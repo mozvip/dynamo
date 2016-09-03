@@ -66,7 +66,7 @@ public interface SearchResultDAO {
 
 	@SqlQuery("SELECT SEARCHRESULT.*, DOWNLOADABLE.* FROM SEARCHRESULT INNER JOIN DOWNLOADABLE ON SEARCHRESULT.DOWNLOADABLE_ID = DOWNLOADABLE.ID WHERE SEARCHRESULT.DOWNLOADABLE_ID = :downloadableId")
 	@Mapper(SearchResultMapper.class)
-	public List<SearchResult> getSearchResults(@Bind("downloadableId") long downloadableId);
+	public List<SearchResult> findSearchResults(@Bind("downloadableId") long downloadableId);
 
 	@SqlQuery("SELECT SEARCHRESULT.*, DOWNLOADABLE.* FROM SEARCHRESULT INNER JOIN DOWNLOADABLE ON SEARCHRESULT.DOWNLOADABLE_ID = DOWNLOADABLE.ID WHERE SEARCHRESULT.TYPE = :searchResultType AND SEARCHRESULT.CLIENTID IS NOT NULL AND (BLACKLISTED IS NULL OR BLACKLISTED=FALSE)")
 	@Mapper(SearchResultMapper.class)

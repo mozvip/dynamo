@@ -145,6 +145,7 @@ public class DownloadableManager {
 	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
 	public void want( Downloadable downloadable ) {
+		cancelDownload(downloadable);
 		downloadableDAO.updateStatus(downloadable.getId(), DownloadableStatus.WANTED);
 		downloadableDAO.updateLabel(downloadable.getId(), "");
 		scheduleFind( downloadable );
@@ -370,7 +371,7 @@ public class DownloadableManager {
 	}
 	
 	public void cancelDownload( Downloadable downloadable ) {
-		List<SearchResult> searchResults = searchResultDAO.getSearchResults( downloadable.getId() );
+		List<SearchResult> searchResults = searchResultDAO.findSearchResults( downloadable.getId() );
 		for (SearchResult searchResult : searchResults) {
 			if (!searchResult.isBlackListed() && StringUtils.isNotEmpty( searchResult.getClientId() )) {
 				BackLogProcessor.getInstance().schedule( new CancelDownloadTask( downloadable, searchResult ));
