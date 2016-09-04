@@ -12,9 +12,6 @@ import retrofit.RestAdapter;
 
 public class PushBullet implements Enableable {
 	
-	@Configurable(category="Notifiers", name="Enable PushBullet notifications")
-	private boolean enabled;
-
 	@Configurable(category="Notifiers", name="PushBullet Access Token")
 	private String accessToken;
 	
@@ -38,11 +35,7 @@ public class PushBullet implements Enableable {
 	}
 
 	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+		return accessToken != null && deviceIdent != null;
 	}
 	
 	private PushBulletService service = null;

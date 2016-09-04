@@ -53,6 +53,7 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 			
 			Downloadable downloadable = DownloadableFactory.getInstance().createInstance( searchResult.getDownloadableId() );
 			if (downloadable == null) {
+				searchResultDAO.deleteResultForDownloadableId( searchResult.getDownloadableId() );
 				continue;
 			}
 
