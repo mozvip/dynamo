@@ -1,1 +1,5 @@
 /target
+/src/main/resources
+/data
+/config.json
+/*.db
