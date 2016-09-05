@@ -8,8 +8,8 @@
 	<modules>
 		<module>jaudiotagger</module>
 		<module>dynamo-core</module>
-		<module>dynamo-subtitles</module>
-		<module>dynamo-web</module>
+		
+		
 		<module>hclient/hclient</module>
 		<module>dynamo-framework</module>
 	</modules>
