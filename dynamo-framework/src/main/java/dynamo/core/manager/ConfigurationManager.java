@@ -192,7 +192,7 @@ public class ConfigurationManager {
 			} else if (fieldType.equals( Path.class )) {
 				value = Paths.get( stringValue );
 			} else if (fieldType.isEnum()) {
-				value = Enum.valueOf(fieldType, stringValue);
+				value = !stringValue.equals("") ? Enum.valueOf(fieldType, stringValue) : null;
 			} else if (Collection.class.isAssignableFrom( fieldType )) {
 				String[] values = stringValue.split(";");
 				Class contentsClass = annotation.contentsClass();

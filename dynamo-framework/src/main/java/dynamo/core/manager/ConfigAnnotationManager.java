@@ -106,7 +106,11 @@ public class ConfigAnnotationManager {
 			return null;
 		}
 		if (items.containsKey(key)) {
-			return items.get(key).getValue();
+			String value = items.get(key).getValue();
+			if (value != null && value.equals("__NULL__")) {
+				value = null;
+			}
+			return value;
 		}
 		return null;
 	}	

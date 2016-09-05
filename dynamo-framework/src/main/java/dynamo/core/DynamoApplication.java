@@ -50,7 +50,7 @@ public abstract class DynamoApplication {
 	protected void upgradeDatabase( String databaseId ) {
 		try (Connection conn = DAOManager.getInstance().getSingleConnection(databaseId)) {
 			DatabaseConnection connection = new JdbcConnection( conn );
-			Liquibase liquibase = new Liquibase( String.format("databases/%s.xml", databaseId ), new ClassLoaderResourceAccessor( getClass().getClassLoader()), connection );
+			Liquibase liquibase = new Liquibase( String.format("./databases/%s.xml", databaseId ), new ClassLoaderResourceAccessor( getClass().getClassLoader()), connection );
 			liquibase.update( "" );
 		} catch (ValidationFailedException e) {
 			// database has been modified outside of Liquibase, assume it needs to be recreated
