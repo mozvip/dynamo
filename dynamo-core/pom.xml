@@ -8,10 +8,10 @@
 			<name>Maven Java Net Snapshots and Releases</name>
 			<url>https://maven.java.net/content/groups/public/</url>
 		</repository>
-	    <repository>
-	        <id>4thline.org-repo</id>
-	        <url>http://4thline.org/m2</url>
-	    </repository>
+		<repository>
+			<id>4thline.org-repo</id>
+			<url>http://4thline.org/m2</url>
+		</repository>
 	</repositories>
 	<build>
 		<plugins>
@@ -39,29 +39,72 @@
 								<resource>
 									<directory>../dynamo-frontend/app</directory>
 									<filtering>true</filtering>
-						            <excludes>
-						                <exclude>**/*.woff</exclude>
-						                <exclude>**/*.woff2</exclude>
-						                <exclude>**/*.ttf</exclude>
-						            </excludes>								
+									<excludes>
+										<exclude>**/*.woff</exclude>
+										<exclude>**/*.woff2</exclude>
+										<exclude>**/*.ttf</exclude>
+									</excludes>
 								</resource>
 								<resource>
 									<directory>../dynamo-frontend/app</directory>
 									<filtering>false</filtering>
-						            <includes>
-						                <include>**/*.woff</include>
-						                <include>**/*.woff2</include>
-						                <include>**/*.ttf</include>
-						            </includes>								
+									<includes>
+										<include>**/*.woff</include>
+										<include>**/*.woff2</include>
+										<include>**/*.ttf</include>
+									</includes>
 								</resource>
 							</resources>
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>			
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<createDependencyReducedPom>true</createDependencyReducedPom>
+					<filters>
+						<filter>
+							<artifact>*:*</artifact>
+							<excludes>
+								<exclude>META-INF/*.SF</exclude>
+								<exclude>META-INF/*.DSA</exclude>
+								<exclude>META-INF/*.RSA</exclude>
+							</excludes>
+						</filter>
+					</filters>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<excludes>
+									<exclude>junit:junit</exclude>
+									<exclude>org.mockito:*</exclude>
+									<exclude>com.google.code.findbugs:*</exclude>
+								</excludes>
+							</artifactSet>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>dynamo.server.Dynamo</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
