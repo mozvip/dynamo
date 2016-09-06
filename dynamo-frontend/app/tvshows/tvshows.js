@@ -196,6 +196,10 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     }, this);
   }
 
+  $scope.deleteFile = function( file ) {
+    
+  }
+
   $scope.delete = function( episode ) {
     downloadableService.delete( episode.id ).then( function() {
       episode.status = 'IGNORED';

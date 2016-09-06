@@ -22,6 +22,9 @@ public interface UnrecognizedDAO {
 	@Mapper(UnrecognizedFolderMapper.class)
 	public List<UnrecognizedFolder> getUnrecognizedFolders();
 
+	@SqlUpdate("DELETE FROM UNRECOGNIZEDFILE WHERE ID=:id")
+	public void deleteUnrecognizedFile(@Bind("id") long id);
+
 	@SqlUpdate("DELETE FROM UNRECOGNIZEDFILE WHERE PATH=:path")
 	public void deleteUnrecognizedFile(@BindPath("path") Path path);
 

@@ -454,5 +454,9 @@ public class TVShowManager implements Reconfigurable {
 	public void toggleAutoDownload(String id) {
 		tvShowDAO.toggleAutoDownload( id );
 	}
+
+	public void deleteUnrecognizedFile(long id) {
+		unrecognizedDAO.deleteUnrecognizedFile(id);
+	}
 	
 }

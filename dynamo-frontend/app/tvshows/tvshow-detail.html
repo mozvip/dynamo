@@ -60,7 +60,7 @@
                 <tr class="danger" ng-repeat="file in unrecognizedFiles | orderBy: 'path'">
                     <td>
                         <div class="btn-group" role="group">
-                        <button class="btn btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{file.path | limitTo:255:tvshow.folder.length+1}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No,  cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="delete(item)">
+                        <button class="btn btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{file.path | limitTo:255:tvshow.folder.length+1}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No,  cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="deleteFile(file)">
                             <span class="glyphicon glyphicon-trash" />
                         </button>
                         <button class="btn btn-default">
