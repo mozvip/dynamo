@@ -1,5 +1,5 @@
 /target
-/src/main/resources
 /data
 /config.json
+/src/main/resources/private-data-do-not-commit.properties
 /*.db
