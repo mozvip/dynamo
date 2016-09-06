@@ -1,4 +1,4 @@
-package dynamo.parsers.magazines;
+package dynamo.magazines.parsers;
 
 import java.util.List;
 

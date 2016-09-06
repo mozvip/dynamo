@@ -18,11 +18,11 @@ import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.magazines.jdbi.MagazineDAO;
 import dynamo.magazines.model.Magazine;
 import dynamo.magazines.model.MagazineIssue;
+import dynamo.magazines.parsers.MagazineIssueInfo;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadSuggestion;
 import dynamo.model.DownloadableStatus;
-import dynamo.parsers.magazines.MagazineIssueInfo;
-import dynamo.parsers.magazines.MagazineNameParser;
+import dynamo.magazines.parsers.MagazineNameParser;
 import dynamo.webapps.googleimages.GoogleImages;
 
 public class MagazineManager implements Reconfigurable {

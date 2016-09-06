@@ -2,6 +2,7 @@ package dynamo.backlog.tasks.torrent;
 
 import java.nio.file.Path;
 
+import core.WebResource;
 import dynamo.backlog.queues.HTTPDownloadQueue;
 import dynamo.core.DynamoTask;
 import dynamo.core.configuration.ClassDescription;
@@ -17,26 +18,26 @@ public class DownloadTorrentTask extends Task {
 	private SearchResult searchResult;
 	private Downloadable downloadable;
 	
-	private String url; 
+	private WebResource url; 
 
-	public DownloadTorrentTask( String url ) {
+	public DownloadTorrentTask( WebResource url ) {
 		this.url = url;
 	}
 
 	public DownloadTorrentTask(Path torrentFilePath, SearchResult searchResult, Downloadable downloadable) {
 		this.torrentFilePath = torrentFilePath;
-		this.url = searchResult.getUrl();
+		this.url = new WebResource( searchResult.getUrl(), searchResult.getReferer() );
 		this.searchResult = searchResult;
 		this.downloadable = downloadable;
 	}
 	
 	public DownloadTorrentTask(String url, SearchResult searchResult, Downloadable downloadable) {
-		this.url = url;
+		this.url = new WebResource( searchResult.getUrl(), searchResult.getReferer() );
 		this.searchResult = searchResult;
 		this.downloadable = downloadable;
 	}
 
-	public String getURL() {
+	public WebResource getURL() {
 		return url;
 	}
 	

@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.apache.commons.lang3.StringUtils;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.SearchResultDAO;
@@ -28,8 +30,14 @@ public abstract class AbstractTorrentDownloadExecutor extends TaskExecutor<Downl
 	public void execute() throws Exception {
 	
 		Path filePath = task.getTorrentFilePath();
-		if (filePath == null && task.getURL().startsWith("http")) {
-			filePath = HTTPClient.getInstance().download( task.getURL(), null );
+		if (filePath == null && task.getURL() != null) {
+			filePath = Files.createTempFile("dynamo", ".torrent");
+			String contentType = HTTPClient.getInstance().downloadToFile(task.getURL(), filePath, 0);
+			
+			if (StringUtils.equals(contentType, "text/html")) {
+				
+			}
+			
 		}
 		
 		String ident = null;

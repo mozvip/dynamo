@@ -1,4 +1,4 @@
-package dynamo.parsers.magazines;
+package dynamo.magazines.parsers;
 
 import java.io.IOException;
 import java.text.DateFormatSymbols;
