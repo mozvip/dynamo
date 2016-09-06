@@ -20,6 +20,7 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
+import dynamo.backlog.tasks.files.DeleteFileTask;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
@@ -456,7 +457,9 @@ public class TVShowManager implements Reconfigurable {
 	}
 
 	public void deleteUnrecognizedFile(long id) {
+		UnrecognizedFile file = unrecognizedDAO.getUnrecognizedFile(id);
 		unrecognizedDAO.deleteUnrecognizedFile(id);
+		BackLogProcessor.getInstance().runNow( new DeleteFileTask( file.getPath()), false );
 	}
 	
 }
