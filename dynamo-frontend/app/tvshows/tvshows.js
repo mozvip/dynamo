@@ -197,7 +197,9 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   }
 
   $scope.deleteFile = function( file ) {
-    
+    BackendService.delete('tvshows/unrecognized/' + file.id).then( function( response ) {
+      $scope.unrecognizedFiles = filterFilter($scope.unrecognizedFiles, {'id': '!' + file.id });
+    });
   }
 
   $scope.delete = function( episode ) {
