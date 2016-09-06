@@ -14,6 +14,11 @@
 		</repository>
 	</repositories>
 	<build>
+        <resources>
+            <resource>
+                <directory>../dynamo-frontend/app</directory>
+            </resource>
+        </resources>	
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -24,49 +29,13 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.0.1</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/src/main/resources</outputDirectory>
-							<resources>
-								<resource>
-									<directory>../dynamo-frontend/app</directory>
-									<filtering>true</filtering>
-									<excludes>
-										<exclude>**/*.woff</exclude>
-										<exclude>**/*.woff2</exclude>
-										<exclude>**/*.ttf</exclude>
-									</excludes>
-								</resource>
-								<resource>
-									<directory>../dynamo-frontend/app</directory>
-									<filtering>false</filtering>
-									<includes>
-										<include>**/*.woff</include>
-										<include>**/*.woff2</include>
-										<include>**/*.ttf</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.4.3</version>
 				<configuration>
 					<createDependencyReducedPom>true</createDependencyReducedPom>
 					<filters>
@@ -95,10 +64,12 @@
 								</excludes>
 							</artifactSet>
 							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+				                <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+				                    <resource>META-INF/README</resource>
+				                    <file>README.txt</file>
+				                </transformer>							
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>dynamo.server.Dynamo</mainClass>
 								</transformer>
 							</transformers>
