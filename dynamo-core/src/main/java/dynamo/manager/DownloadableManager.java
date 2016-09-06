@@ -340,8 +340,9 @@ public class DownloadableManager {
 		downloadableDAO.delete(klass, statusToDelete);
 	}
 
-	public void delete(long id) {
-		downloadableDAO.delete(id);
+	public void delete(long downloadableId) {
+		downloadableDAO.delete(downloadableId);
+		searchResultDAO.deleteResultForDownloadableId(downloadableId);
 	}
 
 	public void redownload(Downloadable downloadable) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {

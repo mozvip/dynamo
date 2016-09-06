@@ -3,12 +3,11 @@ package dynamo.backlog.tasks.files;
 import java.util.List;
 
 import dynamo.backlog.BackLogProcessor;
-import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.DownloadableFile;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.LogSuccess;
 import dynamo.core.model.TaskExecutor;
 import dynamo.games.model.VideoGame;
-import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
@@ -22,12 +21,10 @@ import model.ManagedEpisode;
 public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableTask> implements LogSuccess {
 	
 	private DownloadableUtilsDAO downloadableDAO;
-	private SearchResultDAO searchResultDAO;	
 
-	public DeleteDownloadableExecutor( DeleteDownloadableTask task, DownloadableUtilsDAO downloadableDAO, SearchResultDAO searchResultDAO ) {
+	public DeleteDownloadableExecutor( DeleteDownloadableTask task, DownloadableUtilsDAO downloadableDAO ) {
 		super(task);
 		this.downloadableDAO = downloadableDAO;
-		this.searchResultDAO = searchResultDAO;
 	}
 
 	@Override
