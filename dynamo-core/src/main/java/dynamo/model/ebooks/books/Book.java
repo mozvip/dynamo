@@ -30,8 +30,7 @@ public class Book extends Downloadable implements EBook {
 
 	@Override
 	public String getRelativeLink() {
-		// FIXME
-		return isDownloaded() ? "books-collection.jsf" : "books-kiosk.jsf";
+		return "#/books/" + getStatus().name();
 	}
 
 	@Override
