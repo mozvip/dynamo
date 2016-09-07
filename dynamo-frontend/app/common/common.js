@@ -213,7 +213,8 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
           scope.item.values.push( newItem );
           if (scope.item.remainingValues) {
             scope.refreshRemainingValues();
-          }          
+          }
+          scope.changeValue();
         }
       }
     }
