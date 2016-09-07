@@ -51,6 +51,12 @@ public class TVShowsService {
 		return TVShowManager.getInstance().getUnrecognizedFolders();
 	}
 	
+	@DELETE
+	@Path("/unrecognized/{id}")
+	public void deleteFile(@PathParam("id") long id) {
+		TVShowManager.getInstance().deleteUnrecognizedFile( id );
+	}
+
 	@GET
 	@Path("/{id}/unrecognized")
 	public List<UnrecognizedFile> getUnrecognizedFiles(@PathParam("id") String id) {

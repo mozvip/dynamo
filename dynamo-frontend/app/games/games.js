@@ -88,7 +88,7 @@ angular.module('dynamo.games', ['ngRoute', 'ngResource'])
 
   }])
 
-  .controller('GamesConfigCtrl', ['$scope', 'configuration', function ($scope, configuration) {
+  .controller('GamesConfigCtrl', ['$scope', 'configurationService', 'configuration', function ($scope, configurationService, configuration) {
 
     $scope.config = configuration.data;
 

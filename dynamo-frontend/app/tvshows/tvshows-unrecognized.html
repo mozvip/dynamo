@@ -1,5 +1,4 @@
 <h4>Unrecognized TV Show Folders</h4>
-
 <div class="panel panel-default" ng-repeat="folder in unrecognizeds" ng-show="!selectedFolder || selectedFolder.path === folder.path">
   <div class="panel-body">
     <h4 class="text-center" style="font-family:'Courier New'">{{folder.path}}</h4>
@@ -18,8 +17,8 @@
   <div class="form-group">
     <label class="control-label">Search Language</label>
     <select ng-model="searchLanguage" class="form-control" ng-options="item.key as item.value for item in languages">
-            <option value="" />
-          </select>
+      <option value="" />
+    </select>
   </div>
   <div class="btn-group">
     <button class="btn btn-primary" ng-disabled="!searchForm.$valid" ng-click="searchTVShow()"><span class="glyphicon glyphicon-search"/> Search</button>

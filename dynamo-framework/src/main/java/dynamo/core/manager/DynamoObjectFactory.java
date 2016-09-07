@@ -71,7 +71,10 @@ public class DynamoObjectFactory<T> {
 
     public Set<T> getInstances() {
 		Set<Class<? extends T>> classes = reflections.getSubTypesOf( interfaceToImplement );
-		return classes.stream().filter( klass -> !Modifier.isAbstract( klass.getModifiers() )).map( klass -> getInstance(klass)).collect( Collectors.toSet());
+		return classes.stream()
+				.filter( klass -> !Modifier.isAbstract( klass.getModifiers() ))
+				.map( klass -> getInstance(klass))
+				.collect( Collectors.toSet());
     }
   
 }
