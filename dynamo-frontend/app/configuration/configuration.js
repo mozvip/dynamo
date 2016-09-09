@@ -86,7 +86,6 @@ angular.module('dynamo.configuration', ['ngRoute'])
         $scope.itemsToConfigure = [
             $scope.config['DownloadableManager.notifyOnSnatch'],
             $scope.config['DownloadableManager.notifyOnDownload'],
-            $scope.config['PushBullet.enabled'],
             $scope.config['PushBullet.accessToken'],
             $scope.config['PushBullet.deviceIdent']
         ];
