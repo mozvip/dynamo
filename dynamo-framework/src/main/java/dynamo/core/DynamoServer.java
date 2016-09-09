@@ -2,6 +2,7 @@ package dynamo.core;
 
 import java.awt.AWTException;
 import java.awt.Desktop;
+import java.awt.Desktop.Action;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
@@ -142,7 +143,7 @@ public class DynamoServer {
 	}
 	
 	protected void openWelcomePage() {
-		if (Desktop.isDesktopSupported()) {
+		if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Action.BROWSE)) {
 			try {
 				Desktop.getDesktop().browse(new URI( String.format("http://localhost:%d/", port )));
 			} catch (IOException | URISyntaxException e) {
