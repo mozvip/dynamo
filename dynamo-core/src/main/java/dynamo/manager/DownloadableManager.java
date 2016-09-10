@@ -231,66 +231,54 @@ public class DownloadableManager {
 
 		downloadableDAO.addFile( id, newFile, Files.size( newFile ), fileIndex );
 		downloadableDAO.updateStatus( id, DownloadableStatus.DOWNLOADED );
-		
+
 		unrecognizedDAO.deleteUnrecognizedFile( newFile );
 		
-		if ( downloadable instanceof MusicAlbum) {
+		if (downloadable instanceof Video) {
 			
-			MusicAlbum musicAlbum = ( MusicAlbum ) downloadable;
-			try {
-				if (AudioFileFilter.getInstance().accept(newFile)) {
-					BackLogProcessor.getInstance().schedule( new ImportMusicFileTask( musicAlbum, newFile, false ), false );
-				}
-			} catch (IOException e) {
-			}
-		} else {
-
-			if (downloadable instanceof Video) {
-				
-				if ( VideoFileFilter.getInstance().accept( newFile ) ) {
-					String fileName = newFile.getFileName().toString();
-					try {
-						if (fileName.contains("-sample") || fileName.startsWith("sample-") || Files.size(newFile) < (50*1024*1024)) {
-							BackLogProcessor.getInstance().schedule( new DeleteTask( newFile, false ));	// FIXME : should have been done earlier, by the post processor ?
-						} else {
-							if (downloadable instanceof ManagedEpisode) {
-								ManagedSeries series = TVShowManager.getInstance().getManagedSeries(((ManagedEpisode) downloadable).getSeriesId());
-								if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, series.getSubtitlesLanguage() )) {
-									managedEpisodeDAO.setSubtitled( id, ((ManagedEpisode) downloadable).getSubtitlesPath() );
-								}
-							} else if (downloadable instanceof Movie) {
-								if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, MovieManager.getInstance().getSubtitlesLanguage() )) {
-									movieDAO.setSubtitled( id, ((Movie) downloadable).getSubtitlesPath() );
-								}
+			if ( VideoFileFilter.getInstance().accept( newFile ) ) {
+				String fileName = newFile.getFileName().toString();
+				try {
+					if (fileName.contains("-sample") || fileName.startsWith("sample-") || Files.size(newFile) < (50*1024*1024)) {
+						BackLogProcessor.getInstance().schedule( new DeleteTask( newFile, false ));	// FIXME : should have been done earlier, by the post processor ?
+					} else {
+						if (downloadable instanceof ManagedEpisode) {
+							ManagedSeries series = TVShowManager.getInstance().getManagedSeries(((ManagedEpisode) downloadable).getSeriesId());
+							if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, series.getSubtitlesLanguage() )) {
+								managedEpisodeDAO.setSubtitled( id, ((ManagedEpisode) downloadable).getSubtitlesPath() );
 							}
-							downloadableDAO.updateLabel( id, fileName );
+						} else if (downloadable instanceof Movie) {
+							if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, MovieManager.getInstance().getSubtitlesLanguage() )) {
+								movieDAO.setSubtitled( id, ((Movie) downloadable).getSubtitlesPath() );
+							}
 						}
-					} catch (IOException e) {
-						ErrorManager.getInstance().reportThrowable(e);
+						downloadableDAO.updateLabel( id, fileName );
 					}
-					
-				} else if (SubtitlesFileFilter.getInstance().accept( newFile )) {
-					((Video)downloadable).setSubtitlesPath( newFile );								
-					((Video)downloadable).setSubtitled( true );								
+				} catch (IOException e) {
+					ErrorManager.getInstance().reportThrowable(e);
+				}
+				
+			} else if (SubtitlesFileFilter.getInstance().accept( newFile )) {
+				((Video)downloadable).setSubtitlesPath( newFile );								
+				((Video)downloadable).setSubtitled( true );								
+			}
+
+		} else if (downloadable instanceof TVShowSeason) {
+
+			if ( VideoFileFilter.getInstance().accept( newFile ) ) {
+				TVShowSeason season = TVShowManager.getInstance().findSeason( id );
+				ManagedSeries series = TVShowManager.getInstance().getManagedSeries( season.getSeriesId() );
+
+				TVShowEpisodeInfo episodeInfo = VideoNameParser.getTVShowEpisodeInfo(series, newFile);
+				if (episodeInfo != null) {
+					// TODO
 				}
 
-			} else if (downloadable instanceof TVShowSeason) {
-
-				if ( VideoFileFilter.getInstance().accept( newFile ) ) {
-					TVShowSeason season = TVShowManager.getInstance().findSeason( id );
-					ManagedSeries series = TVShowManager.getInstance().getManagedSeries( season.getSeriesId() );
-
-					TVShowEpisodeInfo episodeInfo = VideoNameParser.getTVShowEpisodeInfo(series, newFile);
-					if (episodeInfo != null) {
-						// TODO
-					}
-
-					BackLogProcessor.getInstance().schedule( new ScanTVShowTask( series ));
-				}
-
+				BackLogProcessor.getInstance().schedule( new ScanTVShowTask( series ));
 			}
 
 		}
+
 	}
 
 	public List<DownloadInfo> findWanted() {
