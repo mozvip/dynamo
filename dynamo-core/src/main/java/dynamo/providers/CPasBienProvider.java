@@ -47,7 +47,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 				String url = node.select("a").attr("abs:href");
 				if ( urlMatchRegexp == null || RegExp.matches( url, urlMatchRegexp) ) {
 					String torrentURL = BASE_URL + "/_torrents" + url.substring(url.lastIndexOf('/')).replace(".html", ".torrent");
-					results.add( new SearchResult( this, SearchResultType.TORRENT, title, torrentURL, url, parseSize(sizeExpression), false ) );
+					results.add( new SearchResult( this, SearchResultType.TORRENT, title, torrentURL, url, parseSize(sizeExpression) ) );
 				}
 			}
 			

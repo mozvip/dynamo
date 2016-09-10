@@ -16,12 +16,10 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
 import dynamo.backlog.BackLogProcessor;
-import dynamo.backlog.tasks.core.AudioFileFilter;
 import dynamo.backlog.tasks.core.CancelDownloadTask;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.DeleteTask;
-import dynamo.backlog.tasks.music.ImportMusicFileTask;
 import dynamo.core.DownloadFinder;
 import dynamo.core.DynamoApplication;
 import dynamo.core.DynamoServer;
@@ -204,7 +202,8 @@ public class DownloadableManager {
 	public void snatched( Downloadable downloadable, SearchResult result ) {
 		
 		if (result != null) {
-		
+			
+			searchResultDAO.setDownloaded( result.getUrl() );
 			DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SNATCHED,
 					String.format("<a href='%s'>%s</a> has been snatched from %s : %s", downloadable.getRelativeLink(), downloadable.toString(), result.getProviderName(), result.getTitle()) );
 			downloadableDAO.updateLabel(downloadable.getId(), result.getTitle());
@@ -338,8 +337,8 @@ public class DownloadableManager {
 	}
 
 	public void redownload( long downloadableId ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		// blacklist search result
-		searchResultDAO.blacklist( downloadableId );
+		// blacklist downloaded search result
+		searchResultDAO.blacklistDownloaded( downloadableId );
 		// delete all corresponding files
 		getAllFiles(downloadableId).forEach( downloadedFile -> BackLogProcessor.getInstance().schedule( new DeleteTask(downloadedFile.getFilePath(), true), false ));
 		want(downloadableId);

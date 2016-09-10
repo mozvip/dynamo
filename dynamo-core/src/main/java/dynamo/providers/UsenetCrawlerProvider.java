@@ -75,7 +75,7 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 			float size = parseSize( row.select("td.less.right").text() );
 			Element downloadLink = row.select("a[title*=Download Nzb]").first();
 			if (downloadLink != null) {
-				results.add( new SearchResult(this, SearchResultType.NZB, title, downloadLink.absUrl("href"), searchURL, size, false) );
+				results.add( new SearchResult(this, SearchResultType.NZB, title, downloadLink.absUrl("href"), searchURL, size) );
 			}
 		}
 

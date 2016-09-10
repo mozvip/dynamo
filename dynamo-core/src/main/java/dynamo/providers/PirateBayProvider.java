@@ -83,7 +83,7 @@ public class PirateBayProvider extends DownloadFinder implements MovieProvider, 
 				}
 				
 				searchResults.add( new SearchResult( this, SearchResultType.TORRENT, title,
-						url, searchURL, parseSize(sizeExpr), false ) );
+						url, searchURL, parseSize(sizeExpr) ) );
 			}
 		}
 		

@@ -14,11 +14,12 @@ public class SearchResult {
 
 	private long downloadableId;
 	private boolean blackListed = false;
+	private boolean downloaded = false;
 	
 	private Class<? extends DownloadFinder> providerClass;
 	private String providerName;
 
-	public SearchResult( DownloadFinder downloadFinder, SearchResultType type, String title, String url, String referer, float sizeInMegs, boolean blackListed ) {
+	public SearchResult( DownloadFinder downloadFinder, SearchResultType type, String title, String url, String referer, float sizeInMegs ) {
 		this.title = title;
 		this.url = url;
 		this.referer = referer;
@@ -26,10 +27,9 @@ public class SearchResult {
 		this.providerClass = downloadFinder.getClass();
 		this.providerName = (downloadFinder instanceof Labelized) ? ((Labelized)downloadFinder).getLabel() : downloadFinder.toString();
 		this.sizeInMegs = sizeInMegs;
-		this.blackListed = blackListed;
 	}
 
-	public SearchResult(long downloadableId, String providerName, Class<? extends DownloadFinder> providerClass, SearchResultType type, String title, String url, String referer, float sizeInMegs, boolean blackListed) {
+	public SearchResult(long downloadableId, String providerName, Class<? extends DownloadFinder> providerClass, SearchResultType type, String title, String url, String referer, float sizeInMegs, boolean blackListed, boolean downloaded) {
 		this.url = url;
 		this.downloadableId = downloadableId;
 		this.providerName = providerName;
@@ -39,6 +39,7 @@ public class SearchResult {
 		this.referer = referer;
 		this.sizeInMegs = sizeInMegs;
 		this.blackListed = blackListed;
+		this.downloaded = downloaded;
 	}
 
 	public String getTitle() {
@@ -83,6 +84,10 @@ public class SearchResult {
 
 	public boolean isBlackListed() {
 		return blackListed;
+	}
+	
+	public boolean isDownloaded() {
+		return downloaded;
 	}
 
 	@Override
