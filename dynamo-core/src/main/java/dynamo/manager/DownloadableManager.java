@@ -143,7 +143,6 @@ public class DownloadableManager {
 	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
 	public void want( Downloadable downloadable ) {
-		cancelDownload(downloadable);
 		downloadableDAO.updateStatus(downloadable.getId(), DownloadableStatus.WANTED);
 		downloadableDAO.updateLabel(downloadable.getId(), "");
 		scheduleFind( downloadable );
@@ -339,6 +338,8 @@ public class DownloadableManager {
 	public void redownload( long downloadableId ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 		// blacklist downloaded search result
 		searchResultDAO.blacklistDownloaded( downloadableId );
+		// FIXME : stop corresponding download if torrent !
+		cancelDownload(downloadableId);
 		// delete all corresponding files
 		getAllFiles(downloadableId).forEach( downloadedFile -> BackLogProcessor.getInstance().schedule( new DeleteTask(downloadedFile.getFilePath(), true), false ));
 		want(downloadableId);
@@ -358,11 +359,11 @@ public class DownloadableManager {
 		suggestionURLDAO.saveSuggestionURL(downloadable.getId(), url );
 	}
 	
-	public void cancelDownload( Downloadable downloadable ) {
-		List<SearchResult> searchResults = searchResultDAO.findSearchResults( downloadable.getId() );
+	public void cancelDownload( long downloadableId ) {
+		List<SearchResult> searchResults = searchResultDAO.findSearchResults( downloadableId );
 		for (SearchResult searchResult : searchResults) {
-			if (!searchResult.isBlackListed() && StringUtils.isNotEmpty( searchResult.getClientId() )) {
-				BackLogProcessor.getInstance().schedule( new CancelDownloadTask( downloadable, searchResult ));
+			if (searchResult.isDownloaded() && StringUtils.isNotEmpty( searchResult.getClientId() )) {
+				BackLogProcessor.getInstance().schedule( new CancelDownloadTask( searchResult ));
 			}
 		}
 	}

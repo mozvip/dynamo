@@ -1,22 +1,15 @@
 package dynamo.backlog.tasks.core;
 
 import dynamo.core.model.Task;
-import dynamo.model.Downloadable;
 import dynamo.model.result.SearchResult;
 
 public class CancelDownloadTask extends Task {
-	
-	private Downloadable downloadable;
+
 	private SearchResult result;
 
-	public CancelDownloadTask( Downloadable downloadable, SearchResult result ) {
+	public CancelDownloadTask( SearchResult result ) {
 		super();
-		this.downloadable = downloadable;
 		this.result = result;
-	}
-
-	public Downloadable getDownloadable() {
-		return downloadable;
 	}
 	
 	public SearchResult getResult() {
@@ -25,7 +18,7 @@ public class CancelDownloadTask extends Task {
 
 	@Override
 	public String toString() {
-		return String.format( "Cancelling download for %s", downloadable.toString() );
+		return String.format( "Cancelling download %s", result.getTitle() );
 	}
 
 }

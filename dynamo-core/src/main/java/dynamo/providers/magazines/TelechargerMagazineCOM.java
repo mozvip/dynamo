@@ -43,6 +43,10 @@ public class TelechargerMagazineCOM implements KioskIssuesSuggester {
 				String coverImage = image.absUrl("src");
 				String title = RegExp.extract( image.attr("title"), "télécharger (.*)" );
 				
+				if (title == null) {
+					continue;
+				}
+				
 				try {
 					
 					WebDocument magazinePage = HTTPClient.getInstance().getDocument( link.absUrl("href"), url, HTTPClient.REFRESH_ONE_WEEK );
