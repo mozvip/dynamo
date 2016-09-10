@@ -306,6 +306,8 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     $scope.config['TVShowManager.metaDataLanguage'],
     $scope.config['TVShowManager.subtitlesLanguage'],
     $scope.config['TVShowManager.tvshowEpisodeProviders'],
+    $scope.config['TVShowManager.tvShowSeasonProviders'],
+    $scope.config['TVShowManager.wordsBlackList'],
     $scope.config['TVShowManager.tvShowQualities']
   ];
 
