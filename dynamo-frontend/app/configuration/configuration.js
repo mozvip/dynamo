@@ -109,10 +109,14 @@ angular.module('dynamo.configuration', ['ngRoute'])
             $scope.config['T411Provider.baseURL'],
             $scope.config['T411Provider.login'],
             $scope.config['T411Provider.password'],
+            $scope.config['CPasBienProvider.enabled'],
+            $scope.config['PirateBayProvider.enabled'],
+            $scope.config['TorrentProjectSE.enabled'],
             $scope.config['UsenetCrawlerProvider.enabled'],
             $scope.config['UsenetCrawlerProvider.login'],
-            $scope.config['UsenetCrawlerProvider.password']
-            
+            $scope.config['UsenetCrawlerProvider.password'],
+            $scope.config['NZBIndexNLProvider.enabled'],
+            $scope.config['BTDigg.enabled']
         ];
 
         $scope.saveSettings = function () {
