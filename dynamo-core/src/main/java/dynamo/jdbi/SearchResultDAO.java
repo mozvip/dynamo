@@ -80,6 +80,6 @@ public interface SearchResultDAO {
 	public void clearBlackList();
 
 	@SqlUpdate("UPDATE SEARCHRESULT SET DOWNLOADED = TRUE WHERE URL = :url")
-	public void setDownloaded(String url);
+	public void setDownloaded(@Bind("url") String url);
 
 }
