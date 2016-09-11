@@ -55,9 +55,8 @@ public class SubTitleDownloader implements Reconfigurable {
 		}
 	}
 
-	public Path downloadSubTitle( Downloadable video, Path videoFile, String seriesName, VideoQuality quality, VideoSource source, String releaseGroup, int season, int episode, Language subtitlesLanguage ) throws Exception {
+	public boolean downloadSubTitle( Downloadable video, Path videoFile, String seriesName, VideoQuality quality, VideoSource source, String releaseGroup, int season, int episode, Language subtitlesLanguage, Path destinationSRT ) throws Exception {
 
-		
 		VideoMetaData metaData = VideoManager.getInstance().getMetaData(video, videoFile );
 		
 		VideoDetails details = new VideoDetails( videoFile, seriesName, quality, source, releaseGroup, season, episode, metaData.getOpenSubtitlesHash() );
@@ -78,14 +77,11 @@ public class SubTitleDownloader implements Reconfigurable {
 		}
 
 		if (selectedSubTitles != null && selectedSubTitles.getScore() >= 6) {
-
-			Path tempFile = Files.createTempFile( "dynamo", "subtitles" );
-			Files.write(tempFile, selectedSubTitles.getData(), StandardOpenOption.WRITE);			
-			return tempFile;
-
+			Files.write(destinationSRT, selectedSubTitles.getData(), StandardOpenOption.WRITE);
+			return true;
 		}
 		
-		return null;
+		return false;
 	}
 
 }
