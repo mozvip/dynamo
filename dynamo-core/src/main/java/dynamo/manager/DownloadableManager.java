@@ -410,11 +410,17 @@ public class DownloadableManager {
 	public void saveDownloadLocations(long downloadableId, String title, String suggesterName,  Class<? extends DownloadFinder> providerClass, String referer, float size, Collection<DownloadLocation> downloadLocations) {
 		if (downloadableId >= 0 && downloadLocations != null && !downloadLocations.isEmpty()) {
 			for (DownloadLocation downloadLocation : downloadLocations) {
-				saveResult(title, downloadLocation.getUrl(), suggesterName, providerClass, referer, size, downloadLocation.getType(), downloadableId);
+				saveDownloadLocation(downloadableId, title, suggesterName, providerClass, referer, size, downloadLocation);
 			}
 		}		
 	}
 	
+	public void saveDownloadLocation(long downloadableId, String title, String suggesterName,  Class<? extends DownloadFinder> providerClass, String referer, float size, DownloadLocation downloadLocation) {
+		if (downloadableId >= 0 && downloadLocation != null) {
+			saveResult(title, downloadLocation.getUrl(), suggesterName, providerClass, referer, size, downloadLocation.getType(), downloadableId);
+		}		
+	}
+
 	public void setAkas( long downloadableId, Collection<String> akas ) {
 		downloadableDAO.saveAka(downloadableId, akas);
 	}

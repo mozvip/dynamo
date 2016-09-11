@@ -110,6 +110,7 @@ angular.module('dynamo.configuration', ['ngRoute'])
             $scope.config['T411Provider.login'],
             $scope.config['T411Provider.password'],
             $scope.config['CPasBienProvider.enabled'],
+            $scope.config['RARBGProvider.enabled'],
             $scope.config['PirateBayProvider.enabled'],
             $scope.config['TorrentProjectSE.enabled'],
             $scope.config['UsenetCrawlerProvider.enabled'],
