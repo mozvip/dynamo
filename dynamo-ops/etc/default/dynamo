@@ -1,0 +1,28 @@
+# defaults for server
+
+# pulled in from the init script; makes things easier.
+NAME=dynamo
+
+# location of java
+JAVA=/usr/bin/java
+
+# arguments to pass to java
+JAVA_ARGS="-Djava.awt.headless=true -Xmx512m -agentlib:jdwp=transport=dt_socket,server=y,address=6006,suspend=n -server"
+#JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make server listen on IPv4 address
+
+PIDFILE=/var/run/$NAME/$NAME.pid
+
+# user and group to be invoked as (default to $NAME)
+SERVICE_USER=$NAME
+SERVICE_GROUP=$NAME
+
+# service home location
+SERVICE_HOME=/var/lib/$NAME
+
+# log location.  this may be a syslog facility.priority
+SERVICE_LOG=/var/log/$NAME/$NAME-daemon.log
+
+SERVICE_JAR=$SERVICE_HOME/dynamo-core-0.0.1-SNAPSHOT.jar
+
+#SERVICE_ARGS="server /etc/dynamo/config.yml"
+SERVICE_ARGS=""
