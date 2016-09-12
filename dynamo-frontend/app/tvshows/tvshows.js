@@ -235,7 +235,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('TVShowsSearchCtrl', ['$scope', 'BackendService', 'tvShowsService', 'tvdbService', 'languages', 'tvshow', function( $scope, BackendService, tvShowsService, tvdbService, languages, tvshow ) {
+.controller('TVShowsSearchCtrl', ['$scope', 'BackendService', 'tvShowsService', 'tvdbService', 'languages', 'tvshow', '$uibModalInstance', '$location', function( $scope, BackendService, tvShowsService, tvdbService, languages, tvshow, $uibModalInstance, $location ) {
 
   $scope.tvshow = tvshow;
   $scope.languages= languages;
@@ -250,10 +250,10 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     });
   }  
   
-  $scope.selectTVShow = function( tvshow ) {
-    
-    tvShowsService.associate( $scope.tvshow.path, tvshow.id, $scope.searchLanguage, tvshow.language.toUpperCase(), $scope.subtitlesLanguage ).then(
+  $scope.selectTVShow = function( tvshow ) {    
+    tvShowsService.associate( $scope.tvshow.folder, tvshow.id, $scope.searchLanguage, tvshow.language.toUpperCase(), $scope.subtitlesLanguage ).then(
       function( response ) {
+        $uibModalInstance.dismiss('done');
         $location.path("/tvshow-detail/" + response.data);
       }
     );
