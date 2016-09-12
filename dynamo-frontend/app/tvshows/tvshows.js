@@ -148,6 +148,23 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
   $scope.selectedEpisode = {};
 
+  $scope.wrongShow = function() {
+    return $uibModal.open({
+      animation: false,
+      templateUrl: 'tvShowSearch.html',
+      controller: 'TVShowsSearchCtrl',
+      size: 'lg',
+      resolve: {
+        languages: function () {
+          return $scope.languages;
+        },
+        tvshow: function () {
+          return $scope.tvshow;
+        }
+      }
+    }); 
+  }
+
   $scope.assignEpisode = function( file ) {
     downloadableService.assign( file.id, $scope.selectedEpisode[file.id].id ).then(
       function( response ) {
@@ -215,6 +232,27 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
       }
     }, this);
   }
+
+}])
+
+.controller('TVShowsSearchCtrl', ['$scope', 'BackendService', 'tvShowsService', 'tvdbService', 'languages', 'tvshow', function( $scope, BackendService, tvShowsService, tvdbService, languages, tvshow ) {
+
+  $scope.tvshow = tvshow;
+  $scope.languages= languages;
+
+  $scope.name = tvshow.name;
+  $scope.year = tvshow.year;
+
+  $scope.searchTVShow = function() {
+    tvdbService.find( $scope.name, $scope.year, $scope.searchLanguage ).then( function( response ) {
+      $scope.results = response.data;
+    });
+  }  
+  
+  $scope.selectTVShow = function( tvshow ) {
+    alert(tvshow.seriesName);
+  }
+
 
 }])
 

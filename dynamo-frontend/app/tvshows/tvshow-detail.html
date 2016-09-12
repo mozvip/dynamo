@@ -49,7 +49,7 @@
                     <div class="form-group">
                     </div>                        
                 </form>
-                <button class="btn btn-block btn-default"><span class="glyphicon glyphicon-exclamation-sign" /> Wrong Show</button>
+                <button class="btn btn-block btn-default" ng-click="wrongShow()"><span class="glyphicon glyphicon-exclamation-sign" /> Wrong Show</button>
                 <button class="btn btn-block btn-default" ng-click="rescan()"><span class="glyphicon glyphicon-refresh" /> Rescan Files</button>
                 <button class="btn btn-block btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{tvshow.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="deleteTVShow()"><span class="glyphicon glyphicon-trash" /> Delete {{tvshow.name}}</button>
             </div>
