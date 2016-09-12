@@ -6,6 +6,7 @@ import java.net.NetworkInterface;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -57,7 +58,7 @@ public abstract class DynamoApplication {
 			Path databaseFile = Paths.get( String.format("%s.mv.db", databaseId));
 			Path databaseFileBackup = Paths.get( String.format("%s.%2$tY%2$tm%2$te.bak", databaseFile.getFileName().toString(), Calendar.getInstance()));
 			try {
-				Files.move( databaseFile, databaseFileBackup );
+				Files.move( databaseFile, databaseFileBackup, StandardCopyOption.REPLACE_EXISTING );
 				upgradeDatabase( databaseId );
 			} catch (IOException eMove) {
 				ErrorManager.getInstance().reportThrowable( eMove );

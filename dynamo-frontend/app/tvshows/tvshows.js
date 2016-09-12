@@ -242,6 +242,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
   $scope.name = tvshow.name;
   $scope.year = tvshow.year;
+  $scope.searchLanguage = 'EN';
 
   $scope.searchTVShow = function() {
     tvdbService.find( $scope.name, $scope.year, $scope.searchLanguage ).then( function( response ) {
@@ -250,7 +251,12 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   }  
   
   $scope.selectTVShow = function( tvshow ) {
-    alert(tvshow.seriesName);
+    
+    tvShowsService.associate( $scope.tvshow.path, tvshow.id, $scope.searchLanguage, tvshow.language.toUpperCase(), $scope.subtitlesLanguage ).then(
+      function( response ) {
+        $location.path("/tvshow-detail/" + response.data);
+      }
+    );
   }
 
 
@@ -289,7 +295,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
       function( response ) {
         $location.path("/tvshow-detail/" + response.data);
       }
-    );    
+    );
   }
 
 }])

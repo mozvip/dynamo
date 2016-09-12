@@ -442,4 +442,11 @@
 		</addColumn>
 	</changeSet>
 
+	<changeSet author="mozvip" id="31">
+		<delete tableName="MANAGEDSERIES">
+			<where>FOLDER IS NULL</where>
+		</delete>
+		<addNotNullConstraint tableName="MANAGEDSERIES" columnName="FOLDER" columnDataType="VARCHAR(4096)"/>
+	</changeSet>
+
 </databaseChangeLog>

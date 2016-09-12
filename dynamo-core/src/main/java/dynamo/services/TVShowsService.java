@@ -26,6 +26,7 @@ import model.backlog.ScanTVShowTask;
 
 @Path("tvshows")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class TVShowsService {
 	
 	@GET
@@ -83,7 +84,6 @@ public class TVShowsService {
 	
 	@POST
 	@Path("/save")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void save( ManagedSeries series ) {
 		TVShowManager.getInstance().saveSeries( series);
 	}
@@ -94,11 +94,9 @@ public class TVShowsService {
 	public List<ManagedEpisode> getEpisodes(@PathParam("id") String id) {
 		return TVShowManager.getInstance().findEpisodes( TVShowManager.getInstance().getManagedSeries( id ) );
 	}
-	
 
-	@javax.ws.rs.POST
+	@POST
 	@Path("/add")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public String addTVShow(TVShowRequest tvshow) throws TvDbException, IOException {
 		
 		java.nio.file.Path parentFolder = FileUtils.getFolderWithMostUsableSpace( TVShowManager.getInstance().getFolders() );
