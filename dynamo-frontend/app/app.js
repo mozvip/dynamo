@@ -19,7 +19,8 @@ angular.module('dynamo', [
   'dynamo.books',
   'dynamo.magazines',
   'dynamo.tvshows',
-  'dynamo.games'
+  'dynamo.games',
+  'dynamo.login'
 ])
 
 .config(['$routeProvider', function($routeProvider) {
