@@ -8,6 +8,7 @@ import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.HttpProxyServerBootstrap;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 
+import core.WebResource;
 import dynamo.backlog.tasks.nzb.DownloadNZBTask;
 import dynamo.backlog.tasks.torrent.DownloadTorrentTask;
 import dynamo.core.configuration.Reconfigurable;
@@ -67,7 +68,7 @@ public class ProxyServiceExecutor extends TaskExecutor<ProxyServiceTask> impleme
 				                        	HttpResponse response = (HttpResponse) httpObject;
 				                        	String contentType = response.headers().get("Content-Type");
 				                        	if (StringUtils.equalsIgnoreCase(contentType, "application/x-bittorrent")) {
-				                        		queue( new DownloadTorrentTask( originalRequest.getUri() ) );
+				                        		queue( new DownloadTorrentTask( new WebResource( originalRequest.getUri() )) );
 				                        		// FIXME: HOW ? new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 				                        	} else if(StringUtils.equalsIgnoreCase(contentType, "application/x-nzb")) {
 				                        		queue( new DownloadNZBTask( originalRequest.getUri() ) );

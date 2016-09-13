@@ -65,9 +65,9 @@ public abstract class AbstractTorrentDownloadExecutor extends TaskExecutor<Downl
 			
 			// this has to be a magnet link
 			if (Transmission.getInstance().isEnabled()) {
-				long id = Transmission.getInstance().downloadByURL( task.getURL() );
+				long id = Transmission.getInstance().downloadByURL( task.getURL().getUrl() );
 				if (id >= 0) {
-					ident = "" + Transmission.getInstance().downloadByURL( task.getURL() );
+					ident = "" + Transmission.getInstance().downloadByURL( task.getURL().getUrl() );
 				} else {
 					throw new Exception( String.format("Could not download torrent at url %s", task.getURL() ) );
 				}
