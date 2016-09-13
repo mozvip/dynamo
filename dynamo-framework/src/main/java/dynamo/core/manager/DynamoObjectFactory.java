@@ -2,9 +2,9 @@ package dynamo.core.manager;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
@@ -56,6 +56,7 @@ public class DynamoObjectFactory<T> {
 		this.interfaceToImplement = interfaceToImplement;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T> T getInstance( Class<T> klass ) {
 		try {
 			Object object = instancesCache.get( klass );
@@ -70,11 +71,14 @@ public class DynamoObjectFactory<T> {
     }
 
     public Set<T> getInstances() {
+    	Set<T> instances = new HashSet<>();
 		Set<Class<? extends T>> classes = reflections.getSubTypesOf( interfaceToImplement );
-		return classes.stream()
-				.filter( klass -> !Modifier.isAbstract( klass.getModifiers() ))
-				.map( klass -> getInstance(klass))
-				.collect( Collectors.toSet());
+		for (Class<? extends T> klass : classes) {
+			if ( !Modifier.isAbstract( klass.getModifiers() ) ) {
+				instances.add( getInstance(klass) );
+			}
+		}
+		return instances;
     }
   
 }
