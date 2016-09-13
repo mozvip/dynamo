@@ -123,7 +123,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   return tvShowsService;
 }])
 
-.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'languages', 'episodes', 'unrecognizedFiles', 'BackendService', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter, languages, episodes, unrecognizedFiles, BackendService ) {
+.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'languages', 'episodes', 'unrecognizedFiles', 'BackendService', '$location', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter, languages, episodes, unrecognizedFiles, BackendService, $location ) {
 
   $scope.tvshow = tvshow.data;
   $scope.episodes = episodes.data;
@@ -147,6 +147,23 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   }
 
   $scope.selectedEpisode = {};
+
+  $scope.wrongShow = function() {
+    return $uibModal.open({
+      animation: false,
+      templateUrl: 'tvShowSearch.html',
+      controller: 'TVShowsSearchCtrl',
+      size: 'lg',
+      resolve: {
+        languages: function () {
+          return $scope.languages;
+        },
+        tvshow: function () {
+          return $scope.tvshow;
+        }
+      }
+    }); 
+  }
 
   $scope.assignEpisode = function( file ) {
     downloadableService.assign( file.id, $scope.selectedEpisode[file.id].id ).then(
@@ -218,6 +235,33 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
 }])
 
+.controller('TVShowsSearchCtrl', ['$scope', 'BackendService', 'tvShowsService', 'tvdbService', 'languages', 'tvshow', '$uibModalInstance', '$location', function( $scope, BackendService, tvShowsService, tvdbService, languages, tvshow, $uibModalInstance, $location ) {
+
+  $scope.tvshow = tvshow;
+  $scope.languages= languages;
+
+  $scope.name = tvshow.name;
+  $scope.year = tvshow.year;
+  $scope.searchLanguage = 'EN';
+
+  $scope.searchTVShow = function() {
+    tvdbService.find( $scope.name, $scope.year, $scope.searchLanguage ).then( function( response ) {
+      $scope.results = response.data;
+    });
+  }  
+  
+  $scope.selectTVShow = function( tvshow ) {    
+    tvShowsService.associate( $scope.tvshow.folder, tvshow.id, $scope.searchLanguage, tvshow.language.toUpperCase(), $scope.subtitlesLanguage ).then(
+      function( response ) {
+        $uibModalInstance.dismiss('done');
+        $location.path("/tvshow-detail/" + response.data);
+      }
+    );
+  }
+
+
+}])
+
 .controller('TVShowsUnrecognizedCtrl', ['$scope', 'BackendService', 'tvShowsService', 'tvdbService', 'configuration', 'languages', 'unrecognizeds', '$location', function( $scope, BackendService, tvShowsService, tvdbService, configuration, languages, unrecognizeds, $location ) {
 
   $scope.unrecognizeds = unrecognizeds.data;
@@ -251,7 +295,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
       function( response ) {
         $location.path("/tvshow-detail/" + response.data);
       }
-    );    
+    );
   }
 
 }])
@@ -306,6 +350,8 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
     $scope.config['TVShowManager.metaDataLanguage'],
     $scope.config['TVShowManager.subtitlesLanguage'],
     $scope.config['TVShowManager.tvshowEpisodeProviders'],
+    $scope.config['TVShowManager.tvShowSeasonProviders'],
+    $scope.config['TVShowManager.wordsBlackList'],
     $scope.config['TVShowManager.tvShowQualities']
   ];
 

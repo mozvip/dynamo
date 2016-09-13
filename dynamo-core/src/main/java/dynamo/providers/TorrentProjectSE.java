@@ -53,7 +53,7 @@ public class TorrentProjectSE extends DownloadFinder implements MagazineProvider
 				url = torrentLink.attr("href");
 			}
 			
-			results.add( new SearchResult(this, SearchResultType.TORRENT, title, url, referer, sizeInMegs, false));
+			results.add( new SearchResult(this, SearchResultType.TORRENT, title, url, referer, sizeInMegs) );
 		}
 		return results;
 	}

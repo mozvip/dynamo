@@ -154,9 +154,9 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 		}
 	}
 	
-	protected void newMusicFile( Path musicFilePath, Path albumDestinationFolder, MusicAlbum musicAlbum, String songTitle, String songArtist, int track, int year, boolean keepExisting ) throws IOException, ExecutionException {
+	protected void newMusicFile( Path musicFilePath, Path albumDestinationFolder, MusicAlbum musicAlbum, String songTitle, String songArtist, int track, int year, boolean keepSourceFiles ) throws IOException, ExecutionException {
 		Path targetPath = musicFilePath;
-		if (!keepExisting) {
+		if (!keepSourceFiles) {
 			// we are allowed to move this file to its final destination // FIXME: handle Disc %d parent folders
 			targetPath = albumDestinationFolder.resolve(musicFilePath.getFileName()).toAbsolutePath();
 			if ((!Files.exists(targetPath)) || (!Files.isSameFile(musicFilePath, targetPath))) {

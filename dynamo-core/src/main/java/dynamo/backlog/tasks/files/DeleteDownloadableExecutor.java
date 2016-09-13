@@ -38,7 +38,7 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 
 		// unschedule any associated tasks
 		if (downloadable.getStatus() == DownloadableStatus.SNATCHED) {
-			DownloadableManager.getInstance().cancelDownload( downloadable );
+			DownloadableManager.getInstance().cancelDownload( downloadable.getId() );
 		}
 		BackLogProcessor.getInstance().unschedule( String.format( "this.downloadable.id == %d", downloadable.getId() ) );
 

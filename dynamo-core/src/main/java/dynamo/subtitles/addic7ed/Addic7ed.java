@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.w3c.dom.Node;
 
 import core.RegExp;
@@ -28,16 +30,11 @@ public class Addic7ed extends SubtitlesFinder {
 	}
 	
 	public String getShowId( VideoDetails details ) {
-		String name = details.getName().toLowerCase();
-		name = name.replaceAll("[,']", " ");
-		name = name.replaceAll("\\s{2}", " ");
-		name = name.replaceAll("\\s", "_");
-		
+		String name = getShowName( details.getName() );
 		if (! shows.containsKey( name )) {
-			name= RegExp.filter( name, "(.*)_\\(\\d{4}\\)");
+			name= RegExp.filter( name, "(.*)\\(\\d{4}\\)");
 		}
-		
-		return shows.get( name.trim() );
+		return shows.get( name );
 	}
 
 	@Override
@@ -117,25 +114,29 @@ public class Addic7ed extends SubtitlesFinder {
 	@Override
 	public void customInit() throws Exception {
 		WebDocument document = client.getDocument( "http://www.addic7ed.com/shows.php", HTTPClient.REFRESH_ONE_WEEK );
-		List<Node> showLinks = document.evaluateXPath( "//h3/a" );
-		for ( Node showLink : showLinks ) {
-			if (showLink.getFirstChild() != null) {
-				String show = showLink.getFirstChild().getTextContent();
+		Elements showLinks = document.jsoup( "h3 > a" );
+		for ( Element showLink : showLinks ) {
+			String show = showLink.text();
 
-				show = show.toLowerCase();
-				show = show.replaceAll("'", " ");
-				show = show.replaceAll("[,!\\?]", " ");
-				show = show.replaceAll("\\s{2,}", " ");
-				show = show.trim();
+			String href = showLink.absUrl("href");					
+			String showId = href.substring( href.lastIndexOf("/") + 1);
 
-				show = show.replaceAll("\\s", "_");
-				
-				String href = showLink.getAttributes().getNamedItem("href").getTextContent();					
-				String showId = href.substring( href.lastIndexOf("/") + 1);
-
-				shows.put( show, showId );
+			show = getShowName(show);
+			
+			String [] groups = RegExp.parseGroups(show, "(.*)\\((\\d{4})\\)");
+			if (groups != null) {
+				shows.put( groups[0], showId );
 			}
-		}
+			
+			shows.put( show, showId );
+		}		
+	}
+
+	private String getShowName(String show) {
+		show = show.toLowerCase();
+		show = show.replaceAll("[\\s',!\\?]", "");
+		show = show.trim();
+		return show;
 	}
 
 }

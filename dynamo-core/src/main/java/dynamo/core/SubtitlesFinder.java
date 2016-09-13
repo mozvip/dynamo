@@ -22,13 +22,12 @@ public abstract class SubtitlesFinder implements Reconfigurable, Enableable {
 		this.enabled = enabled;
 	}
 	
-	protected HTTPClient client;
+	protected HTTPClient client = HTTPClient.getInstance();
 	
 	@Override
 	public void reconfigure() {
 		this.ready = false;
 		try {
-			client = HTTPClient.getInstance();
 			try {
 				customInit();
 			} catch (Exception e) {

@@ -435,5 +435,18 @@
 		<addForeignKeyConstraint constraintName="FK_SUGGESTION_URL_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="DOWNLOADABLE_ID" baseTableName="SUGGESTION_URL" referencedColumnNames="ID" onDelete="CASCADE"/>
 		<dropColumn tableName="DOWNLOADABLE" columnName="SUGGESTEDBY"/>
 	</changeSet>
+	
+	<changeSet author="mozvip" id="30">
+		<addColumn tableName="SEARCHRESULT">
+			<column name="DOWNLOADED" type="BOOLEAN" defaultValueBoolean="false" />
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="mozvip" id="31">
+		<delete tableName="MANAGEDSERIES">
+			<where>FOLDER IS NULL</where>
+		</delete>
+		<addNotNullConstraint tableName="MANAGEDSERIES" columnName="FOLDER" columnDataType="VARCHAR(4096)"/>
+	</changeSet>
 
 </databaseChangeLog>

@@ -167,6 +167,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
           scope.item.remainingValues = {};
           remainingProperties.forEach(function(property) {
             scope.item.remainingValues[property] = scope.item.allowedValues[property];
+            scope.item.newValue = property;
           }, this);
         }
 

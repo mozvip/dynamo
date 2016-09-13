@@ -59,7 +59,15 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 
 		for (String seriesName : series.getAka()) {
 
-			Path subtitles = SubTitleDownloader.getInstance().downloadSubTitle(
+			String filename = mainVideoFilePath.getFileName().toString();
+			String filenameWithoutExtension = filename; 
+			if ( filenameWithoutExtension.lastIndexOf('.') > 0 ) {
+				filenameWithoutExtension = filenameWithoutExtension.substring( 0, filenameWithoutExtension.lastIndexOf('.'));
+			}
+			
+			Path destinationSRT = mainVideoFilePath.getParent().resolve( filenameWithoutExtension + ".srt" );
+
+			boolean downloaded = SubTitleDownloader.getInstance().downloadSubTitle(
 					episode,
 					mainVideoFilePath,
 					seriesName,
@@ -67,19 +75,9 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 					episode.getSource(),
 					episode.getReleaseGroup(),
 					episode.getSeasonNumber(), episode.getEpisodeNumber(),
-					series.getSubtitlesLanguage() );
+					series.getSubtitlesLanguage(), destinationSRT );
 			
-			if ( subtitles != null ) {
-				
-				String filename = mainVideoFilePath.getFileName().toString();
-				String filenameWithoutExtension = filename; 
-				if ( filenameWithoutExtension.lastIndexOf('.') > 0 ) {
-					filenameWithoutExtension = filenameWithoutExtension.substring( 0, filenameWithoutExtension.lastIndexOf('.'));
-				}
-				
-				Path destinationSRT = mainVideoFilePath.getParent().resolve( filenameWithoutExtension + ".srt" );
-				
-				Files.move( subtitles, destinationSRT, StandardCopyOption.REPLACE_EXISTING);
+			if ( downloaded ) {
 
 				episodeDAO.updateSubtitlesPath( episode.getId(), destinationSRT );
 				

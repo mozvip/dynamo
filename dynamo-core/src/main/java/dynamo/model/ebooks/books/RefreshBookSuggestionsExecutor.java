@@ -29,6 +29,10 @@ public class RefreshBookSuggestionsExecutor extends TaskExecutor<RefreshBookSugg
 	@Override
 	public void execute() throws Exception {
 		
+		if (suggesters == null) {
+			return ;
+		}
+		
 		totalItems = suggesters.size();
 
 		for (BookSuggester suggester : suggesters) {

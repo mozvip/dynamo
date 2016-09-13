@@ -58,8 +58,8 @@ public interface SearchResultDAO {
 	@SqlUpdate("UPDATE SEARCHRESULT SET CLIENTID = NULL WHERE CLIENTID = :clientId")
 	public void freeClientId(@Bind("clientId") String clientId);
 
-	@SqlUpdate("UPDATE SEARCHRESULT SET BLACKLISTED = TRUE WHERE DOWNLOADABLE_ID = :downloadableId")
-	public void blacklist(@Bind("downloadableId") long downloadableId);
+	@SqlUpdate("UPDATE SEARCHRESULT SET BLACKLISTED = TRUE WHERE DOWNLOADABLE_ID = :downloadableId AND DOWNLOADED = TRUE")
+	public void blacklistDownloaded(@Bind("downloadableId") long downloadableId);
 
 	@SqlUpdate("UPDATE SEARCHRESULT SET BLACKLISTED = TRUE WHERE URL = :url")
 	public void blacklist(@Bind("url") String url);
@@ -78,5 +78,8 @@ public interface SearchResultDAO {
 
 	@SqlUpdate("DELETE FROM SEARCHRESULT WHERE BLACKLISTED = TRUE")
 	public void clearBlackList();
+
+	@SqlUpdate("UPDATE SEARCHRESULT SET DOWNLOADED = TRUE WHERE URL = :url")
+	public void setDownloaded(@Bind("url") String url);
 
 }

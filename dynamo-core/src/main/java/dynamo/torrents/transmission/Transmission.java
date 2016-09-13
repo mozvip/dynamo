@@ -1,9 +1,9 @@
 package dynamo.torrents.transmission;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import dynamo.core.Enableable;
@@ -20,6 +20,12 @@ public class Transmission implements Reconfigurable, Enableable {
 	@Configurable(category="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor", name="Transmission URL (http://server:9091/transmission)")
 	private String transmissionURL;
 	
+	@Configurable(category="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor", name="Transmission Login")
+	private String login;
+
+	@Configurable(category="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor", name="Transmission Password")
+	private String password;
+
 	@Override
 	public boolean isEnabled() {
 		return ConfigurationManager.getInstance().isActive(DownloadTorrentTransmissionExecutor.class) && StringUtils.isNotBlank(transmissionURL);
@@ -32,7 +38,23 @@ public class Transmission implements Reconfigurable, Enableable {
 	public void setTransmissionURL(String transmissionURL) {
 		this.transmissionURL = transmissionURL;
 	}
-	
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	private TransmissionErrorHandler errorHandler = new TransmissionErrorHandler();
 	private TransmissionService service = null;
 	
@@ -59,7 +81,7 @@ public class Transmission implements Reconfigurable, Enableable {
 	
 	public long downloadTorrent( byte[] torrentData ) {
 		TransmissionRequest request = new TransmissionRequest( "torrent-add" );
-		request.getArguments().setMetainfo( Base64.encodeBase64String( torrentData ) );
+		request.getArguments().setMetainfo( Base64.getEncoder().encodeToString( torrentData ) );
 		return extractTorrentId( executeRequest(request) );
 	}
 
@@ -108,9 +130,17 @@ public class Transmission implements Reconfigurable, Enableable {
 	}
 	
 	private volatile boolean ready = false;
+	private String authorizationHeader = null;
 
 	@Override
 	public void reconfigure() {
+		
+		if (getLogin() != null && getPassword() != null) {
+			String loginAndPassword = getLogin() + ":" + getPassword();
+			authorizationHeader = String.format("Basic %s", Base64.getEncoder().encodeToString( loginAndPassword.getBytes() ));
+		} else {
+			authorizationHeader = null;
+		}
 		
 		ready = false;
 		try {
@@ -127,6 +157,11 @@ public class Transmission implements Reconfigurable, Enableable {
 					
 					@Override
 					public void intercept(RequestFacade request) {
+						
+						if (authorizationHeader != null) {
+							request.addHeader("Authorization", authorizationHeader);
+						}
+						
 						if (errorHandler.getxTransmissionSessionId() != null) {
 							request.addHeader("X-Transmission-Session-Id", errorHandler.getxTransmissionSessionId());
 						}

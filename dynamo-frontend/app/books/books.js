@@ -28,7 +28,11 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
     $scope.config = configuration.data;
 
     $scope.itemsToConfigure = [
-      $scope.config['BookManager.folders']
+      $scope.config['BookManager.folders'],
+      $scope.config['BookManager.defaultLanguage'],
+      $scope.config['BookManager.blackList'],
+      $scope.config['BookManager.providers'],
+      $scope.config['RefreshBookSuggestionsExecutor.suggesters']
     ];
 
     $scope.saveSettings = function () {

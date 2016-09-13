@@ -118,7 +118,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 				String torrentId = RegExp.extract( nfoLink.attr("href"), ".*id=(\\d+)" );
 				String torrentURL = String.format( "%s/torrents/download/?id=%s", baseURL, torrentId );
 	
-				results.add( new SearchResult( this, SearchResultType.TORRENT, title, torrentURL, href, parseSize(size), false ));
+				results.add( new SearchResult( this, SearchResultType.TORRENT, title, torrentURL, href, parseSize(size) ));
 			}
 			
 			Element nextLink = getLinkToNextPage(document);

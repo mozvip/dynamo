@@ -86,7 +86,6 @@ angular.module('dynamo.configuration', ['ngRoute'])
         $scope.itemsToConfigure = [
             $scope.config['DownloadableManager.notifyOnSnatch'],
             $scope.config['DownloadableManager.notifyOnDownload'],
-            $scope.config['PushBullet.enabled'],
             $scope.config['PushBullet.accessToken'],
             $scope.config['PushBullet.deviceIdent']
         ];
@@ -110,10 +109,15 @@ angular.module('dynamo.configuration', ['ngRoute'])
             $scope.config['T411Provider.baseURL'],
             $scope.config['T411Provider.login'],
             $scope.config['T411Provider.password'],
+            $scope.config['CPasBienProvider.enabled'],
+            $scope.config['RARBGProvider.enabled'],
+            $scope.config['PirateBayProvider.enabled'],
+            $scope.config['TorrentProjectSE.enabled'],
             $scope.config['UsenetCrawlerProvider.enabled'],
             $scope.config['UsenetCrawlerProvider.login'],
-            $scope.config['UsenetCrawlerProvider.password']
-            
+            $scope.config['UsenetCrawlerProvider.password'],
+            $scope.config['NZBIndexNLProvider.enabled'],
+            $scope.config['BTDigg.enabled']
         ];
 
         $scope.saveSettings = function () {

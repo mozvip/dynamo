@@ -30,7 +30,8 @@ public class SearchResultMapper implements ResultSetMapper< SearchResult > {
 					r.getString("URL"),
 					r.getString("REFERER"),
 					r.getFloat("SIZEINMEGS"),
-					r.getBoolean("BLACKLISTED"));
+					r.getBoolean("BLACKLISTED"),
+					r.getBoolean("DOWNLOADED"));
 			
 			String clientId = r.getString("CLIENTID");
 			result.setClientId( clientId );

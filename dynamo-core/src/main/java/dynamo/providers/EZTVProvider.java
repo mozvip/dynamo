@@ -62,7 +62,7 @@ public class EZTVProvider extends DownloadFinder implements EpisodeFinder {
 
 			Elements downloadLinks = row.select("a[class~=magnet|download_\\d+]");
 			for (Element downloadLink : downloadLinks) {
-				results.add( new SearchResult( this, SearchResultType.TORRENT, title, downloadLink.attr("href"), referer, sizeInMegs, false) );
+				results.add( new SearchResult( this, SearchResultType.TORRENT, title, downloadLink.attr("href"), referer, sizeInMegs) );
 			}
 		}
 		

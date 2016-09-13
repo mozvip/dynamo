@@ -16,12 +16,10 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 
 import dynamo.backlog.BackLogProcessor;
-import dynamo.backlog.tasks.core.AudioFileFilter;
 import dynamo.backlog.tasks.core.CancelDownloadTask;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.DeleteTask;
-import dynamo.backlog.tasks.music.ImportMusicFileTask;
 import dynamo.core.DownloadFinder;
 import dynamo.core.DynamoApplication;
 import dynamo.core.DynamoServer;
@@ -145,7 +143,6 @@ public class DownloadableManager {
 	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
 	public void want( Downloadable downloadable ) {
-		cancelDownload(downloadable);
 		downloadableDAO.updateStatus(downloadable.getId(), DownloadableStatus.WANTED);
 		downloadableDAO.updateLabel(downloadable.getId(), "");
 		scheduleFind( downloadable );
@@ -204,7 +201,8 @@ public class DownloadableManager {
 	public void snatched( Downloadable downloadable, SearchResult result ) {
 		
 		if (result != null) {
-		
+			
+			searchResultDAO.setDownloaded( result.getUrl() );
 			DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SNATCHED,
 					String.format("<a href='%s'>%s</a> has been snatched from %s : %s", downloadable.getRelativeLink(), downloadable.toString(), result.getProviderName(), result.getTitle()) );
 			downloadableDAO.updateLabel(downloadable.getId(), result.getTitle());
@@ -231,66 +229,54 @@ public class DownloadableManager {
 
 		downloadableDAO.addFile( id, newFile, Files.size( newFile ), fileIndex );
 		downloadableDAO.updateStatus( id, DownloadableStatus.DOWNLOADED );
-		
+
 		unrecognizedDAO.deleteUnrecognizedFile( newFile );
 		
-		if ( downloadable instanceof MusicAlbum) {
+		if (downloadable instanceof Video) {
 			
-			MusicAlbum musicAlbum = ( MusicAlbum ) downloadable;
-			try {
-				if (AudioFileFilter.getInstance().accept(newFile)) {
-					BackLogProcessor.getInstance().schedule( new ImportMusicFileTask( musicAlbum, newFile, false ), false );
-				}
-			} catch (IOException e) {
-			}
-		} else {
-
-			if (downloadable instanceof Video) {
-				
-				if ( VideoFileFilter.getInstance().accept( newFile ) ) {
-					String fileName = newFile.getFileName().toString();
-					try {
-						if (fileName.contains("-sample") || fileName.startsWith("sample-") || Files.size(newFile) < (50*1024*1024)) {
-							BackLogProcessor.getInstance().schedule( new DeleteTask( newFile, false ));	// FIXME : should have been done earlier, by the post processor ?
-						} else {
-							if (downloadable instanceof ManagedEpisode) {
-								ManagedSeries series = TVShowManager.getInstance().getManagedSeries(((ManagedEpisode) downloadable).getSeriesId());
-								if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, series.getSubtitlesLanguage() )) {
-									managedEpisodeDAO.setSubtitled( id, ((ManagedEpisode) downloadable).getSubtitlesPath() );
-								}
-							} else if (downloadable instanceof Movie) {
-								if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, MovieManager.getInstance().getSubtitlesLanguage() )) {
-									movieDAO.setSubtitled( id, ((Movie) downloadable).getSubtitlesPath() );
-								}
+			if ( VideoFileFilter.getInstance().accept( newFile ) ) {
+				String fileName = newFile.getFileName().toString();
+				try {
+					if (fileName.contains("-sample") || fileName.startsWith("sample-") || Files.size(newFile) < (50*1024*1024)) {
+						BackLogProcessor.getInstance().schedule( new DeleteTask( newFile, false ));	// FIXME : should have been done earlier, by the post processor ?
+					} else {
+						if (downloadable instanceof ManagedEpisode) {
+							ManagedSeries series = TVShowManager.getInstance().getManagedSeries(((ManagedEpisode) downloadable).getSeriesId());
+							if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, series.getSubtitlesLanguage() )) {
+								managedEpisodeDAO.setSubtitled( id, ((ManagedEpisode) downloadable).getSubtitlesPath() );
 							}
-							downloadableDAO.updateLabel( id, fileName );
+						} else if (downloadable instanceof Movie) {
+							if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, MovieManager.getInstance().getSubtitlesLanguage() )) {
+								movieDAO.setSubtitled( id, ((Movie) downloadable).getSubtitlesPath() );
+							}
 						}
-					} catch (IOException e) {
-						ErrorManager.getInstance().reportThrowable(e);
+						downloadableDAO.updateLabel( id, fileName );
 					}
-					
-				} else if (SubtitlesFileFilter.getInstance().accept( newFile )) {
-					((Video)downloadable).setSubtitlesPath( newFile );								
-					((Video)downloadable).setSubtitled( true );								
+				} catch (IOException e) {
+					ErrorManager.getInstance().reportThrowable(e);
+				}
+				
+			} else if (SubtitlesFileFilter.getInstance().accept( newFile )) {
+				((Video)downloadable).setSubtitlesPath( newFile );								
+				((Video)downloadable).setSubtitled( true );								
+			}
+
+		} else if (downloadable instanceof TVShowSeason) {
+
+			if ( VideoFileFilter.getInstance().accept( newFile ) ) {
+				TVShowSeason season = TVShowManager.getInstance().findSeason( id );
+				ManagedSeries series = TVShowManager.getInstance().getManagedSeries( season.getSeriesId() );
+
+				TVShowEpisodeInfo episodeInfo = VideoNameParser.getTVShowEpisodeInfo(series, newFile);
+				if (episodeInfo != null) {
+					// TODO
 				}
 
-			} else if (downloadable instanceof TVShowSeason) {
-
-				if ( VideoFileFilter.getInstance().accept( newFile ) ) {
-					TVShowSeason season = TVShowManager.getInstance().findSeason( id );
-					ManagedSeries series = TVShowManager.getInstance().getManagedSeries( season.getSeriesId() );
-
-					TVShowEpisodeInfo episodeInfo = VideoNameParser.getTVShowEpisodeInfo(series, newFile);
-					if (episodeInfo != null) {
-						// TODO
-					}
-
-					BackLogProcessor.getInstance().schedule( new ScanTVShowTask( series ));
-				}
-
+				BackLogProcessor.getInstance().schedule( new ScanTVShowTask( series ));
 			}
 
 		}
+
 	}
 
 	public List<DownloadInfo> findWanted() {
@@ -350,8 +336,10 @@ public class DownloadableManager {
 	}
 
 	public void redownload( long downloadableId ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		// blacklist search result
-		searchResultDAO.blacklist( downloadableId );
+		// blacklist downloaded search result
+		searchResultDAO.blacklistDownloaded( downloadableId );
+		// FIXME : stop corresponding download if torrent !
+		cancelDownload(downloadableId);
 		// delete all corresponding files
 		getAllFiles(downloadableId).forEach( downloadedFile -> BackLogProcessor.getInstance().schedule( new DeleteTask(downloadedFile.getFilePath(), true), false ));
 		want(downloadableId);
@@ -371,11 +359,11 @@ public class DownloadableManager {
 		suggestionURLDAO.saveSuggestionURL(downloadable.getId(), url );
 	}
 	
-	public void cancelDownload( Downloadable downloadable ) {
-		List<SearchResult> searchResults = searchResultDAO.findSearchResults( downloadable.getId() );
+	public void cancelDownload( long downloadableId ) {
+		List<SearchResult> searchResults = searchResultDAO.findSearchResults( downloadableId );
 		for (SearchResult searchResult : searchResults) {
-			if (!searchResult.isBlackListed() && StringUtils.isNotEmpty( searchResult.getClientId() )) {
-				BackLogProcessor.getInstance().schedule( new CancelDownloadTask( downloadable, searchResult ));
+			if (searchResult.isDownloaded() && StringUtils.isNotEmpty( searchResult.getClientId() )) {
+				BackLogProcessor.getInstance().schedule( new CancelDownloadTask( searchResult ));
 			}
 		}
 	}
@@ -422,11 +410,17 @@ public class DownloadableManager {
 	public void saveDownloadLocations(long downloadableId, String title, String suggesterName,  Class<? extends DownloadFinder> providerClass, String referer, float size, Collection<DownloadLocation> downloadLocations) {
 		if (downloadableId >= 0 && downloadLocations != null && !downloadLocations.isEmpty()) {
 			for (DownloadLocation downloadLocation : downloadLocations) {
-				saveResult(title, downloadLocation.getUrl(), suggesterName, providerClass, referer, size, downloadLocation.getType(), downloadableId);
+				saveDownloadLocation(downloadableId, title, suggesterName, providerClass, referer, size, downloadLocation);
 			}
 		}		
 	}
 	
+	public void saveDownloadLocation(long downloadableId, String title, String suggesterName,  Class<? extends DownloadFinder> providerClass, String referer, float size, DownloadLocation downloadLocation) {
+		if (downloadableId >= 0 && downloadLocation != null) {
+			saveResult(title, downloadLocation.getUrl(), suggesterName, providerClass, referer, size, downloadLocation.getType(), downloadableId);
+		}		
+	}
+
 	public void setAkas( long downloadableId, Collection<String> akas ) {
 		downloadableDAO.saveAka(downloadableId, akas);
 	}

@@ -58,7 +58,7 @@ public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicA
 				
 				String sizeExpression = element.select("td[class*=nobr]").text();
 	
-				results.add( new SearchResult( this, SearchResultType.TORRENT, title, downloadTorrentLink, document.getOriginalURL().toString(), parseSize(sizeExpression), false) );
+				results.add( new SearchResult( this, SearchResultType.TORRENT, title, downloadTorrentLink, document.getOriginalURL().toString(), parseSize(sizeExpression)	) );
 			}
 		}
 

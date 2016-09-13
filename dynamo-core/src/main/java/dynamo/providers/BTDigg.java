@@ -42,7 +42,7 @@ public class BTDigg extends DownloadFinder implements MagazineProvider {
 					String sizeExpression = attributesNames.get(0).nextElementSibling().text();
 					float size = parseSize(sizeExpression);
 					if (size > minimumSize && size < maximumSize) {
-						results.add( new SearchResult(this, SearchResultType.TORRENT, title, url, searchURL, parseSize(sizeExpression), false) );
+						results.add( new SearchResult(this, SearchResultType.TORRENT, title, url, searchURL, parseSize(sizeExpression)) );
 					}
 				}
 			}

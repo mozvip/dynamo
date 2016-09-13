@@ -29,7 +29,7 @@ public class ConfigurationItem {
 		this.category = category;
 		this.name = name;
 		this.type = type;
-		this.value = defaultStringValue;
+		this.value = defaultStringValue != null && !defaultStringValue.equals("__NULL__") ? defaultStringValue : null;
 		this.list = list;
 		this.set = set;
 		
