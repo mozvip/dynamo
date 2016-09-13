@@ -1,3 +1,8 @@
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
+before_install:
+- npm install -g bower
+- cd dynamo-frontend
+- bower install
+- cd ..
