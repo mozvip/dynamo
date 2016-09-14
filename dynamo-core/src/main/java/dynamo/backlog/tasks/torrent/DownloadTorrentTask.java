@@ -55,7 +55,7 @@ public class DownloadTorrentTask extends Task {
 
 	@Override
 	public String toString() {
-		return String.format( "Download torrent at %s", url );
+		return String.format( "Download torrent from <a href='%s'>URL</a>", url.getUrl() );
 	}
 
 }
