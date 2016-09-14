@@ -8,7 +8,7 @@ public @interface Configurable {
 	String category();
 	String name() default "";
 	
-	boolean required() default true;
+	boolean required() default false;
 
 	Class contentsClass() default DEFAULT.class;
 

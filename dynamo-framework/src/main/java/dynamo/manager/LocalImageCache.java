@@ -11,6 +11,7 @@ import java.nio.file.StandardOpenOption;
 import org.apache.commons.io.IOUtils;
 
 import core.FileNameUtils;
+import core.WebResource;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.manager.ErrorManager;
 import dynamo.model.backlog.core.HTTPDownloadTask;
@@ -80,7 +81,7 @@ public class LocalImageCache {
 				if (async) {
 					BackLogProcessor.getInstance().schedule( new HTTPDownloadTask( url, referer, localFile ), false );
 				} else {
-					String contentType = HTTPClient.getInstance().downloadToFile(url, referer, localFile, 0);
+					String contentType = HTTPClient.getInstance().downloadToFile( new WebResource( url, referer ), localFile, 0);
 				}
 			}
 		} catch (InvalidPathException | IOException e) {
