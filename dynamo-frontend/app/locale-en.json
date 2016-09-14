@@ -1,0 +1,30 @@
+{
+    "EZTVProvider.enabled" : "Enable EZTV",
+    "EZTVProvider.baseURL" : "Base URL for EZTV",
+    "KATProvider.enabled" : "Enable Kick Ass Torrents",
+    "KATProvider.baseURL" : "Base URL for Kick Ass Torrent",
+    "T411Provider.enabled" : "Enabled Torrent 411",
+    "T411Provider.baseURL" : "Base URL for Torrent 411",
+    "T411Provider.login" : "Login for Torrent 411",
+    "T411Provider.password" : "Password for Torrent 411",
+    "CPasBienProvider.enabled" : "Enable CPasBien",
+    "RARBGProvider.enabled" : "Enable RARBG",
+    "PirateBayProvider.enabled" : "Enable The Pirate Bay",
+    "TorrentProjectSE.enabled" : "Enable TorrentProject.se",
+    "UsenetCrawlerProvider.enabled" : "Enable Usenet Crawler",
+    "UsenetCrawlerProvider.login" : "Usenet Crawler Login",
+    "UsenetCrawlerProvider.password" : "Usenet Crawler Password",
+    "NZBIndexNLProvider.enabled" : "Enable NZBIndex.nl",
+    "BTDigg.enabled" : "Enable BTDigg",
+
+    "SabNzbd.sabnzbdUrl" : "URL for SABNZBD (ex : http://ipaddress:8080/)",
+    "SabNzbd.apiKey" : "API Key for SABNZBD",
+
+    "MagazineManager.folders" : "Folders for magazines storage",
+    "BookManager.folders" : "Folders for books storage",
+
+    "MovieManager.folders" : "Folders for movies storage",
+    "RefreshMovieSuggestionExecutor.movieSuggesters" : "Use movie suggestions from",
+    "MovieManager.movieDownloadProviders" : "Download movies from",
+    "MovieManager.defaultQuality" : "Preferred movie quality"
+}

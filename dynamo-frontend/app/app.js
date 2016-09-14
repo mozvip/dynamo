@@ -4,11 +4,13 @@
 angular.module('dynamo', [
   'angular.filter',
   'ngRoute',
+  'ngCookies',
   'ngResource',
   'ngSanitize',
   'ngWebSocket',
   'ui.bootstrap',
   'ng-sweet-alert',
+  'pascalprecht.translate',
   'dynamo.common',
   'dynamo.trakt',
   'dynamo.log',
@@ -26,6 +28,17 @@ angular.module('dynamo', [
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/welcome'});
 }])
+
+.config(['$translateProvider', function ($translateProvider) {
+  $translateProvider.useStaticFilesLoader({
+      prefix: 'locale-',
+      suffix: '.json'
+  });
+  $translateProvider.preferredLanguage('en');
+  $translateProvider.useCookieStorage();
+}])
+
+
 .controller('MenuCtrl', ['$scope', '$rootScope', 'eventDataService', 'downloadableService', function($scope, $rootScope, eventDataService, downloadableService) {
 
   $rootScope.moviesCollectionCount = 0;
