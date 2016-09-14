@@ -177,8 +177,7 @@ public class Movie extends Downloadable implements Video {
 
 	@Override
 	public String getRelativeLink() {
-		String urlSuffix = getStatus().name();
-		return "#/movies/" + urlSuffix;
+		return "index.html#/movies/";
 	}
 	@Override
 	public int hashCode() {

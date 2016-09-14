@@ -72,7 +72,7 @@ public class MagazineIssue extends Downloadable implements EBook {
 
 	@Override
 	public String getRelativeLink() {
-		return "#/magazines/" + getStatus().name();
+		return "index.html#/magazines/";
 	}
 	
 	private Magazine magazine = null;

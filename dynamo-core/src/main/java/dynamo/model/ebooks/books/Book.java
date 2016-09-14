@@ -30,7 +30,7 @@ public class Book extends Downloadable implements EBook {
 
 	@Override
 	public String getRelativeLink() {
-		return "#/books/" + getStatus().name();
+		return "index.html#/books";
 	}
 
 	@Override
