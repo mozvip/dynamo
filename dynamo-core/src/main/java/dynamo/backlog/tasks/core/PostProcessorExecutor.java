@@ -50,10 +50,10 @@ import model.ManagedSeries;
 
 public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> implements Reconfigurable {
 	
-	@Configurable(category="Post Processor", name="Post process all files (not only the ones downloaded by Dynamo)")
+	@Configurable(category="Post Processor")
 	private boolean allowPostProcessorToManageAllFiles = true;
 
-	@Configurable(category="Post Processor", name="Remove empty folders", defaultValue="true")
+	@Configurable(category="Post Processor", defaultValue="true")
 	private boolean removeEmptyFolders = true;
 
 	public boolean isAllowPostProcessorToManageAllFiles() {
@@ -272,7 +272,7 @@ public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> i
 									continue;
 								}
 							}
-							Path destinationFolder = series.getFolder().resolve( String.format( TVShowManager.getInstance().getSeasonFolderPattern(), episodeInfo.getSeason()) );
+							Path destinationFolder = series.getFolder().resolve( String.format( "Season %02d", episodeInfo.getSeason()) );
 							Path destinationFile = destinationFolder.resolve( path.getFileName() );
 
 							FolderManager.moveFile( path, destinationFile, associatedEpisodes.get(0) );	// FIXME: pass a list of downloadable in case we have several ??

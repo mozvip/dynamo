@@ -45,7 +45,7 @@ public class TVShowSeason extends Downloadable {
 	
 	@Override
 	public Path determineDestinationFolder() {
-		return getSeries().getFolder().resolve( String.format(TVShowManager.getInstance().getSeasonFolderPattern(), getSeason()) );
+		return getSeries().getFolder().resolve( String.format("Season %02d", getSeason()) );
 	}
 
 }

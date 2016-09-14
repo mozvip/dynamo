@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Configurable {
 	String category();
-	String name() default "";
 	
 	boolean required() default false;
 

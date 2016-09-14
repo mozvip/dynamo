@@ -19,10 +19,10 @@ import hclient.HTTPClient;
 
 public class BetaSeries extends SubtitlesFinder {
 	
-	@Configurable(category="Subtitles Finders", name="BetaSeries Login")
+	@Configurable(category="Subtitles Finders")
 	private String login;
 	
-	@Configurable(category="Subtitles Finders", name="BetaSeries Password")
+	@Configurable(category="Subtitles Finders")
 	private String password;
 
 	public String getLogin() {

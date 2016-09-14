@@ -12,10 +12,10 @@ import dynamo.jdbi.SearchResultDAO;
 @ClassDescription(label="Blackhole")
 public class DownloadTorrentBlackHoleExecutor extends AbstractTorrentDownloadExecutor {
 
-	@Configurable(category="dynamo.backlog.tasks.torrent.DownloadTorrentBlackHoleExecutor",  name="Blackhole Folder")
+	@Configurable(category="dynamo.backlog.tasks.torrent.DownloadTorrentBlackHoleExecutor")
 	private Path blackHoleFolder;
 	
-	@Configurable(category="dynamo.backlog.tasks.torrent.DownloadTorrentBlackHoleExecutor", name="Completed files folder")
+	@Configurable(category="dynamo.backlog.tasks.torrent.DownloadTorrentBlackHoleExecutor")
 	private Path torrentIncomingFolder;
 
 	public DownloadTorrentBlackHoleExecutor(DownloadTorrentTask task, SearchResultDAO searchResultDAO) {

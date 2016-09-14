@@ -72,10 +72,10 @@ public class DownloadableManager {
 	private SuggestionURLDAO suggestionURLDAO = DAOManager.getInstance().getDAO( SuggestionURLDAO.class );
 	private UnrecognizedDAO unrecognizedDAO = DAOManager.getInstance().getDAO( UnrecognizedDAO.class );
 	
-	@Configurable(category="Notifiers", name="Notify on Snatch events", defaultValue="false")
+	@Configurable(category="Notifiers", defaultValue="false")
 	private boolean notifyOnSnatch;
 	
-	@Configurable(category="Notifiers", name="Notify on Download events", defaultValue="true")
+	@Configurable(category="Notifiers", defaultValue="true")
 	private boolean notifyOnDownload;
 
 	public boolean isNotifyOnSnatch() {

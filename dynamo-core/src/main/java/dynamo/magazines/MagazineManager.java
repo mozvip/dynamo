@@ -27,13 +27,13 @@ import dynamo.webapps.googleimages.GoogleImages;
 
 public class MagazineManager implements Reconfigurable {
 
-	@Configurable(category="Magazines", name="Magazines Default Language")
+	@Configurable(category="Magazines")
 	private Language defaultLanguage = Language.EN;
 
-	@Configurable(category="Magazines", name="Magazine Folders", contentsClass=Path.class)
+	@Configurable(category="Magazines", contentsClass=Path.class)
 	private List<Path> folders;
 
-	@Configurable(category="Magazines", name="Download Providers", contentsClass=MagazineProvider.class, ordered=true)
+	@Configurable(category="Magazines", contentsClass=MagazineProvider.class, ordered=true)
 	private List<MagazineProvider> providers;
 
 	public boolean isEnabled() {

@@ -11,7 +11,7 @@ public class RefreshBookSuggestionsExecutor extends TaskExecutor<RefreshBookSugg
 	private int totalItems;
 	private int itemsDone;
 
-	@Configurable(category="Books", name="Books Suggesters", contentsClass=BookSuggester.class )
+	@Configurable(category="Books", contentsClass=BookSuggester.class )
 	private List<BookSuggester> suggesters;
 	
 	public List<BookSuggester> getSuggesters() {

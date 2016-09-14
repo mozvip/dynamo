@@ -17,17 +17,15 @@ public class ConfigurationItem {
 	
 	private String key;
 	private String category;
-	private String name;
 	private Class<?> type;
 	private String value;
 	private boolean list;
 	private boolean set;
 	private Map<String, String> allowedValues;
 
-	public ConfigurationItem(String key, String category, String name, Class<?> type, String defaultStringValue, boolean list, boolean set) {
+	public ConfigurationItem(String key, String category, Class<?> type, String defaultStringValue, boolean list, boolean set) {
 		this.key = key;
 		this.category = category;
-		this.name = name;
 		this.type = type;
 		this.value = defaultStringValue != null && !defaultStringValue.equals("__NULL__") ? defaultStringValue : null;
 		this.list = list;
@@ -65,10 +63,6 @@ public class ConfigurationItem {
 
 	public String getCategory() {
 		return category;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public Class<?> getType() {

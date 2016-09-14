@@ -9,10 +9,10 @@ import hclient.HTTPClient;
 
 public class ProxyManager implements Reconfigurable {
 
-	@Configurable(category="Use HTTP Proxy for outbound HTTP connections", name="HTTP Proxy Host")
+	@Configurable(category="Use HTTP Proxy for outbound HTTP connections")
 	private String proxyHost;
 
-	@Configurable(category="Use HTTP Proxy for outbound HTTP connections", name="HTTP Proxy Port")
+	@Configurable(category="Use HTTP Proxy for outbound HTTP connections")
 	private int proxyPort = 3128;
 	
 	public boolean isProxyEnabled() {

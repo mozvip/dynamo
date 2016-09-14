@@ -12,13 +12,13 @@ import dynamo.core.manager.ErrorManager;
 
 public class DynamoNNTPClient implements Reconfigurable, Enableable {
 
-	@Configurable(category = "NNTP Client", name="Enable internal NNTP Client")
+	@Configurable(category = "NNTP Client")
 	private boolean enabled = false;
-	@Configurable(category = "NNTP Client", name="NNTP Server Host")
+	@Configurable(category = "NNTP Client")
 	private String host;
-	@Configurable(category = "NNTP Client", name="NNTP Server Login")
+	@Configurable(category = "NNTP Client")
 	private String login;
-	@Configurable(category = "NNTP Client", name="NNTP Server Password")
+	@Configurable(category = "NNTP Client")
 	private String password;
 
 	public String getHost() {

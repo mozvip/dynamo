@@ -11,10 +11,10 @@ import dynamo.jdbi.SearchResultDAO;
 @ClassDescription(label="Blackhole")
 public class DownloadNZBBlackHoleExecutor extends AbstractNZBDownloadExecutor {
 	
-	@Configurable(category="dynamo.backlog.tasks.nzb.DownloadNZBBlackHoleExecutor", name="Blackhole Folder" )
+	@Configurable(category="dynamo.backlog.tasks.nzb.DownloadNZBBlackHoleExecutor")
 	private Path blackHoleFolder;
 	
-	@Configurable(category="dynamo.backlog.tasks.nzb.DownloadNZBBlackHoleExecutor", name="Completed files folder")
+	@Configurable(category="dynamo.backlog.tasks.nzb.DownloadNZBBlackHoleExecutor")
 	private Path nzbIncomingFolder;
 	
 	public Path getBlackHoleFolder() {

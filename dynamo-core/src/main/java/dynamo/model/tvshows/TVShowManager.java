@@ -55,35 +55,32 @@ public class TVShowManager implements Reconfigurable {
 
 	private static final String TVDBAPI_KEY = "2805AD2873519EC5";
 
-	@Configurable( category="TV Shows", name="Default Metadata Language", defaultValue="EN" )
+	@Configurable( category="TV Shows", defaultValue="EN" )
 	private Language metaDataLanguage;
 
-	@Configurable( category="TV Shows", name="Default Audio Language", defaultLabel="Original" )
+	@Configurable( category="TV Shows", defaultLabel="Original" )
 	private Language audioLanguage;
 
-	@Configurable( category="TV Shows", name="Default Subtitles Language" )
+	@Configurable( category="TV Shows" )
 	private Language subtitlesLanguage;
 
-	@Configurable( category="TV Shows", name="Video Qualities", contentsClass=VideoQuality.class )
+	@Configurable( category="TV Shows", contentsClass=VideoQuality.class )
 	private List<VideoQuality> tvShowQualities;
 	
-	@Configurable( category="TV Shows", name="TV Shows folders", contentsClass=Path.class )
+	@Configurable( category="TV Shows", contentsClass=Path.class )
 	private List<Path> folders;	
 	
-	@Configurable( category="TV Shows", name="Automatically delete watched episodes", defaultValue="false" )
+	@Configurable( category="TV Shows", defaultValue="false" )
 	private boolean deleteWatched;
 
-	@Configurable( category="TV Shows", name="Words Black List", contentsClass=String.class )
+	@Configurable( category="TV Shows", contentsClass=String.class )
 	private Collection<String> wordsBlackList;
 
-	@Configurable(category="TV Shows", name="TV Shows Episode Providers", contentsClass=EpisodeFinder.class, ordered=true )
+	@Configurable(category="TV Shows", contentsClass=EpisodeFinder.class, ordered=true )
 	private List<EpisodeFinder> tvshowEpisodeProviders;
 
-	@Configurable(category="TV Shows", name="TV Shows Full Season Providers", contentsClass=TVShowSeasonProvider.class, ordered=true )
+	@Configurable(category="TV Shows", contentsClass=TVShowSeasonProvider.class, ordered=true )
 	private List<TVShowSeasonProvider> tvShowSeasonProviders;
-
-	@Configurable(category="TV Shows", name="Season folder pattern", defaultValue="Season %02d" )
-	private String seasonFolderPattern;
 
 	private TVShowDAO tvShowDAO = DAOManager.getInstance().getDAO( TVShowDAO.class );
 	private ManagedEpisodeDAO managedEpisodeDAO = DAOManager.getInstance().getDAO( ManagedEpisodeDAO.class );
@@ -166,14 +163,6 @@ public class TVShowManager implements Reconfigurable {
 	
 	public void setWordsBlackList(Collection<String> wordsBlackList) {
 		this.wordsBlackList = wordsBlackList;
-	}
-
-	public String getSeasonFolderPattern() {
-		return seasonFolderPattern;
-	}
-
-	public void setSeasonFolderPattern(String seasonFolderPattern) {
-		this.seasonFolderPattern = seasonFolderPattern;
 	}
 
 	static class SingletonHolder {

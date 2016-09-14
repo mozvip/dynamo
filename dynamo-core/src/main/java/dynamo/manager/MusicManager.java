@@ -45,19 +45,19 @@ public class MusicManager implements Reconfigurable {
 	public final static String VARIOUS_ARTISTS = "Various Artists";
 	public final static String ORIGINAL_SOUNDTRACK = "Original Soundtrack";
 
-	@Configurable( category="Music", name="Music Quality" )
+	@Configurable( category="Music" )
 	private MusicQuality musicQuality = MusicQuality.COMPRESSED;
 
-	@Configurable( category="Music", name="Music Folders", contentsClass=Path.class )
+	@Configurable( category="Music", contentsClass=Path.class )
 	private List<Path> folders;
 
-	@Configurable(category="Music", name="Music Providers", contentsClass=MusicAlbumFinder.class )
+	@Configurable(category="Music", contentsClass=MusicAlbumFinder.class )
 	private List<MusicAlbumFinder> musicDownloadProviders;	
 
-	@Configurable( category="Music", name="Clean music folders during scan (remove useless files like *.nfo, ...)" )
+	@Configurable( category="Music" )
 	private boolean cleanDuringImport;
 	
-	@Configurable( category="Music", name="Music Album Suggesters", contentsClass=MusicAlbumSuggester.class, ordered=false )
+	@Configurable( category="Music", contentsClass=MusicAlbumSuggester.class, ordered=false )
 	private Collection<MusicAlbumSuggester> suggesters;
 
 	private MusicAlbumDAO musicDAO = DAOManager.getInstance().getDAO( MusicAlbumDAO.class );

@@ -23,6 +23,8 @@
     "MagazineManager.folders" : "Folders for magazines storage",
     "BookManager.folders" : "Folders for books storage",
 
+    "MusicManager.cleanDuringImport" : "Clean music folders during scan (remove useless files like *.nfo, ...)",
+
     "MovieManager.folders" : "Folders for movies storage",
     "RefreshMovieSuggestionExecutor.movieSuggesters" : "Use movie suggestions from",
     "MovieManager.movieDownloadProviders" : "Download movies from",

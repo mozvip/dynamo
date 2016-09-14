@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,9 +140,8 @@ public class ConfigAnnotationManager {
 		for (Class<? extends Task> taskClass : taskClasses) {
 			
 			String key = String.format("Plugin.%s", taskClass.getName());
-			String name = String.format("Plugin for %s", taskClass.getName());
-			
-			items.put(key, new ConfigurationItem( key, "Plugins", name, String.class, null, false, false ));
+
+			items.put(key, new ConfigurationItem( key, "Plugins", String.class, null, false, false ));
 		}
 		
 	}
@@ -169,15 +167,11 @@ public class ConfigAnnotationManager {
 			if (annotation != null) {
 
 				String key = String.format("%s.%s", configuredClass.getSimpleName(), field.getName());
-				String name = annotation.name();
-				if (StringUtils.isBlank( name )) {
-					name = StringUtils.capitalize( field.getName() );
-				}
 				
 				boolean list = Collection.class.isAssignableFrom( field.getType() );
 				boolean set = Set.class.isAssignableFrom( field.getType() );
 				
-				items.put(key, new ConfigurationItem( key, annotation.category(), name, !annotation.contentsClass().equals( DEFAULT.class ) ? annotation.contentsClass() : field.getType(), annotation.defaultValue(), list, set ));
+				items.put(key, new ConfigurationItem( key, annotation.category(), !annotation.contentsClass().equals( DEFAULT.class ) ? annotation.contentsClass() : field.getType(), annotation.defaultValue(), list, set ));
 				
 				configurable = true;
 			}

@@ -345,7 +345,6 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
   $scope.itemsToConfigure = [
     $scope.config['TVShowManager.folders'],
-    $scope.config['TVShowManager.seasonFolderPattern'],
     $scope.config['TVShowManager.audioLanguage'],
     $scope.config['TVShowManager.metaDataLanguage'],
     $scope.config['TVShowManager.subtitlesLanguage'],
