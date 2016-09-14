@@ -17,13 +17,13 @@ import retrofit.RestAdapter;
 
 public class Transmission implements Reconfigurable, Enableable {
 
-	@Configurable(category="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor", required=true)
+	@Configurable(ifExpression="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor", required=true)
 	private String transmissionURL;
 	
-	@Configurable(category="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor", required=false)
+	@Configurable(ifExpression="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor", required=false)
 	private String login;
 
-	@Configurable(category="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor", required=false)
+	@Configurable(ifExpression="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor", required=false)
 	private String password;
 
 	@Override

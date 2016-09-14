@@ -12,13 +12,13 @@ import dynamo.core.manager.ErrorManager;
 
 public class Kodi implements Enableable, Reconfigurable {
 
-	@Configurable(category = "Notifiers")
+	@Configurable(ifExpression = "Notifiers")
 	private boolean enabled;
 
-	@Configurable(category = "Notifiers")
+	@Configurable(ifExpression = "Kodi.enabled", required=true)
 	private String kodiIPAddress = "127.0.0.1";
 
-	@Configurable(category = "Notifiers")
+	@Configurable(ifExpression = "Kodi.enabled", required=true)
 	private int kodiPort = 80;
 
 	public String getKodiIPAddress() {

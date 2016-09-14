@@ -34,7 +34,7 @@ import hclient.HTTPClient;
 @ClassDescription(label="IMDB Watch Lists")
 public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, Enableable {
 	
-	@Configurable(category = "dynamo.suggesters.movies.IMDBWatchListSuggester", contentsClass=String.class)
+	@Configurable(ifExpression = "dynamo.suggesters.movies.IMDBWatchListSuggester", contentsClass=String.class)
 	private Set<String> urls;
 
 	@Override

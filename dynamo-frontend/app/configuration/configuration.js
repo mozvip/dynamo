@@ -46,7 +46,7 @@ angular.module('dynamo.configuration', ['ngRoute'])
             $scope.pluginOptions.forEach(function(plugin) {
                 plugin.itemsToConfigure = [];
                 var configurationKeys = Object.keys($scope.config).filter( function( key ) {
-                    return plugin.value && $scope.config[key].category == plugin.value;
+                    return plugin.value && $scope.config[key].ifExpression == plugin.value;
                 });
                 configurationKeys.forEach(function(key) {
                     plugin.itemsToConfigure.push( $scope.config[key] );  

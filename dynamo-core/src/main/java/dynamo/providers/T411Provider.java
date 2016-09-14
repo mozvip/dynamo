@@ -50,11 +50,11 @@ import hclient.HTTPClient;
 @ClassDescription(label="Torrent 411")
 public class T411Provider extends DownloadFinder implements BookFinder, EpisodeFinder, TVShowSeasonProvider, MusicAlbumFinder, MovieProvider, MagazineProvider, GameFinder, KioskIssuesSuggester, BookSuggester, MovieSuggester {
 
-	@Configurable(category="Providers")
+	@Configurable(ifExpression="T411Provider.enabled", required=true)
 	private String login;
-	@Configurable(category="Providers")
+	@Configurable(ifExpression="T411Provider.enabled", required=true)
 	private String password;
-	@Configurable(category="Providers", defaultValue="http://www.t411.in")
+	@Configurable(ifExpression="T411Provider.enabled", required=true, defaultValue="http://www.t411.in")
 	private String baseURL;
 
 	public String getLogin() {

@@ -16,10 +16,10 @@ import retrofit.RestAdapter;
 
 public class AcoustId implements Enableable {
 	
-	@Configurable(category="Music")
+	@Configurable
 	private boolean enabled;
 	
-	@Configurable(category="Music", folder=false)
+	@Configurable(ifExpression="AcoustId.enabled", folder=false, required=true)
 	private Path fpcalcPath;
 
 	// registed on https://acoustid.org/applications for Dynamo 0.0.1-SNAPSHOT

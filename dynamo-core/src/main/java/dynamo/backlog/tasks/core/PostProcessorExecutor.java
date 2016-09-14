@@ -50,10 +50,10 @@ import model.ManagedSeries;
 
 public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> implements Reconfigurable {
 	
-	@Configurable(category="Post Processor")
+	@Configurable
 	private boolean allowPostProcessorToManageAllFiles = true;
 
-	@Configurable(category="Post Processor", defaultValue="true")
+	@Configurable(defaultValue="true")
 	private boolean removeEmptyFolders = true;
 
 	public boolean isAllowPostProcessorToManageAllFiles() {

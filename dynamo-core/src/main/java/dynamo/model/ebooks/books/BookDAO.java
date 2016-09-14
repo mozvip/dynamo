@@ -13,7 +13,6 @@ import dynamo.core.model.DownloadableDAO;
 import dynamo.jdbi.core.BindContains;
 import dynamo.jdbi.core.BindEnum;
 import dynamo.jdbi.core.BindUpper;
-import dynamo.jdbi.core.DAO;
 import dynamo.model.DownloadableStatus;
 
 public interface BookDAO extends DownloadableDAO<Book> {

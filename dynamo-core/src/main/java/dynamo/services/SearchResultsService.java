@@ -10,7 +10,6 @@ import javax.ws.rs.core.MediaType;
 
 import dynamo.core.manager.DAOManager;
 import dynamo.jdbi.SearchResultDAO;
-import dynamo.model.SuggestionURL;
 import dynamo.model.result.SearchResult;
 
 @Path("searchResults")

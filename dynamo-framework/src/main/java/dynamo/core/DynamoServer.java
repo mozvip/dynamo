@@ -46,7 +46,7 @@ public class DynamoServer {
 
 	protected static Path rootFolder;	
 	
-	@Configurable(category="Main Settings", required=true)
+	@Configurable(required=true)
 	protected int port = 8081;
 
 	public int getPort() {

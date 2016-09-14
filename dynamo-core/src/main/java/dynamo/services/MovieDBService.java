@@ -19,7 +19,6 @@ import core.RegExp;
 import dynamo.core.Language;
 import dynamo.movies.model.Movie;
 import dynamo.movies.model.MovieManager;
-import dynamo.services.MovieDBService.MovieResult;
 
 @Path("movie-db")
 public class MovieDBService {

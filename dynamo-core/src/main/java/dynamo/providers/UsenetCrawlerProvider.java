@@ -25,10 +25,10 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 
 	private static final String BASE_URL = "https://www.usenet-crawler.com";
 
-	@Configurable(category = "Providers")
+	@Configurable(ifExpression = "UsenetCrawlerProvider.enabled")
 	private String login;
 
-	@Configurable(category = "Providers")
+	@Configurable(ifExpression = "UsenetCrawlerProvider.enabled")
 	private String password;
 
 	public String getLogin() {

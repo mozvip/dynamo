@@ -12,10 +12,10 @@ import retrofit.RestAdapter;
 
 public class PushBullet implements Enableable {
 	
-	@Configurable(category="Notifiers")
+	@Configurable
 	private String accessToken;
 	
-	@Configurable(category="Notifiers")
+	@Configurable
 	private String deviceIdent;
 	
 	public String getAccessToken() {

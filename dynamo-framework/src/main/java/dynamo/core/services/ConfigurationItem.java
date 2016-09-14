@@ -16,20 +16,22 @@ import dynamo.core.manager.DynamoObjectFactory;
 public class ConfigurationItem {
 	
 	private String key;
-	private String category;
+	private String ifExpression;
 	private Class<?> type;
 	private String value;
 	private boolean list;
 	private boolean set;
 	private Map<String, String> allowedValues;
+	private boolean required;
 
-	public ConfigurationItem(String key, String category, Class<?> type, String defaultStringValue, boolean list, boolean set) {
+	public ConfigurationItem(String key, String ifExpression, Class<?> type, String defaultStringValue, boolean required, boolean list, boolean set) {
 		this.key = key;
-		this.category = category;
+		this.ifExpression = ifExpression != null && !ifExpression.equals("") ? ifExpression : null;;
 		this.type = type;
 		this.value = defaultStringValue != null && !defaultStringValue.equals("__NULL__") ? defaultStringValue : null;
 		this.list = list;
 		this.set = set;
+		this.required = required;
 		
 		if (type.isEnum()) {
 			allowedValues = new HashMap<>();
@@ -61,8 +63,8 @@ public class ConfigurationItem {
 		return key;
 	}
 
-	public String getCategory() {
-		return category;
+	public String getIfExpression() {
+		return ifExpression;
 	}
 
 	public Class<?> getType() {
@@ -79,6 +81,10 @@ public class ConfigurationItem {
 
 	public boolean isList() {
 		return list;
+	}
+	
+	public boolean isRequired() {
+		return required;
 	}
 
 	public void setList(boolean list) {

@@ -20,10 +20,10 @@ import retrofit.RestAdapter;
 
 public class TraktManager implements Reconfigurable, MovieSuggester, Enableable {
 	
-	@Configurable(category="Trakt")
+	@Configurable
 	private boolean enabled;
 	
-	@Configurable(category="Trakt")
+	@Configurable(ifExpression="TraktManager.enabled", required=true)
 	private String username;
 
 	public static final String clientId = "1f93ab28686a87d36c0e198f15a34ba7c0d3fb45cbd3303515da246718b570a6";

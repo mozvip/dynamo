@@ -24,7 +24,7 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 	private final static String megsExpression = "\\s*([\\d\\.,]+)\\D*[Mm][OoBb]?\\s*.*";
 	private final static String gigsExpression = "\\s*([\\d\\.,]+)\\D*[Gg][OoBb]?\\s*.*";
 
-	@Configurable(category="Providers")
+	@Configurable
 	private boolean enabled;
 	
 	@Override

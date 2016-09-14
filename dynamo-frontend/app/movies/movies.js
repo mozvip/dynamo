@@ -77,7 +77,8 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
     $scope.config['MovieManager.maximumSizeFor720'],
     $scope.config['MovieManager.minimumSizeFor1080'],
     $scope.config['MovieManager.maximumSizeFor1080'],
-    $scope.config['MovieManager.wordsBlackList']
+    $scope.config['MovieManager.wordsBlackList'],
+    $scope.config['MovieCleanupTask.rename']    
   ];
 
     $scope.saveSettings = function () {

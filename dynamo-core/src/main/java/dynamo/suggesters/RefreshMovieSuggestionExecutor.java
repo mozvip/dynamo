@@ -12,7 +12,7 @@ import dynamo.suggesters.movies.MovieSuggester;
 
 public class RefreshMovieSuggestionExecutor extends TaskExecutor<RefreshMovieSuggestionTask> implements ReportProgress {
 
-	@Configurable(category="Movies", contentsClass=MovieSuggester.class, ordered=false)
+	@Configurable(contentsClass=MovieSuggester.class, ordered=false)
 	private Collection<MovieSuggester> movieSuggesters;
 
 	public Collection<MovieSuggester> getMovieSuggesters() {

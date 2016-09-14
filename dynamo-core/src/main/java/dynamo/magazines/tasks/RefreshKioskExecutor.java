@@ -10,7 +10,7 @@ import dynamo.magazines.KioskIssuesSuggester;
 
 public class RefreshKioskExecutor extends TaskExecutor<RefreshKioskTask> implements ReportProgress {
 	
-	@Configurable(category="Magazines", contentsClass=KioskIssuesSuggester.class)
+	@Configurable(contentsClass=KioskIssuesSuggester.class)
 	private List<KioskIssuesSuggester> suggesters;
 	
 	public List<KioskIssuesSuggester> getSuggesters() {

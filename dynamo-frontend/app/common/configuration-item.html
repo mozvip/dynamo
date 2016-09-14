@@ -38,7 +38,7 @@
     <label>{{item.key | translate}}</label>
     <div class="input-group">
       <span class="input-group-addon"><span class="glyphicon glyphicon-folder-open" /></span>
-      <input type="text" ng-required="true" valid-folder class="form-control" ng-model="item.value" />
+      <input type="text" ng-required="item.required" valid-folder class="form-control" ng-model="item.value" />
     </div>
   </div>
 </div>
@@ -46,14 +46,14 @@
 <div ng-if="!item.list && item.type == 'java.lang.String'">
   <div class="form-group">
     <label>{{item.key | translate}}</label>
-    <input type="text" ng-required="true" class="form-control" ng-model="item.value" />
+    <input type="text" ng-required="item.required" class="form-control" ng-model="item.value" />
   </div>
 </div>
 
 <div ng-if="item.type == 'int'">
   <div class="form-group">
     <label>{{item.key | translate}}</label>
-    <input type="number" ng-required="true" class="form-control" ng-model="item.value" />
+    <input type="number" ng-required="item.required" class="form-control" ng-model="item.value" />
   </div>
 </div>
 

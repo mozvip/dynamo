@@ -9,10 +9,10 @@ import dynamo.core.model.ServiceTask;
 @DynamoTask(queueClass=ServiceQueue.class)
 public class ProxyServiceTask extends ServiceTask {
 	
-	@Configurable(category="Main Settings")
+	@Configurable
 	private boolean enabled;
 	
-	@Configurable(category="Main Settings", defaultValue="3128")
+	@Configurable(ifExpression="ProxyServiceTask.enabled", defaultValue="3128", required=true)
 	private int port = 3128;
 
 	@Override

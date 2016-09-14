@@ -1,14 +1,11 @@
 package dynamo.subtitles.tvsubtitles.net;
 
-import java.net.URI;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Node;
 
 import core.WebDocument;
 import dynamo.core.FinderQuality;

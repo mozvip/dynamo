@@ -24,7 +24,7 @@ import dynamo.model.Downloadable;
 
 public class VideoManager {
 	
-	@Configurable( category="Videos", folder=false )
+	@Configurable(folder=false)
 	private Path mediaInfoBinaryPath;
 	
 	private VideoDAO videoDAO = DAOManager.getInstance().getDAO( VideoDAO.class );

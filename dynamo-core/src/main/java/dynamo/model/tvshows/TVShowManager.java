@@ -55,31 +55,31 @@ public class TVShowManager implements Reconfigurable {
 
 	private static final String TVDBAPI_KEY = "2805AD2873519EC5";
 
-	@Configurable( category="TV Shows", defaultValue="EN" )
+	@Configurable( defaultValue="EN" )
 	private Language metaDataLanguage;
 
-	@Configurable( category="TV Shows", defaultLabel="Original" )
+	@Configurable( defaultLabel="Original" )
 	private Language audioLanguage;
 
-	@Configurable( category="TV Shows" )
+	@Configurable
 	private Language subtitlesLanguage;
 
-	@Configurable( category="TV Shows", contentsClass=VideoQuality.class )
+	@Configurable( contentsClass=VideoQuality.class )
 	private List<VideoQuality> tvShowQualities;
 	
-	@Configurable( category="TV Shows", contentsClass=Path.class )
+	@Configurable( contentsClass=Path.class )
 	private List<Path> folders;	
 	
-	@Configurable( category="TV Shows", defaultValue="false" )
+	@Configurable( defaultValue="false" )
 	private boolean deleteWatched;
 
-	@Configurable( category="TV Shows", contentsClass=String.class )
+	@Configurable( contentsClass=String.class )
 	private Collection<String> wordsBlackList;
 
-	@Configurable(category="TV Shows", contentsClass=EpisodeFinder.class, ordered=true )
+	@Configurable(contentsClass=EpisodeFinder.class, ordered=true )
 	private List<EpisodeFinder> tvshowEpisodeProviders;
 
-	@Configurable(category="TV Shows", contentsClass=TVShowSeasonProvider.class, ordered=true )
+	@Configurable(contentsClass=TVShowSeasonProvider.class, ordered=true )
 	private List<TVShowSeasonProvider> tvShowSeasonProviders;
 
 	private TVShowDAO tvShowDAO = DAOManager.getInstance().getDAO( TVShowDAO.class );

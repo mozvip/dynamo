@@ -1,6 +1,6 @@
 <form name="settingsForm" novalidate>
 
-  <configuration-item ng-repeat="item in itemsToConfigure" item="item" />
+  <configuration-item ng-repeat="item in itemsToConfigure" item="item" ng-if="item.ifExpression == undefined || config[item.ifExpression].value == true"/>
 
   <button ng-disabled="!settingsForm.$valid" class="btn btn-primary" ng-click="saveSettings()"><span class="glyphicon glyphicon-save" /> Save Settings</button>
 

@@ -1,6 +1,5 @@
 package dynamo.model.ebooks.books;
 
-import dynamo.backlog.BackLogProcessor;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.core.FindDownloadableTask;

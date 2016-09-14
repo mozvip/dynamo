@@ -19,21 +19,21 @@ import dynamo.magazines.jdbi.MagazineDAO;
 import dynamo.magazines.model.Magazine;
 import dynamo.magazines.model.MagazineIssue;
 import dynamo.magazines.parsers.MagazineIssueInfo;
+import dynamo.magazines.parsers.MagazineNameParser;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadSuggestion;
 import dynamo.model.DownloadableStatus;
-import dynamo.magazines.parsers.MagazineNameParser;
 import dynamo.webapps.googleimages.GoogleImages;
 
 public class MagazineManager implements Reconfigurable {
 
-	@Configurable(category="Magazines")
+	@Configurable
 	private Language defaultLanguage = Language.EN;
 
-	@Configurable(category="Magazines", contentsClass=Path.class)
+	@Configurable(contentsClass=Path.class)
 	private List<Path> folders;
 
-	@Configurable(category="Magazines", contentsClass=MagazineProvider.class, ordered=true)
+	@Configurable(contentsClass=MagazineProvider.class, ordered=true)
 	private List<MagazineProvider> providers;
 
 	public boolean isEnabled() {

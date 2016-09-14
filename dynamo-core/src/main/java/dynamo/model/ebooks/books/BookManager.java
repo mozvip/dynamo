@@ -16,16 +16,16 @@ import dynamo.model.DownloadableStatus;
 
 public class BookManager implements Enableable {
 
-	@Configurable(category = "Books", contentsClass=Path.class, folder=true)
+	@Configurable(contentsClass=Path.class, folder=true)
 	private List<Path> folders = new ArrayList<>();
 
-	@Configurable(category = "Books")
+	@Configurable
 	private Language defaultLanguage = null;
 	
-	@Configurable(category="Books")
+	@Configurable
 	private List<String> blackList = null;
 	
-	@Configurable(category="Books", contentsClass=BookFinder.class)
+	@Configurable(contentsClass=BookFinder.class)
 	private List<BookFinder> providers = null;
 	
 	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );

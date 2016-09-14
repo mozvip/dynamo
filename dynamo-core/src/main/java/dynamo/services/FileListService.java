@@ -14,8 +14,8 @@ import javax.ws.rs.core.MediaType;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteFileTask;
 import dynamo.core.manager.DAOManager;
-import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.DownloadableFile;
+import dynamo.core.model.DownloadableUtilsDAO;
 
 @Path("file-list")
 public class FileListService {

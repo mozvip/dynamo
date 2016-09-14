@@ -46,40 +46,40 @@ import hclient.HTTPClient;
 
 public class MovieManager implements Reconfigurable {
 	
-	@Configurable( category="Movies", defaultValue="_1080p" )
+	@Configurable( defaultValue="_1080p" )
 	private VideoQuality defaultQuality;
 
-	@Configurable( category="Movies", defaultValue="EN", defaultLabel="Original Language" )
+	@Configurable( defaultValue="EN", defaultLabel="Original Language" )
 	private Language metaDataLanguage;
 
-	@Configurable( category="Movies", defaultValue="", defaultLabel="Original Language" )
+	@Configurable( defaultValue="", defaultLabel="Original Language" )
 	private Language audioLanguage;
 
-	@Configurable( category="Movies" )
+	@Configurable
 	private Language subtitlesLanguage;
 
-	@Configurable( category="Movies", contentsClass=Path.class )
+	@Configurable( contentsClass=Path.class )
 	private List<Path> folders;
 	
-	@Configurable(category="Movies", contentsClass=MovieProvider.class, ordered=true)
+	@Configurable(contentsClass=MovieProvider.class, ordered=true)
 	private List<MovieProvider> movieDownloadProviders;
 	
-	@Configurable( category="Movies", defaultValue="5000" )
+	@Configurable( defaultValue="5000" )
 	private int minimumSizeFor1080;
 
-	@Configurable( category="Movies", defaultValue="3000" )
+	@Configurable( defaultValue="3000" )
 	private int minimumSizeFor720;
 
-	@Configurable( category="Movies", defaultValue="20000" )
+	@Configurable( defaultValue="20000" )
 	private int maximumSizeFor1080;
 
-	@Configurable( category="Movies", defaultValue="10000" )
+	@Configurable( defaultValue="10000" )
 	private int maximumSizeFor720;
 	
-	@Configurable( category="Movies", defaultValue="7" )
+	@Configurable( defaultValue="7" )
 	private int minimumSuggestionRating;
 	
-	@Configurable( category="Movies", contentsClass=String.class )
+	@Configurable( contentsClass=String.class )
 	private Collection<String> wordsBlackList;	
 
 	private MovieDAO movieDAO = DAOManager.getInstance().getDAO( MovieDAO.class );

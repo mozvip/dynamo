@@ -20,6 +20,10 @@
     "SabNzbd.sabnzbdUrl" : "URL for SABNZBD (ex : http://ipaddress:8080/)",
     "SabNzbd.apiKey" : "API Key for SABNZBD",
 
+    "Transmission.transmissionURL" : "Transmission URL",
+    "Transmission.login" : "Transmission Login",
+    "Transmission.password" : "Transmission Password",
+
     "MagazineManager.folders" : "Folders for magazines storage",
     "BookManager.folders" : "Folders for books storage",
 

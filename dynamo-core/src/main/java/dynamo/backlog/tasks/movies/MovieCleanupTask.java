@@ -6,7 +6,7 @@ import dynamo.movies.model.MovieManager;
 
 public class MovieCleanupTask extends DaemonTask {
 	
-	@Configurable(category="Movies", defaultValue="false")
+	@Configurable(defaultValue="false")
 	private boolean rename = false;
 	
 	@Override

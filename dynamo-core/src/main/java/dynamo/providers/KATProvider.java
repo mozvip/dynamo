@@ -30,7 +30,7 @@ import hclient.HTTPClient;
 @ClassDescription(label="KickAssTorrents")
 public class KATProvider extends DownloadFinder implements EpisodeFinder, MusicAlbumFinder, TVShowSeasonProvider, MovieProvider, MagazineProvider, GameFinder {
 
-	@Configurable(category="Providers", defaultValue="http://kat.am")
+	@Configurable(ifExpression="KATProvider.enabled", defaultValue="http://kat.am")
 	private String baseURL = "http://kat.am";
 	
 	public String getBaseURL() {

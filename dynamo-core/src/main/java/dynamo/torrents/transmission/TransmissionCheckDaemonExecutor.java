@@ -18,7 +18,7 @@ import dynamo.model.result.SearchResultType;
 
 public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCheckDaemonTask> implements Enableable {
 
-	@Configurable(category="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor",  defaultValue="2.0")
+	@Configurable(ifExpression="dynamo.torrents.transmission.DownloadTorrentTransmissionExecutor",  defaultValue="2.0")
 	private float limitUploadRatio = 1.2f;
 
 	public float getLimitUploadRatio() {
