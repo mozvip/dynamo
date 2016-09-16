@@ -3,7 +3,7 @@
     "EZTVProvider.baseURL" : "Base URL for EZTV",
     "KATProvider.enabled" : "Enable Kick Ass Torrents",
     "KATProvider.baseURL" : "Base URL for Kick Ass Torrent",
-    "T411Provider.enabled" : "Enabled Torrent 411",
+    "T411Provider.enabled" : "Enable Torrent 411",
     "T411Provider.baseURL" : "Base URL for Torrent 411",
     "T411Provider.login" : "Login for Torrent 411",
     "T411Provider.password" : "Password for Torrent 411",
@@ -26,6 +26,8 @@
 
     "MagazineManager.folders" : "Folders for magazines storage",
     "BookManager.folders" : "Folders for books storage",
+
+    "TVShowManager.audioLanguage" : "Default Audio Language for TV Shows",
 
     "MusicManager.cleanDuringImport" : "Clean music folders during scan (remove useless files like *.nfo, ...)",
 
