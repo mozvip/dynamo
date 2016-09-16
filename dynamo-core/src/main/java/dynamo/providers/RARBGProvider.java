@@ -1,8 +1,14 @@
 package dynamo.providers;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 
@@ -10,17 +16,26 @@ import core.RegExp;
 import core.WebDocument;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
+import dynamo.core.VideoQuality;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
+import dynamo.finders.core.EpisodeFinder;
+import dynamo.finders.core.GameFinder;
+import dynamo.finders.core.MovieProvider;
+import dynamo.finders.core.TVShowSeasonProvider;
+import dynamo.games.model.VideoGame;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadLocation;
+import dynamo.model.ebooks.books.Book;
+import dynamo.model.ebooks.books.BookFinder;
+import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import dynamo.movies.model.Movie;
 import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 
 @ClassDescription(label="RARBG")
-public class RARBGProvider extends DownloadFinder implements MovieSuggester {
+public class RARBGProvider extends DownloadFinder implements MovieSuggester, GameFinder, MovieProvider, EpisodeFinder, TVShowSeasonProvider, BookFinder {
 	
 	private final static int MAX_PAGES = 10;
 	
@@ -98,6 +113,92 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester {
 	public void configureProvider() throws Exception {
 		webClient.getOptions().setUseInsecureSSL( true );
 		webClient.getOptions().setCssEnabled( false );
+	}
+	
+	protected List<SearchResult> extractResultsFromURL( String url ) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+		
+		List<SearchResult> results = new ArrayList<>();
+		
+		Page webPage = webClient.getPage( url );
+		WebDocument currentPage = new WebDocument(url, webPage.getWebResponse().getContentAsString());		
+		Elements rows = currentPage.jsoup("tr.lista2");
+		for (Element element : rows) {
+			Element torrentLink = element.child(1).select("a").first();
+			String title = torrentLink.attr("title");
+			String torrentPageURL = torrentLink.absUrl("href");
+			String size = element.child(3).text();
+			
+			Page torrentPage = webClient.getPage(torrentPageURL);
+			WebDocument torrentPageDocument = new WebDocument(url, torrentPage.getWebResponse().getContentAsString());
+			
+			Element torrentDownloadLink = torrentPageDocument.jsoupSingle("a[href*=/download.php?id=]");
+
+			results.add( new SearchResult( this, SearchResultType.TORRENT, title, torrentDownloadLink.absUrl("href"), torrentPageURL, parseSize(size)) );
+		}
+		
+		return results;
+	}
+
+	@Override
+	public List<SearchResult> findGame(VideoGame videoGame) throws Exception {
+		
+		int[] categories = new int[] {};
+		
+		switch (videoGame.getPlatform()) {
+		case PS3:
+			categories = new int[] { 40 };
+			break;
+
+		case XBOX360:
+			categories = new int[] { 32 };
+			break;
+
+		case PC:
+			categories = new int[] { 27, 28 };
+			break;
+
+		default:
+			break;
+		}
+
+		return extractResultsFromURL(buildURL(videoGame.getName(), categories));
+	}
+
+	private String buildURL(String searchString, int[] categories) {
+		String url = baseURL + "/torrents.php?name" + searchString;
+		for (int category : categories) {
+			url += "&category[]=" + category;
+		}
+		return url;
+	}
+
+	@Override
+	public List<SearchResult> findBook(Book book) throws Exception {
+		return extractResultsFromURL( buildURL( book.getName(), new int[] { 35 } ));
+	}
+
+	@Override
+	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int seasonNumber,
+			int episodeNumber) throws Exception {
+		return extractResultsFromURL( buildURL( String.format("%s S%02dE%02d", seriesName, seasonNumber, episodeNumber), new int[] { 18, 41 } ));
+	}
+
+	@Override
+	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage,
+			int absoluteEpisodeNumber) throws Exception {
+		return extractResultsFromURL( buildURL( String.format("%s %d", seriesName, absoluteEpisodeNumber), new int[] { 18, 41 } ));
+	}
+
+	@Override
+	public List<SearchResult> findMovie(String name, int year, VideoQuality videoQuality, Language audioLanguage,
+			Language subtitlesLanguage) throws Exception {
+		return extractResultsFromURL( buildURL( String.format("%s %d", name, year), new int[] { 14, 17, 42, 44, 45, 46, 47, 48 } ));
+	}
+
+	@Override
+	public List<SearchResult> findDownloadsForSeason(String seriesName, Language audioLanguage, int seasonNumber)
+			throws Exception {
+		return extractResultsFromURL( buildURL( String.format("%s S%02d", seriesName, seasonNumber), new int[] { 18, 41 } ) );
 	}
 
 }

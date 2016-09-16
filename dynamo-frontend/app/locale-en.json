@@ -1,4 +1,5 @@
 {
+
     "EZTVProvider.enabled" : "Enable EZTV",
     "EZTVProvider.baseURL" : "Base URL for EZTV",
     "KATProvider.enabled" : "Enable Kick Ass Torrents",

@@ -32,4 +32,14 @@
     <changeSet author="mozvip" id="1406620788324-52">
         <addForeignKeyConstraint baseColumnNames="LOGITEM_ID" baseTableName="LOGSTACKTRACEELEMENT" constraintName="FK_LOGSTACKTRACEELEMENT_LOGITEM_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="LOGITEM"/>
     </changeSet>
+    <changeSet author="mozvip" id="1">
+    	<createTable tableName="USERS">
+    		<column name="EMAIL" type="VARCHAR(512)">
+    			<constraints nullable="false" primaryKey="true" primaryKeyName="USERS_PK" />
+    		</column>
+    		<column name="PASSWORD" type="VARCHAR(512)"/>
+    		<column name="LAST_CONNECTION_DATE" type="TIMESTAMP" />
+    		<column name="PASSWORD_CHANGED_DATE" type="TIMESTAMP" />
+    	</createTable>
+    </changeSet>
 </databaseChangeLog>

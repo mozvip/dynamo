@@ -15,7 +15,7 @@ angular.module('dynamo.login', ['ngRoute', 'ngResource'])
     $scope.password = '';
 
     $scope.login = function() {
-
+      alert($scope.password);
     }
 
 }]);
