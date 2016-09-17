@@ -41,7 +41,8 @@ public class FileListService {
 	
 	@GET
 	@Path("/download")
-	public Response downloadFile( @QueryParam("path") java.nio.file.Path path ) throws IOException {
+	public Response downloadFile( @QueryParam("path") String pathStr ) throws IOException {
+		java.nio.file.Path path = Paths.get( pathStr );
 		DownloadableFile file = downloadableDAO.getFile(path);
 
 		String fileName = path.getFileName().toString();
