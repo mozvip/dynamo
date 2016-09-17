@@ -19,6 +19,7 @@ import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
+import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
@@ -90,8 +91,11 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 					// Collection downloadLocations = new ArrayList<>();
 					// Elements relatedRows = currentPage.jsoup("tr.lista2");
 					
-					
-					DownloadableManager.getInstance().saveDownloadLocation(suggestion.getId(), title, "RARBG", this.getClass(), torrentPageURL, parseSize(size), dl);
+					try {
+						DownloadableManager.getInstance().saveDownloadLocation(suggestion.getId(), title, "RARBG", this.getClass(), torrentPageURL, parseSize(size), dl);
+					} catch (Exception e) {
+						ErrorManager.getInstance().reportThrowable( e );
+					}
 				} else {
 					
 				}

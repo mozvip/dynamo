@@ -77,7 +77,7 @@ public class SubTitleDownloader implements Reconfigurable {
 		}
 
 		if (selectedSubTitles != null && selectedSubTitles.getScore() >= 6) {
-			Files.write(destinationSRT, selectedSubTitles.getData(), StandardOpenOption.WRITE);
+			Files.write(destinationSRT, selectedSubTitles.getData(), StandardOpenOption.CREATE);
 			return true;
 		}
 		
