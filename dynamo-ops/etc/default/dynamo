@@ -2,6 +2,8 @@
 
 # pulled in from the init script; makes things easier.
 NAME=dynamo
+HTTP_PORT=8081
+
 # user and group to be invoked as (default to $NAME)
 SERVICE_USER=$NAME
 SERVICE_GROUP=$NAME
