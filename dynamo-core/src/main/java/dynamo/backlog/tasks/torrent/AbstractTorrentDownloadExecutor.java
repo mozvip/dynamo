@@ -31,7 +31,7 @@ public abstract class AbstractTorrentDownloadExecutor extends TaskExecutor<Downl
 	
 		Path filePath = task.getTorrentFilePath();
 		if (filePath == null && task.getURL() != null) {
-			if (!task.getURL().getUrl().startsWith("http")) {
+			if (task.getURL().getUrl().startsWith("http")) {
 				filePath = Files.createTempFile("dynamo", ".torrent");
 				String contentType = HTTPClient.getInstance().downloadToFile(task.getURL(), filePath, 0);
 				
