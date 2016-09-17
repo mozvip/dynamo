@@ -1,7 +1,7 @@
 package dynamo.model.result;
 
 import dynamo.core.DownloadFinder;
-import dynamo.core.Labelized;
+import dynamo.core.configuration.ClassDescription;
 
 public class SearchResult {
 
@@ -25,7 +25,10 @@ public class SearchResult {
 		this.referer = referer;
 		this.type = type;
 		this.providerClass = downloadFinder.getClass();
-		this.providerName = (downloadFinder instanceof Labelized) ? ((Labelized)downloadFinder).getLabel() : downloadFinder.toString();
+		
+		ClassDescription classDescription = downloadFinder.getClass().getAnnotation(ClassDescription.class);
+		this.providerName = (classDescription != null) ? classDescription.label() : downloadFinder.toString();
+		
 		this.sizeInMegs = sizeInMegs;
 	}
 

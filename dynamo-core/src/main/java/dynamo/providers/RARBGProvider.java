@@ -165,7 +165,7 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 	}
 
 	private String buildURL(String searchString, int[] categories) {
-		String url = baseURL + "/torrents.php?name" + searchString;
+		String url = baseURL + "/torrents.php?search=" + searchString;
 		for (int category : categories) {
 			url += "&category[]=" + category;
 		}

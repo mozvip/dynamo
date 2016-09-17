@@ -206,7 +206,7 @@ public class DownloadableManager {
 			
 			searchResultDAO.setDownloaded( result.getUrl() );
 			DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SNATCHED,
-					String.format("<a href='%s'>%s</a> has been snatched from %s : %s", downloadable.getRelativeLink() + "/SNATCHED", downloadable.toString(), result.getProviderName(), result.getTitle()) );
+					String.format("<a href='%s'>%s</a> has been snatched from <a href='%s' target='_blank'>%s</a> : %s", downloadable.getRelativeLink() + "/SNATCHED", downloadable.toString(), result.getReferer(), result.getProviderName(), result.getTitle()) );
 			downloadableDAO.updateLabel(downloadable.getId(), result.getTitle());
 			
 		} else {
