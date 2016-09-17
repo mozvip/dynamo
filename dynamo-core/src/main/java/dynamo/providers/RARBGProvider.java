@@ -24,11 +24,14 @@ import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
 import dynamo.finders.core.TVShowSeasonProvider;
+import dynamo.finders.music.MusicAlbumFinder;
+import dynamo.finders.music.MusicAlbumSearchException;
 import dynamo.games.model.VideoGame;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadLocation;
 import dynamo.model.ebooks.books.Book;
 import dynamo.model.ebooks.books.BookFinder;
+import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import dynamo.movies.model.Movie;
@@ -36,7 +39,7 @@ import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 
 @ClassDescription(label="RARBG")
-public class RARBGProvider extends DownloadFinder implements MovieSuggester, GameFinder, MovieProvider, EpisodeFinder, TVShowSeasonProvider, BookFinder {
+public class RARBGProvider extends DownloadFinder implements MovieSuggester, GameFinder, MovieProvider, EpisodeFinder, TVShowSeasonProvider, BookFinder, MusicAlbumFinder {
 	
 	private final static int MAX_PAGES = 10;
 	
@@ -203,6 +206,17 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 	public List<SearchResult> findDownloadsForSeason(String seriesName, Language audioLanguage, int seasonNumber)
 			throws Exception {
 		return extractResultsFromURL( buildURL( String.format("%s S%02d", seriesName, seasonNumber), new int[] { 18, 41 } ) );
+	}
+
+	@Override
+	public List<SearchResult> findMusicAlbum(String artist, String album, MusicQuality quality)
+			throws MusicAlbumSearchException {
+		int category = ( quality == MusicQuality.COMPRESSED ? 23 : 25 );
+		try {
+			return extractResultsFromURL( buildURL( String.format("%s %s", artist, album), new int[] { category } ) );
+		} catch (Exception e) {
+			throw new MusicAlbumSearchException( e );
+		}
 	}
 
 }
