@@ -87,17 +87,17 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 					WebDocument torrentPageDocument = new WebDocument(url, torrentPage.getWebResponse().getContentAsString());
 					
 					Element torrentDownloadLink = torrentPageDocument.jsoupSingle("a[href*=/download.php?id=]");
+					if (torrentDownloadLink != null) {
 					
-					DownloadLocation dl = new DownloadLocation( SearchResultType.TORRENT, torrentDownloadLink.absUrl("href") );
-						
-					// TODO
-					// Collection downloadLocations = new ArrayList<>();
-					// Elements relatedRows = currentPage.jsoup("tr.lista2");
-					
-					try {
-						DownloadableManager.getInstance().saveDownloadLocation(suggestion.getId(), title, "RARBG", this.getClass(), torrentPageURL, parseSize(size), dl);
-					} catch (Exception e) {
-						ErrorManager.getInstance().reportThrowable( e );
+						DownloadLocation dl = new DownloadLocation( SearchResultType.TORRENT, torrentDownloadLink.absUrl("href") );
+						// TODO
+						// Collection downloadLocations = new ArrayList<>();
+						// Elements relatedRows = currentPage.jsoup("tr.lista2");
+						try {
+							DownloadableManager.getInstance().saveDownloadLocation(suggestion.getId(), title, "RARBG", this.getClass(), torrentPageURL, parseSize(size), dl);
+						} catch (Exception e) {
+							ErrorManager.getInstance().reportThrowable( e );
+						}
 					}
 				} else {
 					
@@ -139,8 +139,9 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 			WebDocument torrentPageDocument = new WebDocument(url, torrentPage.getWebResponse().getContentAsString());
 			
 			Element torrentDownloadLink = torrentPageDocument.jsoupSingle("a[href*=/download.php?id=]");
-
-			results.add( new SearchResult( this, SearchResultType.TORRENT, title, torrentDownloadLink.absUrl("href"), torrentPageURL, parseSize(size)) );
+			if (torrentDownloadLink != null) {
+				results.add( new SearchResult( this, SearchResultType.TORRENT, title, torrentDownloadLink.absUrl("href"), torrentPageURL, parseSize(size)) );
+			}
 		}
 		
 		return results;
