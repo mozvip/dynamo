@@ -2,6 +2,7 @@ package dynamo.services;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -12,8 +13,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+
+import org.apache.commons.io.IOUtils;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteFileTask;
@@ -47,9 +52,16 @@ public class FileListService {
 
 		String fileName = path.getFileName().toString();
 		
+		
 		try (InputStream input = Files.newInputStream(path)) {
-			return Response.ok(
-					input, MediaType.APPLICATION_OCTET_STREAM)
+			StreamingOutput stream = new StreamingOutput() {
+				@Override
+				public void write(OutputStream output) throws IOException, WebApplicationException {
+					IOUtils.copy(input, output);
+				}
+			};
+			return Response.ok( 
+					stream, MediaType.APPLICATION_OCTET_STREAM)
 					.header("Content-Length", file.getSize())
 					.header("content-disposition","attachment; filename = " + fileName)
 					.build();
