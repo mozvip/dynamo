@@ -187,8 +187,8 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
           }
           return true;
         }
-  
-        scope.changeValue = function() {
+
+        scope.recalculateValue = function() {
           var itemValues = scope.item.values.map( function( element ) {
             return element.value;
           });          
@@ -196,25 +196,25 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
             return currentValue + ';' + previousValue;
           } );
         }
-        scope.moveUp = function( index ) {
-          
+  
+        scope.changeValue = function() {
+          if (scope.item.remainingValues) {
+            scope.refreshRemainingValues();
+          }
+          scope.recalculateValue();
         }
-        scope.moveDown = function( index ) {
 
-        }
         scope.removeRow = function( index ) {
           scope.item.values.splice( index, 1 );
           scope.changeValue();
         }
+
         scope.addRow = function() {
           var newItem = {};
           if (scope.item.newValue) {
             newItem['value'] = scope.item.newValue;
           }
           scope.item.values.push( newItem );
-          if (scope.item.remainingValues) {
-            scope.refreshRemainingValues();
-          }
           scope.changeValue();
         }
       }
