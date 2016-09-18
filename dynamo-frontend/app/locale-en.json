@@ -18,6 +18,9 @@
     "NZBIndexNLProvider.enabled" : "Enable NZBIndex.nl",
     "BTDigg.enabled" : "Enable BTDigg",
 
+    "Authorise.Trakt" : "Authorize Trakt",
+    "Trak.PIN" : "Trakt PIN code",
+
     "SabNzbd.sabnzbdUrl" : "URL for SABNZBD (ex : http://ipaddress:8080/)",
     "SabNzbd.apiKey" : "API Key for SABNZBD",
 
