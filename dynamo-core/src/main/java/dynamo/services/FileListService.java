@@ -65,9 +65,9 @@ public class FileListService {
 //					out.flush();
 //				}
 //			};
-		return Response.ok(in).type(MediaType.APPLICATION_OCTET_STREAM)
+		return Response.ok(in)
 				.header("Content-Length", Files.size(path))
-				.header("content-Disposition", "attachment; filename=\"" + fileName + "\"")
+				.header("content-Disposition", "inline; filename=\"" + fileName + "\"")
 				.header("Content-Type", Files.probeContentType(path))
 				.build();
 	}
