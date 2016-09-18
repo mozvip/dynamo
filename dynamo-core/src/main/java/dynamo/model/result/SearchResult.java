@@ -1,7 +1,7 @@
 package dynamo.model.result;
 
 import dynamo.core.DownloadFinder;
-import dynamo.core.configuration.ClassDescription;
+import dynamo.core.manager.DynamoObjectFactory;
 
 public class SearchResult {
 
@@ -26,8 +26,7 @@ public class SearchResult {
 		this.type = type;
 		this.providerClass = downloadFinder.getClass();
 		
-		ClassDescription classDescription = downloadFinder.getClass().getAnnotation(ClassDescription.class);
-		this.providerName = (classDescription != null) ? classDescription.label() : downloadFinder.toString();
+		this.providerName = DynamoObjectFactory.getClassDescription( downloadFinder.getClass() );
 		
 		this.sizeInMegs = sizeInMegs;
 	}

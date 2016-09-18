@@ -15,6 +15,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import dynamo.core.configuration.ClassDescription;
+
 public class DynamoObjectFactory<T> {
 	
 	private static Reflections reflections = new Reflections("dynamo", new FieldAnnotationsScanner(), new SubTypesScanner( false ), new TypeAnnotationsScanner());
@@ -80,5 +82,12 @@ public class DynamoObjectFactory<T> {
 		}
 		return instances;
     }
+    
+	public static String getClassDescription( Class<?> klass ) {
+		ClassDescription description = klass.getAnnotation(ClassDescription.class);
+		String label = description != null ? description.label() : klass.getName();
+		return label;
+	}
+    
   
 }

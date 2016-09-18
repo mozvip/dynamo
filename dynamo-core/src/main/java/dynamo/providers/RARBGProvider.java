@@ -55,14 +55,22 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 	public void setBaseURL(String baseURL) {
 		this.baseURL = baseURL;
 	}
+	
+	protected WebDocument getDocument( String url ) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+		try {
+			Thread.sleep( 500 );
+		} catch (InterruptedException e) {
+		}
+		Page webPage = webClient.getPage( url );
+		return new WebDocument(url, webPage.getWebResponse().getContentAsString());
+	}
 
 	@Override
 	public void suggestMovies() throws Exception {
 		
 		for( int page=1; page<=MAX_PAGES; page++) {
 			String url = String.format("%s/torrents.php?category=movies&page=%d", baseURL, page);
-			Page webPage = webClient.getPage( url );
-			WebDocument currentPage = new WebDocument(url, webPage.getWebResponse().getContentAsString());
+			WebDocument currentPage = getDocument(url);
 			
 			Elements rows = currentPage.jsoup("tr.lista2");
 			for (Element element : rows) {
@@ -83,8 +91,7 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 				if (imdbId != null) {
 					Movie suggestion = MovieManager.getInstance().suggestImdbId(imdbId, null, Language.EN, torrentPageURL);
 					
-					Page torrentPage = webClient.getPage(torrentPageURL);
-					WebDocument torrentPageDocument = new WebDocument(url, torrentPage.getWebResponse().getContentAsString());
+					WebDocument torrentPageDocument = getDocument( torrentPageURL );
 					
 					Element torrentDownloadLink = torrentPageDocument.jsoupSingle("a[href*=/download.php?id=]");
 					if (torrentDownloadLink != null) {
@@ -126,8 +133,7 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 		
 		List<SearchResult> results = new ArrayList<>();
 		
-		Page webPage = webClient.getPage( url );
-		WebDocument currentPage = new WebDocument(url, webPage.getWebResponse().getContentAsString());		
+		WebDocument currentPage = getDocument( url );	
 		Elements rows = currentPage.jsoup("tr.lista2");
 		for (Element element : rows) {
 			Element torrentLink = element.child(1).select("a").first();
