@@ -87,8 +87,8 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   fileListService.delete = function( path ) {
     return BackendService.delete('file-list?path=' + path);
   }
-  fileListService.download = function( path ) {
-    return BackendService.get('file-list/download?path=' + path);
+  fileListService.downloadURL = function( path ) {
+    return BackendService.getBackendURL() + 'file-list/download?path=' + path;
   }
   fileListService.openModal = function( downloadable ) {
     return $uibModal.open({
@@ -114,8 +114,8 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     $uibModalInstance.dismiss('cancel');
   };
 
-  $scope.download = function( file ) {
-    fileListService.download( file );
+  $scope.downloadURL = function( file ) {
+    return fileListService.downloadURL( file );
   }
 
   $scope.delete = function( file ) {

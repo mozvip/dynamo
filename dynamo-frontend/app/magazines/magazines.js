@@ -75,6 +75,13 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
       $scope.pageChanged();
     }
 
+    $scope.delete = function (downloadable) {
+      downloadableService.delete(downloadable.id);
+      $scope.allItems = filterFilter($scope.allItems, { 'id': '!' + downloadable.id });
+      $scope.filteredList = filterFilter($scope.filteredList, { 'id': '!' + downloadable.id });
+      $scope.pageChanged();
+    }
+
     $scope.pageChanged = function () {
       var start = ($scope.currentPage - 1) * 24;
       $scope.pageContents = $scope.filteredList.slice(start, start + 24);
