@@ -14,7 +14,7 @@
     <tr ng-repeat="logItem in log | limitTo:100" ng-class="{success: logItem.severity=='DEBUG', warning: logItem.severity=='WARNING', danger:logItem.severity=='ERROR', info:logItem.severity=='INFO'}">
         <td>{{logItem.date | date:'medium'}}</td>
         <td>{{logItem.severity}}</td>
-        <td><span ng-bind-html="logItem.message" /></td>
+        <td><a ng-click="openStackTrace(logItem)"><span ng-bind-html="logItem.message" /></a></td>
         <td><span ng-bind-html="logItem.taskName" /></td>
     </tr>
 </table>
