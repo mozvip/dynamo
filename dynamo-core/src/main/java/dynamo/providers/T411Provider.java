@@ -19,6 +19,8 @@ import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
+import dynamo.core.exceptions.LoginFailedException;
+import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.GameFinder;
@@ -87,8 +89,8 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		if (loginPage.jsoupSingle("a.logout") == null) { // not already logged in
 			WebDocument newPage = client.submit( loginPage.jsoupSingle("form#loginform"), "login="+login, "password="+password ).getDocument();
 			if ( newPage.jsoupSingle("a.logout") == null) {
-				ErrorManager.getInstance().reportError("Login failed for " + toString() + ", disabling provider");
 				setEnabled( false );
+				throw new LoginFailedException( DynamoObjectFactory.getClassDescription( this.getClass()), login );
 			}
 		}
 	}

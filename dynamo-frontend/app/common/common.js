@@ -87,6 +87,9 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   fileListService.delete = function( path ) {
     return BackendService.delete('file-list?path=' + path);
   }
+  fileListService.downloadURL = function( path ) {
+    return BackendService.getBackendURL() + 'file-list/download?path=' + path;
+  }
   fileListService.openModal = function( downloadable ) {
     return $uibModal.open({
       animation: false,
@@ -110,6 +113,10 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel');
   };
+
+  $scope.downloadURL = function( file ) {
+    return fileListService.downloadURL( file );
+  }
 
   $scope.delete = function( file ) {
     fileListService.delete( file.filePath ).then( function() {
@@ -187,8 +194,8 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
           }
           return true;
         }
-  
-        scope.changeValue = function() {
+
+        scope.recalculateValue = function() {
           var itemValues = scope.item.values.map( function( element ) {
             return element.value;
           });          
@@ -196,25 +203,25 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
             return currentValue + ';' + previousValue;
           } );
         }
-        scope.moveUp = function( index ) {
-          
+  
+        scope.changeValue = function() {
+          if (scope.item.remainingValues) {
+            scope.refreshRemainingValues();
+          }
+          scope.recalculateValue();
         }
-        scope.moveDown = function( index ) {
 
-        }
         scope.removeRow = function( index ) {
           scope.item.values.splice( index, 1 );
           scope.changeValue();
         }
+
         scope.addRow = function() {
           var newItem = {};
           if (scope.item.newValue) {
             newItem['value'] = scope.item.newValue;
           }
           scope.item.values.push( newItem );
-          if (scope.item.remainingValues) {
-            scope.refreshRemainingValues();
-          }
           scope.changeValue();
         }
       }

@@ -11,6 +11,7 @@ angular.module('dynamo', [
   'ui.bootstrap',
   'ng-sweet-alert',
   'pascalprecht.translate',
+  'dndLists',
   'dynamo.common',
   'dynamo.trakt',
   'dynamo.log',

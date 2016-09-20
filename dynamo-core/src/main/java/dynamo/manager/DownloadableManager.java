@@ -189,11 +189,11 @@ public class DownloadableManager {
 				}
 				String absoluteURL = String.format("http://%s:%d/%s", DynamoApplication.getInstance().getIpAddress(),  DynamoServer.getInstance().getPort(), downloadable.getRelativeLink() );
 				if (notifyOnDownload && newStatus == DownloadableStatus.DOWNLOADED && PushBullet.getInstance().isEnabled()) {
-					absoluteURL += "/DOWNLOADED";
+					absoluteURL += "DOWNLOADED";
 					PushBullet.getInstance().pushLink( "Dynamo has downloaded something", downloadable.toString(), absoluteURL );
 				}
 				if (notifyOnSnatch && newStatus == DownloadableStatus.SNATCHED && PushBullet.getInstance().isEnabled()) {
-					absoluteURL += "/SNATCHED";
+					absoluteURL += "SNATCHED";
 					PushBullet.getInstance().pushLink( "Dynamo has snatched something", downloadable.toString(), absoluteURL );
 				}
 			}
@@ -206,13 +206,13 @@ public class DownloadableManager {
 			
 			searchResultDAO.setDownloaded( result.getUrl() );
 			DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SNATCHED,
-					String.format("<a href='%s'>%s</a> has been snatched from %s : %s", downloadable.getRelativeLink() + "/SNATCHED", downloadable.toString(), result.getProviderName(), result.getTitle()) );
+					String.format("<a href='%s'>%s</a> has been snatched from <a href='%s' target='_blank'>%s</a> : %s", downloadable.getRelativeLink() + "SNATCHED", downloadable.toString(), result.getReferer(), result.getProviderName(), result.getTitle()) );
 			downloadableDAO.updateLabel(downloadable.getId(), result.getTitle());
 			
 		} else {
 			
 			DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.SNATCHED,
-					String.format("<a href='%s'>%s</a> has been snatched", downloadable.getRelativeLink() + "/SNATCHED", downloadable.toString()) );
+					String.format("<a href='%s'>%s</a> has been snatched", downloadable.getRelativeLink() + "SNATCHED", downloadable.toString()) );
 			
 		}
 	}
@@ -319,7 +319,7 @@ public class DownloadableManager {
 		}
 		
 		if (filesFound) {
-			logStatusChange( downloadable, DownloadableStatus.DOWNLOADED, String.format("<a href='%s'>%s</a> has been downloaded", downloadable.getRelativeLink() + "/DOWNLOADED", downloadable.toString()) );
+			logStatusChange( downloadable, DownloadableStatus.DOWNLOADED, String.format("<a href='%s'>%s</a> has been downloaded", downloadable.getRelativeLink() + "DOWNLOADED", downloadable.toString()) );
 		}
 
 	}

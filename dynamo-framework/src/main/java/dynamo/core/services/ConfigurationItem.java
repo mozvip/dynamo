@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import dynamo.core.Labelized;
-import dynamo.core.configuration.ClassDescription;
 import dynamo.core.manager.DynamoObjectFactory;
 
 @JsonInclude(Include.NON_NULL)
@@ -50,8 +49,7 @@ public class ConfigurationItem {
 					if (Modifier.isAbstract( klass.getModifiers() )) {
 						continue;
 					}
-					ClassDescription annotation = klass.getAnnotation( ClassDescription.class );
-					String label = annotation != null ? annotation.label() : klass.getName();
+					String label = DynamoObjectFactory.getClassDescription(klass);
 					allowedValues.put( klass.getName(), label );
 				}
 			}

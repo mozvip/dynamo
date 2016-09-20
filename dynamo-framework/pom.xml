@@ -21,11 +21,6 @@
   </build>
   <dependencies>
   	<dependency>
-  		<groupId>org.apache.commons</groupId>
-  		<artifactId>commons-lang3</artifactId>
-  		<version>3.4</version>
-  	</dependency>
-  	<dependency>
   		<groupId>org.slf4j</groupId>
   		<artifactId>slf4j-api</artifactId>
   		<version>1.7.21</version>
@@ -51,11 +46,6 @@
   		<version>1.7.21</version>
   	</dependency>
   	<dependency>
-  		<groupId>org.glassfish.web</groupId>
-  		<artifactId>el-impl</artifactId>
-  		<version>2.2</version>
-  	</dependency>
-  	<dependency>
   		<groupId>javax.servlet</groupId>
   		<artifactId>jstl</artifactId>
   		<version>1.2</version>
@@ -78,7 +68,7 @@
   	<dependency>
   		<groupId>io.undertow</groupId>
   		<artifactId>undertow-websockets-jsr</artifactId>
-  		<version>1.4.0.Final</version>
+  		<version>1.4.2.Final</version>
   	</dependency>
   	<dependency>
   		<groupId>com.thetransactioncompany</groupId>
@@ -115,6 +105,11 @@
   		<groupId>com.h2database</groupId>
   		<artifactId>h2</artifactId>
   		<version>1.4.192</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.glassfish.web</groupId>
+  		<artifactId>el-impl</artifactId>
+  		<version>2.2</version>
   	</dependency>
   </dependencies>
 </project>

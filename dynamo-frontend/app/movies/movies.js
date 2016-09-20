@@ -128,6 +128,11 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
     $scope.removeFromList( downloadable );
   }
 
+  $scope.redownload = function( downloadable ) {
+    downloadableService.redownload( downloadable.id );
+    downloadable.status = 'WANTED';
+  }
+
   $scope.filterChanged = function() {
     // FIXME : optimize in one filter call
     $scope.filteredList = filterFilter($scope.allItems, {'name': $scope.filter });

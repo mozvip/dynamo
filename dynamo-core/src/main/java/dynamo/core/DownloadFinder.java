@@ -8,9 +8,11 @@ import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.NotAlwaysReady;
 import dynamo.core.configuration.Reconfigurable;
+import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
 import hclient.HTTPClient;
 import hclient.RegExpMatcher;
@@ -81,7 +83,8 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 				try {
 					configureProvider();
 				} catch (Exception e) {
-					ErrorManager.getInstance().reportThrowable(e);
+					String label = DynamoObjectFactory.getClassDescription( this.getClass() );
+					ErrorManager.getInstance().reportThrowable(String.format("Configuration of %s failed", label), e);
 					setEnabled(false);
 				}
 				ready = true;

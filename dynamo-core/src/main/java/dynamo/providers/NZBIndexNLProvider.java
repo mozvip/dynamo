@@ -77,7 +77,7 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 		
 		int minimumSize = MovieManager.getInstance().getMinimumSizeForMovie(videoQuality);
 		
-		String searchURL = String.format( "%s/search/?q=%s" + SEARCH_SUFFIX, BASE_URL, plus(name), minimumSize );
+		String searchURL = String.format( "%s/search/?q=%s+%d" + SEARCH_SUFFIX, BASE_URL, plus(name), year, minimumSize );
 		return extractResults( searchURL );
 	}
 

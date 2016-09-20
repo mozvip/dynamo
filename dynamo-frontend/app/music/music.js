@@ -50,9 +50,7 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
 
     $scope.redownload = function (downloadable) {
       downloadableService.redownload(downloadable.id);
-      $scope.allItems = filterFilter($scope.allItems, { 'id': '!' + downloadable.id });
-      $scope.filteredList = filterFilter($scope.filteredList, { 'id': '!' + downloadable.id });
-      $scope.pageChanged();
+      downloadable.status = 'WANTED';
     }
 
     $scope.pageChanged = function () {

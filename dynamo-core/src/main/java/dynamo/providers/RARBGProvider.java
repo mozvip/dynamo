@@ -19,15 +19,19 @@ import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
+import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.GameFinder;
 import dynamo.finders.core.MovieProvider;
 import dynamo.finders.core.TVShowSeasonProvider;
+import dynamo.finders.music.MusicAlbumFinder;
+import dynamo.finders.music.MusicAlbumSearchException;
 import dynamo.games.model.VideoGame;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadLocation;
 import dynamo.model.ebooks.books.Book;
 import dynamo.model.ebooks.books.BookFinder;
+import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import dynamo.movies.model.Movie;
@@ -35,7 +39,7 @@ import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 
 @ClassDescription(label="RARBG")
-public class RARBGProvider extends DownloadFinder implements MovieSuggester, GameFinder, MovieProvider, EpisodeFinder, TVShowSeasonProvider, BookFinder {
+public class RARBGProvider extends DownloadFinder implements MovieSuggester, GameFinder, MovieProvider, EpisodeFinder, TVShowSeasonProvider, BookFinder, MusicAlbumFinder {
 	
 	private final static int MAX_PAGES = 10;
 	
@@ -51,14 +55,22 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 	public void setBaseURL(String baseURL) {
 		this.baseURL = baseURL;
 	}
+	
+	protected WebDocument getDocument( String url ) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+		try {
+			Thread.sleep( 500 );
+		} catch (InterruptedException e) {
+		}
+		Page webPage = webClient.getPage( url );
+		return new WebDocument(url, webPage.getWebResponse().getContentAsString());
+	}
 
 	@Override
 	public void suggestMovies() throws Exception {
 		
 		for( int page=1; page<=MAX_PAGES; page++) {
 			String url = String.format("%s/torrents.php?category=movies&page=%d", baseURL, page);
-			Page webPage = webClient.getPage( url );
-			WebDocument currentPage = new WebDocument(url, webPage.getWebResponse().getContentAsString());
+			WebDocument currentPage = getDocument(url);
 			
 			Elements rows = currentPage.jsoup("tr.lista2");
 			for (Element element : rows) {
@@ -79,19 +91,21 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 				if (imdbId != null) {
 					Movie suggestion = MovieManager.getInstance().suggestImdbId(imdbId, null, Language.EN, torrentPageURL);
 					
-					Page torrentPage = webClient.getPage(torrentPageURL);
-					WebDocument torrentPageDocument = new WebDocument(url, torrentPage.getWebResponse().getContentAsString());
+					WebDocument torrentPageDocument = getDocument( torrentPageURL );
 					
 					Element torrentDownloadLink = torrentPageDocument.jsoupSingle("a[href*=/download.php?id=]");
+					if (torrentDownloadLink != null) {
 					
-					DownloadLocation dl = new DownloadLocation( SearchResultType.TORRENT, torrentDownloadLink.absUrl("href") );
-						
-					// TODO
-					// Collection downloadLocations = new ArrayList<>();
-					// Elements relatedRows = currentPage.jsoup("tr.lista2");
-					
-					
-					DownloadableManager.getInstance().saveDownloadLocation(suggestion.getId(), title, "RARBG", this.getClass(), torrentPageURL, parseSize(size), dl);
+						DownloadLocation dl = new DownloadLocation( SearchResultType.TORRENT, torrentDownloadLink.absUrl("href") );
+						// TODO
+						// Collection downloadLocations = new ArrayList<>();
+						// Elements relatedRows = currentPage.jsoup("tr.lista2");
+						try {
+							DownloadableManager.getInstance().saveDownloadLocation(suggestion.getId(), title, "RARBG", this.getClass(), torrentPageURL, parseSize(size), dl);
+						} catch (Exception e) {
+							ErrorManager.getInstance().reportThrowable( e );
+						}
+					}
 				} else {
 					
 				}
@@ -119,8 +133,7 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 		
 		List<SearchResult> results = new ArrayList<>();
 		
-		Page webPage = webClient.getPage( url );
-		WebDocument currentPage = new WebDocument(url, webPage.getWebResponse().getContentAsString());		
+		WebDocument currentPage = getDocument( url );	
 		Elements rows = currentPage.jsoup("tr.lista2");
 		for (Element element : rows) {
 			Element torrentLink = element.child(1).select("a").first();
@@ -132,8 +145,9 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 			WebDocument torrentPageDocument = new WebDocument(url, torrentPage.getWebResponse().getContentAsString());
 			
 			Element torrentDownloadLink = torrentPageDocument.jsoupSingle("a[href*=/download.php?id=]");
-
-			results.add( new SearchResult( this, SearchResultType.TORRENT, title, torrentDownloadLink.absUrl("href"), torrentPageURL, parseSize(size)) );
+			if (torrentDownloadLink != null) {
+				results.add( new SearchResult( this, SearchResultType.TORRENT, title, torrentDownloadLink.absUrl("href"), torrentPageURL, parseSize(size)) );
+			}
 		}
 		
 		return results;
@@ -165,7 +179,7 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 	}
 
 	private String buildURL(String searchString, int[] categories) {
-		String url = baseURL + "/torrents.php?name" + searchString;
+		String url = baseURL + "/torrents.php?search=" + searchString;
 		for (int category : categories) {
 			url += "&category[]=" + category;
 		}
@@ -199,6 +213,17 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 	public List<SearchResult> findDownloadsForSeason(String seriesName, Language audioLanguage, int seasonNumber)
 			throws Exception {
 		return extractResultsFromURL( buildURL( String.format("%s S%02d", seriesName, seasonNumber), new int[] { 18, 41 } ) );
+	}
+
+	@Override
+	public List<SearchResult> findMusicAlbum(String artist, String album, MusicQuality quality)
+			throws MusicAlbumSearchException {
+		int category = ( quality == MusicQuality.COMPRESSED ? 23 : 25 );
+		try {
+			return extractResultsFromURL( buildURL( String.format("%s %s", artist, album), new int[] { category } ) );
+		} catch (Exception e) {
+			throw new MusicAlbumSearchException( e );
+		}
 	}
 
 }
