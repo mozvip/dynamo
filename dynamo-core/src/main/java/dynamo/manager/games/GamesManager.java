@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,7 +32,7 @@ import dynamo.webapps.thegamesdb.net.images.TheGamesDBBoxArt;
 public class GamesManager implements Reconfigurable {
 
 	@Configurable(contentsClass=GamePlatform.class)
-	private List<GamePlatform> platforms;	
+	private Set<GamePlatform> platforms;	
 	
 	@Configurable(contentsClass=GameFinder.class, ordered=true )
 	private List<GameFinder> providers;
@@ -40,11 +41,11 @@ public class GamesManager implements Reconfigurable {
 		return platforms != null && platforms.size() > 0;
 	}
 
-	public List<GamePlatform> getPlatforms() {
+	public Set<GamePlatform> getPlatforms() {
 		return platforms;
 	}
 
-	public void setPlatforms(List<GamePlatform> platforms) {
+	public void setPlatforms(Set<GamePlatform> platforms) {
 		this.platforms = platforms;
 	}
 	

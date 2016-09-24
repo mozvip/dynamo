@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.RegEx;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.omertron.themoviedbapi.MovieDbException;
@@ -470,8 +472,21 @@ public class MovieManager implements Reconfigurable {
 	public Movie findByImdbId( String imdbId ) {
 		return movieDAO.findByImdbId( imdbId );
 	}
+	
+	public static String[] movieNameCleanups = new String[] {
+			"(.*) 3d",
+			"(.*)\\s+\\(version longue\\)",
+			"(.*)\\s+\\(unrated\\)",
+			"(.*)\\s+\\(extended edition\\)",
+			"(.*)\\s+\\(ultimate edition\\)",
+			"(.*)\\s+\\bluray",
+			"(.*)\\s+\\truefrench"
+	};
 
 	public Movie suggestByName( String name, int year, WebResource defaultImage, Language language, boolean maybeUnreleased, String suggestionURL ) throws MovieDbException, IOException, URISyntaxException, ParseException {
+		
+		name = RegExp.clean(name, movieNameCleanups);
+		
 		MovieInfo movieDb = searchByName( name, year, language, maybeUnreleased);
 		if (movieDb != null && movieDb.getImdbID() != null) {
 			Movie movie = findByImdbId( movieDb.getImdbID() );
