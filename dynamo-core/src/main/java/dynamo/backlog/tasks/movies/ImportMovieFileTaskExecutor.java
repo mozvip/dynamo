@@ -31,7 +31,7 @@ public class ImportMovieFileTaskExecutor extends TaskExecutor< ImportMovieFileTa
 		float imdbRating = imdbTitle != null ? imdbTitle.getRating() : 0.0f;
 		
 		Movie movie = MovieManager.getInstance().createMovieFromMovieDB(
-				movieDb, MovieManager.getInstance().getMetaDataLanguage(), null, DownloadableStatus.DOWNLOADED, imdbRating, false
+				movieDb, null, DownloadableStatus.DOWNLOADED, imdbRating, false
 		);
 		// move main file
 		Path destinationFolder = FileUtils.getFolderWithMostUsableSpace( MovieManager.getInstance().getFolders() );

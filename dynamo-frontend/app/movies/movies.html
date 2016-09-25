@@ -13,13 +13,11 @@
           </td>
         </tr>
       </table>
-      <form>
+      <form class="form-inline" novalidate>
         <div class="form-group">
-          <label class="control-label" for="movieName">Movie Name</label>
-          <input type="text" class="form-control" name="movieName" placeholder="Movie Name" ng-model="movieName" required />
+          <input type="text" class="form-control" name="movieName" ng-required="false" placeholder="Movie Name" ng-model="movieName" />
         </div>
         <div class="form-group">
-          <label class="control-label" for="movieYear">Year</label>
           <input type="number" class="form-control" name="movieYear" ng-model="movieYear" placeholder="Year" />
         </div>
         <button type="submit" class="btn btn-primary btn-block-level" ng-click="search()">
@@ -29,14 +27,14 @@
         <table class="table">
           <tr ng-repeat="result in movies">
             <td>
-              {{ result.name }}
+              {{ result.title }}
             </td>
             <td>
-              {{ result.year }}
+              {{ result.release_date }}
             </td>
             <td>
               <div class="button-list">
-                <button class="btn btn-primary" ng-click="select(result)">Select</button>
+                <button class="btn btn-success" ng-click="select(result.id)">Select</button>
               </div>
             </td>
           </tr>
@@ -48,39 +46,45 @@
 </script>
 
 <form class="form-inline">
-<div class="input-group">
-  <input type="text" ng-model="filter" class="form-control" placeholder="Search for ..." ng-change="filterChanged()"/>
-</div>
-<div class="input-group">
-  <input type="number" size="4" ng-model="filterYear" class="form-control" placeholder="Year ..." ng-change="filterChanged()"/>
-</div>
-<div class="input-group">
-  <input type="number" size="4" ng-model="filterRating" class="form-control" placeholder="Rating ..." ng-change="filterChanged()"/>
-</div>
+	<div class="input-group">
+		<input type="text" ng-model="filter" class="form-control" placeholder="Search for ..." ng-change="filterChanged()" />
+	</div>
+	<div class="input-group">
+		<input type="number" size="4" ng-model="filterYear" class="form-control" placeholder="Year ..." ng-change="filterChanged()"
+		/>
+	</div>
+	<div class="input-group">
+		<input type="number" size="4" ng-model="filterRating" class="form-control" placeholder="Rating ..." ng-change="filterChanged()"
+		/>
+	</div>
 </form>
 
 <div class="row" ng-show="filteredList.length > 24">
-  <p class="text-center">
-    <uib-pagination total-items="filteredList.length" items-per-page="24" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
-  </p>
+	<p class="text-center">
+		<uib-pagination total-items="filteredList.length" items-per-page="24" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+	</p>
 </div>
 
 <div class="thumbnail downloadable-thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents">
-  <img ng-src="{{imageURL(downloadable.image)}}" alt="{{downloadable.name}}" style="min-height: 280px;" />
-  <div class="buttons">
-    <button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>  Show Files</button>
-    <button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openMovieSearch(downloadable)" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>  Identify</button>
-    
-    <a ng-show="downloadable.status == 'DOWNLOADED' || downloadable.status == 'SNATCHED'" class="btn btn-danger btn-lg btn-block" sweetalert sweet-options='{"title":"Confirm Redownload","text":"Are you sure you want to redownload {{downloadable.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, redownload it!","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="redownload(downloadable)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>  Redownload</a>
+	<img ng-src="{{imageURL(downloadable.image)}}" alt="{{downloadable.name}}" style="min-height: 280px;" />
+	<div class="buttons">
+		<button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>  Show Files</button>
+		<button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openMovieSearch(downloadable)" class="btn btn-default btn-lg btn-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>  Identify</button>
 
-    <button type="button" ng-show="downloadable.status == 'SUGGESTED'" ng-click="want(downloadable)" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Want</button>
+		<a ng-show="downloadable.status == 'DOWNLOADED' || downloadable.status == 'SNATCHED'" class="btn btn-danger btn-lg btn-block"
+			sweetalert sweet-options='{"title":"Confirm Redownload","text":"Are you sure you want to redownload {{downloadable.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, redownload it!","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}' ' sweet-on-confirm="redownload(downloadable)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>  Redownload</a>
+
+    <button type="button" ng-show="downloadable.status == 'SUGGESTED '" ng-click="want(downloadable)" class="btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Want</button>
     <a target="_blank" ng-show="downloadable.imdbID" class="btn btn-default btn-lg btn-block" href="http://www.imdb.com/title/{{downloadable.imdbID}}">IMDB&nbsp;<span class="glyphicon glyphicon-new-window" /></a>
-    <a class="btn btn-danger btn-lg btn-block" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{downloadable.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="delete(downloadable)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>  Delete</a>
-  </div>
-  <div class="caption">
-    {{downloadable.name}} ({{downloadable.year}})
-    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>{{downloadable.rating}}&nbsp;
-  </div>
+    <a class="btn btn-danger btn-lg btn-block" sweetalert sweet-options='{ "title": "Confirm Delete", "text":
+			"Are you sure you want to delete {{downloadable.name}} ?", "type": "warning", "showCancelButton":true, "confirmButtonColor": "#DD6B55", "confirmButtonText": "Yes, delete it!",
+			"cancelButtonText": "No, cancel!", "closeOnConfirm":true, "closeOnCancel":true} '' sweet-on-confirm="delete(downloadable)"><span class="glyphicon glyphicon-trash"
+			aria-hidden="true"></span> Delete</a>
+	</div>
+	<div class="caption">
+		{{downloadable.name}} ({{downloadable.year}})
+		<span class="glyphicon glyphicon-star" aria-hidden="true"></span>{{downloadable.rating}}&nbsp;
+	</div>
 </div>
 
 <ng-include src="'common/templates.html'" />

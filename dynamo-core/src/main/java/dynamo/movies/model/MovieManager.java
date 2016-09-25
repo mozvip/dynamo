@@ -13,8 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.RegEx;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.omertron.themoviedbapi.MovieDbException;
@@ -188,16 +186,12 @@ public class MovieManager implements Reconfigurable {
 		return api.searchMovie( name, 0, language != null ? language.getShortName() : null, true, year > 0 ? year : 0, year > 0 ? year : 0, SearchType.PHRASE );
 	}
 	
-	public MovieInfo getMovieInfo( int movieId, String language) throws MovieDbException {
-		return api.getMovieInfo(movieId, language);
-	}
-	
 	public String getImageURL( String imagePath ) throws MovieDbException {
 		return api.createImageUrl(imagePath, "w185").toExternalForm();
 	}
 	
 	public MovieInfo getMovieInfo( int movieId ) throws MovieDbException {
-		return getMovieInfo( movieId, metaDataLanguage != null ? metaDataLanguage.getShortName() : null );	
+		return api.getMovieInfo( movieId, metaDataLanguage != null ? metaDataLanguage.getShortName() : null );	
 	}
 
 	public VideoQuality getDefaultQuality() {
@@ -239,11 +233,11 @@ public class MovieManager implements Reconfigurable {
 		}
 	}
 
-	public Movie createMovieFromMovieDB( MovieInfo movieDb, Language language, WebResource defaultImage, DownloadableStatus status, float imdbRating, boolean watched ) throws MovieDbException, IOException {
+	public Movie createMovieFromMovieDB( MovieInfo movieDb, WebResource defaultImage, DownloadableStatus status, float imdbRating, boolean watched ) throws MovieDbException, IOException {
 		Movie movie = movieDAO.findByMovieDbId( movieDb.getId() );
 		if (movie == null) {
 			if (movieDb.getImdbID() == null) {
-				movieDb = api.getMovieInfo( movieDb.getId(), language.getShortName());
+				movieDb = getMovieInfo( movieDb.getId() );
 			}
 
 			long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, movieDb.getTitle(), status );
@@ -440,7 +434,7 @@ public class MovieManager implements Reconfigurable {
 				return null;
 			}
 
-			return createMovieFromMovieDB( api.getMovieInfoImdb(imdbId, language.getShortName()), language, defaultImage, status, imdbTitle.getRating(), watched );
+			return createMovieFromMovieDB( api.getMovieInfoImdb(imdbId, language.getShortName()), defaultImage, status, imdbTitle.getRating(), watched );
 		}
 	}
 	
