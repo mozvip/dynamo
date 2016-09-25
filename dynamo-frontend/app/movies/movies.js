@@ -131,6 +131,8 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
   $scope.allItems = [];
   $scope.filteredList = [];
 
+  $scope.itemsPerPage = 18;
+
   $scope.imageURL = function( url ) {
     return BackendService.getImageURL( url );
   }    
@@ -138,13 +140,13 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
   $scope.pageContents = [];
   downloadableService.find( 'MOVIE', $routeParams.status ).then( function( response ) {
     $scope.allItems = response.data;
-    $scope.pageContents = $scope.allItems.slice( 0, 24 );
+    $scope.pageContents = $scope.allItems.slice( 0, $scope.itemsPerPage );
     $scope.filteredList = $scope.allItems.slice( 0 );
   });
 
   $scope.pageChanged = function() {
-    var start = ($scope.currentPage - 1) * 24;
-    $scope.pageContents = $scope.filteredList.slice( start, start + 24);
+    var start = ($scope.currentPage - 1) * $scope.itemsPerPage;
+    $scope.pageContents = $scope.filteredList.slice( start, start + $scope.itemsPerPage);
   }
 
   $scope.removeFromList = function( downloadable ) {
