@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.Enableable;
+import dynamo.core.EventManager;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.model.AbstractDynamoQueue;
@@ -50,6 +51,7 @@ public class ConfigurationManager {
 	}
 
 	public void save() throws Exception {
+		EventManager.getInstance().reportInfo("Configuration Saved");
 		ConfigAnnotationManager.getInstance().persistConfiguration();
 		configureApplication();
 	}

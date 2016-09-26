@@ -174,11 +174,11 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
   }
 
   $scope.filterChanged = function() {
-    // FIXME : optimize in one filter call
-    $scope.filteredList = filterFilter($scope.allItems, {'name': $scope.filter });
+    var filter = {'name': $scope.filter};
     if ($scope.filterYear) {
-      $scope.filteredList = filterFilter($scope.filteredList, {'year': $scope.filterYear });
+      filter['year'] = $scope.filterYear;
     }
+    $scope.filteredList = filterFilter($scope.allItems, filter);
     if ($scope.filterRating) {
       $scope.filteredList = $scope.filteredList.filter( function( element ) {
         return element.rating >= $scope.filterRating;
@@ -201,6 +201,11 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 
   $scope.openMovieSearch = function ( movie) {
 
+    var movieName = movie.name;
+    if (movieName.endsWith(".mkv")) {
+      movieName = movieName.substr(0, movieName.length - 4);
+    }
+
     var modalInstance = $uibModal.open({
       animation: false,
       templateUrl: 'movieSearch.html',
@@ -211,7 +216,7 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
           return fileListService.get( movie.id );
         },
         movies: function () {
-          return movieDbSearchService.find( movie.name, movie.year, 'en' );
+          return movieDbSearchService.find( movieName, movie.year, 'en' );
         },
         movie: movie
       }

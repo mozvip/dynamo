@@ -23,7 +23,9 @@ import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.model.DownloableCount;
 import dynamo.core.model.DownloadableDAO;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.manager.DownloadableManager;
+import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
@@ -37,7 +39,6 @@ public class DownloadableService {
 	@GET
 	public List<Downloadable> get(@QueryParam("type") String type, @QueryParam("status") String allStatus) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		Class<? extends Downloadable> klass = DownloadableManager.getInstance().getDownloadableTypeBySimpleName( type );
-		
 		DownloadableDAO daoInstance = DownloadableManager.getInstance().getDAOInstance( klass );
 		String[] statuses = allStatus.split(",");
 		List<Downloadable> downloads = new ArrayList<>();
@@ -48,6 +49,13 @@ public class DownloadableService {
 		return downloads;
 	}
 	
+	@GET
+	@Path("/wanted")
+	public List<DownloadInfo> findWanted() {
+		DownloadableUtilsDAO dao = DAOManager.getInstance().getDAO(DownloadableUtilsDAO.class);
+		return dao.findWanted();
+	}
+
 	@DELETE
 	@Path("{id}")
 	public void delete(@PathParam("id") long id) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {

@@ -2,7 +2,6 @@ package dynamo.movies.model;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -327,14 +326,8 @@ public class MovieManager implements Reconfigurable {
 	@Override
 	public void reconfigure() {
 		if ( isEnabled() ) {
-			if (getFolders() != null) {
-				for (Path path : getFolders()) {
-					if (Files.isReadable( path )) {
-						BackLogProcessor.getInstance().schedule( new ScanMovieFolderTask( path ) );
-					} else {
-						ErrorManager.getInstance().reportWarning(String.format("Movie folder %s is not readable", path.toAbsolutePath().toString()));
-					}
-				}
+			for (Path path : getFolders()) {
+				BackLogProcessor.getInstance().schedule( new ScanMovieFolderTask( path ), false );
 			}
 		} else {
 			BackLogProcessor.getInstance().unschedule( RefreshMovieSuggestionTask.class );
