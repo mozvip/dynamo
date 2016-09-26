@@ -14,9 +14,19 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
         return configurationService.getItems();
       }]
     }    
+  }).when('/movies-manual-add', {
+    templateUrl: 'movies/movies-manual-add.html',
+    controller: 'MoviesManualAddCtrl',
+    resolve: {
+      configuration: ['configurationService', function(  configurationService  ) {
+        return configurationService.getItems();
+      }],
+      languages: ['languageService', function(  languageService  ) {
+        return languageService.find();
+      }]      
+    }    
   });
 }])
-
 
 .factory('movieDbSearchService', ['BackendService', '$http', function(BackendService, $http){
   var movieDbSearchService = {};
@@ -33,6 +43,34 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
   return movieDbSearchService;
 }])
 
+. controller('MoviesManualAddCtrl', ['$scope', 'movieDbSearchService', 'filterFilter', 'BackendService', 'languages', function($scope, movieDbSearchService, filterFilter, BackendService, languages) {
+
+  $scope.languages = languages.data;
+
+  $scope.name = '';
+  $scope.year = '';
+  $scope.language = 'EN';
+  $scope.subtitlesLanguage = '';
+
+  $scope.search = function() {
+    movieDbSearchService.find( $scope.name, $scope.year, $scope.language ).then( function( response ) {
+      $scope.results = response.data;
+    });
+  }
+
+  $scope.selectMovie = function( movie ) {
+    BackendService.post('movies/add', {
+      'movieDbId': movie.id,
+      'audioLanguage': movie.audiolanguage,
+      'subtitlesLanguage': movie.subtitlesLanguage
+    }).then(function() {
+      $scope.results = filterFilter($scope.results, {'id': '!' + movie.id });
+    });
+  }
+
+
+}])
+
 . controller('MovieSearchCtrl', ['$scope', '$uibModalInstance', 'fileList', 'movies', 'movie', 'movieDbSearchService', function($scope, $uibModalInstance, fileList, movies, movie, movieDbSearchService) {
 
   $scope.files = fileList.data;
@@ -47,8 +85,8 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
     });
   };
 
-  $scope.select = function( selectedMovie ) {
-    movieDbSearchService.associate( movie.id, selectedMovie.movieDbId ).then( function( response ) {
+  $scope.select = function( movieDbId ) {
+    movieDbSearchService.associate( movie.id, movieDbId ).then( function( response ) {
       movie = response.data;
       $uibModalInstance.close( movie );
     });
@@ -93,6 +131,8 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
   $scope.allItems = [];
   $scope.filteredList = [];
 
+  $scope.itemsPerPage = 18;
+
   $scope.imageURL = function( url ) {
     return BackendService.getImageURL( url );
   }    
@@ -100,13 +140,13 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
   $scope.pageContents = [];
   downloadableService.find( 'MOVIE', $routeParams.status ).then( function( response ) {
     $scope.allItems = response.data;
-    $scope.pageContents = $scope.allItems.slice( 0, 24 );
+    $scope.pageContents = $scope.allItems.slice( 0, $scope.itemsPerPage );
     $scope.filteredList = $scope.allItems.slice( 0 );
   });
 
   $scope.pageChanged = function() {
-    var start = ($scope.currentPage - 1) * 24;
-    $scope.pageContents = $scope.filteredList.slice( start, start + 24);
+    var start = ($scope.currentPage - 1) * $scope.itemsPerPage;
+    $scope.pageContents = $scope.filteredList.slice( start, start + $scope.itemsPerPage);
   }
 
   $scope.removeFromList = function( downloadable ) {

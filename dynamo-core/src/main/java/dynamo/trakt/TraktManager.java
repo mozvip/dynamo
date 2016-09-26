@@ -83,7 +83,7 @@ public class TraktManager implements Reconfigurable, MovieSuggester, Enableable 
 		access_token = ConfigAnnotationManager.getInstance().getConfigString("TraktManager.access_token");
 		if (access_token != null) {
 			RestAdapter restAdapter = new RestAdapter.Builder()
-			.setEndpoint("https://api-v2launch.trakt.tv")
+			.setEndpoint("https://api.trakt.tv")
 			.setRequestInterceptor( new RequestInterceptor() {
 				@Override
 				public void intercept(RequestFacade request) {
@@ -97,7 +97,7 @@ public class TraktManager implements Reconfigurable, MovieSuggester, Enableable 
 			service = restAdapter.create(TraktService.class);
 		} else {
 			RestAdapter restAdapter = new RestAdapter.Builder()
-			.setEndpoint("https://api-v2launch.trakt.tv")
+			.setEndpoint("https://api.trakt.tv")
 			.setRequestInterceptor( new RequestInterceptor() {
 				@Override
 				public void intercept(RequestFacade request) {
@@ -128,11 +128,15 @@ public class TraktManager implements Reconfigurable, MovieSuggester, Enableable 
 		return "Trakt";
 	}
 	
-	public void auth( String oauth ) {
-		tokenResponse = service.token( new TraktTokenRequest( oauth, clientId, clientSecret) );
-		Date expirationDate = new Date( tokenResponse.getCreated_at() + tokenResponse.getExpires_in() );
-		ConfigAnnotationManager.getInstance().setConfigString("TraktManager.access_token", tokenResponse.getAccess_token());
-		reconfigure();
+	public boolean auth( String code ) {
+		tokenResponse = service.token( new TraktTokenRequest( code, clientId, clientSecret) );
+		if (tokenResponse.getAccess_token() != null) {
+			Date expirationDate = new Date( tokenResponse.getCreated_at() + tokenResponse.getExpires_in() );
+			ConfigAnnotationManager.getInstance().setConfigString("TraktManager.access_token", tokenResponse.getAccess_token());
+			reconfigure();
+			return true;
+		}
+		return false;
 	}
 
 }

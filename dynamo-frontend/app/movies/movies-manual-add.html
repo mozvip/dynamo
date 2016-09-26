@@ -1,0 +1,48 @@
+<form name="movieSearchForm" class="form-inline">
+	<div class="input-group">
+		<input type="text" ng-required="true" ng-model="name" class="form-control" placeholder="Search for ..." ng-change="filterChanged()" />
+	</div>
+	<div class="input-group">
+		<input type="number" size="4" ng-model="year" class="form-control" placeholder="Year ..." ng-change="filterChanged()" />
+	</div>
+  <div class="input-group">
+      <select ng-model="language" class="form-control" ng-options="item.key as item.value for item in languages" />
+  </div>
+  <button ng-disabled="!movieSearchForm.$valid" class="btn btn-search btn-primary" ng-click="search()"><span class="glyphicon glyphicon-search" /> Search</button>
+</form>
+
+<div class="panel panel-default" ng-repeat="movie in results">
+  <div class="panel-heading">
+    <h4 class="text-center">{{movie.title}}</h4>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-2">
+        <div ng-show="{{movie.poster_path != ''}}" style="width: 100%; text-align: center">
+          <img ng-src="{{movie.poster_path}}" alt="{{movie.title}}" title="{{movie.title}}" />
+        </div>
+      </div>
+      <div class="col-md-10">
+        <p>{{movie.overview}}</p>
+        <p ng-show="{{movie.release_date != undefined}}">Released on <strong>{{movie.release_date}}</strong></p>
+      </div>
+      <form class="form-inline">
+        <div class="form-group">
+          <label class="control-label">Audio Language</label>
+          <select ng-model="movie.audiolanguage" class="form-control" ng-options="item.key as item.value for item in languages">
+            <option value="" />
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="control-label">SubTitles Language</label>
+          <select ng-model="movie.subtitlesLanguage" class="form-control" ng-options="item.key as item.value for item in languages">
+            <option value="" />
+          </select>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" ng-click="selectMovie(movie)"><span class="glyphicon glyphicon-heart"/> Want !</button>
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
