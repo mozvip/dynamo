@@ -11,6 +11,14 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
         return BackendService.get('log');
       }]
     }   
+  }).when('/wanted', {
+    templateUrl: 'log/wanted.html',
+    controller: 'WantedCtrl',
+    resolve: {
+      wanted: ['BackendService', function(  BackendService  ) {
+        return BackendService.get('downloadable/wanted');
+      }]
+    }   
   }).when('/history', {
     templateUrl: 'log/history.html',
     controller: 'HistoryCtrl',
@@ -22,10 +30,24 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
   });
 }])
 
+
 .controller('StackTraceCtrl', ['$scope', '$uibModal', 'stackTrace', 'BackendService', function( $scope, $uibModal, stackTrace, BackendService ) {
 
 
   
+}])
+
+.controller('WantedCtrl', ['$scope', '$routeParams', 'downloadableService', 'filterFilter', 'BackendService', 'wanted', function( $scope, $routeParams, downloadableService, filterFilter, BackendService, wanted ) {
+
+  $scope.wanted = wanted.data;
+
+  $scope.filterChanged = function() {
+    $scope.wanted = filterFilter(wanted.data, {'name' : $scope.filter});
+  }
+
+  $scope.imageURL = function( url ) {
+    return BackendService.getImageURL( url );
+  }  
 
 }])
 

@@ -1,0 +1,10 @@
+<form class="form-inline">
+    <input type="text" class="form-control" ng-model="filter" ng-change="filterChanged()" />
+</form>
+<table class="table table-condensed">
+    <tr ng-repeat="downloadable in wanted">
+        <td><img src="{{imageURL(downloadable.image)}}" alt="{{downloadable.artistName}} - {{downloadable.name}}" ng-if="downloadable.image" style="min-height: 280px;" /></td>
+        <td>{{downloadable.name}}</td>
+        <td>{{downloadable.year}}</td>
+    </tr>
+</table>
