@@ -6,12 +6,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import core.WebDocument;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.magazines.KioskIssuesSuggester;
 import dynamo.magazines.KioskIssuesSuggesterException;
 import dynamo.magazines.MagazineManager;
 import dynamo.model.DownloadSuggestion;
 import hclient.HTTPClient;
 
+@ClassDescription(label="PDFMagazines.org")
 public class PDFMagazinesOrg implements KioskIssuesSuggester {
 	
 	static int MAX_PAGE_TO_GRAB = 10;

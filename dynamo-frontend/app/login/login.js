@@ -9,7 +9,7 @@ angular.module('dynamo.login', ['ngRoute', 'ngResource'])
   });
 }])
 
-.controller('LoginCtrl', ['$scope', '$routeParams', 'downloadableService', 'log', '$uibModal', 'filterFilter', function( $scope, $routeParams, downloadableService, log, $uibModal, filterFilter ) {
+.controller('LoginCtrl', ['$scope', '$location', function( $scope, $location ) {
 
     $scope.username = '';
     $scope.password = '';
