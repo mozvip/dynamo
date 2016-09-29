@@ -1,5 +1,6 @@
 package dynamo.providers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,10 @@ import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.MovieProvider;
+import dynamo.finders.music.MusicAlbumFinder;
+import dynamo.finders.music.MusicAlbumSearchException;
+import dynamo.magazines.MagazineProvider;
+import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import dynamo.movies.model.MovieManager;
@@ -21,7 +26,7 @@ import hclient.HTTPClient;
 import hclient.SimpleResponse;
 
 @ClassDescription(label="Usenet Crawler")
-public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvider {
+public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvider, MusicAlbumFinder, MagazineProvider {
 
 	private static final String BASE_URL = "https://www.usenet-crawler.com";
 
@@ -50,13 +55,6 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 	@Override
 	public List<SearchResult> findMovie(String name, int year, VideoQuality videoQuality, Language audioLanguage, Language subtitlesLanguage) throws Exception {
 
-		while (!isReady()) {
-			try {
-				Thread.sleep( 1000 );
-			} catch (InterruptedException e) {
-			}
-		}			
-		
 		long minSize = MovieManager.getInstance().getMinimumSizeForMovie(videoQuality);
 		
 		name = plus(name);
@@ -66,20 +64,7 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 			searchURL += "&audiolang=0";
 		}
 		
-		WebDocument document = client.getDocument( searchURL, HTTPClient.REFRESH_ONE_DAY );
-		Elements rows = document.jsoup("#browsetable tr[id]");
-		
-		List<SearchResult> results = new ArrayList<>();
-		for (Element row : rows) {
-			String title = row.select("td.item a").text();
-			float size = parseSize( row.select("td.less.right").text() );
-			Element downloadLink = row.select("a[title*=Download Nzb]").first();
-			if (downloadLink != null) {
-				results.add( new SearchResult(this, SearchResultType.NZB, title, downloadLink.absUrl("href"), searchURL, size) );
-			}
-		}
-
-		return results;
+		return extractResults(searchURL);
 	}
 	
 	@Override
@@ -95,6 +80,43 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 	@Override
 	public boolean needsLanguageInSearchString() {
 		return true;
+	}
+
+	@Override
+	public List<SearchResult> findMusicAlbum(String artist, String album, MusicQuality quality)
+			throws MusicAlbumSearchException {
+
+		int t = quality == MusicQuality.COMPRESSED ? 3010 : 3040;
+		int maxSize = quality == MusicQuality.COMPRESSED ? 500000000 : 2000000000;
+
+		try {
+			String searchURL = String.format("%s/search?val=%s%20%s&age=-1&max=%d&index=3&t=%d", BASE_URL, plus(artist), plus(album), maxSize, t);
+			return extractResults(searchURL);
+		} catch (IOException e) {
+			throw new MusicAlbumSearchException( e );
+		}
+	}
+
+	private List<SearchResult> extractResults(String searchURL) throws IOException {
+		WebDocument document = client.getDocument( searchURL, HTTPClient.REFRESH_ONE_DAY );
+		Elements rows = document.jsoup("#browsetable tr[id]");
+		
+		List<SearchResult> results = new ArrayList<>();
+		for (Element row : rows) {
+			String title = row.select("td.item a").text();
+			float size = parseSize( row.select("td.less.right").text() );
+			Element downloadLink = row.select("a[title*=Download Nzb]").first();
+			if (downloadLink != null) {
+				results.add( new SearchResult(this, SearchResultType.NZB, title, downloadLink.absUrl("href"), searchURL, size) );
+			}
+		}
+		return results;
+	}
+
+	@Override
+	public List<SearchResult> findDownloadsForMagazine(String issueSearchString) throws Exception {
+		String searchURL = String.format("%s/search?val=%s&age=-1&index=3&t=7010", BASE_URL, issueSearchString);
+		return extractResults( searchURL );
 	}
 
 }
