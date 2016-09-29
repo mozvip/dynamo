@@ -34,12 +34,8 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 	@Override
 	public void execute() throws Exception {
 		
-		SABHistoryResponse response = sab.getHistoryFailed();
-		for (SabNzbdResponseSlot failedSlot : response.getSlots()) {
-			sab.deleteFromHistory( failedSlot.getNzo_id() );
-		}
-
-		response = sab.getHistory();
+		sab.deleteFailed();
+		SABHistoryResponse response = sab.getHistory();
 
 		List<SearchResult> results = searchResultDAO.getActiveSearchResults( SearchResultType.NZB );
 		for (SearchResult searchResult : results) {
