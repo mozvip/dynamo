@@ -3,12 +3,19 @@
 angular.module('dynamo.home', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/home', {
+  $routeProvider.when('/welcome', {
     templateUrl: 'home/home.html',
-    controller: 'HomeCtrl'
+    controller: 'HomeCtrl',
+    resolve: {
+      disks: ['BackendService', function(  BackendService  ) {
+        return BackendService.get('disks');
+      }]
+    }
   });
 }])
 
-.controller('HomeCtrl', [function() {
+.controller('HomeCtrl', ['$scope', '$location', 'disks', function( $scope, $location, disks ) {
+
+    $scope.disks = disks.data;
 
 }]);

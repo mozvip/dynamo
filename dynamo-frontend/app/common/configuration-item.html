@@ -4,7 +4,7 @@
       {{item.key | translate}}
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body" ng-if="item.values && item.values.length > 0">
       <ul dnd-list="item.values" dnd-allowed-types="[item.key]">
         <li ng-repeat="row in item.values"
             dnd-draggable="row"

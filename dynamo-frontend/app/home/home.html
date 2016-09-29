@@ -1,1 +1,7 @@
-<p>Welcome</p>
+<table class="table table-stripped">
+    <tr ng-repeat="disk in disks">
+        <td>{{disk.name}}</td>
+        <td>{{disk.totalSpace | number}}</td>
+        <td>{{disk.freeSpace | number}}</td>
+    </tr>
+</table>

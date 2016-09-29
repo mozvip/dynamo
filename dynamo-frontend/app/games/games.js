@@ -101,4 +101,6 @@ angular.module('dynamo.games', ['ngRoute', 'ngResource'])
       configurationService.saveItems($scope.itemsToConfigure);
     }
 
+    $scope.folders = {};
+
   }]);

@@ -29,6 +29,7 @@
     "Transmission.password" : "Transmission Password",
 
     "MagazineManager.folders" : "Folders for magazines storage",
+    "RefreshKioskExecutor.suggesters" : "Use magazine suggestions from",
     "BookManager.folders" : "Folders for books storage",
 
     "TVShowManager.audioLanguage" : "Default Audio Language for TV Shows",

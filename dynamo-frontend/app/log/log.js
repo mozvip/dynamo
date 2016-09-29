@@ -30,6 +30,13 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
   });
 }])
 
+
+.controller('StackTraceCtrl', ['$scope', '$uibModal', 'stackTrace', 'BackendService', function( $scope, $uibModal, stackTrace, BackendService ) {
+
+
+  
+}])
+
 .controller('WantedCtrl', ['$scope', '$routeParams', 'downloadableService', 'filterFilter', 'BackendService', 'wanted', function( $scope, $routeParams, downloadableService, filterFilter, BackendService, wanted ) {
 
   $scope.wanted = wanted.data;
@@ -52,6 +59,18 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
   $scope.pageSize = 100;
 
   $scope.currentPage = 1;
+
+  $scope.openStackTrace = function( logItem ) {
+    var modalInstance = $uibModal.open({
+      templateUrl: 'stack-trace.html',
+      controller: 'StackTraceCtrl',
+      resolve: {
+        stackTrace: function () {
+          return BackendService.get('stack-trace/' + logItem.id);
+        }
+      }
+    });
+  }
 
   $scope.filterChanged = function() {
 
