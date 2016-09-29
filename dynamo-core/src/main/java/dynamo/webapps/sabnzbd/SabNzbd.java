@@ -59,6 +59,10 @@ public class SabNzbd implements Reconfigurable, Enableable {
 		return service.getHistory(apiKey).getHistory();
 	}
 
+	public SABHistoryResponse getHistoryFailed() {
+		return service.getHistoryFailed(apiKey).getHistory();
+	}
+
 	public String addNZB( String niceName, String nzbURL ) {
 		SabNzbdResponse response = service.addNZBByURL( nzbURL, niceName, apiKey );
 		return response.getNzo_ids().get(0);
