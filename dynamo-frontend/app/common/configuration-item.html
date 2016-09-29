@@ -70,7 +70,7 @@
   </div>
 </div>
 
-<div ng-if="item.type == 'int'">
+<div ng-if="item.type == 'int' || item.type == 'float'">
   <div class="form-group">
     <label>{{item.key | translate}}</label>
     <input type="number" ng-required="item.required" class="form-control" ng-model="item.value" />
