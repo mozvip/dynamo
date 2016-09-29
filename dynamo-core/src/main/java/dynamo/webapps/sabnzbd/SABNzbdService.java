@@ -33,6 +33,6 @@ public interface SABNzbdService {
 	public SabNzbdResponse getHistory(@Query("apikey") String apiKey);
 
 	@GET("/sabnzbd/api?mode=history&name=delete&value=failed&del_files=1")
-	public void deleteFailed(@Query("apikey") String apiKey);
+	public String deleteFailed(@Query("apikey") String apiKey);
 
 }
