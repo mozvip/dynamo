@@ -90,7 +90,7 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 		int maxSize = quality == MusicQuality.COMPRESSED ? 500000000 : 2000000000;
 
 		try {
-			String searchURL = String.format("%s/search?val=%s%20%s&age=-1&max=%d&index=3&t=%d", BASE_URL, plus(artist), plus(album), maxSize, t);
+			String searchURL = String.format("%s/search?val=%s %s&age=-1&max=%d&index=3&t=%d", BASE_URL, plus(artist), plus(album), maxSize, t);
 			return extractResults(searchURL);
 		} catch (IOException e) {
 			throw new MusicAlbumSearchException( e );

@@ -23,25 +23,36 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     $scope.allItems = [];
     $scope.filteredList = [];
 
-    $scope.imageURL = function( url ) {
-      return BackendService.getImageURL( url );
+    $scope.itemsPerPage = 18;
+
+    $scope.imageURL = function (url) {
+      return BackendService.getImageURL(url);
     }
 
     $scope.pageContents = [];
     downloadableService.find('MUSICALBUM', $routeParams.status).then(function (response) {
       $scope.allItems = response.data;
-      $scope.pageContents = $scope.allItems.slice(0, 24);
+      $scope.pageContents = $scope.allItems.slice(0, $scope.itemsPerPage);
       $scope.filteredList = $scope.allItems.slice(0);
     });
 
     $scope.want = function (downloadable) {
       downloadableService.want(downloadable.id);
-      $scope.allItems = filterFilter($scope.allItems, { 'id': '!' + downloadable.id });
-      $scope.filteredList = filterFilter($scope.filteredList, { 'id': '!' + downloadable.id });
-      $scope.pageChanged();
+      $scope.removeFromList( downloadable );
 
       $rootScope.musicAlbumsSuggestionCount = $scope.allItems.length;
       $rootScope.musicAlbumsWantedCount++;
+    }
+
+    $scope.removeFromList = function (downloadable) {
+      $scope.allItems = filterFilter($scope.allItems, { 'id': '!' + downloadable.id });
+      $scope.filteredList = filterFilter($scope.filteredList, { 'id': '!' + downloadable.id });
+      $scope.pageChanged();
+    }
+
+    $scope.delete = function (downloadable) {
+      downloadableService.delete(downloadable.id);
+      $scope.removeFromList(downloadable);
     }
 
     $scope.updateImage = function (downloadable) {
@@ -54,8 +65,8 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     }
 
     $scope.pageChanged = function () {
-      var start = ($scope.currentPage - 1) * 24;
-      $scope.pageContents = $scope.filteredList.slice(start, start + 24);
+      var start = ($scope.currentPage - 1) * $scope.itemsPerPage;
+      $scope.pageContents = $scope.filteredList.slice(start, start + $scope.itemsPerPage);
     }
 
     $scope.filterChanged = function () {
@@ -98,7 +109,7 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     ];
 
     $scope.saveSettings = function () {
-      configurationService.saveItems( $scope.itemsToConfigure );
+      configurationService.saveItems($scope.itemsToConfigure);
     }
 
   }]);

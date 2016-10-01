@@ -51,8 +51,8 @@ public class ConfigurationManager {
 	}
 
 	public void save() throws Exception {
-		EventManager.getInstance().reportInfo("Configuration Saved");
 		ConfigAnnotationManager.getInstance().persistConfiguration();
+		EventManager.getInstance().reportSuccess("Configuration Saved");
 		configureApplication();
 	}
 	
