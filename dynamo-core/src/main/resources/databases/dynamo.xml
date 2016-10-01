@@ -449,4 +449,12 @@
 		<addNotNullConstraint tableName="MANAGEDSERIES" columnName="FOLDER" columnDataType="VARCHAR(4096)"/>
 	</changeSet>
 
+	<changeSet author="mozvip" id="32">
+		<dropColumn tableName="MUSICALBUM" columnName="PATH"/>
+		<addColumn tableName="MUSICALBUM">
+			<column name="FOLDER" type="VARCHAR(2048)"></column>
+		</addColumn>
+		<delete tableName="MUSICALBUM"></delete>
+	</changeSet>
+
 </databaseChangeLog>

@@ -63,7 +63,7 @@ public class ImportMusicFolderExecutor extends AbstractNewFolderExecutor<ImportM
 		MusicFile musicFile = musicDAO.findMusicFile(currentPath);
 		if (musicFile == null) {
 			try {
-				runSync(new ImportMusicFileTask( null, currentPath, keepSourceFiles ));
+				runSync(new ImportMusicFileTask( currentPath, keepSourceFiles ));
 			} catch (Exception e) {
 				ErrorManager.getInstance().reportThrowable( task, e );
 			}

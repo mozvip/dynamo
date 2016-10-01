@@ -14,7 +14,30 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
           return configurationService.getItems();
         }]
       }
+    }).when('/music-album/:albumId', {
+      templateUrl: 'music/music-album.html',
+      controller: 'MusicAlbumCtrl',
+      resolve: {
+        album: ['BackendService', '$route', function (BackendService, $route) {
+          return BackendService.get('music/album/' + $route.current.params.albumId);
+        }],
+        files: ['fileListService', '$route', function (fileListService, $route) {
+          return fileListService.get( $route.current.params.albumId);
+        }]
+      }
     });
+  }])
+
+  .controller('MusicAlbumCtrl', ['$scope', 'BackendService', 'album', 'files', function ($scope, BackendService, album, files) {
+
+    $scope.album = album.data;
+    $scope.files = files.data;
+
+    $scope.imageURL = function( url ) {
+      return BackendService.getImageURL( url );
+    }
+
+
   }])
 
   .controller('MusicCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'BackendService', function ($scope, $rootScope, $routeParams, downloadableService, fileListService, $uibModal, filterFilter, BackendService) {

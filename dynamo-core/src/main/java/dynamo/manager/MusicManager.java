@@ -248,7 +248,7 @@ public class MusicManager implements Reconfigurable {
 		}
 	}
 
-	public synchronized MusicAlbum getAlbum( String artistName, String albumName, String genre, DownloadableStatus status, Path path, MusicQuality quality, boolean createIfMissing ) throws ExecutionException, IOException {
+	public synchronized MusicAlbum getAlbum( String artistName, String albumName, String genre, DownloadableStatus status, Path folder, MusicQuality quality, boolean createIfMissing ) throws ExecutionException, IOException {
 		
 		MusicAlbum album = null;
 
@@ -274,17 +274,17 @@ public class MusicManager implements Reconfigurable {
 			}
 		}
 
-		if (path == null) {
-			path = getPath( artistName, albumName );
+		if (folder == null) {
+			folder = getPath( artistName, albumName );
 		}
 		
 		if (album == null && createIfMissing ) {
 			album = new MusicAlbum(
 					DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, status),
-					status, path, null, 
+					status, folder, null, 
 					artist.getName(), albumName, null, quality, null
 			);
-			musicDAO.save(album.getId(), artist.getName(), null, genre, quality, searchString);
+			musicDAO.save(album.getId(), artist.getName(), null, genre, quality, searchString, folder);
 		}
 
 		return album;

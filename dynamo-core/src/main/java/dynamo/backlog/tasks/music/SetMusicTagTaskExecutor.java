@@ -32,7 +32,7 @@ public class SetMusicTagTaskExecutor extends TaskExecutor<SetMusicTagTask> {
 
 		MusicAlbum musicAlbum = musicDAO.find( previousAlbumId );
 		
-		Path albumPath = musicAlbum.getPath();
+		Path albumPath = musicAlbum.getFolder();
 
 		if ( task.getAlbumArtist() != null || task.getAlbum() != null ) {
 			String albumArtist = task.getAlbumArtist() != null ? task.getAlbumArtist() : musicAlbum.getArtistName() ;

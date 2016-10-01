@@ -24,7 +24,7 @@ public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 		
 		long albumId = task.getMusicAlbum().getId();
 		
-		Path albumPath = task.getMusicAlbum().getPath();
+		Path albumPath = task.getMusicAlbum().getFolder();
 		
 		DownloadableManager.downloadImage( task.getMusicAlbum(), task.getLocalImagePath() );
 		List<MusicFile> files = musicDAO.findMusicFiles( albumId );

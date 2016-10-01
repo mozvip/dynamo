@@ -20,7 +20,7 @@ public class MusicAlbumMapper implements ResultSetMapper<MusicAlbum> {
 		return new MusicAlbum(
 				r.getLong("ID"),
 				MapperUtils.getEnum(r, "STATUS", DownloadableStatus.class),
-				MapperUtils.getPath(r, "PATH"),
+				MapperUtils.getPath(r, "FOLDER"),
 				r.getString("AKA"),
 				r.getString("ARTIST_NAME"),
 				r.getString("NAME"),

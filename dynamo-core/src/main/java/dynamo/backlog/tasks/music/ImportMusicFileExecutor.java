@@ -101,34 +101,25 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 			
 			Path albumDestinationFolder = folder;
 
-			MusicAlbum musicAlbum = task.getMusicAlbum();
-			if (musicAlbum != null) {
-				artistName = musicAlbum.getArtistName();
-				albumName = musicAlbum.getName();
-				
-				albumDestinationFolder = musicAlbum.getPath();
-			} else {
-
-				boolean importInPlace = false;
-				for (Path configuredFolder : MusicManager.getInstance().getFolders()) {
-					if (albumDestinationFolder.startsWith(configuredFolder)) {
-						importInPlace = true;
-						break;
-					}
+			boolean importInPlace = false;
+			for (Path configuredFolder : MusicManager.getInstance().getFolders()) {
+				if (albumDestinationFolder.startsWith(configuredFolder)) {
+					importInPlace = true;
+					break;
 				}
-				
-				if (importInPlace) {
-					for (String folderName : intermediateFolders) {
-						if (albumDestinationFolder.getFileName().toString().equalsIgnoreCase(folderName)) {
-							albumDestinationFolder = albumDestinationFolder.getParent();
-						}
-					}
-				}
-				
-				musicAlbum = MusicManager.getInstance().getAlbum(
-						artistName, albumName, null, DownloadableStatus.DOWNLOADED,
-						albumDestinationFolder, audioTag instanceof FlacTag ? MusicQuality.LOSSLESS : MusicQuality.COMPRESSED, true);
 			}
+			
+			if (importInPlace) {
+				for (String folderName : intermediateFolders) {
+					if (albumDestinationFolder.getFileName().toString().equalsIgnoreCase(folderName)) {
+						albumDestinationFolder = albumDestinationFolder.getParent();
+					}
+				}
+			}
+			
+			MusicAlbum musicAlbum = MusicManager.getInstance().getAlbum(
+					artistName, albumName, null, DownloadableStatus.DOWNLOADED,
+					albumDestinationFolder, audioTag instanceof FlacTag ? MusicQuality.LOSSLESS : MusicQuality.COMPRESSED, true);
 			
 			if (albumDestinationFolder == null) {
 				// default destination folder

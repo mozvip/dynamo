@@ -17,11 +17,13 @@
   <img src="{{imageURL(downloadable.image)}}" alt="{{downloadable.artistName}} - {{downloadable.name}}" ng-if="downloadable.image" style="min-height: 280px;" />
   <img src="common/music-album.jpg" alt="{{downloadable.artistName}} - {{downloadable.name}}" ng-if="!downloadable.image" style="max-height: 280px;" />
   <div class="buttons">
-    <button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></button>
+    <button title="Show files" type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></button>
 
     <a title="Delete" ng-show="downloadable.status == 'DOWNLOADED'" class="btn btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{downloadable.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="delete(downloadable)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
 
     <a title="Redownload" ng-show="downloadable.status == 'DOWNLOADED' || downloadable.status == 'SNATCHED'" class="btn btn-danger" sweetalert sweet-options='{"title":"Confirm Redownload","text":"Are you sure you want to redownload {{downloadable.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="redownload(downloadable)"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+
+    <a class="btn btn-primary" ng-show="downloadable.status == 'DOWNLOADED'" ng-href="#/music-album/{{downloadable.id}}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
 
     <button type="button" ng-show="downloadable.status == 'SUGGESTED'" ng-click="want(downloadable)" class="btn btn-primary"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></button>
     <button type="button" ng-click="updateImage(downloadable)" class="btn btn-primary"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span></button>

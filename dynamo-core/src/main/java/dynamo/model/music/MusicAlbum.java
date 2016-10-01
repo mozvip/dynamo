@@ -13,15 +13,15 @@ public class MusicAlbum extends Downloadable {
 	private String allMusicURL;
 	private String artistName;
 	private String genre;
-	private Path path;
+	private Path folder;
 
-	public MusicAlbum(  Long id, DownloadableStatus status, Path path, String aka, String artistName, String albumName, String genre, MusicQuality quality, String allMusicURL) {
+	public MusicAlbum(  Long id, DownloadableStatus status, Path folder, String aka, String artistName, String albumName, String genre, MusicQuality quality, String allMusicURL) {
 		super( id, albumName, null, status, aka, -1, null );
 		this.artistName = artistName;
 		this.genre = genre;
 		this.allMusicURL = allMusicURL;
 		this.quality = quality;
-		this.path = path;
+		this.folder = folder;
 
 		this.searchString = MusicManager.getSearchString( artistName, albumName );
 	}
@@ -79,19 +79,15 @@ public class MusicAlbum extends Downloadable {
 		}
 		return false;
 	}
-	
-	public Path getPath() {
-		return path;
-	}
-	
-	public void setPath(Path path) {
-		this.path = path;
-	}
 
+	public Path getFolder() {
+		return folder;
+	}
+	
 	@Override
 	public Path determineDestinationFolder() {
-		if ( getPath() != null ) {
-			return getPath();
+		if ( folder != null ) {
+			return folder;
 		} else {
 			return MusicManager.getInstance().getPath(getArtistName(), getName() );
 		}

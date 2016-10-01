@@ -17,6 +17,15 @@ import dynamo.music.jdbi.MusicAlbumDAO;
 @Path("/music")
 public class MusicService {
 	
+	private static MusicAlbumDAO dao = DAOManager.getInstance().getDAO(MusicAlbumDAO.class);
+	
+	@GET
+	@Path("/album/{musicAlbumId}")
+	public MusicAlbum getAlbum( @PathParam("musicAlbumId") long musicAlbumId ) {
+		return dao.find(musicAlbumId);
+	}
+
+	
 	@GET
 	@Path("/suggest/artist/{prefix}")
 	public List<String> suggestArtist( @PathParam("prefix") String prefix ) {

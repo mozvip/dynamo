@@ -56,8 +56,8 @@ public interface MusicAlbumDAO extends DownloadableDAO<MusicAlbum> {
 	@SqlUpdate("UPDATE MUSICALBUM SET ALLMUSICURL=:allMusicURL WHERE id=:albumId")
 	void updateAllMusicURL(@Bind("albumId") long albumId, @Bind("allMusicURL") String allMusicURL);
 	
-	@SqlUpdate("MERGE INTO MUSICALBUM(ID, ARTIST_NAME, ALLMUSICURL, GENRE, QUALITY, SEARCHSTRING) VALUES(:albumId, :artistName, :allMusicURL, :genre, :quality, :searchString)")
-	public void save(@Bind("albumId") long albumId, @Bind("artistName") String artistName, @Bind("allMusicURL") String allMusicURL, @Bind("genre") String genre, @BindEnum("quality") MusicQuality quality, @Bind("searchString") String searchString);
+	@SqlUpdate("MERGE INTO MUSICALBUM(ID, ARTIST_NAME, ALLMUSICURL, GENRE, QUALITY, SEARCHSTRING, FOLDER) VALUES(:albumId, :artistName, :allMusicURL, :genre, :quality, :searchString, :folder)")
+	public void save(@Bind("albumId") long albumId, @Bind("artistName") String artistName, @Bind("allMusicURL") String allMusicURL, @Bind("genre") String genre, @BindEnum("quality") MusicQuality quality, @Bind("searchString") String searchString, @BindPath("folder") Path folder);
 
 	@SqlQuery("SELECT * FROM MUSICFILE WHERE ALBUM_ID=:albumId ORDER BY TRACK")
 	@Mapper(MusicFileMapper.class)
