@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
@@ -31,15 +32,17 @@ public class USub extends SubtitlesFinder {
 		return FinderQuality.VERY_HIGH;
 	}
 	
+	public String getSearchString( String string ) {
+		return string.replaceAll("\\W", "").toUpperCase();
+	}
+	
 	@Override
 	public void customInit() throws Exception {
-		indexPage = client.getDocument( "http://www.u-sub.net/sous-titres/", HTTPClient.REFRESH_ONE_HOUR );
-		List<Node> nodes = indexPage.evaluateXPath("//table[@id='s_list']//a[contains(@title,'Sous-titres ')]");
-		for(Node node : nodes) {
-			String seriesName = StringUtils.trim( node.getTextContent() ).toLowerCase();
-			seriesName = seriesName.replace(": ", " ");
-			String seriesURL = node.getAttributes().getNamedItem("href").getTextContent();
-
+		indexPage = client.getDocument( "http://www.u-sub.net/sous-titres/", HTTPClient.REFRESH_ONE_DAY );
+		Elements elements = indexPage.jsoup("a[href*=/sous-titres/][title]");
+		for(Element element : elements) {
+			String seriesName = getSearchString( element.text() );
+			String seriesURL = element.attr("href");
 			urls.put( seriesName, seriesURL );
 		}
 	}
@@ -47,7 +50,7 @@ public class USub extends SubtitlesFinder {
 	@Override
 	public RemoteSubTitles downloadSubtitle( VideoDetails details, Language language) throws Exception {
 		
-		String url = urls.get( details.getName().toLowerCase() );
+		String url = urls.get( getSearchString( details.getName() ) );
 		
 		if (url == null) {
 			logger.debug("Series " + details.getName() + " was not found");
