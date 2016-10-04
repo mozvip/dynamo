@@ -1,38 +1,48 @@
 package dynamo.backlog.tasks.music;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 import core.WebDocument;
 import core.WebResource;
 import dynamo.backlog.BackLogProcessor;
-import dynamo.core.model.TaskExecutor;
+import dynamo.backlog.tasks.core.FindDownloadableImageExecutor;
+import dynamo.core.manager.ErrorManager;
+import dynamo.manager.DownloadableManager;
 import dynamo.manager.MusicManager;
 import dynamo.model.music.MusicAlbum;
 import dynamo.webapps.googleimages.GoogleImages;
 import hclient.HTTPClient;
 
-public class FindMusicAlbumImageExecutor extends TaskExecutor<FindMusicAlbumImageTask> {
+public class FindMusicAlbumImageExecutor extends FindDownloadableImageExecutor<MusicAlbum> {
 
 	public FindMusicAlbumImageExecutor( FindMusicAlbumImageTask task ) {
 		super(task);
 	}
+	
+	@Override
+	public void onImageFound( Path localImage ) {
+		BackLogProcessor.getInstance().schedule( new SetAlbumImageTask( task.getDownloadable(), localImage), false);
+	}
 
 	@Override
-	public void execute() throws Exception {
-		
-		Path localImage = null;
-		
+	public boolean downloadImageTo(Path localImage) {
 		String referer = null;
 		
-		MusicAlbum album = task.getAlbum();
+		MusicAlbum album = task.getDownloadable();
 		
 		if (album.getAllMusicURL() != null) {
 			
 			referer = album.getAllMusicURL();
 			
-			WebDocument document = client.getDocument( referer, HTTPClient.REFRESH_ONE_WEEK );
-			String imageURL = document.jsoup("div.album-contain > img").attr("abs:src");
-			localImage = HTTPClient.getInstance().download( imageURL, referer );
+			try {
+				WebDocument document = client.getDocument( referer, HTTPClient.REFRESH_ONE_WEEK );
+				String imageURL = document.jsoup("div.album-contain > img").attr("abs:src");
+				DownloadableManager.getInstance().downloadImage(task.getDownloadable(), imageURL, referer);
+				return true;
+			} catch (IOException e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}
 			
 		} else {
 			
@@ -43,19 +53,18 @@ public class FindMusicAlbumImageExecutor extends TaskExecutor<FindMusicAlbumImag
 			for (String string : searchStrings) {
 				WebResource googleResult = GoogleImages.findImage( string, 1.0f );
 				if (googleResult != null) {
-					localImage = HTTPClient.getInstance().download( googleResult.getUrl(), googleResult.getReferer() );
-				}
-				if (localImage != null) {
-					break;
+					try {
+						DownloadableManager.getInstance().downloadImage(task.getDownloadable(), googleResult.getUrl(), googleResult.getReferer());
+						return true;
+					} catch (IOException e) {
+						ErrorManager.getInstance().reportThrowable( e );
+					}
 				}
 			}
-			
 
 		}
-
-		if (localImage != null) {
-			BackLogProcessor.getInstance().schedule( new SetAlbumImageTask( album, localImage), false);
-		}
+		
+		return false;
 	}
 
 }

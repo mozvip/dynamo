@@ -31,14 +31,12 @@ import org.xnio.XnioWorker;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
-import dynamo.ui.servlets.ExternalDataServlet;
 import dynamo.websocket.DynamoMessagesEndpoint;
 import io.undertow.Undertow;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import io.undertow.servlet.api.ServletContainerInitializerInfo;
-import io.undertow.servlet.api.ServletInfo;
 import io.undertow.servlet.util.ImmediateInstanceFactory;
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo;
 
@@ -102,11 +100,7 @@ public class DynamoServer {
 			.setDeploymentName("dynamo.war")
 			.setResourceManager( new ClassPathResourceManager( getClass().getClassLoader() ) )
 			.addInitParameter("com.sun.faces.expressionFactory", "com.sun.el.ExpressionFactoryImpl")
-			.addWelcomePage("index.html")
-			.addServlets(
-					new ServletInfo("ExternalDataServlet", ExternalDataServlet.class)
-							.addMapping("/data/*")
-			);
+			.addWelcomePage("index.html");
 
 		registerServlet( servletDeploymentInfo, JerseyServletContainerInitializer.class );
 		

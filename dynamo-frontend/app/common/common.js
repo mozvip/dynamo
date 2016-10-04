@@ -142,7 +142,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
 .factory('languageService', ['BackendService', '$http', function(BackendService, $http){
   var languageService = {};
   languageService.find = function( type, status ) {
-    return BackendService.get('languages');
+    return BackendService.getAndCache('languages');
   }
   return languageService;
 }])

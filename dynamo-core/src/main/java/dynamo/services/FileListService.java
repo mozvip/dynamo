@@ -48,23 +48,6 @@ public class FileListService {
 		String fileName = path.getFileName().toString();
 
 		InputStream in = Files.newInputStream(path, StandardOpenOption.READ);
-//			StreamingOutput stream = new StreamingOutput() {
-//				@Override
-//				public void write(OutputStream out) throws IOException, WebApplicationException {
-//					ReadableByteChannel source = null;
-//					WritableByteChannel destination = null;
-//
-//					source = Channels.newChannel(in);
-//					destination = Channels.newChannel(out);
-//					ByteBuffer byteBuffer = ByteBuffer.allocateDirect(CHUNK_SIZE);
-//					while (source.read(byteBuffer) != -1) {
-//						byteBuffer.flip();
-//						destination.write(byteBuffer);
-//						byteBuffer.clear();
-//					}
-//					out.flush();
-//				}
-//			};
 		return Response.ok(in)
 				.header("Content-Length", Files.size(path))
 				.header("content-Disposition", "inline; filename=\"" + fileName + "\"")
