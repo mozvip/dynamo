@@ -30,15 +30,15 @@ public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 		List<MusicFile> files = musicDAO.findMusicFiles( albumId );
 		if (files != null && files.size() > 0) {
 			for (MusicFile file : files) {
-				if (albumPath == null) {
-					albumPath = file.getPath().getParent();
-				}
 				queue( new SynchronizeMusicTagsTask( file.getPath() ), false );	// update file tag
 			}
 		}
 
 		if (albumPath != null) {
 			Path folderJpg = albumPath.resolve("folder.jpg");
+			if (!Files.exists( albumPath )) {
+				Files.createDirectories( albumPath );
+			}
 			Files.copy( task.getLocalImagePath(), folderJpg, StandardCopyOption.REPLACE_EXISTING );
 		}
 	}

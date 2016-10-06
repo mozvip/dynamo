@@ -15,7 +15,7 @@ public class MusicAlbum extends Downloadable {
 	private String genre;
 	private Path folder;
 
-	public MusicAlbum(  Long id, DownloadableStatus status, Path folder, String aka, String artistName, String albumName, String genre, MusicQuality quality, String allMusicURL) {
+	public MusicAlbum( Long id, DownloadableStatus status, Path folder, String aka, String artistName, String albumName, String genre, MusicQuality quality, String allMusicURL) {
 		super( id, albumName, null, status, aka, -1, null );
 		this.artistName = artistName;
 		this.genre = genre;
