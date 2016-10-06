@@ -29,7 +29,9 @@
     "Transmission.password" : "Transmission Password",
 
     "MagazineManager.folders" : "Folders for magazines storage",
+    "MagazineManager.defaultLanguage": "Default Language for magazines",
     "RefreshKioskExecutor.suggesters" : "Use magazine suggestions from",
+    "MagazineManager.providers" : "Download magazines from",
     "BookManager.folders" : "Folders for books storage",
 
     "TVShowManager.audioLanguage" : "Default Audio Language for TV Shows",

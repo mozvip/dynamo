@@ -7,8 +7,7 @@ import dynamo.core.ExtensionsFileFilter;
 import dynamo.core.Labelized;
 
 public enum GamePlatform implements Labelized {
-	
-	UNKNOWN("Unknown", null),
+
 	PC("PC", null),
 	PS1("Sony Playstation", new ExtensionsFileFilter(".cue", ".ccd", ".img", ".sub", ".bin", ".iso"), 1.0f, 3000),
 	PS2("Sony Playstation 2", new ExtensionsFileFilter(".cso", ".iso", ".gz", ".nrg", ".gi", ".mdf"), 0.70f, 10000),

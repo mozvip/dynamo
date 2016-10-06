@@ -31,7 +31,12 @@ public class GoogleImages {
 			}
 			Elements images = document.jsoup("div.rg_di");
 			for (Element element : images) {
-				String href = element.select("a.rg_l[href*=imgurl]").first().attr("href");
+				Elements links = element.select("a.rg_l[href*=imgurl]");
+				if (links.size() == 0) {
+					continue;
+				}
+				
+				String href = links.first().attr("href");
 				String imageURL = RegExp.extract(href, ".*imgurl=([^\\&]*).*");
 
 
