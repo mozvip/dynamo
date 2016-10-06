@@ -38,14 +38,14 @@ public class FindMusicAlbumImageExecutor extends FindDownloadableImageExecutor<M
 			try {
 				WebDocument document = client.getDocument( referer, HTTPClient.REFRESH_ONE_WEEK );
 				String imageURL = document.jsoup("div.album-contain > img").attr("abs:src");
-				DownloadableManager.getInstance().downloadImage(task.getDownloadable(), imageURL, referer);
+				DownloadableManager.downloadImage(task.getDownloadable(), imageURL, referer);
 				return true;
 			} catch (IOException e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
 			
 		} else {
-			
+
 			// google images search
 			String albumName = MusicManager.getAlbumName(  album.getName() );
 			
@@ -54,7 +54,7 @@ public class FindMusicAlbumImageExecutor extends FindDownloadableImageExecutor<M
 				WebResource googleResult = GoogleImages.findImage( string, 1.0f );
 				if (googleResult != null) {
 					try {
-						DownloadableManager.getInstance().downloadImage(task.getDownloadable(), googleResult.getUrl(), googleResult.getReferer());
+						DownloadableManager.downloadImage(task.getDownloadable(), googleResult.getUrl(), googleResult.getReferer());
 						return true;
 					} catch (IOException e) {
 						ErrorManager.getInstance().reportThrowable( e );

@@ -11,6 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
+import core.RegExp;
+import dynamo.core.manager.DownloadableFactory;
 import dynamo.manager.LocalImageCache;
 
 @Path("data")
@@ -24,6 +26,8 @@ public class ExternalDataService {
 			
 			if (url.endsWith(".jpg")) {
 				// TODO : search for missing image in this case
+				
+				DownloadableFactory.getInstance().createInstance( downloadableId );
 				
 				InputStream in = this.getClass().getResourceAsStream("/ring.svg");
 				return Response.ok(in)

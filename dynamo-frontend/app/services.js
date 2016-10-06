@@ -8,7 +8,7 @@ angular.module('dynamo')
 
     if ($location.host() == 'localhost') {
         //backendHostAndPort = '192.168.1.75:8081';
-        backendHostAndPort = 'localhost:8081';
+        backendHostAndPort = 'localhost:8082';
     } else {
         backendHostAndPort = $location.host() + ':' + location.port;
     }
@@ -24,7 +24,7 @@ angular.module('dynamo')
         },
 
         getImageURL : function( imageURL ) {
-            return 'http://' + backendHostAndPort + imageURL;
+            return 'http://' + backendHostAndPort + '/services' + imageURL;
         },
 
         post: function( url, data ) {
@@ -38,7 +38,7 @@ angular.module('dynamo')
                 completeURL += ( '?' +  Object.keys(parameters).map(function(key) { return encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]); }).join('&') );
             }
             return $http.delete( completeURL );
-        },
+        },   
 
         get: function( urlPrefix, parameters ) {
             var completeURL = this.getBackendURL() + urlPrefix;
@@ -46,7 +46,15 @@ angular.module('dynamo')
                 completeURL += ( '?' +  Object.keys(parameters).map(function(key) { return encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]); }).join('&') );
             }
             return $http.get( completeURL );
-        }
+        },
+
+        getAndCache: function( urlPrefix, parameters ) {
+            var completeURL = this.getBackendURL() + urlPrefix;
+            if (parameters) {
+                completeURL += ( '?' +  Object.keys(parameters).map(function(key) { return encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]); }).join('&') );
+            }
+            return $http.get( completeURL, {cache: true} );
+        },
     }
 
 }])
