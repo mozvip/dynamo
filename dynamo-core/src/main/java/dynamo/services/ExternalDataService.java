@@ -27,7 +27,7 @@ public class ExternalDataService {
 			if (url.endsWith(".jpg")) {
 				// TODO : search for missing image in this case
 				
-				DownloadableFactory.getInstance().createInstance( downloadableId );
+				// DownloadableFactory.getInstance().createInstance( downloadableId );
 				
 				InputStream in = this.getClass().getResourceAsStream("/ring.svg");
 				return Response.ok(in)
