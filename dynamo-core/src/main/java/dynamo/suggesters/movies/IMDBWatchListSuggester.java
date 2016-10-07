@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.thetvdbapi.model.Series;
 
 import core.RegExp;
@@ -24,9 +25,8 @@ import dynamo.core.Language;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
-import dynamo.manager.DownloadableManager;
+import dynamo.model.DownloadableStatus;
 import dynamo.model.tvshows.TVShowManager;
-import dynamo.movies.model.Movie;
 import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.TVShowSuggester;
 import hclient.HTTPClient;
@@ -51,15 +51,6 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 	}
 
 	private HTTPClient client = HTTPClient.getInstance();
-	
-	private static void getMovieSuggestionFromIMDB( String imdbID, String suggestionURL ) throws IOException, URISyntaxException {
-		IMDBTitle title = extractIMDBTitle( imdbID );
-		if (title.isTvSeries() && !title.isReleased()) {
-			return;
-		}
-		long movieId = DownloadableManager.getInstance().createSuggestion( Movie.class, title.getName(), suggestionURL );
-		DownloadableManager.downloadImage(Movie.class, movieId, title.getImage().getUrl(), title.getImage().getReferer());
-	}
 	
 	public static IMDBTitle extractIMDBTitle( String imdbID ) throws IOException {
 		if (StringUtils.isBlank( imdbID)) {
@@ -139,7 +130,7 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 	}
 
 	@Override
-	public void suggestMovies() throws IOException {
+	public void suggestMovies() throws IOException, MovieDbException, ParseException {
 
 		if (urls != null && urls.size() > 0) {
 			for (String url : urls) {
@@ -153,11 +144,13 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 							Element link = element.select("a[href*=/title/]").first();
 
 							String imdbURL = link.attr("abs:href");
-							String imdbID = RegExp.extract(imdbURL, ".*/title/(\\w+).*");
-							if (MovieManager.getInstance().getWatchedImdbIds().contains( imdbID)) {
+							String imdbId = RegExp.extract(imdbURL, ".*/title/(\\w+).*");
+							if (MovieManager.getInstance().getWatchedImdbIds().contains( imdbId)) {
 								continue;
 							}
-							getMovieSuggestionFromIMDB( imdbID, currentURL );
+
+							IMDBTitle title = extractIMDBTitle(imdbId);
+							MovieManager.getInstance().createByImdbID(imdbId, title.getImage(), Language.EN, DownloadableStatus.SUGGESTED, false);
 						}
 
 						Element nextPageLink = document
