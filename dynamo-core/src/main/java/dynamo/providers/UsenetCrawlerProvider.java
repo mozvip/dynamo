@@ -60,9 +60,6 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 		name = plus(name);
 		
 		String searchURL = String.format("%s/search?val=%s&min=%d&t=2000", BASE_URL, name, minSize);
-		if (audioLanguage == Language.EN) {
-			searchURL += "&audiolang=0";
-		}
 		
 		return extractResults(searchURL);
 	}
