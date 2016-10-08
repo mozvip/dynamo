@@ -24,9 +24,12 @@
 </div>
 
 <table class="table">
-  <tr ng-repeat="file in files | orderBy: index">
+  <tr ng-repeat="file in files | orderBy: index" ng-class="{success:!file.wrongFolder, danger:file.wrongFolder}">
     <td>
-      <span style="font-family: 'Courier New'">{{file.filePath}}</span>
+      <input type="checkbox" ng-model="file.selected" />
+    </td>
+    <td>
+      <span style="font-family: 'Courier New'">{{file.fileName}}</span>
     </td>
     <td>
       {{file.size | number}}

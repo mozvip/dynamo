@@ -33,6 +33,16 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     $scope.album = album.data;
     $scope.files = files.data;
 
+    $scope.files.forEach(function(file) {
+      if (file.filePath.startsWith($scope.album.folder)) {
+        file.wrongFolder = false;
+        file.fileName = file.filePath.substr($scope.album.folder.length+1);
+      } else {
+        file.fileName = file.filePath;
+        file.wrongFolder = true;
+      }
+    }, this);
+
     $scope.imageURL = function( url ) {
       return BackendService.getImageURL( url );
     }
