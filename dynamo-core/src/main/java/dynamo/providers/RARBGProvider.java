@@ -79,7 +79,7 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 				Element imdbLink = null;
 				String imdbId = null;
 				Elements imdbLinks = element.select("a[href*=?imdb=]");
-				if (imdbLinks != null) {
+				if (imdbLinks.size() > 0) {
 					imdbLink = imdbLinks.first();
 					imdbId = RegExp.extract( imdbLink.attr("href"), ".*imdb=(\\w+)"); 
 				}
