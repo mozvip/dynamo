@@ -22,10 +22,12 @@ public class DownloadableFactory {
 	
 	public synchronized Downloadable createInstance( long downloadableId ) {
 		DownloadInfo downloadInfo = DownloadableManager.getInstance().find( downloadableId );
-		try {
-			return createInstance(downloadableId, downloadInfo.getDownloadableClass());
-		} catch (ClassNotFoundException | InvocationTargetException | IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException e) {
-			ErrorManager.getInstance().reportThrowable( e );
+		if (downloadInfo != null) {
+			try {
+				return createInstance(downloadableId, downloadInfo.getDownloadableClass());
+			} catch (ClassNotFoundException | InvocationTargetException | IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}
 		}
 		return null;
 	}

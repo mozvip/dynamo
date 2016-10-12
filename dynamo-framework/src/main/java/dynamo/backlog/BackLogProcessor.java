@@ -172,8 +172,8 @@ public class BackLogProcessor extends Thread {
 		}
 	}
 
-	public void schedule( Task item ) {
-		schedule( item, true );
+	public void schedule( Task task ) {
+		schedule( task, true );
 	}
 
 	public void schedule( Task task, boolean reportQueued ) {
