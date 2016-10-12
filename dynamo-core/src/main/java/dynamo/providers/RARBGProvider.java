@@ -90,6 +90,9 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 				
 				if (imdbId != null) {
 					Movie suggestion = MovieManager.getInstance().suggestImdbId(imdbId, null, Language.EN, torrentPageURL);
+					if (suggestion == null) {
+						continue;
+					}
 					
 					WebDocument torrentPageDocument = getDocument( torrentPageURL );
 					

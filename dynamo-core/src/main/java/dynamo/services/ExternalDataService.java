@@ -16,7 +16,6 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.FindDownloadableImageTask;
 import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.manager.DynamoObjectFactory;
-import dynamo.core.model.Task;
 import dynamo.manager.LocalImageCache;
 import dynamo.model.Downloadable;
 
@@ -39,8 +38,10 @@ public class ExternalDataService {
 					Downloadable instance = DownloadableFactory.getInstance().createInstance( downloadableId );
 					
 					if  (instance != null ) {
-						// TODO : search for missing image in this case
-						BackLogProcessor.getInstance().schedule( (Task) DynamoObjectFactory.createInstance( FindDownloadableImageTask.class, instance), false );
+						FindDownloadableImageTask instanceTask = DynamoObjectFactory.createInstance( FindDownloadableImageTask.class, instance);
+						if (instanceTask != null) {
+							BackLogProcessor.getInstance().schedule( instanceTask, false );
+						}
 					}
 				}
 
