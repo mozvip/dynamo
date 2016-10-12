@@ -1,5 +1,7 @@
 package dynamo.core.manager;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
@@ -89,5 +91,26 @@ public class DynamoObjectFactory<T> {
 		return label;
 	}
     
+	public static <T> T createInstance( Class<T> abstractClass, Object parameter ) {
+		Set<Class<? extends T>> klasses = DynamoObjectFactory.getReflections().getSubTypesOf( abstractClass );
+		for (Class<?> klass : klasses) {
+			if (Modifier.isAbstract( klass.getModifiers() )) {
+				continue;
+			}
+			Constructor<?>[] constructors = klass.getConstructors();
+			for (Constructor<?> constructor : constructors) {
+				if (constructor.getParameterTypes() != null && constructor.getParameterTypes().length == 1 && constructor.getParameterTypes()[0].equals( parameter.getClass() )) {
+					try {
+						return (T) constructor.newInstance( parameter );
+					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+							| InvocationTargetException e) {
+						ErrorManager.getInstance().reportThrowable( e );
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
   
 }

@@ -1,7 +1,6 @@
 package dynamo.manager;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -104,23 +103,9 @@ public class DownloadableManager {
 	
 	private Set<Class<? extends Downloadable>> downloadableTypes;
 	private Map<Class<? extends Downloadable>, Class<? extends DownloadableDAO>> downloadableDaos;
-	private Map<Class<? extends Downloadable>, Constructor<? extends FindDownloadableTask<Downloadable>>> findDownloadableTaskContructors;
 	
 	private DownloadableManager() {
 
-		Set<Class<? extends FindDownloadableTask>> findDownloadableTypes = DynamoObjectFactory.getReflections().getSubTypesOf( FindDownloadableTask.class );
-		
-		findDownloadableTaskContructors = new HashMap<>();
-		for (Class<? extends FindDownloadableTask> klass : findDownloadableTypes) {
-			Constructor<?>[] constructors = klass.getConstructors();
-			for (Constructor<?> constructor : constructors) {
-				if (constructor.getParameterTypes().length == 1) {
-					findDownloadableTaskContructors.put( (Class<? extends Downloadable>) constructor.getParameterTypes()[0], (Constructor<? extends FindDownloadableTask<Downloadable>>) constructor);
-					break;
-				}
-			}
-		}
-		
 		downloadableTypes = DynamoObjectFactory.getReflections().getSubTypesOf(Downloadable.class);
 		downloadableDaos = new HashMap<>();
 		Set<Class<? extends DownloadableDAO>> daos = DynamoObjectFactory.getReflections().getSubTypesOf(DownloadableDAO.class);
@@ -138,7 +123,6 @@ public class DownloadableManager {
 	public DownloadableDAO getDAOInstance( Class<? extends Downloadable> downloadableClass ) {
 		return DAOManager.getInstance().getDAO( downloadableDaos.get( downloadableClass ));
 	}
-
 	
 	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
@@ -154,12 +138,7 @@ public class DownloadableManager {
 	}	
 	
 	public void scheduleFind( Downloadable downloadable ) {
-		try {
-			BackLogProcessor.getInstance().schedule( findDownloadableTaskContructors.get(downloadable.getClass()).newInstance( downloadable ), false );
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			ErrorManager.getInstance().reportThrowable( e );
-		}
+		BackLogProcessor.getInstance().schedule( DynamoObjectFactory.createInstance( FindDownloadableTask.class, downloadable ), false );
 	}
 	
 	public int updateStatus( Downloadable downloadable, DownloadableStatus newStatus ) {

@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.NotAlwaysReady;
 import dynamo.core.configuration.Reconfigurable;
