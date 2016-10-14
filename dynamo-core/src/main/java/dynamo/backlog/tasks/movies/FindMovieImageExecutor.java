@@ -7,7 +7,6 @@ import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.model.movie.MovieInfo;
 
 import dynamo.backlog.tasks.core.FindDownloadableImageExecutor;
-import dynamo.backlog.tasks.core.FindDownloadableImageTask;
 import dynamo.core.manager.ErrorManager;
 import dynamo.manager.DownloadableManager;
 import dynamo.movies.model.Movie;
@@ -17,7 +16,7 @@ import dynamo.suggesters.movies.IMDBWatchListSuggester;
 
 public class FindMovieImageExecutor extends FindDownloadableImageExecutor<Movie> {
 
-	public FindMovieImageExecutor(FindDownloadableImageTask<Movie> task) {
+	public FindMovieImageExecutor(FindMovieImageTask task) {
 		super(task);
 	}
 

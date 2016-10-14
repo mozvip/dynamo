@@ -124,6 +124,9 @@
       <table class="table table-condensed">
         <tr ng-repeat="searchResult in searchResults">
           <td>
+            <span title="Result is blacklisted" class="glyphicon glyphicon-remove-sign" ng-show="searchResult.blackListed"/>
+          </td>
+          <td>
             <a href="{{searchResult.referer}}" target="_blank">{{searchResult.title}}</a>
           </td>
           <td>

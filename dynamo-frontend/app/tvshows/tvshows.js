@@ -123,7 +123,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   return tvShowsService;
 }])
 
-.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', '$uibModal', 'filterFilter', 'languages', 'episodes', 'unrecognizedFiles', 'BackendService', '$location', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, $uibModal, filterFilter, languages, episodes, unrecognizedFiles, BackendService, $location ) {
+.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', 'languages', 'episodes', 'unrecognizedFiles', 'BackendService', '$location', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, searchResultsService, $uibModal, filterFilter, languages, episodes, unrecognizedFiles, BackendService, $location ) {
 
   $scope.tvshow = tvshow.data;
   $scope.episodes = episodes.data;
@@ -194,6 +194,13 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
   $scope.openFileList = function ( downloadable) {
     var modalInstance = fileListService.openModal( downloadable );
+    modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    });
+  };
+
+  $scope.openSearchResults = function ( downloadable) {
+    var modalInstance = searchResultsService.openModal( downloadable );
     modalInstance.result.then(function (selectedItem) {
       $scope.selected = selectedItem;
     });
