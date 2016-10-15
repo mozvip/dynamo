@@ -1,7 +1,12 @@
 
 <div class="row">
   <div class="col-md-2">
-    <img ng-src="{{imageURL(album.image)}}" style="max-height: 300px;" />
+    <div class="thumbnail downloadable-thumbnail">
+      <div class="buttons">
+        <button type="button" ng-show="downloadable.status == 'SUGGESTED'" ng-click="updateImage(downloadable)" class="btn btn-primary"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span></button>
+      </div>
+      <img ng-src="{{imageURL(album.image)}}" class="img-responsive" style="max-height: 300px;" />
+    </div>
   </div>
   <div class="col-md-10">
     <div class="form">

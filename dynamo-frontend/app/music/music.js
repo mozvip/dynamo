@@ -28,7 +28,7 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     });
   }])
 
-  .controller('MusicAlbumCtrl', ['$scope', 'BackendService', 'album', 'files', function ($scope, BackendService, album, files) {
+  .controller('MusicAlbumCtrl', ['$scope', 'downloadableService', 'BackendService', 'album', 'files', function ($scope, downloadableService, BackendService, album, files) {
 
     $scope.album = album.data;
     $scope.files = files.data;
@@ -46,6 +46,10 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     $scope.imageURL = function( url ) {
       return BackendService.getImageURL( url );
     }
+
+    $scope.updateImage = function (downloadable) {
+      downloadableService.updateImage(downloadable.id);
+    }    
 
 
   }])

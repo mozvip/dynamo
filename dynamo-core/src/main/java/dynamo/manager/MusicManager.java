@@ -186,6 +186,9 @@ public class MusicManager implements Reconfigurable {
 	Cache<String, MusicArtist> artistCache = CacheBuilder.newBuilder().maximumSize(1000).build();
 	
 	public static String getArtistName( String artistName ) {
+		if (StringUtils.isBlank( artistName )) {
+			artistName = "Unknown Artist";
+		}
 		String rawArtistName = artistName.trim();
 		for (String soundtrackArtistToken : originalSoundTrackArtists) {
 			if (rawArtistName.equalsIgnoreCase( soundtrackArtistToken )) {
@@ -202,6 +205,14 @@ public class MusicManager implements Reconfigurable {
 		for (String regexp : regExpArtistsName) {
 			rawArtistName = RegExp.filter(rawArtistName, regexp);	
 		}
+		
+		// replace "The Beatles" by "Beatles,The"
+		// FIXME : don't hardcode this behavior
+		String albumArtistWithoutThe = RegExp.extract( rawArtistName, "the\\s+(.*)" );
+		if (albumArtistWithoutThe != null) {
+			rawArtistName = albumArtistWithoutThe + ",The";
+		}
+		
 		return rawArtistName.trim();
 	}	
 
@@ -292,17 +303,6 @@ public class MusicManager implements Reconfigurable {
 
 	public synchronized MusicArtist getArtist( String albumArtist, boolean createIfMissing ) {
 
-		if (albumArtist == null || StringUtils.isBlank( albumArtist )) {
-			albumArtist = "Unknown Artist";
-		}
-
-		String albumArtistWithoutThe = RegExp.extract( albumArtist, "[Tt][Hh]E\\s+(.*)" );
-		if (albumArtistWithoutThe == null) {
-			albumArtistWithoutThe = RegExp.extract( albumArtist, "(.*),?\\s+[Tt][Hh]E" );
-		}
-
-		albumArtist = albumArtistWithoutThe != null ?  albumArtistWithoutThe + ",The" : albumArtist; // FIXME: don't harcode this format (Artist,The)
-
 		albumArtist = getArtistName( albumArtist );
 
 		MusicArtist artist = musicDAO.findArtist( albumArtist );	
@@ -311,10 +311,13 @@ public class MusicManager implements Reconfigurable {
 
 				List<String> aka = new ArrayList<String>();
 				aka.add( albumArtist.toUpperCase() );
+				String albumArtistWithoutThe = RegExp.extract( albumArtist, "(.+)\\s+,the");
 				if ( albumArtistWithoutThe != null ) {
 					aka.add( albumArtistWithoutThe.toUpperCase() );
-					aka.add( (albumArtistWithoutThe + ", The").toUpperCase());
-					aka.add( (albumArtistWithoutThe + ",The").toUpperCase());
+				}
+				albumArtistWithoutThe = RegExp.extract( albumArtist, "the\\s+(.+)");
+				if ( albumArtistWithoutThe != null ) {
+					aka.add( albumArtistWithoutThe.toUpperCase() );
 				}
 				String[] split = albumArtist.split(" ");
 				if (split.length == 2) {
@@ -335,7 +338,7 @@ public class MusicManager implements Reconfigurable {
 	}
 
 	public Path getPath( String albumArtist, String album ) {
-		return getPath( FileUtils.getFolderWithMostUsableSpace( getFolders() ), albumArtist, album );
+		return getPath( FileUtils.getFolderWithMostUsableSpace( getFolders() ), getArtistName(albumArtist), album );
 		
 	}
 	
