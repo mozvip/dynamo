@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 
@@ -47,7 +48,10 @@ public abstract class AmazonRSSSuggester {
 					String imageURL = document.evaluateSingleElementJSoup( ".url > img").attr("src");
 					
 					if ( imageURL != null ) {
-						imageURL = RegExp.keepOnlyGroups(imageURL, "(.*)\\._SL\\d+_(\\.jpg)");
+						String[] groups = RegExp.parseGroups( imageURL, "(.*)\\._SL\\d+_(\\.jpg)" );
+						if (groups != null) {
+							imageURL = StringUtils.join(groups);
+						}
 					}
 					
 					String suggestionURL = document.evaluateSingleElementJSoup( ".url").attr("href");
