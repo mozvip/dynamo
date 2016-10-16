@@ -32,10 +32,6 @@ public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask
 			BackLogProcessor.getInstance().schedule(new DeleteFileTask(source), false);
 			DownloadableManager.getInstance().addFile( task.getDownloadable(), destination );
 		}
-		boolean parentFolderEmpty = FileUtils.isDirEmpty( source.getParent() );
-		if (parentFolderEmpty) {
-			Files.delete( source.getParent() );
-		}
 
 	}
 	

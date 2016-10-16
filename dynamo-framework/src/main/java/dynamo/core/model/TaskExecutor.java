@@ -113,12 +113,7 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 					if (messageToReport == null && eTask != null) {
 						messageToReport	= eTask.toString();
 					}
-					String label = null;
-					if (messageToReport == null) {
-						label = String.format("Task failed (after %8.2f secs)", timeTaken);
-					} else {
-						label = String.format("Task failed (after %8.2f secs) : %s", timeTaken, messageToReport);
-					}
+					String label = String.format("Task failed (after %8.2f secs) : %s : %s", timeTaken, eTask.getClass().getName(), messageToReport);
 					ErrorManager.getInstance().reportThrowable( task, label, eTask );
 					if ( this instanceof ReportFinished ) {
 						EventManager.getInstance().reportError( String.format( "Task : %s failed !", task.toString() ) );
