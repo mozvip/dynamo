@@ -12,10 +12,12 @@ public class HTTPDownloadTask extends Task {
 	private String url;
 	private String referer;
 	private Path destinationFile;
+	private boolean image = false;
 
-	public HTTPDownloadTask(String url, String referer, Path destinationFile ) {
+	public HTTPDownloadTask(String url, String referer, boolean image, Path destinationFile ) {
 		this.url = url;
 		this.referer = referer;
+		this.image = image;
 		this.destinationFile = destinationFile;
 	}
 
@@ -29,6 +31,10 @@ public class HTTPDownloadTask extends Task {
 
 	public Path getDestinationFile() {
 		return destinationFile;
+	}
+	
+	public boolean isImage() {
+		return image;
 	}
 
 	@Override

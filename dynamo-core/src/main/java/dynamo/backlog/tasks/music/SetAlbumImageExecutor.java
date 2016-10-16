@@ -6,7 +6,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import dynamo.core.model.TaskExecutor;
-import dynamo.manager.DownloadableManager;
 import dynamo.model.music.MusicFile;
 import dynamo.music.jdbi.MusicAlbumDAO;
 
@@ -24,9 +23,6 @@ public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 		
 		long albumId = task.getMusicAlbum().getId();
 		
-		Path albumPath = task.getMusicAlbum().getFolder();
-		
-		DownloadableManager.downloadImage( task.getMusicAlbum(), task.getLocalImagePath() );
 		List<MusicFile> files = musicDAO.findMusicFiles( albumId );
 		if (files != null && files.size() > 0) {
 			for (MusicFile file : files) {
@@ -34,6 +30,7 @@ public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 			}
 		}
 
+		Path albumPath = task.getMusicAlbum().getFolder();
 		if (albumPath != null) {
 			Path folderJpg = albumPath.resolve("folder.jpg");
 			if (!Files.exists( albumPath )) {

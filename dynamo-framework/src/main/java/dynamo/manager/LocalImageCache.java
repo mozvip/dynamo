@@ -79,7 +79,7 @@ public class LocalImageCache {
 			
 			if (!Files.exists( localFile ) || Files.size(localFile) == 0) {
 				if (async) {
-					BackLogProcessor.getInstance().schedule( new HTTPDownloadTask( url, referer, localFile ), false );
+					BackLogProcessor.getInstance().schedule( new HTTPDownloadTask( url, referer, true, localFile ), false );
 				} else {
 					String contentType = HTTPClient.getInstance().downloadToFile( new WebResource( url, referer ), localFile, 0);
 				}
