@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -18,9 +19,12 @@ import javax.ws.rs.core.Response;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteFileTask;
+import dynamo.backlog.tasks.files.MoveFileTask;
 import dynamo.core.manager.DAOManager;
+import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.DownloadableUtilsDAO;
+import dynamo.model.Downloadable;
 
 @Path("file-list")
 public class FileListService {
@@ -33,6 +37,20 @@ public class FileListService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<DownloadableFile> getFilesForId(@PathParam("id") long id) {
 		return downloadableDAO.getAllFiles(id);
+	}
+	
+	@POST
+	@Path("moveToFolder")
+	public String move(@QueryParam("downloadableId") long downloadableId, @QueryParam("file") String file, @QueryParam("toFolder") String destinationFolder) {
+		java.nio.file.Path sourceFile = Paths.get( file );
+		java.nio.file.Path destinationFile = Paths.get( destinationFolder ).resolve( sourceFile.getFileName().toString() );
+
+		if (!sourceFile.toAbsolutePath().equals( destinationFile.toAbsolutePath())) {
+			Downloadable downloadable = DownloadableFactory.getInstance().createInstance( downloadableId );
+			BackLogProcessor.getInstance().schedule( new MoveFileTask( sourceFile, destinationFile, downloadable), false );
+		}
+
+		return destinationFile.toAbsolutePath().toString();
 	}
 
 	@DELETE

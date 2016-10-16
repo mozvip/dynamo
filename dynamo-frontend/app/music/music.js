@@ -47,9 +47,26 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
       return BackendService.getImageURL( url );
     }
 
-    $scope.updateImage = function (downloadable) {
-      downloadableService.updateImage(downloadable.id);
-    }    
+    $scope.updateImage = function () {
+      downloadableService.updateImage($scope.album.id);
+    }
+
+    $scope.fixFolder = function() {
+      $scope.files.forEach(function(file) {
+        if (file.wrongFolder) {
+          BackendService.post('file-list/moveToFolder?downloadableId=' + $scope.album.id + '&file=' + file.filePath + '&toFolder=' + $scope.album.folder).then( function( response ) {
+            file.wrongFolder = false;
+            file.filePath = response.data;
+          });
+        }
+      }, this);
+    }
+
+    $scope.selectAll = function() {
+      $scope.files.forEach(function(file) {
+        file.selected = true;
+      }, this);
+    }
 
 
   }])
@@ -90,10 +107,6 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     $scope.delete = function (downloadable) {
       downloadableService.delete(downloadable.id);
       $scope.removeFromList(downloadable);
-    }
-
-    $scope.updateImage = function (downloadable) {
-      downloadableService.updateImage(downloadable.id);
     }
 
     $scope.redownload = function (downloadable) {

@@ -27,7 +27,7 @@ public class ExternalDataService {
 	public Response get(@PathParam("url") String url) throws IOException {
 		
 		java.nio.file.Path path = LocalImageCache.getInstance().resolveLocal( url );
-		if (!Files.isReadable( path )) {
+		if (!Files.isReadable( path ) || Files.size( path ) == 0) {
 			
 			if (url.endsWith(".jpg")) {
 				

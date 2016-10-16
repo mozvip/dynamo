@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.manager.DownloadableManager;
 
 public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask> {
@@ -28,7 +29,7 @@ public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask
 		if (Files.isWritable(source.getParent()) && !source.toAbsolutePath().equals( destination.toAbsolutePath() )) {
 			Files.createDirectories( destination.getParent() );
 			Files.copy( source, destination, StandardCopyOption.REPLACE_EXISTING);
-			Files.delete( source );
+			BackLogProcessor.getInstance().schedule(new DeleteFileTask(source), false);
 			DownloadableManager.getInstance().addFile( task.getDownloadable(), destination );
 		}
 		boolean parentFolderEmpty = FileUtils.isDirEmpty( source.getParent() );
