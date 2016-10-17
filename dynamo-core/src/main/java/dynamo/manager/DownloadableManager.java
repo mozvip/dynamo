@@ -43,7 +43,6 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.SuggestionURLDAO;
 import dynamo.model.Video;
 import dynamo.model.backlog.core.FindDownloadableTask;
-import dynamo.model.backlog.core.HTTPDownloadTask;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
@@ -57,6 +56,7 @@ import dynamo.parsers.VideoNameParser;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import dynamo.webapps.pushbullet.PushBullet;
+import hclient.HTTPClient;
 import model.ManagedEpisode;
 import model.ManagedSeries;
 import model.backlog.ScanTVShowTask;
@@ -479,7 +479,7 @@ public class DownloadableManager {
 	public static void downloadImage( Class<? extends Downloadable> downloadableClass, long downloadableId, String url, String referer ) throws IOException {
 		if (url != null) {
 			Path localFile = resolveImage(downloadableClass, downloadableId);
-			BackLogProcessor.getInstance().schedule( new HTTPDownloadTask(url, referer, true, localFile), false );
+			boolean result = HTTPClient.getInstance().downloadImage(url, referer, localFile );
 		}
 	}	
 

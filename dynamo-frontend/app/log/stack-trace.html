@@ -1,10 +1,12 @@
-<div>
-    <table class="table table-condensed table-stripped">
-        <tr ng-repeat="logElement in stackTrace" ng-class="{success : !logElement.customCode, info : logElement.customCode}">
-            <td>{{logElement.className}}</td>
-            <td>{{logElement.methodName}}</td>
-            <td>{{logElement.fileName}}</td>
-            <td>{{logElement.lineNumber}}</td>
-        </tr>
-    </table>
+<div class="panel">
+    <div class="panel-body">
+        <table class="table table-condensed table-stripped">
+            <tr style="font-family: 'courier new'" ng-repeat="logElement in stackTrace" ng-class="{success : !logElement.customCode, info : logElement.customCode}">
+                <td>{{logElement.className}}</td>
+                <td>{{logElement.methodName}}</td>
+                <td>{{logElement.fileName}}</td>
+                <td>{{logElement.lineNumber}}</td>
+            </tr>
+        </table>
+    </div>
 </div>
