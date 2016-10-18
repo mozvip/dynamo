@@ -472,15 +472,16 @@ public class DownloadableManager {
 		Files.copy( localFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
 	}
 	
-	public static void downloadImage( Downloadable downloadable, String url, String referer ) throws IOException {
-		downloadImage(downloadable.getClass(), downloadable.getId(), url, referer); 
+	public static boolean downloadImage( Downloadable downloadable, String url, String referer ) throws IOException {
+		return downloadImage(downloadable.getClass(), downloadable.getId(), url, referer); 
 	}
 	
-	public static void downloadImage( Class<? extends Downloadable> downloadableClass, long downloadableId, String url, String referer ) throws IOException {
+	public static boolean downloadImage( Class<? extends Downloadable> downloadableClass, long downloadableId, String url, String referer ) throws IOException {
 		if (url != null) {
 			Path localFile = resolveImage(downloadableClass, downloadableId);
-			boolean result = HTTPClient.getInstance().downloadImage(url, referer, localFile );
+			return HTTPClient.getInstance().downloadImage(url, referer, localFile );
 		}
+		return false;
 	}	
 
 }

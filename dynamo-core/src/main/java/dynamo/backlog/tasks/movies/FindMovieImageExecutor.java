@@ -30,8 +30,7 @@ public class FindMovieImageExecutor extends FindDownloadableImageExecutor<Movie>
 			try {
 				MovieInfo movieDb = MovieManager.getInstance().getMovieInfo( movie.getMovieDbId() );
 				if ( movieDb.getPosterPath() != null ) {
-					DownloadableManager.downloadImage(movie, MovieManager.getInstance().getImageURL( movieDb.getPosterPath()), null);
-					return true;
+					return DownloadableManager.downloadImage(movie, MovieManager.getInstance().getImageURL( movieDb.getPosterPath()), null);
 				}
 			} catch (MovieDbException | IOException e) {
 				ErrorManager.getInstance().reportThrowable( e );
@@ -43,7 +42,7 @@ public class FindMovieImageExecutor extends FindDownloadableImageExecutor<Movie>
 			try {
 				IMDBTitle imdbData = IMDBWatchListSuggester.extractIMDBTitle( movie.getImdbID() );
 				if (imdbData.getImage() != null) {
-					DownloadableManager.downloadImage(movie, imdbData.getImage().getUrl(), imdbData.getImage().getReferer());
+					return DownloadableManager.downloadImage(movie, imdbData.getImage().getUrl(), imdbData.getImage().getReferer());
 				}
 				return true;
 			} catch (IOException e) {
