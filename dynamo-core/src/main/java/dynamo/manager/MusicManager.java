@@ -409,7 +409,7 @@ public class MusicManager implements Reconfigurable {
 	public void reconfigure() {
 		if (isEnabled()) {
 			for (Path path : getFolders()) {
-				BackLogProcessor.getInstance().schedule( new ImportMusicFolderTask( path, true ) );
+				BackLogProcessor.getInstance().schedule( new ImportMusicFolderTask( path, true ), false );
 			}
 		} else {
 			BackLogProcessor.getInstance().unschedule( ImportMusicFolderTask.class );

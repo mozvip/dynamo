@@ -24,6 +24,7 @@ import core.RegExp;
 import core.WebResource;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
+import dynamo.backlog.tasks.movies.FindMovieImageTask;
 import dynamo.backlog.tasks.movies.MovieCleanupTask;
 import dynamo.backlog.tasks.movies.ScanMovieFolderTask;
 import dynamo.core.Language;
@@ -220,15 +221,15 @@ public class MovieManager implements Reconfigurable {
 		movie.setMovieDbId( movieDb.getId() );
 		movie.setImdbID( movieDb.getImdbID() );
 
-		if (!DownloadableManager.hasImage( movie ) && movieDb.getPosterPath() != null) {
-			DownloadableManager.downloadImage(movie, getImageURL( movieDb.getPosterPath()), null);
-		}
 		if ( StringUtils.isNotBlank( movieDb.getReleaseDate() )) {
 			int year = Integer.parseInt( RegExp.extract( movieDb.getReleaseDate(), "(\\d{4}).*") );
 			if (movie.getYear() != year) {
 				movie.setYear( year );
 				DownloadableManager.getInstance().updateYear( movie.getId(), movie.getYear());
 			}
+		}
+		if (!DownloadableManager.hasImage( movie )) {
+			BackLogProcessor.getInstance().schedule( new FindMovieImageTask( movie ), false);
 		}
 	}
 
@@ -240,9 +241,7 @@ public class MovieManager implements Reconfigurable {
 			}
 
 			long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, movieDb.getTitle(), status );
-			if (movieDb.getPosterPath() != null) {
-				DownloadableManager.downloadImage(Movie.class, downloadableId, getImageURL( movieDb.getPosterPath()), null);
-			} else if (defaultImage != null) {
+			if (defaultImage != null) {
 				DownloadableManager.downloadImage(Movie.class, downloadableId, defaultImage.getUrl(), defaultImage.getReferer() );
 			}
 
@@ -470,7 +469,8 @@ public class MovieManager implements Reconfigurable {
 			"(.*)\\s+\\(extended edition\\)",
 			"(.*)\\s+\\(ultimate edition\\)",
 			"(.*)\\s+\\bluray",
-			"(.*)\\s+\\truefrench"
+			"(.*)\\s+\\truefrench",
+			"(.*)\\s+\\([^(]*\\s+cut\\)"
 	};
 
 	public Movie suggestByName( String name, int year, WebResource defaultImage, Language language, boolean maybeUnreleased, String suggestionURL ) throws MovieDbException, IOException, URISyntaxException, ParseException {
