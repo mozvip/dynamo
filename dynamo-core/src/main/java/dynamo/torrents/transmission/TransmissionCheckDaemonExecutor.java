@@ -40,6 +40,18 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 		super(task);
 		this.searchResultDAO = searchResultDAO;
 	}
+	
+	private List<Path> getSourceFiles( TransmissionResponseTorrent torrent ) {
+		Path sourceFolder = Paths.get( torrent.getDownloadDir() );
+		List<Path> files = new ArrayList<>();
+		for (ApiFile file : torrent.getFiles()) {
+			if (file.getLength() > 0) {
+				String fileName = file.getName().replace('?', '¿');
+				files.add( sourceFolder.resolve(fileName) );
+			}
+		}
+		return files;
+	}
 
 	@Override
 	public void execute() throws Exception {
@@ -65,23 +77,16 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 				
 				torrentFound = true;
 				if (torrent.getDoneDate() > 0) {	
-					Path sourceFolder = Paths.get( torrent.getDownloadDir() );
-					List<Path> files = new ArrayList<>();
-					for (ApiFile file : torrent.getFiles()) {
-						if (file.getLength() > 0) {
-							String fileName = file.getName().replace('?', '¿');
-							files.add( sourceFolder.resolve(fileName) );
-						}
-					}
+					List<Path> files = getSourceFiles( torrent );
 
 					boolean move = false;
-					if (limitUploadRatio <= 0) {
+					if (torrent.getUploadRatio() >= limitUploadRatio) {
 						move = true;
 						transmission.remove( torrent.getId(), false );
 					}
 
-					DownloadableManager.getInstance().downloaded(task, downloadable, searchResult, sourceFolder, files, move );
-					searchResultDAO.freeClientId(searchResult.getClientId());
+					Path downloadFolder = Paths.get( torrent.getDownloadDir() );
+					DownloadableManager.getInstance().downloaded(task, downloadable, searchResult, downloadFolder, files, move );
 				}
 			}
 
@@ -97,22 +102,20 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 		
 		List<SearchResult> blackListedResults = searchResultDAO.getBlackListedSearchResults( SearchResultType.TORRENT );
 		for (SearchResult searchResult : blackListedResults) {
-			if (searchResult.getClientId() != null) {
-				for (TransmissionResponseTorrent torrent : torrents) {
-					if (Integer.parseInt(searchResult.getClientId()) == torrent.getId()) {
-						transmission.remove( torrent.getId(), true );
-						searchResultDAO.freeClientId(searchResult.getClientId());
-						break;
-					}
+			for (TransmissionResponseTorrent torrent : torrents) {
+				if (Integer.parseInt(searchResult.getClientId()) == torrent.getId()) {
+					transmission.remove( torrent.getId(), true );
+					searchResultDAO.freeClientId(searchResult.getClientId());
+					break;
 				}
 			}
 		}
 		
 		for (TransmissionResponseTorrent torrent : torrents) {
-			if (torrent.getDoneDate() > 0 && torrent.getUploadRatio() > limitUploadRatio) {
-				// delete the torrent, the files will be moved 
+			if (torrent.getDoneDate() > 0 && torrent.getUploadRatio() >= limitUploadRatio) {
+				// delete the torrent and associated files : TODO 
 				searchResultDAO.freeClientId("" + torrent.getId());
-				transmission.remove( torrent.getId(), false );
+				transmission.remove( torrent.getId(), true );
 			}
 		}
 		

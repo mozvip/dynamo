@@ -80,9 +80,6 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 							files = FolderManager.getAllFilesFrom( sourceFolder, true );
 						}
 
-						// FIXME: sourceFolder is local to the SABnzbd server, not to the dynamo server !!!
-						// This only works if SABnzbd and dynamo are on the same server !
-
 						for (Iterator<Path> iterator = files.iterator(); iterator.hasNext();) {
 							Path path = iterator.next();
 							if (!Files.exists(path)) {

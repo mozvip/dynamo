@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -264,9 +265,11 @@ public class DownloadableManager {
 		return downloadableDAO.findWanted();
 	}
 
-	public void downloaded(Task task, Downloadable downloadable, SearchResult searchResult, Path sourceFolder, List<Path> sourceFiles, boolean moveFiles) throws IOException {
+	public Set<Task> downloaded(Task task, Downloadable downloadable, SearchResult searchResult, Path sourceFolder, List<Path> sourceFiles, boolean moveFiles) throws IOException {
 		
 		boolean filesFound = true;
+		
+		Set<Task> fileTasks = new HashSet<>();
 		
 		Path destinationFolder = downloadable.determineDestinationFolder();
 		for (Path source : sourceFiles) {
@@ -291,16 +294,21 @@ public class DownloadableManager {
 			}
 
 			if (moveFiles) {
-				FolderManager.moveFile(source, destinationFile, downloadable);
+				fileTasks.add( FolderManager.moveFile(source, destinationFile, downloadable) );
 			} else {
-				FolderManager.copyFile(source, destinationFile, downloadable);
+				fileTasks.add( FolderManager.copyFile(source, destinationFile, downloadable) );
 			}
 		}
 		
 		if (filesFound) {
 			logStatusChange( downloadable, DownloadableStatus.DOWNLOADED, String.format("<a href='%s'>%s</a> has been downloaded", downloadable.getRelativeLink() + "DOWNLOADED", downloadable.toString()) );
 		}
-
+		
+		if (searchResult.getClientId() != null) {
+			searchResultDAO.freeClientId(searchResult.getClientId());
+		}
+		
+		return fileTasks;
 	}
 
 	public void delete(Class<? extends Downloadable> klass, DownloadableStatus statusToDelete) {

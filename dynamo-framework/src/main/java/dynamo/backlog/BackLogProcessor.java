@@ -176,9 +176,9 @@ public class BackLogProcessor extends Thread {
 		schedule( task, true );
 	}
 
-	public void schedule( Task task, boolean reportQueued ) {
+	public Task schedule( Task task, boolean reportQueued ) {
 		if (task instanceof Enableable && !((Enableable) task).isEnabled()) {
-			return;
+			return null;
 		}
 		
 		if (pendingTasks.contains( task )) {
@@ -188,7 +188,7 @@ public class BackLogProcessor extends Thread {
 		for (AbstractDynamoQueue queue : getQueues().values()) {
 			if (queue.isExecuting(task)) {
 				// already scheduled in queue
-				return;
+				return task;
 			}
 		}
 		
@@ -200,7 +200,8 @@ public class BackLogProcessor extends Thread {
 		if (reportQueued) {
 			EventManager.getInstance().reportInfo( String.format("%s has been queued", task.toString()));
 		}
-
+		
+		return task;
 	}
 
 	public void shutdown() {

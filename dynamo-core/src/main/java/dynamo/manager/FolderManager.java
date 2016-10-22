@@ -12,6 +12,7 @@ import dynamo.backlog.tasks.files.CopyFileTask;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.backlog.tasks.files.MoveFileTask;
 import dynamo.core.manager.ErrorManager;
+import dynamo.core.model.Task;
 import dynamo.model.Downloadable;
 import dynamo.model.backlog.core.NewFolderTask;
 
@@ -28,12 +29,12 @@ public class FolderManager {
 		return SingletonHolder.instance;
 	}
 	
-	public static void moveFile( Path source, Path destinationFile, Downloadable downloadable ) {
-		BackLogProcessor.getInstance().schedule( new MoveFileTask( source, destinationFile, downloadable ), false );
+	public static Task moveFile( Path source, Path destinationFile, Downloadable downloadable ) {
+		return BackLogProcessor.getInstance().schedule( new MoveFileTask( source, destinationFile, downloadable ), false );
 	}
 
-	public static void copyFile( Path source, Path destinationFile, Downloadable downloadable ) {
-		BackLogProcessor.getInstance().schedule( new CopyFileTask( source, destinationFile, downloadable ), false );
+	public static Task copyFile( Path source, Path destinationFile, Downloadable downloadable ) {
+		return BackLogProcessor.getInstance().schedule( new CopyFileTask( source, destinationFile, downloadable ), false );
 	}
 	
 	public static List<Path> getAllFilesFrom( Path folder, boolean deleteEmptyFolders ) throws IOException {
