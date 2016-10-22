@@ -4,8 +4,8 @@
         <td>{{disk.totalSpace | number}}</td>
         <td>{{disk.freeSpace | number}}</td>
         <td>
-            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" ng-style="width:{{disk.occupation}}%">
-                {{disk.occupation}}%
+            <div ng-class="['progress-bar', {'progress-bar-success' : disk.occupation < 50, 'progress-bar-info' : disk.occupation < 75, 'progress-bar-danger': disk.occupation > 75}]" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{disk.occupation}}%">
+                {{disk.occupation | number:2}}%
             </div>
         </td>
     </tr>
