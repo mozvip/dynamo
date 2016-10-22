@@ -64,7 +64,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
 
     $uibModal.open({
         animation: false,
-        templateUrl: 'searchResults.html',
+        templateUrl: 'common/searchResults.html',
         controller: 'SearchResultsCtrl',
         size: 'lg',
         resolve: {
@@ -93,7 +93,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   fileListService.openModal = function( downloadable ) {
     return $uibModal.open({
       animation: false,
-      templateUrl: 'fileList.html',
+      templateUrl: 'common/fileList.html',
       controller: 'FileListCtrl',
       size: 'lg',
       resolve: {

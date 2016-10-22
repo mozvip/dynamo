@@ -1,0 +1,25 @@
+<div class="panel">
+    <div class="panel-heading">
+        <h3>Search Results</h3>
+    </div>
+    <div class="panel-body">
+      <table class="table table-condensed">
+        <tr ng-repeat="searchResult in searchResults">
+          <td>
+            <button class="btn btn-danger" ng-show="searchResult.blackListed">
+                <span title="Result is blacklisted" class="glyphicon glyphicon-remove-sign" />
+            </button>
+          </td>
+          <td>
+            <a href="{{searchResult.referer}}" target="_blank">{{searchResult.title}}</a>
+          </td>
+          <td>
+            <a href="{{ searchResult.url }}" class="btn btn-primary"><span class="glyphicon glyphicon-download"/></a>
+          </td>
+          <td>
+            {{ searchResult.size | number }}
+          </td>
+        </tr>
+      </table>
+    </div>
+</script>

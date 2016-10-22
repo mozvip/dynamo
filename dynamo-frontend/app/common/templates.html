@@ -1,32 +1,4 @@
-<script type="text/ng-template" id="fileList.html">
-    <div class="modal-header">
-        <h3 class="modal-title">Files</h3>
-    </div>
-    <div class="modal-body">
-      <table class="table table-condensed table-striped">
-        <tr ng-repeat="item in files">
-          <td>
-            <div class="btn-group" role="group">
-              <button class="btn btn-danger btn-sm" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{item.filePath}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No,  cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="delete(item)">
-                <span class="glyphicon glyphicon-trash" />
-              </button>
-              <a class="btn btn-default btn-sm" ng-href="{{downloadURL(item.filePath)}}" target="_blank">
-                <span class="glyphicon glyphicon-download" />
-              </a>
-            </div>
-          </td>
-          <td>
-            <span style="font-family: 'Lucida Console'">
-              {{ item.filePath }}
-            </span>
-          </td>
-          <td>
-            {{ item.size | number }}
-          </td>
-        </tr>
-      </table>
-    </div>
-</script>
+
 <script type="text/ng-template" id="tvShowSearch.html">
     <div class="modal-header">
         <h3 class="modal-title">Search TV Show</h3>

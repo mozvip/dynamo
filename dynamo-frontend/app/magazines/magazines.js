@@ -106,23 +106,11 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
       searchResultsService.openModal(downloadable);
     }
 
-    $scope.openFileList = function (downloadable) {
-
-      var modalInstance = $uibModal.open({
-        animation: false,
-        templateUrl: 'fileList.html',
-        controller: 'FileListCtrl',
-        size: 'lg',
-        resolve: {
-          fileList: function () {
-            return fileListService.get(downloadable.id);
-          }
-        }
-      });
-
-      modalInstance.result.then(function (selectedItem) {
-        $scope.selected = selectedItem;
-      });
-    };
+  $scope.openFileList = function ( downloadable) {
+    var modalInstance = fileListService.openModal( downloadable );
+    modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    });
+  };
 
   }]);
