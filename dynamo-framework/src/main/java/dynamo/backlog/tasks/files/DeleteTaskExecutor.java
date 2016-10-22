@@ -49,7 +49,7 @@ public class DeleteTaskExecutor extends TaskExecutor<DeleteTask> implements LogS
 		}
 		
 		if ( task.isRemoveParentFolderIfEmpty() && Files.isDirectory(task.getPath().getParent()) && FileUtils.isDirEmpty(task.getPath().getParent())) {
-			Files.delete( task.getPath().getParent());
+			Files.deleteIfExists( task.getPath().getParent());
 		}
 	}
 	

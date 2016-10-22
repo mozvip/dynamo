@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -474,22 +473,21 @@ public class DownloadableManager {
 		return Files.exists( image ) && Files.size( image ) > 0;
 	}
 	
-	public static void downloadImage( Downloadable downloadable, Path localFile ) throws IOException {
-		Path targetFile = resolveImage(downloadable);
-		Files.createDirectories(targetFile.getParent());
-		Files.copy( localFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
-	}
-	
 	public static boolean downloadImage( Downloadable downloadable, String url, String referer ) throws IOException {
 		return downloadImage(downloadable.getClass(), downloadable.getId(), url, referer); 
 	}
 	
-	public static boolean downloadImage( Class<? extends Downloadable> downloadableClass, long downloadableId, String url, String referer ) throws IOException {
+	public static boolean downloadImage(Path localFile, String url, String referer ) throws IOException {
 		if (url != null) {
-			Path localFile = resolveImage(downloadableClass, downloadableId);
+			Files.deleteIfExists( localFile );
 			return HTTPClient.getInstance().downloadImage(url, referer, localFile );
 		}
 		return false;
+	}	
+
+	public static boolean downloadImage( Class<? extends Downloadable> downloadableClass, long downloadableId, String url, String referer ) throws IOException {
+		Path localFile = resolveImage(downloadableClass, downloadableId);
+		return downloadImage(localFile, url, referer);
 	}	
 
 }
