@@ -64,7 +64,7 @@ public class MusicAlbum extends Downloadable {
 	
 	@Override
 	public String getRelativeLink() {
-		return "index.html#/music/";
+		return String.format("index.html#/music-album/%d", getId());
 	}
 	
 	@Override
