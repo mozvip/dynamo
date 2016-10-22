@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -78,7 +80,12 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 		int minimumSize = MovieManager.getInstance().getMinimumSizeForMovie(videoQuality);
 		
 		String searchURL = String.format( "%s/search/?q=%s+%d" + SEARCH_SUFFIX, BASE_URL, plus(name), year, minimumSize );
-		return extractResults( searchURL );
+		List<SearchResult> results = extractResults( searchURL );
+		if (videoQuality != null && videoQuality != VideoQuality.SD) {
+			return results.stream().filter( movie -> StringUtils.containsAny( movie.getTitle(), videoQuality.getAliases() )).collect( Collectors.toList() );
+		} else {
+			return results;
+		}
 	}
 
 	@Override

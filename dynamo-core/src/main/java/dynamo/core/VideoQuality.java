@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public enum VideoQuality implements Serializable, Labelized {
 	
-	SD( new String[] {" SD ", "DVDRIP", "dvd9"} ),
+	SD( new String[] {" SD ", "DVDRIP", "dvd9" } ),
 	_720p(new String[] {"720p"}),
 	_1080p(new String[] {"1080p"});
 	
