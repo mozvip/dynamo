@@ -226,7 +226,7 @@ public class BackLogProcessor extends Thread {
 
 		boolean result = false;
 
-		if (taskClass == null || task.getClass().equals( taskClass )) {
+		if (taskClass == null || taskClass.isAssignableFrom( task.getClass() )) {
 			if (expressionToVerify != null) {
 				try {
 					DynamoELContext context = new DynamoELContext( task );
@@ -245,6 +245,21 @@ public class BackLogProcessor extends Thread {
 		
 		return result;
 		
+	}
+
+	public boolean isRunningOrPending( Class<? extends Task> taskClass ) {
+		AbstractDynamoQueue queue = getQueueForTaskClass(taskClass);
+		for (Task task : queue.getTaskBackLog()) {
+			if (match( task, taskClass, null)) {
+				return true;
+			}
+		}
+		for (Task task : pendingTasks) {
+			if (match( task, taskClass, null)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void unschedule( Class<? extends Task> taskClass, String expressionToVerify ) {

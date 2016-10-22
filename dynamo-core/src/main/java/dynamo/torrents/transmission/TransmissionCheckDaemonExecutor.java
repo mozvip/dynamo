@@ -5,6 +5,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import dynamo.backlog.BackLogProcessor;
+import dynamo.backlog.tasks.files.FileOperationTask;
 import dynamo.core.Enableable;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.DownloadableFactory;
@@ -111,8 +113,15 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 			}
 		}
 		
+		if (BackLogProcessor.getInstance().isRunningOrPending( FileOperationTask.class )) {
+			// do not cancel any download if file operations are in progress
+			return;
+		}
+
 		for (TransmissionResponseTorrent torrent : torrents) {
 			if (torrent.getDoneDate() > 0 && torrent.getUploadRatio() >= limitUploadRatio) {
+				
+				
 				// delete the torrent and associated files : TODO 
 				searchResultDAO.freeClientId("" + torrent.getId());
 				transmission.remove( torrent.getId(), true );

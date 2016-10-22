@@ -423,9 +423,8 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		List<DownloadSuggestion> movieSuggestions = extractSuggestions(String.format("%s/torrents/search/?search=&subcat=631&term[7][]=16", baseURL), 2, false);
 		for (DownloadSuggestion movieSuggestion : movieSuggestions) {
 			String titleToParse = movieSuggestion.getTitle();
-			titleToParse = titleToParse.replaceAll("1080p", "");
 
-			String[] groups = RegExp.parseGroups( titleToParse, "([\\w\\s\\.]+)(\\d{4})(.*)");
+			String[] groups = RegExp.parseGroups( titleToParse, "([îéè',\\w\\d\\s\\(\\)\\.]+)(19\\d{2}|20\\d{2})(.*)");
 			if (groups != null) {
 				String movieName =  groups[0].trim();
 				movieName = movieName.replaceAll("\\.", " ").trim();
@@ -433,6 +432,8 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 				if (movie != null) {
 					// TODO: store search result
 				}
+			} else {
+				// unable to identify movie info
 			}
 		}
 	}

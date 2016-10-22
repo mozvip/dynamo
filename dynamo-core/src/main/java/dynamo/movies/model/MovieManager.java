@@ -463,13 +463,21 @@ public class MovieManager implements Reconfigurable {
 	}
 	
 	public static String[] movieNameCleanups = new String[] {
-			"(.*) 3d",
+			"(.*)\\s+3d",
 			"(.*)\\s+\\(version longue\\)",
 			"(.*)\\s+\\(unrated\\)",
 			"(.*)\\s+\\(extended edition\\)",
 			"(.*)\\s+\\(ultimate edition\\)",
-			"(.*)\\s+\\bluray",
-			"(.*)\\s+\\truefrench",
+			"(.*)\\s+bluray",
+			"(.*)\\s+multi vff",
+			"(.*)\\s+1080p",
+			"(.*)\\s+1080",
+			"(.*)\\s+720p",
+			"(.*)\\s+720",
+			"(.*)\\s+vff",
+			"(.*)\\s+hdrip",
+			"(.*)\\s+vostfr",
+			"(.*)\\s+truefrench",
 			"(.*)\\s+\\([^(]*\\s+cut\\)"
 	};
 
