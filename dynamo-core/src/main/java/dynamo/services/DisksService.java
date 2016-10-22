@@ -3,6 +3,7 @@ package dynamo.services;
 import java.io.IOException;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -76,20 +77,18 @@ public class DisksService {
 		}
 		// folders.addAll( GamesManager.getInstance().getFolders() ); // TODO
 
-		Set<FileSystem> fileSystems = new HashSet<>();
+		Set<FileStore> fileStores = new HashSet<>();
 		for (java.nio.file.Path path : folders) {
-			fileSystems.add(path.getFileSystem());
+			fileStores.add(Files.getFileStore(path));
 		}
 
 		List<Disk> disks = new ArrayList<>();
-		for (FileSystem fileSystem : fileSystems) {
-			for (FileStore store : fileSystem.getFileStores()) {
-				Disk d = new Disk();
-				d.name = store.toString();
-				d.totalSpace = store.getTotalSpace();
-				d.freeSpace = store.getUsableSpace();
-				disks.add(d);
-			}
+		for (FileStore store : fileStores) {
+			Disk d = new Disk();
+			d.name = store.toString();
+			d.totalSpace = store.getTotalSpace();
+			d.freeSpace = store.getUsableSpace();
+			disks.add(d);
 		}
 
 		return disks;

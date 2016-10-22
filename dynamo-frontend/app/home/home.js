@@ -18,4 +18,8 @@ angular.module('dynamo.home', ['ngRoute'])
 
     $scope.disks = disks.data;
 
+    $scope.disks.forEach(function(disk) {
+      disk.occupation = (disk.totalSpace-disk.freeSpace) / disk.totalSpace * 100;
+    }, this);
+
 }]);
