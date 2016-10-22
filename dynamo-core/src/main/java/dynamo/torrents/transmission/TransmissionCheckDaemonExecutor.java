@@ -73,9 +73,7 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 							files.add( sourceFolder.resolve(fileName) );
 						}
 					}
-					// MAYBE_FIXME : sourceFolder is local to the transmission server, not to the dynamo server
-					// This only works if transmission and dynamo are on the same server !
-					
+
 					boolean move = false;
 					if (limitUploadRatio <= 0) {
 						move = true;
@@ -112,10 +110,9 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 		
 		for (TransmissionResponseTorrent torrent : torrents) {
 			if (torrent.getDoneDate() > 0 && torrent.getUploadRatio() > limitUploadRatio) {
-				
-				// delete the files : FIXME : how to check that we have no file copy or move in progress ?
+				// delete the torrent, the files will be moved 
 				searchResultDAO.freeClientId("" + torrent.getId());
-				transmission.remove( torrent.getId(), true );
+				transmission.remove( torrent.getId(), false );
 			}
 		}
 		
