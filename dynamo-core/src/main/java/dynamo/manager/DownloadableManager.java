@@ -479,7 +479,6 @@ public class DownloadableManager {
 	
 	public static boolean downloadImage(Path localFile, String url, String referer ) throws IOException {
 		if (url != null) {
-			Files.deleteIfExists( localFile );
 			return HTTPClient.getInstance().downloadImage(url, referer, localFile );
 		}
 		return false;
