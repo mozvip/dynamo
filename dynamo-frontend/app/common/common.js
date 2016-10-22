@@ -164,6 +164,10 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
         scope.item.value = parseInt(scope.item.value);
       }
 
+      if (scope.item.type == 'float') {
+        scope.item.value = parseFloat(scope.item.value);
+      }
+
       if (scope.item.list) {
 
         scope.refreshRemainingValues = function() {
