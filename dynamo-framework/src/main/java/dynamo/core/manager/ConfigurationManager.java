@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
@@ -175,7 +176,7 @@ public class ConfigurationManager {
     		TaskExecutor instance = constructorToUse.newInstance( params );
 			configureInstance( instance );
 			return instance;
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException e) {
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}
     	return null;		
@@ -240,7 +241,7 @@ public class ConfigurationManager {
 		}
 	}
 
-    public Object configureInstance( final Object instance ) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
+    public Object configureInstance( final Object instance ) {
 
     	List<Field> fields = new ArrayList<Field>();
     	Class currentClass = instance.getClass();
@@ -266,38 +267,22 @@ public class ConfigurationManager {
 	public static Object configureQueue(Class<? extends AbstractDynamoQueue> queueClass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, ClassNotFoundException {
 		return getInstance().configureInstance( queueClass.newInstance() );
 	}
+	
 
 	public void configureApplication() throws Exception {
 		
+		// get all instances to configure
+		List<?> instances = ConfigAnnotationManager.getInstance().getConfiguredClasses().parallelStream().map( klass -> DynamoObjectFactory.getInstance(klass)).filter(instance -> instance != null).collect( Collectors.toList() );
+		
 		// first pass : set attribute values
-		for (Class klass : ConfigAnnotationManager.getInstance().getConfiguredClasses()) {
-			Object instance = null;
-			try {
-				instance = DynamoObjectFactory.getInstance(klass);
-			} catch ( IllegalArgumentException e) {
-				ErrorManager.getInstance().reportThrowable( e );
-			}
-
-			if ( instance != null ) {
-				LOGGER.debug("Configuring instance of class {}", klass.getCanonicalName());
-				configureInstance( instance );
-			}
-		}
+		instances.parallelStream()
+			.forEach( instance -> configureInstance( instance ));
 		
 		// second pass : reconfigure
-		for (Class klass : ConfigAnnotationManager.getInstance().getConfiguredClasses()) {
-			Object instance = null;
-			try {
-				instance = DynamoObjectFactory.getInstance(klass);
-			} catch (IllegalArgumentException e) {
-				ErrorManager.getInstance().reportThrowable( e );
-			}
-			if (instance instanceof Reconfigurable) {
-				if (!(instance instanceof Enableable) || ((Enableable) instance).isEnabled()) {
-					((Reconfigurable)instance).reconfigure();
-				}
-			}
-		}
+		instances.parallelStream()
+			.filter(instance -> instance instanceof Reconfigurable)
+			.filter(instance -> !(instance instanceof Enableable) || ((Enableable) instance).isEnabled())
+			.forEach( instance -> ((Reconfigurable) instance).reconfigure() );
 
 		Set<InitTask> initTasks = new DynamoObjectFactory<>(InitTask.class).getInstances();
 		for (InitTask initTask : initTasks) {
