@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
@@ -18,7 +17,6 @@ public abstract class AbstractDynamoQueue {
 	private int queueSize;
 	private ThreadPoolExecutor pool;
 	private List<TaskExecutor<Task>> submittedExecutors = new ArrayList<>();
-	public List<FutureTask<?>> futures = new ArrayList<FutureTask<?>>();
 	
 	public abstract String getQueueName();
 
@@ -60,18 +58,18 @@ public abstract class AbstractDynamoQueue {
 		}
 	}
 	
-	public List<TaskExecutor<Task>> getBackLog() {
+	public List<TaskExecutor<Task>> getExecutors() {
 		return submittedExecutors;
 	}
 
-	public List<Task> getTaskBackLog() {
+	public List<Task> getTasks() {
 		synchronized (submittedExecutors) {		
 			return submittedExecutors.stream()
 					.map( executor -> executor.getTask() )
 					.collect( Collectors.toList() );
 		}
 	}
-	
+
 	public boolean isExecuting( Task task ) {
 		synchronized (submittedExecutors) {
 			return submittedExecutors.stream()
@@ -82,11 +80,7 @@ public abstract class AbstractDynamoQueue {
 	public BlockingQueue<Runnable> getQueue() {
 		return pool.getQueue();
 	}
-	
-	public List<FutureTask<?>> getFutures() {
-		return futures;
-	}
-	
+
 	public boolean executeTask( Task task ) throws NoSuchMethodException, SecurityException, ClassNotFoundException {
 		synchronized (submittedExecutors) {
 			Class<? extends TaskExecutor> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
@@ -94,7 +88,7 @@ public abstract class AbstractDynamoQueue {
 				TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
 				if (!isExecuting(task)) {
 					submittedExecutors.add ( executor );
-					futures.add( (FutureTask<?>) pool.submit( executor ) );
+					pool.submit( executor );
 				}
 				return true;
 			} else {

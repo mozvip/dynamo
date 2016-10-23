@@ -2,8 +2,11 @@ package dynamo.suggesters;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dynamo.core.Enableable;
 import dynamo.core.configuration.Configurable;
+import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
@@ -15,6 +18,7 @@ public class RefreshMovieSuggestionExecutor extends TaskExecutor<RefreshMovieSug
 	@Configurable(contentsClass=MovieSuggester.class, ordered=false)
 	private Collection<MovieSuggester> movieSuggesters;
 
+	@JsonIgnore
 	public Collection<MovieSuggester> getMovieSuggesters() {
 		return movieSuggesters;
 	}
@@ -48,7 +52,7 @@ public class RefreshMovieSuggestionExecutor extends TaskExecutor<RefreshMovieSug
 			if (movieSuggester instanceof Enableable && !((Enableable) movieSuggester).isEnabled()) {
 				continue;
 			}
-			setCurrentLabel(String.format("Retrieving movie suggestions from %s", movieSuggester.toString()));
+			setCurrentLabel(String.format("Retrieving movie suggestions from %s", DynamoObjectFactory.getClassDescription( movieSuggester.getClass() )));
 			try {
 				movieSuggester.suggestMovies();
 			} catch (Exception e) {

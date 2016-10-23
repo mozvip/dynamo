@@ -7,6 +7,9 @@ import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
 import dynamo.core.Enableable;
 import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
@@ -60,14 +63,17 @@ public class TraktManager implements Reconfigurable, MovieSuggester, Enableable 
 		this.username = username;
 	}
 
+	@JsonIgnore
 	public List<TraktMovie> getMovieRecommandations() throws ClientProtocolException, UnsupportedEncodingException, IOException {
 		return service.recommandationsMovies();
 	}
 
+	@JsonIgnore
 	public List<TraktWatchedEntry> getMoviesWatched() throws ClientProtocolException, UnsupportedEncodingException, IOException {
 		return service.moviesWatched( username );
 	}
 
+	@JsonIgnore
 	public List<TraktWatchedEntry> getShowsWatched() throws ClientProtocolException, UnsupportedEncodingException, IOException {
 		return service.showsWatched( username );
 	}

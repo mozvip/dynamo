@@ -29,7 +29,9 @@ public enum Language implements Labelized {
 	SL("sl", new Locale("sl"), 	new String[] { "Slovenian" }, null, null, new String[] { "(.*) Slovenia" }),
 	TR("tr", new Locale("tr"), 	new String[] { "Turkish" }, null, null, null),
 	PT("pt", new Locale("pt"), 	new String[] { "Portuguese" }, null, null, new String[] { "(.*) Portugal" } ),
-	UK("uk", new Locale("uk"), 	new String[] { "Ukrainian" }, null, null, new String[] { "(.*) Ukraine" } );
+	UK("uk", new Locale("uk"), 	new String[] { "Ukrainian" }, null, null, new String[] { "(.*) Ukraine" } ),
+	ZH("zh", new Locale("zh"), 	new String[] { "Chinese" }, null, null, new String[] { "(.*) China" } )
+	;
 
 	private String shortName;
 	private Locale locale;

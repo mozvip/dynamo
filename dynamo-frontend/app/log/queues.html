@@ -1,0 +1,9 @@
+<div ng-repeat="queue in queues" ng-if="queue.executors.length > 0">
+    <h3>{{queue.queueName}}</h3>
+    <input type="number" ng-model="queue.queueSize" />
+    <table class="table">
+        <tr ng-repeat="task in queue.executors">
+            <td>{{task.currentLabel}}</td>
+        </tr>
+    </table>
+</div>

@@ -1,11 +1,9 @@
 package dynamo.subtitles.betaseries;
 
 import java.net.URLEncoder;
-import java.util.List;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Node;
 
 import core.WebDocument;
 import dynamo.core.FinderQuality;
@@ -57,11 +55,11 @@ public class BetaSeries extends SubtitlesFinder {
 	public Element getEpisodeElement( String seriesName, int season, int episode ) throws Exception {
 
 		WebDocument searchResults = client.getDocument( String.format( "http://www.betaseries.com/ajax/header/search.php?q=%s", URLEncoder.encode( seriesName, "UTF-8" )),  HTTPClient.REFRESH_ONE_DAY );
-		List<Node> nodes = searchResults.evaluateXPath("/root/item/type[contains(text(),'serie')]/../url/text()");
-		for (Node node : nodes) {
-			String url = "http://www.betaseries.com/ajax/episodes/season.php?url=" + node.getTextContent() + "&saison=" + season;
+		Elements nodes = searchResults.evaluateJSoup("item:contains(serie) > url");
+		for (Element node : nodes) {
+			String url = "http://www.betaseries.com/ajax/episodes/season.php?url=" + node.text() + "&saison=" + season;
 			WebDocument document = client.getDocument( url, HTTPClient.REFRESH_ONE_HOUR );
-			Element element = document.jsoupSingle( String.format( "div[id*=S%02dE%02d]", season, episode ) );
+			Element element = document.jsoupSingle( String.format( "div[id*=%s%d%d]", node.text(), season, episode ) );
 			if ( element != null ) {
 				return element;
 			}

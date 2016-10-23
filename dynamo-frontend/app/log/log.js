@@ -19,6 +19,14 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
         return BackendService.get('downloadable/wanted');
       }]
     }   
+  }).when('/queues', {
+    templateUrl: 'log/queues.html',
+    controller: 'QueuesCtrl',
+    resolve: {
+      queues: ['BackendService', function(  BackendService  ) {
+        return BackendService.get('backlog/queues');
+      }]
+    }   
   }).when('/history', {
     templateUrl: 'log/history.html',
     controller: 'HistoryCtrl',
@@ -28,13 +36,6 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
       }]
     }   
   });
-}])
-
-
-.controller('StackTraceCtrl', ['$scope', '$uibModal', 'stackTrace', 'BackendService', function( $scope, $uibModal, stackTrace, BackendService ) {
-
-
-  
 }])
 
 .controller('WantedCtrl', ['$scope', '$routeParams', 'downloadableService', 'filterFilter', 'BackendService', 'wanted', function( $scope, $routeParams, downloadableService, filterFilter, BackendService, wanted ) {
@@ -58,6 +59,12 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
   $scope.stackTrace.forEach(function(element) {
     element.customCode = element.className.startsWith('java.') || element.className.startsWith('sun.');
   }, this);
+
+}])
+
+.controller('QueuesCtrl', ['$scope', 'queues', function( $scope, queues ) {
+
+  $scope.queues = queues.data;
 
 }])
 

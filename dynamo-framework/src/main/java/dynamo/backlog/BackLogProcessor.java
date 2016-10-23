@@ -249,7 +249,7 @@ public class BackLogProcessor extends Thread {
 
 	public boolean isRunningOrPending( Class<? extends Task> taskClass ) {
 		for (AbstractDynamoQueue queue : queues.values()) {
-			for (Task task : queue.getTaskBackLog()) {
+			for (Task task : queue.getTasks()) {
 				if (match( task, taskClass, null)) {
 					return true;
 				}
@@ -280,7 +280,7 @@ public class BackLogProcessor extends Thread {
 	}
 
 	protected void cancelMatchingTasks(AbstractDynamoQueue queue, Class<? extends Task> taskClass, String expressionToVerify) {
-		for (Task task : queue.getTaskBackLog()) {
+		for (Task task : queue.getTasks()) {
 			if (match( task, taskClass, expressionToVerify)) {
 				queue.cancel(task);
 			}
