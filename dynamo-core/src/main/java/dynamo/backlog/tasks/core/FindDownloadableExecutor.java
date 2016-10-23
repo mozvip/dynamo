@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.DownloadFinder;
+import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.SearchResultDAO;
@@ -100,7 +101,7 @@ public abstract class FindDownloadableExecutor<T extends Downloadable> extends T
 						break;
 					}
 					
-					setCurrentLabel( String.format("%s - Searching from %s", baseLabel, provider.toString() )); 
+					setCurrentLabel( String.format("%s - Searching from %s", baseLabel, DynamoObjectFactory.getClassDescription(provider.getClass()))); 
 	
 					while (!provider.isReady()) {
 						try {

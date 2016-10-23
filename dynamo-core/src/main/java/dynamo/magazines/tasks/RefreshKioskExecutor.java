@@ -2,6 +2,8 @@ package dynamo.magazines.tasks;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.ReportProgress;
@@ -13,6 +15,7 @@ public class RefreshKioskExecutor extends TaskExecutor<RefreshKioskTask> impleme
 	@Configurable(contentsClass=KioskIssuesSuggester.class)
 	private List<KioskIssuesSuggester> suggesters;
 	
+	@JsonIgnore
 	public List<KioskIssuesSuggester> getSuggesters() {
 		return suggesters;
 	}
