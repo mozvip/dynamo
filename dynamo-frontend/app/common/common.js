@@ -143,6 +143,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
 
   $scope.forceNewSearch = function() {
     BackendService.post( 'downloadable/force-search/' + $scope.downloadable.id + '?reset=true' );
+    $scope.downloadable.status = 'WANTED';
     $uibModalInstance.close();
   };
 

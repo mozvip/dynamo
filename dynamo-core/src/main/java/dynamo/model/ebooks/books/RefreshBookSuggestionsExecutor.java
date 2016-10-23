@@ -3,6 +3,7 @@ package dynamo.model.ebooks.books;
 import java.util.List;
 
 import dynamo.core.configuration.Configurable;
+import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
 
@@ -39,7 +40,7 @@ public class RefreshBookSuggestionsExecutor extends TaskExecutor<RefreshBookSugg
 			if (cancelled) {
 				return;
 			}
-			setCurrentLabel( String.format("Retrieving book suggestions from %s", suggester.toString()));
+			setCurrentLabel( String.format("Retrieving book suggestions from %s", DynamoObjectFactory.getClassDescription( suggester.getClass())));
 			suggester.suggestBooks();
 			itemsDone ++;
 		}

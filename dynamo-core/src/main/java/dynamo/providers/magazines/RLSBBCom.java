@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 
 import core.WebDocument;
 import dynamo.core.Language;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.magazines.KioskIssuesSuggester;
 import dynamo.magazines.KioskIssuesSuggesterException;
 import dynamo.magazines.MagazineManager;
@@ -17,6 +18,7 @@ import dynamo.model.DownloadSuggestion;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
 
+@ClassDescription(label="RLSBB.com")
 public class RLSBBCom implements KioskIssuesSuggester {
 
 	private final static int MAX_PAGES = 10;
