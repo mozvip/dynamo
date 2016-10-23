@@ -20,16 +20,18 @@ public class ConfigurationItem {
 	private String value;
 	private boolean list;
 	private boolean set;
+	private boolean folder;
 	private Map<String, String> allowedValues;
 	private boolean required;
 
-	public ConfigurationItem(String key, String ifExpression, Class<?> type, String defaultStringValue, boolean required, boolean list, boolean set) {
+	public ConfigurationItem(String key, String ifExpression, Class<?> type, String defaultStringValue, boolean required, boolean list, boolean set, boolean folder) {
 		this.key = key;
 		this.ifExpression = ifExpression != null && !ifExpression.equals("") ? ifExpression : null;;
 		this.type = type;
 		this.value = defaultStringValue != null && !defaultStringValue.equals("__NULL__") ? defaultStringValue : null;
 		this.list = list;
 		this.set = set;
+		this.folder = folder;
 		this.required = required;
 		
 		if (type.isEnum()) {
@@ -83,6 +85,10 @@ public class ConfigurationItem {
 	
 	public boolean isRequired() {
 		return required;
+	}
+	
+	public boolean isFolder() {
+		return folder;
 	}
 
 	public void setList(boolean list) {

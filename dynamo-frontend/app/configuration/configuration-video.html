@@ -1,8 +1,8 @@
 <form name="traktForm" novalidate>
 
-	<configuration-item ng-repeat="item in itemsToConfigure" item="item" ng-if="item.ifExpression == undefined || config[item.ifExpression].value == true" />
+    <configuration-item ng-repeat="item in itemsToConfigure" item="item" ng-if="item.ifExpression == undefined || config[item.ifExpression].value == true" />
 
-    <div class="well" ng-if="itemsToConfigure[0].value">
+    <div class="well" ng-if="config['TraktManager.enabled'].value">
         <a class="btn btn-success" ng-href="{{authorizeURL}}" target="_blank"><span class="glyphicon glyphicon-new-window" /> {{'Authorise.Trakt' | translate}}</a>
 
         <div class="form-group">

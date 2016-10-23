@@ -19,7 +19,11 @@
     "BTDigg.enabled" : "Enable BTDigg",
 
     "Authorise.Trakt" : "Authorize Trakt",
+
     "Trak.PIN" : "Trakt PIN code",
+    "TraktManager.username" : "Trakt Username",
+
+    "VideoManager.mediaInfoBinaryPath" : "Path to mediainfo binary",
 
     "SabNzbd.sabnzbdUrl" : "URL for SABNZBD (ex : http://ipaddress:8080/)",
     "SabNzbd.apiKey" : "API Key for SABNZBD",
