@@ -13,9 +13,9 @@
   </p>
 </div>
 
-<div class="thumbnail downloadable-thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents">
+<div class="thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents" style="height: 350px;">
   <a ng-href="#/music-album/{{downloadable.id}}">
-    <img ng-src="{{imageURL(downloadable.image)}}" alt="{{downloadable.artistName}} - {{downloadable.name}}" style="min-height: 280px;" />
+    <img ng-src="{{imageURL(downloadable.image)}}" alt="{{downloadable.artistName}} - {{downloadable.name}}" style="height: 280px;" />
   </a>
   <div class="buttons">
     <button title="Show files" type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></button>
@@ -27,7 +27,12 @@
     <button type="button" ng-show="downloadable.status == 'SUGGESTED'" ng-click="want(downloadable)" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span></button>
   </div>
   <div class="caption">
-    {{downloadable.artistName}} - {{downloadable.name}}
+    <p title="{{downloadable.artistName}}">
+      {{downloadable.artistName}}
+    </p>
+    <p title="{{downloadable.name}}">
+      {{downloadable.name}}
+    </p>
   </div>
 </div>
 

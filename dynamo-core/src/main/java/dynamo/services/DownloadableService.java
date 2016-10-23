@@ -65,9 +65,15 @@ public class DownloadableService {
 	@POST
 	@Path("/redownload/{id}")
 	public void redownload(@PathParam("id") long id) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException  {
-		DownloadableManager.getInstance().redownload(id);
+		DownloadableManager.getInstance().redownload(id, false);
 	}
 	
+	@POST
+	@Path("/force-search/{id}")
+	public void forceSearch(@PathParam("id") long id, @QueryParam("reset") boolean reset) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException  {
+		DownloadableManager.getInstance().redownload(id, reset);
+	}
+
 	@POST
 	@Path("/updateImage/{id}")
 	public void updateImage(@PathParam("id") long id) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException  {

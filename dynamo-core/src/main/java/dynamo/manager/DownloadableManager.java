@@ -320,14 +320,17 @@ public class DownloadableManager {
 	}
 
 	public void redownload(Downloadable downloadable) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		redownload(downloadable.getId());
+		redownload(downloadable.getId(), false);
 	}
 
-	public void redownload( long downloadableId ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		// blacklist downloaded search result
-		searchResultDAO.blacklistDownloaded( downloadableId );
-		// FIXME : stop corresponding download if torrent !
+	public void redownload( long downloadableId, boolean resetExistingSearchs ) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 		cancelDownload(downloadableId);
+		if (resetExistingSearchs) {
+			searchResultDAO.deleteResultForDownloadableId(downloadableId);
+		} else {
+			// blacklist downloaded search result
+			searchResultDAO.blacklistDownloaded( downloadableId );
+		}
 		// delete all corresponding files
 		getAllFiles(downloadableId).forEach( downloadedFile -> BackLogProcessor.getInstance().schedule( new DeleteTask(downloadedFile.getFilePath(), true), false ));
 		want(downloadableId);

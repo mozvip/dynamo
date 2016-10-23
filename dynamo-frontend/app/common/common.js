@@ -70,6 +70,9 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
         resolve: {
           searchResultsList: function () {
             return searchResultsService.get( downloadable.id );
+          },
+          downloadable: function () {
+            return downloadable;
           }
         }
       });
@@ -129,17 +132,23 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('SearchResultsCtrl', ['$scope', '$uibModalInstance', 'searchResultsList', function($scope, $uibModalInstance, searchResultsList) {
+.controller('SearchResultsCtrl', ['$scope', '$uibModalInstance', 'downloadable', 'searchResultsList', 'BackendService', function($scope, $uibModalInstance, downloadable, searchResultsList, BackendService) {
 
   $scope.searchResults = searchResultsList.data;
+  $scope.downloadable = downloadable;
 
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel');
   };
 
+  $scope.forceNewSearch = function() {
+    BackendService.post( 'downloadable/force-search/' + $scope.downloadable.id + '?reset=true' );
+    $uibModalInstance.close();
+  };
+
 }])
 
-.factory('languageService', ['BackendService', '$http', function(BackendService, $http){
+.factory('languageService', ['BackendService', function(BackendService){
   var languageService = {};
   languageService.find = function( type, status ) {
     return BackendService.getAndCache('languages');
