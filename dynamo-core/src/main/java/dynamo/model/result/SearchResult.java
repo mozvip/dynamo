@@ -34,7 +34,7 @@ public class SearchResult {
 	public SearchResult(long downloadableId, String providerName, Class<? extends DownloadFinder> providerClass, SearchResultType type, String title, String url, String referer, float sizeInMegs, boolean blackListed, boolean downloaded) {
 		this.url = url;
 		this.downloadableId = downloadableId;
-		this.providerName = providerName;
+		this.providerName = DynamoObjectFactory.getClassDescription( providerClass );
 		this.providerClass = providerClass;
 		this.type = type;
 		this.title = title;

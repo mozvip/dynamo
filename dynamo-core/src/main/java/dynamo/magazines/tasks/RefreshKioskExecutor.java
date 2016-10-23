@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dynamo.core.configuration.Configurable;
+import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
@@ -45,7 +46,7 @@ public class RefreshKioskExecutor extends TaskExecutor<RefreshKioskTask> impleme
 				return;
 			}
 			
-			setCurrentLabel( String.format("Retrieving magazine issues from %s", kioskIssuesSuggester.toString()));
+			setCurrentLabel( String.format("Retrieving magazine issues from %s", DynamoObjectFactory.getClassDescription( kioskIssuesSuggester.getClass())));
 			try {
 				kioskIssuesSuggester.suggestIssues();
 			} catch (Exception e) {

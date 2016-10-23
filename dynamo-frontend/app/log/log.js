@@ -62,9 +62,22 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('QueuesCtrl', ['$scope', 'queues', function( $scope, queues ) {
+.controller('QueuesCtrl', ['$scope', '$timeout', 'BackendService', 'queues', function( $scope, $timeout, BackendService, queues ) {
 
   $scope.queues = queues.data;
+
+  var tickTimeout;
+
+  (function tick() {
+      BackendService.get('backlog/queues').then(function(response){
+        $scope.queues = response.data;
+        tickTimeout = $timeout(tick, 1000);
+      });
+  })();
+
+  $scope.$on('$destroy', function() {
+      $timeout.cancel(tickTimeout);
+  });  
 
 }])
 

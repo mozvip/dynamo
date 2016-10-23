@@ -1,9 +1,16 @@
 <div ng-repeat="queue in queues" ng-if="queue.executors.length > 0">
     <h3>{{queue.queueName}}</h3>
-    <input type="number" ng-model="queue.queueSize" />
-    <table class="table">
-        <tr ng-repeat="task in queue.executors">
-            <td>{{task.currentLabel}}</td>
-        </tr>
-    </table>
+    <div ng-repeat="executor in queue.executors" class="well">
+        <h4>
+            <span ng-bind-html="executor.currentLabel" />
+        </h4>
+        <p ng-show="executor.running">
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{executor.itemsPercent}}%">
+                {{executor.itemsPercent}}%
+            </div>
+        </p>                
+        <p ng-show="!executor.running">
+            {{executor.task.minDate | date:'medium'}}
+        </p>
+    </div>
 </div>
