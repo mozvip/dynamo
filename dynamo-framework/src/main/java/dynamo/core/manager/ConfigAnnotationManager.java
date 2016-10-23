@@ -12,9 +12,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -118,23 +120,24 @@ public class ConfigAnnotationManager {
 		Reflections reflections = DynamoObjectFactory.getReflections();
 		
 		Set<String> allTypes = reflections.getAllTypes();
-		for (String typeName : allTypes) {
-			
-			Class<?> declaringClass;
-			try {
-				declaringClass = Class.forName( typeName );
-				if (Modifier.isAbstract( declaringClass.getModifiers() ) || declaringClass.isInterface() ) {
-					continue;
+		
+		List<Class<?>> klasses = allTypes.stream()
+			.map( typeName -> {
+				try {
+					return Class.forName( typeName );
+				} catch (ClassNotFoundException e) {
+					ErrorManager.getInstance().reportThrowable( e );
+					return null;
 				}
-				
-				if (extractAnnotations(declaringClass, declaringClass)) {
-					configuredClasses.add( declaringClass );
-				}
-			} catch (ClassNotFoundException e) {
-				ErrorManager.getInstance().reportThrowable( e );
-			}
+			})
+		.filter( klass -> klass != null && ! ( Modifier.isAbstract(klass.getModifiers()) || klass.isInterface() ) )
+		.collect( Collectors.toList());
 
-		}
+		configuredClasses.addAll( 
+			klasses.parallelStream()		
+				.filter( klass -> extractAnnotations( klass, klass ))
+				.collect( Collectors.toList())
+		);
 		
 		Set<Class<? extends Task>> taskClasses = reflections.getSubTypesOf( Task.class );
 		for (Class<? extends Task> taskClass : taskClasses) {
