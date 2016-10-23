@@ -248,10 +248,11 @@ public class BackLogProcessor extends Thread {
 	}
 
 	public boolean isRunningOrPending( Class<? extends Task> taskClass ) {
-		AbstractDynamoQueue queue = getQueueForTaskClass(taskClass);
-		for (Task task : queue.getTaskBackLog()) {
-			if (match( task, taskClass, null)) {
-				return true;
+		for (AbstractDynamoQueue queue : queues.values()) {
+			for (Task task : queue.getTaskBackLog()) {
+				if (match( task, taskClass, null)) {
+					return true;
+				}
 			}
 		}
 		for (Task task : pendingTasks) {

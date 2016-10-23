@@ -2,13 +2,15 @@
 
     <configuration-item ng-repeat="item in itemsToConfigure" item="item" ng-if="item.ifExpression == undefined || config[item.ifExpression].value == true" />
 
-    <div class="well" ng-if="config['TraktManager.enabled'].value">
-        <a class="btn btn-success" ng-href="{{authorizeURL}}" target="_blank"><span class="glyphicon glyphicon-new-window" /> {{'Authorise.Trakt' | translate}}</a>
+    <div class="well" ng-show="config['TraktManager.enabled'].value">
 
-        <div class="form-group">
-            <label>{{'Trak.PIN' | translate}}</label>
-            <input type="text" ng-required="true" class="form-control" ng-model="pinCode" placeholder="Enter PIN code here" />
+        <div class="input-group">
+            <span class="input-group-btn">
+                <a class="btn btn-success" ng-href="{{authorizeURL}}" target="_blank"><span class="glyphicon glyphicon-new-window" /> {{'Authorise.Trakt' | translate}}</a>
+            </span>
+            <input type="text" ng-required="true" class="form-control" ng-model="traktPinCode" placeholder="{{'Trak.PIN' | translate}}" />
         </div>
+
     </div>
 
 	<button ng-disabled="!traktForm.$valid" class="btn btn-primary" ng-click="saveSettings()"><span class="glyphicon glyphicon-save" /> Save Settings</button>

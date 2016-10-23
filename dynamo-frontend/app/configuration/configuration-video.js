@@ -26,10 +26,10 @@ angular.module('dynamo.trakt', ['ngRoute', 'ngResource'])
       $scope.config['TraktManager.username']
   ];
 
-  $scope.pinCode = '';
+  $scope.traktPinCode = '';
 
   $scope.saveSettings = function () {
-    BackendService.post('trakt/auth/' + $scope.pinCode);
+    BackendService.post('trakt/auth/' + $scope.traktPinCode);
     configurationService.saveItems($scope.itemsToConfigure);
   }
 
