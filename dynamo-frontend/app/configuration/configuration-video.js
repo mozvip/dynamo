@@ -11,7 +11,42 @@ angular.module('dynamo.trakt', ['ngRoute', 'ngResource'])
         return configurationService.getItems();
       }]
     }
+  }).when('/configuration-subtitles', {
+    templateUrl: 'configuration/configuration.html',
+    controller: 'ConfigSubtitlesCtrl',
+    resolve: {
+      configuration: ['configurationService', function(  configurationService  ) {
+        return configurationService.getItems();
+      }]
+    }
   });
+}])
+
+.controller('ConfigSubtitlesCtrl', ['$scope', 'configuration', 'configurationService', 'BackendService', function($scope, configuration, configurationService, BackendService) {
+
+  $scope.config = configuration.data;
+
+  $scope.itemsToConfigure = [
+      $scope.config['Addic7ed.enabled'],
+      $scope.config['BetaSeries.enabled'],
+      $scope.config['BetaSeries.login'],
+      $scope.config['BetaSeries.password'],
+      $scope.config['OpenSubtitlesOrg.enabled'],
+      $scope.config['Podnapisi.enabled'],
+      $scope.config['Podnapisi.login'],
+      $scope.config['Podnapisi.password'],
+      $scope.config['SeriesSub.enabled'],
+      $scope.config['SousTitresEU.enabled'],
+      $scope.config['TVSubs.enabled'],
+      $scope.config['TVSubtitlesNet.enabled'],
+      $scope.config['USub.enabled']
+  ];
+
+
+  $scope.saveSettings = function () {
+    configurationService.saveItems($scope.itemsToConfigure);
+  }
+
 }])
 
 .controller('ConfigurationVideoCtrl', ['$scope', 'configuration', 'configurationService', 'BackendService', function( $scope, configuration, configurationService, BackendService ) {

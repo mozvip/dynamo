@@ -11,7 +11,6 @@ import dynamo.core.SubtitlesFinder;
 import dynamo.core.VideoDetails;
 import dynamo.core.VideoQuality;
 import dynamo.core.VideoSource;
-import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
@@ -21,19 +20,8 @@ import dynamo.video.VideoManager;
 
 public class SubTitleDownloader implements Reconfigurable {
 	
-	@Configurable
-	private boolean enabled;
-	
 	private Set<SubtitlesFinder> finders;
 	
-	public boolean isEnabled() {
-		return enabled;
-	}
-	
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
 	static class SingletonHolder {
 		private SingletonHolder() {}
 		static SubTitleDownloader instance = new SubTitleDownloader();
