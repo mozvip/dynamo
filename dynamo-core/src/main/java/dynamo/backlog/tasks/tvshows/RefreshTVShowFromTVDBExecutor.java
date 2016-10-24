@@ -15,6 +15,7 @@ import com.omertron.thetvdbapi.TvDbException;
 import com.omertron.thetvdbapi.model.Episode;
 import com.omertron.thetvdbapi.model.Series;
 
+import dynamo.core.Language;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.TaskExecutor;
 import dynamo.manager.DownloadableManager;
@@ -63,6 +64,12 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 
 		series.setEnded( StringUtils.equalsIgnoreCase( tvDbSeries.getStatus(), "Ended" ));
 		series.setName( tvDbSeries.getSeriesName() );	// in case of metadata language change
+		
+		if (StringUtils.isNotBlank( tvDbSeries.getLanguage() )) {
+			// TODO
+		} else if (StringUtils.equalsIgnoreCase( tvDbSeries.getNetwork(), "France 2") || StringUtils.endsWith( tvDbSeries.getNetwork(), "(FR)")) {
+			series.setOriginalLanguage( Language.FR );
+		}
 		
 		for (Episode episode : episodes) {
 			

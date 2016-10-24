@@ -89,14 +89,14 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String searchString, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
+	public List<SearchResult> findEpisode(String searchString, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
 		int minimumSize = 100;
 		String searchURL = String.format( "%s/search/?q=%s+S%02dE%02d" + SEARCH_SUFFIX, BASE_URL, plus(searchString), seasonNumber, episodeNumber, minimumSize );
 		return extractResults( searchURL );
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
+	public List<SearchResult> findEpisode(String seriesName, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
 		int minimumSize = 100;
 		String searchURL = String.format( "%s/search/?q=%s+%d" + SEARCH_SUFFIX, BASE_URL, plus(seriesName), absoluteEpisodeNumber, minimumSize );
 		return extractResults( searchURL );

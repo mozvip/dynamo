@@ -181,7 +181,7 @@ public class ConfigAnnotationManager {
 		}
 		
 		if ( configurable ) {
-			LOGGER.info("Introspected configuration data from {}", currentClass.getName());
+			LOGGER.debug("Introspected configuration data from {}", currentClass.getName());
 			configuredClasses.add( configuredClass );
 		}
 

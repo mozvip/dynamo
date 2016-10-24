@@ -168,7 +168,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode( String searchString, Language audioLanguage, int seasonNumber, int episodeNumber ) throws Exception {
+	public List<SearchResult> findEpisode( String searchString, Language audioLanguage, int seasonNumber, int episodeNumber ) throws Exception {
 
 		String searchParams = String.format("%s S%02dE%02d", searchString, seasonNumber, episodeNumber);
 		
@@ -227,7 +227,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String searchString, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
+	public List<SearchResult> findEpisode(String searchString, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
 		String searchParams = String.format("%s %d", searchString, absoluteEpisodeNumber);
 
 		List<SearchResult> results = new ArrayList<SearchResult>();

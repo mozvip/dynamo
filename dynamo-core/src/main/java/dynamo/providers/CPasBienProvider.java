@@ -69,7 +69,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
+	public List<SearchResult> findEpisode(String seriesName, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
 		return extractResults( String.format("%s S%02dE%02d", seriesName, seasonNumber, episodeNumber), ".*/series/.*" );
 	}
 
@@ -98,7 +98,7 @@ public class CPasBienProvider extends DownloadFinder implements MovieProvider, E
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String searchString, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
+	public List<SearchResult> findEpisode(String searchString, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
 		return extractResults( String.format("%s %d", searchString, absoluteEpisodeNumber), ".*/series/.*" );
 	}
 

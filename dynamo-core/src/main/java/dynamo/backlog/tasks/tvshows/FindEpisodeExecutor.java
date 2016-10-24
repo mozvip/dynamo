@@ -59,9 +59,9 @@ public class FindEpisodeExecutor extends AbstractFindTVShowExecutor<ManagedEpiso
 		EpisodeFinder episodeFinder = (EpisodeFinder) provider;
 		List<SearchResult> results = null;
 		if (series.isUseAbsoluteNumbering()) {
-			results = episodeFinder.findDownloadsForEpisode( searchString, audioLanguage, episode.getAbsoluteNumber() );
+			results = episodeFinder.findEpisode( searchString, audioLanguage, episode.getAbsoluteNumber() );
 		} else {
-			results = episodeFinder.findDownloadsForEpisode( searchString, audioLanguage, episode.getSeasonNumber(), episode.getEpisodeNumber() );
+			results = episodeFinder.findEpisode( searchString, audioLanguage, episode.getSeasonNumber(), episode.getEpisodeNumber() );
 		}
 		return filter( results );
 	}

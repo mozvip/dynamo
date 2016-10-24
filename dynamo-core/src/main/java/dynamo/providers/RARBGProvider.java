@@ -195,13 +195,13 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage, int seasonNumber,
+	public List<SearchResult> findEpisode(String seriesName, Language audioLanguage, int seasonNumber,
 			int episodeNumber) throws Exception {
 		return extractResultsFromURL( buildURL( String.format("%s S%02dE%02d", seriesName, seasonNumber, episodeNumber), new int[] { 18, 41 } ));
 	}
 
 	@Override
-	public List<SearchResult> findDownloadsForEpisode(String seriesName, Language audioLanguage,
+	public List<SearchResult> findEpisode(String seriesName, Language audioLanguage,
 			int absoluteEpisodeNumber) throws Exception {
 		return extractResultsFromURL( buildURL( String.format("%s %d", seriesName, absoluteEpisodeNumber), new int[] { 18, 41 } ));
 	}
