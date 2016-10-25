@@ -3,6 +3,7 @@ package dynamo.webapps.googleimages;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.conn.HttpHostConnectException;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -56,9 +57,12 @@ public class GoogleImages {
 					continue;
 				}
 				
-				SimpleResponse simpleResponse = client.get(imageURL, imageRefURL, HTTPClient.REFRESH_ONE_HOUR);
-				if (StringUtils.startsWith( simpleResponse.getContentType(), "image/")) {
-					return new WebResource( imageURL, imageRefURL );
+				try {
+					SimpleResponse simpleResponse = client.get(imageURL, imageRefURL, HTTPClient.REFRESH_ONE_HOUR);
+					if (StringUtils.startsWith( simpleResponse.getContentType(), "image/")) {
+						return new WebResource( imageURL, imageRefURL );
+					}
+				} catch (HttpHostConnectException e) {
 				}
 			}
 		} catch (IOException e) {
