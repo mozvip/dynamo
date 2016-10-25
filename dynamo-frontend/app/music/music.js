@@ -33,6 +33,10 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     $scope.album = album.data;
     $scope.files = files.data;
 
+    $scope.saveData = function() {
+      BackendService.post('music/save', $scope.album);
+    }
+
     $scope.files.forEach(function(file) {
       if (file.filePath.startsWith($scope.album.folder)) {
         file.wrongFolder = false;
@@ -120,7 +124,14 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     }
 
     $scope.filterChanged = function () {
-      $scope.filteredList = filterFilter($scope.allItems, { 'name': $scope.filter });
+      var filterObject = {};
+      if ($scope.filterName) {
+        filterObject['name'] = $scope.filterName;
+      }
+      if ($scope.filterArtist) {
+        filterObject['artistName'] = $scope.filterArtist;
+      }
+      $scope.filteredList = filterFilter($scope.allItems, filterObject);
       $scope.currentPage = 1;
       $scope.pageChanged();
     }

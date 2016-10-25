@@ -138,6 +138,10 @@ public interface MusicAlbumDAO extends DownloadableDAO<MusicAlbum> {
 	@Mapper(MusicFileMapper.class)
 	List<MusicFile> getMusicFiles(@BindContains("artistsSearchFilter") String artistsSearchFilter, @BindContains("albumNameFilter") String albumNameFilter, @Bind("start") int start, @Bind("limit") int limit );
 
+	@SqlQuery("SELECT MUSICFILE.* FROM MUSICFILE INNER JOIN MUSICALBUM ON MUSICALBUM.ID = MUSICFILE.ALBUM_ID INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.ID = :downloadableId")
+	@Mapper(MusicFileMapper.class)
+	List<MusicFile> getMusicFiles(@Bind("downloadableId") long downloadableId );
+
 	@SqlQuery("SELECT DOWNLOADABLE.*, MUSICALBUM.* FROM MUSICALBUM INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS='DOWNLOADED' AND DOWNLOADABLE.COVER_IMAGE IS NOT NULL")
 	@Mapper(MusicAlbumMapper.class)
 	List<MusicAlbum> findAlbumsWithImage();

@@ -6,6 +6,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public abstract class Downloadable {
 	
 	private Long id;
@@ -18,6 +22,9 @@ public abstract class Downloadable {
 	private Date creationDate;
 	
 	private String simpleClassName;
+	
+	public Downloadable() {
+	}
 
 	public Downloadable(Long id, String name, String label, DownloadableStatus status, String aka, int year, Date creationDate) {
 		this.id = id;
@@ -33,6 +40,10 @@ public abstract class Downloadable {
 
 	public long getId() {
 		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	public String getName() {
@@ -63,6 +74,7 @@ public abstract class Downloadable {
 		return aka;
 	}
 
+	@JsonIgnore
 	public abstract String getRelativeLink();
 	
 	public abstract Path determineDestinationFolder();
