@@ -2,7 +2,6 @@ package dynamo.model;
 
 import java.util.Set;
 
-import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 
 public class DownloadSuggestion {
@@ -12,13 +11,12 @@ public class DownloadSuggestion {
 	private String referer;
 	private Language language;
 	private float size;
-	private String suggesterName;
-	private Class<? extends DownloadFinder> downloadFinderClass;
+	private Class<?> downloadFinderClass;
 	private Set<DownloadLocation> downloadLocations;
 	private boolean xxx;
 	private String suggestionURL;
 
-	public DownloadSuggestion(String title, String imageURL, String referer, Set<DownloadLocation> downloadLocations, Language language, float size, String suggesterName, Class<? extends DownloadFinder> downloadFinderClass, boolean xxx, String suggestionURL) {
+	public DownloadSuggestion(String title, String imageURL, String referer, Set<DownloadLocation> downloadLocations, Language language, float size, Class<?> downloadFinderClass, boolean xxx, String suggestionURL) {
 		super();
 		this.title = title;
 		this.imageURL = imageURL;
@@ -26,7 +24,6 @@ public class DownloadSuggestion {
 		this.downloadLocations = downloadLocations;
 		this.language = language;
 		this.size = size;
-		this.suggesterName = suggesterName;
 		this.downloadFinderClass = downloadFinderClass;
 		this.xxx = xxx;
 		this.suggestionURL = suggestionURL;
@@ -52,11 +49,7 @@ public class DownloadSuggestion {
 		return language;
 	}
 
-	public String getSuggesterName() {
-		return suggesterName;
-	}
-
-	public Class<? extends DownloadFinder> getDownloadFinderClass() {
+	public Class<?> getDownloadFinderClass() {
 		return downloadFinderClass;
 	}
 	

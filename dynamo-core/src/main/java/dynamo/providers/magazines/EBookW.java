@@ -39,7 +39,7 @@ public class EBookW implements KioskIssuesSuggester {
 					Element footer = footerList.get(index);
 					String suggestionURL = footer.select(".readmore a").first().absUrl("href");
 
-					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, null, -1.0f, toString(), null, false, suggestionURL));
+					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, null, null, -1.0f, getClass(), false, suggestionURL));
 				}
 				index++;
 			}

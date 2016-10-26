@@ -100,7 +100,7 @@ public class BookManager implements Enableable {
 		BookInfo bookInfo = BookNameParser.getBookInfo( suggestion.getTitle() );
 		long downloadableId = suggest( bookInfo, suggestion.getImageURL(), suggestion.getReferer(), suggestion.getReferer() );
 		
-		DownloadableManager.getInstance().saveDownloadLocations(downloadableId, suggestion.getTitle(), suggestion.getSuggesterName(), suggestion.getDownloadFinderClass(), suggestion.getReferer(), suggestion.getSize(), suggestion.getDownloadLocations());
+		DownloadableManager.getInstance().saveDownloadLocations(downloadableId, suggestion.getTitle(), suggestion.getDownloadFinderClass(), suggestion.getReferer(), suggestion.getSize(), suggestion.getDownloadLocations());
 	}
 
 	public long suggest(BookInfo bookInfo, String imageURL, String referer, String suggestionURL) throws IOException {

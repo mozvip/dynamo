@@ -104,7 +104,7 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 						// Collection downloadLocations = new ArrayList<>();
 						// Elements relatedRows = currentPage.jsoup("tr.lista2");
 						try {
-							DownloadableManager.getInstance().saveDownloadLocation(suggestion.getId(), title, "RARBG", this.getClass(), torrentPageURL, parseSize(size), dl);
+							DownloadableManager.getInstance().saveDownloadLocation(suggestion.getId(), title, this.getClass(), torrentPageURL, parseSize(size), dl);
 						} catch (Exception e) {
 							ErrorManager.getInstance().reportThrowable( e );
 						}

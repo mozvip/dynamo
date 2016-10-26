@@ -226,7 +226,7 @@ public class MagazineManager implements Reconfigurable {
 		
 		DownloadableManager.getInstance().updateYear( downloadableId, issueInfo.getYear() );
 
-		DownloadableManager.getInstance().saveDownloadLocations(downloadableId, suggestion.getTitle(), suggestion.getSuggesterName(), suggestion.getDownloadFinderClass(), suggestion.getReferer(), suggestion.getSize(), suggestion.getDownloadLocations());
+		DownloadableManager.getInstance().saveDownloadLocations(downloadableId, suggestion.getTitle(), suggestion.getDownloadFinderClass(), suggestion.getReferer(), suggestion.getSize(), suggestion.getDownloadLocations());
 	}
 	
 }

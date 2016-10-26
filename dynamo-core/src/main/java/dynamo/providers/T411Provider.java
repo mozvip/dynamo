@@ -331,7 +331,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 				Set<DownloadLocation> downloadLocations = new HashSet<>();
 				downloadLocations.add( new DownloadLocation(SearchResultType.TORRENT, torrentURL));
 				try {
-					suggestions.add( new DownloadSuggestion(title, imageSrc, href, downloadLocations, Language.FR, parseSize(size), toString(), getClass(), false, href) );
+					suggestions.add( new DownloadSuggestion(title, imageSrc, href, downloadLocations, Language.FR, parseSize(size), getClass(), false, href) );
 				} catch (Exception e) {
 					ErrorManager.getInstance().reportThrowable(e);
 				}

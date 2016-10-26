@@ -378,10 +378,10 @@ public class DownloadableManager {
 		return false;
 	}
 
-	public void saveResult(String title, String url, String providerName, Class<? extends DownloadFinder> providerClass, String referer, float sizeInMegs,
+	public void saveResult(String title, String url, Class<?> providerClass, String referer, float sizeInMegs,
 			SearchResultType downloadType, long downloadableId) {
 		
-		searchResultDAO.save(url, providerName, providerClass, referer, sizeInMegs, title, downloadType, downloadableId, null);
+		searchResultDAO.save(url, providerClass, referer, sizeInMegs, title, downloadType, downloadableId, null);
 		
 	}
 
@@ -398,17 +398,17 @@ public class DownloadableManager {
 		searchResultDAO.clearBlackList();
 	}
 	
-	public void saveDownloadLocations(long downloadableId, String title, String suggesterName,  Class<? extends DownloadFinder> providerClass, String referer, float size, Collection<DownloadLocation> downloadLocations) {
+	public void saveDownloadLocations(long downloadableId, String title, Class<?> providerClass, String referer, float size, Collection<DownloadLocation> downloadLocations) {
 		if (downloadableId >= 0 && downloadLocations != null && !downloadLocations.isEmpty()) {
 			for (DownloadLocation downloadLocation : downloadLocations) {
-				saveDownloadLocation(downloadableId, title, suggesterName, providerClass, referer, size, downloadLocation);
+				saveDownloadLocation(downloadableId, title, providerClass, referer, size, downloadLocation);
 			}
 		}		
 	}
 	
-	public void saveDownloadLocation(long downloadableId, String title, String suggesterName,  Class<? extends DownloadFinder> providerClass, String referer, float size, DownloadLocation downloadLocation) {
+	public void saveDownloadLocation(long downloadableId, String title, Class<?> providerClass, String referer, float size, DownloadLocation downloadLocation) {
 		if (downloadableId >= 0 && downloadLocation != null) {
-			saveResult(title, downloadLocation.getUrl(), suggesterName, providerClass, referer, size, downloadLocation.getType(), downloadableId);
+			saveResult(title, downloadLocation.getUrl(), providerClass, referer, size, downloadLocation.getType(), downloadableId);
 		}		
 	}
 

@@ -170,7 +170,6 @@ public abstract class FindDownloadableExecutor<T extends Downloadable> extends T
 		
 		searchResultDAO.save(
 				selectedResult.getUrl(),
-				selectedResult.getProviderName(),
 				selectedResult.getProviderClass(),
 				selectedResult.getReferer(),
 				selectedResult.getSizeInMegs(),
