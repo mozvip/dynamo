@@ -23,7 +23,6 @@ public class SearchResultMapper implements ResultSetMapper< SearchResult > {
 			providerClass = providerClassName != null ? (Class<? extends DownloadFinder>) Class.forName( providerClassName ) : null;
 			SearchResult result = new SearchResult(
 					r.getLong("DOWNLOADABLE_ID"),
-					r.getString("PROVIDERNAME"),
 					providerClass,
 					MapperUtils.getEnum(r, "TYPE", SearchResultType.class),
 					r.getString("TITLE"),

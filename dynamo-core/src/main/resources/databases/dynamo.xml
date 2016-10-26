@@ -456,5 +456,11 @@
 		</addColumn>
 		<delete tableName="MUSICALBUM"></delete>
 	</changeSet>
+	
+	<changeSet author="mozvip" id="33">
+		<delete tableName="SEARCHRESULT"></delete>
+		<dropColumn tableName="SEARCHRESULT" columnName="PROVIDERNAME"/>
+		<addNotNullConstraint columnDataType="VARCHAR(1024)" tableName="SEARCHRESULT" columnName="PROVIDERCLASSNAME"/>
+	</changeSet>
 
 </databaseChangeLog>
