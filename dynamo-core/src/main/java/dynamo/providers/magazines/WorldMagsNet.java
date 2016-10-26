@@ -34,7 +34,7 @@ public class WorldMagsNet implements KioskIssuesSuggester {
 				Element magazineLink = magazineElement.select(".news-title-mags a").first();
 				String title = magazineLink.text();
 				
-				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, imageElt.absUrl("src"), url, null, null, -1.0f, toString(), null, false, magazineLink.absUrl("href")));
+				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, imageElt.absUrl("src"), url, null, null, -1.0f, getClass(), false, magazineLink.absUrl("href")));
 			}
 		}
 	}

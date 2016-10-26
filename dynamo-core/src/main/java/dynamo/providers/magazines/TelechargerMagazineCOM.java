@@ -55,7 +55,7 @@ public class TelechargerMagazineCOM implements KioskIssuesSuggester {
 					for (Element element : downloadLinks) {
 						downloadLocations.add( new DownloadLocation(SearchResultType.HTTP, element.absUrl("href")));
 					}
-					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, downloadLocations, Language.FR, -1.0f, toString(), null, false, link.absUrl("href")));
+					MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, downloadLocations, Language.FR, -1.0f, getClass(), false, link.absUrl("href")));
 				} catch (IOException e) {
 					ErrorManager.getInstance().reportThrowable( e );
 				}
