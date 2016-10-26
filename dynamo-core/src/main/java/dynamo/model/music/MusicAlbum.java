@@ -2,8 +2,6 @@ package dynamo.model.music;
 
 import java.nio.file.Path;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import dynamo.manager.MusicManager;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
@@ -16,13 +14,14 @@ public class MusicAlbum extends Downloadable {
 	private String artistName;
 	private String genre;
 	private Path folder;
+	private String tadbAlbumId;
 	
 	// empty constructor for JSON
 	public MusicAlbum() {
 		super();
 	}
 
-	public MusicAlbum( Long id, DownloadableStatus status, Path folder, String aka, String artistName, String albumName, String genre, MusicQuality quality, String allMusicURL) {
+	public MusicAlbum( Long id, DownloadableStatus status, Path folder, String aka, String artistName, String albumName, String genre, MusicQuality quality, String allMusicURL, String tadbAlbumId) {
 		super( id, albumName, null, status, aka, -1, null );
 		this.artistName = artistName;
 		this.genre = genre;
@@ -89,6 +88,10 @@ public class MusicAlbum extends Downloadable {
 
 	public Path getFolder() {
 		return folder;
+	}
+	
+	public String getTadbAlbumId() {
+		return tadbAlbumId;
 	}
 	
 	@Override

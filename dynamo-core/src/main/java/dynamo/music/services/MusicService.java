@@ -59,7 +59,7 @@ public class MusicService {
 			}
 		}
 
-		dao.save(id, artist.getName(), musicAlbum.getAllMusicURL(), musicAlbum.getGenre(), musicAlbum.getQuality(), newSearchString, musicAlbum.getFolder());
+		dao.save(id, artist.getName(), musicAlbum.getAllMusicURL(), musicAlbum.getGenre(), musicAlbum.getQuality(), newSearchString, musicAlbum.getFolder(), musicAlbum.getTadbAlbumId());
 		
 		EventManager.getInstance().reportSuccess(String.format("'%s - %s' has been saved", artist.getName(), musicAlbum.getName()));
 		

@@ -25,7 +25,10 @@ public class MusicAlbumMapper implements ResultSetMapper<MusicAlbum> {
 				r.getString("ARTIST_NAME"),
 				r.getString("NAME"),
 				r.getString("GENRE"),
-				MapperUtils.getEnum(r, "QUALITY", MusicQuality.class), r.getString("ALLMUSICURL"));
+				MapperUtils.getEnum(r, "QUALITY", MusicQuality.class),
+				r.getString("ALLMUSICURL"),
+				r.getString("TADB_ALBUM_ID")
+				);
 	}
 
 }

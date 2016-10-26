@@ -296,9 +296,9 @@ public class MusicManager implements Reconfigurable {
 			album = new MusicAlbum(
 					DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, status),
 					status, folder, null, 
-					artist.getName(), albumName, null, quality, null
+					artist.getName(), albumName, null, quality, null, null
 			);
-			musicDAO.save(album.getId(), artist.getName(), null, genre, quality, searchString, folder);
+			musicDAO.save(album.getId(), artist.getName(), null, genre, quality, searchString, folder, album.getTadbAlbumId());
 		}
 
 		return album;

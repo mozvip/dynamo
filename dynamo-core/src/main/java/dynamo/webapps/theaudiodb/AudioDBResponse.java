@@ -7,14 +7,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AudioDBResponse {
 
 	@JsonProperty(value="album")
-	private List<AudioDBAlbum> albums;
+	private List<AudioDBAlbum> album;
 
-	public List<AudioDBAlbum> getAlbums() {
-		return albums;
+	public List<AudioDBAlbum> getAlbum() {
+		return album;
 	}
 
-	public void setAlbums(List<AudioDBAlbum> albums) {
-		this.albums = albums;
+	public void setAlbum(List<AudioDBAlbum> album) {
+		this.album = album;
 	}
 
 }

@@ -463,4 +463,16 @@
 		<addNotNullConstraint columnDataType="VARCHAR(1024)" tableName="SEARCHRESULT" columnName="PROVIDERCLASSNAME"/>
 	</changeSet>
 
+	<changeSet author="mozvip" id="34">
+		<addColumn tableName="MUSICALBUM">
+			<column name="TADB_ALBUM_ID" type="INT(12)"></column>
+		</addColumn>
+		<addColumn tableName="MUSICARTIST">
+			<column name="TADB_ARTIST_ID" type="INT(12)"></column>
+		</addColumn>
+		<addColumn tableName="MUSICFILE">
+			<column name="TADB_TRACK_ID" type="INT(12)"></column>
+		</addColumn>
+	</changeSet>
+
 </databaseChangeLog>

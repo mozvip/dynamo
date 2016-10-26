@@ -9,4 +9,7 @@ public interface TheAudioDBService {
 	@GET("/api/v1/json/{apiKey}/searchalbum.php")
 	AudioDBResponse searchAlbum(@Path("apiKey") String apiKey, @Query("s") String artistName, @Query("a") String albumName);
 
+	@GET("/api/v1/json/{apiKey}/searchalbum.php")
+	AudioDBResponse searchAlbums(@Path("apiKey") String apiKey, @Query("s") String artistName);
+
 }
