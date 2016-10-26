@@ -66,7 +66,7 @@ public class IdentifyMusicFileExecutor extends TaskExecutor<IdentifyMusicFileTas
 		MusicAlbum album = MusicManager.getInstance().getAlbum( albumArtist, albumName, null, DownloadableStatus.DOWNLOADED, null, MusicQuality.COMPRESSED, true );
 
 		// delete existing files if exists
-		musicDAO.deleteFile( task.getMusicFilePath() );
+		musicDAO.deleteMusicFile( task.getMusicFilePath() );
 		
 		if (album != null) {
 			musicDAO.createMusicFile(

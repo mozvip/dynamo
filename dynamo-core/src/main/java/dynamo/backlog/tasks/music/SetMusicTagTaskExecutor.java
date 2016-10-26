@@ -54,7 +54,7 @@ public class SetMusicTagTaskExecutor extends TaskExecutor<SetMusicTagTask> {
 				queue( new DeleteMusicFileTask( musicFile ), false );
 			}
 
-			musicDAO.deleteFile(musicFile.getPath());
+			musicDAO.deleteMusicFile(musicFile.getPath());
 		}
 		
 		musicDAO.createMusicFile(

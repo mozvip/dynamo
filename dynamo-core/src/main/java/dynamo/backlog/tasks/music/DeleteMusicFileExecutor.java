@@ -25,7 +25,7 @@ public class DeleteMusicFileExecutor extends TaskExecutor<DeleteMusicFileTask> {
 		if (Files.exists(task.getMusicFile().getPath())) {
 			queue( new DeleteTask( task.getMusicFile().getPath(), true ), false );
 		}
-		musicDAO.deleteFile( task.getMusicFile().getPath() );
+		musicDAO.deleteMusicFile( task.getMusicFile().getPath() );
 		List<MusicFile> remainingMusicFiles = musicDAO.findMusicFiles( task.getMusicFile().getAlbumId() );
 		if (remainingMusicFiles.size() == 0) {
 			MusicAlbum album = task.getMusicAlbum();

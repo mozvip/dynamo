@@ -42,17 +42,10 @@ public class MusicFile implements Comparable<MusicFile> {
 		return path;
 	}
 
-	public long getSize() throws IOException {
-		if (size <= 0 && Files.exists(path)) {
-			size = Files.size( path );
-		}
+	public long getSize() {
 		return size;
 	}
 
-	public void setSize(long size) {
-		this.size = size;
-	}
-	
 	@Transient
 	public String getFileName() {
 		return path.getFileName().toString();

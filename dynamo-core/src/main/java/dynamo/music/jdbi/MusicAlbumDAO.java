@@ -102,7 +102,7 @@ public interface MusicAlbumDAO extends DownloadableDAO<MusicAlbum> {
 	void updateFavorite(@Bind("name") String name, @Bind("favorite") boolean favorite);
 
 	@SqlUpdate("DELETE FROM MUSICFILE WHERE PATH=:path")
-	void deleteFile(@BindPath("path") Path path);
+	void deleteMusicFile(@BindPath("path") Path path);
 
 	@SqlUpdate("DELETE FROM MUSICARTIST WHERE NAME=:artistName")
 	void deleteArtist(@Bind("artistName") String artistName);

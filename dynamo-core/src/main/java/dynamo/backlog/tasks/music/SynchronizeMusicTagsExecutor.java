@@ -36,7 +36,7 @@ public class SynchronizeMusicTagsExecutor extends TaskExecutor<SynchronizeMusicT
 		try {
 			audioFile = AudioFileIO.read( musicFile.getPath().toFile() );
 		} catch (java.io.FileNotFoundException e) {
-			musicDAO.deleteFile( musicFile.getPath() );
+			musicDAO.deleteMusicFile( musicFile.getPath() );
 			throw e;
 		}
 
