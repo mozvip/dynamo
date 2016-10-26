@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -295,8 +296,9 @@ public class MusicManager implements Reconfigurable {
 		if (album == null && createIfMissing ) {
 			album = new MusicAlbum(
 					DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, status),
-					status, folder, null, 
-					artist.getName(), albumName, null, quality, null, null
+					albumName, null, 
+					status, -1, new Date(), folder, null, 
+					artist.getName(), null, quality, null, null
 			);
 			musicDAO.save(album.getId(), artist.getName(), null, genre, quality, searchString, folder, album.getTadbAlbumId());
 		}

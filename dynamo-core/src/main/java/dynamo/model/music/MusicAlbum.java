@@ -1,6 +1,7 @@
 package dynamo.model.music;
 
 import java.nio.file.Path;
+import java.util.Date;
 
 import dynamo.manager.MusicManager;
 import dynamo.model.Downloadable;
@@ -21,8 +22,8 @@ public class MusicAlbum extends Downloadable {
 		super();
 	}
 
-	public MusicAlbum( Long id, DownloadableStatus status, Path folder, String aka, String artistName, String albumName, String genre, MusicQuality quality, String allMusicURL, String tadbAlbumId) {
-		super( id, albumName, null, status, aka, -1, null );
+	public MusicAlbum( Long id,  String albumName, String label, DownloadableStatus status, int year, Date creationDate, Path folder, String aka, String artistName, String genre, MusicQuality quality, String allMusicURL, String tadbAlbumId) {
+		super( id, albumName, label, status, aka, year, creationDate );
 		this.artistName = artistName;
 		this.genre = genre;
 		this.allMusicURL = allMusicURL;

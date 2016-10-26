@@ -1,6 +1,5 @@
 package dynamo.music.services;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -9,12 +8,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 import dynamo.backlog.BackLogProcessor;
-import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.music.FindMusicAlbumImageTask;
 import dynamo.core.EventManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.DownloadableFactory;
-import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.manager.MusicManager;
 import dynamo.model.DownloadableStatus;
@@ -34,7 +31,7 @@ public class MusicService {
 	public MusicAlbum getAlbum( @PathParam("musicAlbumId") long musicAlbumId ) {
 		return dao.find(musicAlbumId);
 	}
-	
+
 	@POST
 	@Path("/save")
 	public long saveAlbum( MusicAlbum musicAlbum ) {
@@ -44,22 +41,21 @@ public class MusicService {
 
 		long id = musicAlbum.getId();
 		if (existingAlbum != null && existingAlbum.getId() != musicAlbum.getId()) {
-			id = existingAlbum.getId();
 			List<MusicFile> musicFiles = dao.getMusicFiles( musicAlbum.getId() );
 			if ( musicFiles != null && musicFiles.size() > 0) {
 				for (MusicFile musicFile : musicFiles) {
 					dao.updateMusicFile( musicFile.getPath(), existingAlbum.getId(), musicFile.getSongArtist(), musicFile.getSongTitle(), musicFile.getTrack(), musicFile.getYear(), musicFile.getSize(), false);
 				}
-				downloadableDAO.updateStatus(id, DownloadableStatus.DOWNLOADED);
+				downloadableDAO.updateStatus(existingAlbum.getId(), DownloadableStatus.DOWNLOADED);
 			}
-			try {
-				BackLogProcessor.getInstance().schedule( new DeleteDownloadableTask( musicAlbum.getId() ));
-			} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
-				ErrorManager.getInstance().reportThrowable(e);
-			}
-		}
+			downloadableDAO.delete( musicAlbum.getId() );
 
-		dao.save(id, artist.getName(), musicAlbum.getAllMusicURL(), musicAlbum.getGenre(), musicAlbum.getQuality(), newSearchString, musicAlbum.getFolder(), musicAlbum.getTadbAlbumId());
+			dao.save(existingAlbum.getId(), artist.getName(), musicAlbum.getAllMusicURL(), musicAlbum.getGenre(), musicAlbum.getQuality(), newSearchString, musicAlbum.getFolder(), musicAlbum.getTadbAlbumId());
+			
+			id = existingAlbum.getId();
+		} else {
+			dao.save(musicAlbum.getId(), artist.getName(), musicAlbum.getAllMusicURL(), musicAlbum.getGenre(), musicAlbum.getQuality(), newSearchString, musicAlbum.getFolder(), musicAlbum.getTadbAlbumId());
+		}
 		
 		EventManager.getInstance().reportSuccess(String.format("'%s - %s' has been saved", artist.getName(), musicAlbum.getName()));
 		

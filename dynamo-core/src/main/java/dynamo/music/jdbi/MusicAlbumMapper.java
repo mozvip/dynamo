@@ -19,11 +19,14 @@ public class MusicAlbumMapper implements ResultSetMapper<MusicAlbum> {
 
 		return new MusicAlbum(
 				r.getLong("ID"),
+				r.getString("NAME"),
+				r.getString("LABEL"),
 				MapperUtils.getEnum(r, "STATUS", DownloadableStatus.class),
+				r.getInt("YEAR"),
+				r.getDate("CREATION_DATE"),
 				MapperUtils.getPath(r, "FOLDER"),
 				r.getString("AKA"),
 				r.getString("ARTIST_NAME"),
-				r.getString("NAME"),
 				r.getString("GENRE"),
 				MapperUtils.getEnum(r, "QUALITY", MusicQuality.class),
 				r.getString("ALLMUSICURL"),
