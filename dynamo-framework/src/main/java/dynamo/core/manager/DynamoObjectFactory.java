@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
@@ -60,29 +61,25 @@ public class DynamoObjectFactory<T> {
 		this.interfaceToImplement = interfaceToImplement;
 	}
 
-	@SuppressWarnings("unchecked")
-	public static <T> T getInstance( Class<T> klass ) {
+	public static Object getInstance( Class<?> klass ) {
 		try {
 			Object object = instancesCache.get( klass );
 			if (object instanceof String && object.equals( NO_INSTANCE_MARKER )) {
 				return null;
 			}
-			return (T) object;
+			return object;
 		} catch (ExecutionException e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		}
 		return null;
     }
 
-    public Set<T> getInstances() {
-    	Set<T> instances = new HashSet<>();
-		Set<Class<? extends T>> classes = reflections.getSubTypesOf( interfaceToImplement );
-		for (Class<? extends T> klass : classes) {
-			if ( !Modifier.isAbstract( klass.getModifiers() ) ) {
-				instances.add( getInstance(klass) );
-			}
-		}
-		return instances;
+    public static Set<?> getInstances(Class<?> interfaceToImplement) {
+		return reflections.getSubTypesOf( interfaceToImplement )
+				.stream()
+				.filter( klass -> !Modifier.isAbstract( klass.getModifiers() ))
+				.map( klass -> getInstance( klass ) )
+				.collect( Collectors.toSet());
     }
     
 	public static String getClassDescription( Class<?> klass ) {

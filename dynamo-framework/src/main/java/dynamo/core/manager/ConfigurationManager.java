@@ -284,7 +284,7 @@ public class ConfigurationManager {
 			.filter(instance -> !(instance instanceof Enableable) || ((Enableable) instance).isEnabled())
 			.forEach( instance -> ((Reconfigurable) instance).reconfigure() );
 
-		Set<InitTask> initTasks = new DynamoObjectFactory<>(InitTask.class).getInstances();
+		Set<InitTask> initTasks = (Set<InitTask>) DynamoObjectFactory.getInstances( InitTask.class );
 		for (InitTask initTask : initTasks) {
 			if ( initTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( initTask, false );
@@ -293,7 +293,7 @@ public class ConfigurationManager {
 			}
 		}
 
-		Set<ServiceTask> serviceTasks = new DynamoObjectFactory<>(ServiceTask.class ).getInstances();
+		Set<ServiceTask> serviceTasks = (Set<ServiceTask>) DynamoObjectFactory.getInstances( ServiceTask.class );
 		for (ServiceTask serviceTask : serviceTasks) {
 			if ( serviceTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( serviceTask, false );
@@ -302,7 +302,7 @@ public class ConfigurationManager {
 			}
 		}
 
-		Set<DaemonTask> daemonTasks = new DynamoObjectFactory<>(DaemonTask.class ).getInstances();
+		Set<DaemonTask> daemonTasks = (Set<DaemonTask>) DynamoObjectFactory.getInstances( DaemonTask.class );
 		for (DaemonTask daemonTask : daemonTasks) {
 			if ( daemonTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( daemonTask, false );

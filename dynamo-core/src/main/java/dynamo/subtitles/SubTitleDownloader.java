@@ -13,7 +13,6 @@ import dynamo.core.VideoQuality;
 import dynamo.core.VideoSource;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DynamoObjectFactory;
-import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.video.VideoMetaData;
 import dynamo.model.Downloadable;
 import dynamo.video.VideoManager;
@@ -36,11 +35,7 @@ public class SubTitleDownloader implements Reconfigurable {
 	
 	@Override
 	public void reconfigure() {
-		try {
-			finders = new DynamoObjectFactory<SubtitlesFinder>(SubtitlesFinder.class).getInstances();
-		} catch (Exception e) {
-			ErrorManager.getInstance().reportThrowable( e );
-		}
+		finders = (Set<SubtitlesFinder>) DynamoObjectFactory.getInstances( SubtitlesFinder.class );
 	}
 
 	public boolean downloadSubTitle( Downloadable video, Path videoFile, String seriesName, VideoQuality quality, VideoSource source, String releaseGroup, int season, int episode, Language subtitlesLanguage, Path destinationSRT ) throws Exception {

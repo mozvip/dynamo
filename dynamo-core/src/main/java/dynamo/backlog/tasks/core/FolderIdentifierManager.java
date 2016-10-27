@@ -4,7 +4,6 @@ import java.util.Set;
 
 import dynamo.core.FolderIdentifier;
 import dynamo.core.manager.DynamoObjectFactory;
-import dynamo.core.manager.ErrorManager;
 
 public class FolderIdentifierManager {
 
@@ -26,11 +25,7 @@ public class FolderIdentifierManager {
 	
 	public synchronized Set<FolderIdentifier> getFolderIdentifiers() {
 		if (folderIdentifiers == null) {
-			try {
-				folderIdentifiers = new DynamoObjectFactory<>(FolderIdentifier.class).getInstances();
-			} catch (Exception e) {
-				ErrorManager.getInstance().reportThrowable( e );
-			}
+			folderIdentifiers = (Set<FolderIdentifier>) DynamoObjectFactory.getInstances( FolderIdentifier.class );
 		}
 		return folderIdentifiers;
 	}
