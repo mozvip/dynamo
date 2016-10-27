@@ -6,10 +6,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-		
 		<module>dynamo-core</module>
-		
-		
 		<module>hclient/hclient</module>
 		<module>dynamo-framework</module>
 	</modules>
