@@ -41,7 +41,7 @@ public interface SearchResultDAO {
 	@SqlUpdate("DELETE FROM SEARCHRESULT WHERE DOWNLOADABLE_ID = :downloadableId")
 	public void deleteResultForDownloadableId(@Bind("downloadableId") long downloadableId);
 
-	@SqlUpdate("MERGE INTO SEARCHRESULT(URL, PROVIDERCLASSNAME, REFERER, SIZEINMEGS, TITLE, TYPE, DOWNLOADABLE_ID, CLIENTID) VALUES(:url, :providerName, :providerClass, :referer, :sizeInMegs, :title, :type, :downloadableId, :clientId)")
+	@SqlUpdate("MERGE INTO SEARCHRESULT(URL, PROVIDERCLASSNAME, REFERER, SIZEINMEGS, TITLE, TYPE, DOWNLOADABLE_ID, CLIENTID) VALUES(:url, :providerClass, :referer, :sizeInMegs, :title, :type, :downloadableId, :clientId)")
 	public void save(
 			@Bind("url") String url, @BindClassName("providerClass") Class<?> providerClass,
 			@Bind("referer") String referer, @Bind("sizeInMegs") float sizeInMegs,
