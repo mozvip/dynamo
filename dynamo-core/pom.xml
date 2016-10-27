@@ -37,6 +37,7 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<version>2.19.1</version>
 				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
 			<plugin>
