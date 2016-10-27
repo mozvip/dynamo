@@ -72,7 +72,7 @@
 
 		<button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></button>
 		<button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openMovieSearch(downloadable)" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-    <button title="Search Results" ng-show="downloadable.status == 'WANTED'" class="btn btn-sm btn-default" ng-click="openSearchResults(downloadable)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+    <button title="Search Results" class="btn btn-sm btn-default" ng-click="openSearchResults(downloadable)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
 
     <button type="button" ng-show="downloadable.status == 'SUGGESTED'" ng-click="want(downloadable)" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> Want</button>
 		<a ng-show="downloadable.status == 'DOWNLOADED' || downloadable.status == 'SNATCHED'" class="btn btn-danger btn-sm"
