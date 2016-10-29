@@ -18,12 +18,12 @@ import dynamo.utils.DynamoStringUtils;
 
 public class MagazineNameParser {
 	
-	public static String NAME_REGEXP = "[…ÈË‡Í«Á!&,í'\\[\\]\\w\\s\\.\\d\\-:Ω\\+\\?#∞]+";
-	public static String SEPARATOR_REGEXP = "[\\s\\.\\-ñ_\\/]+";	
+	public static String NAME_REGEXP = "[\\w√©√®]+";
+	public static String SEPARATOR_REGEXP = "[\\s\\.\\-_\\/]+";	
 
-	public static String DAY_SEPARATOR_REGEXP = "[\\s\\-ñ_]+";	
-	public static String MONTH = "(\\d{1,2}|[\\w…È˚]+)";
-	public static String MONTH_LABEL = "[\\w…È˚]+";
+	public static String DAY_SEPARATOR_REGEXP = "[\\s\\-_]+";	
+	public static String MONTH = "(\\d{1,2}|[\\w√©√ª]+)";
+	public static String MONTH_LABEL = "[\\w√©√ª]+";
 	
 	private Map<String, MagazineMetadata> magazineNameMetaData = new HashMap<>();
 	
@@ -71,7 +71,7 @@ public class MagazineNameParser {
 			}
 		}
 		
-		if (RegExp.matches( issueInfo.getIssueName(), ".*Hors-SÈrie.*")) {
+		if (RegExp.matches( issueInfo.getIssueName(), ".*Hors-S√©rie.*")) {
 			issueInfo.setLanguage(Language.FR);
 		}
 		
@@ -134,8 +134,6 @@ public class MagazineNameParser {
 	
 	private static MagazineIssueInfo parseIssueInfo(String title) {
 
-		title = title.replace("&#233;", "È");
-		
 		String format = null;
 		if (StringUtils.containsIgnoreCase(title, "pdf")) {
 			format = "pdf";
@@ -174,16 +172,24 @@ public class MagazineNameParser {
 		int month = -1;
 		int day = -1;
 
-		String[] cleaners = new String[] { "^(.*)[\\s-ñ,\\/]+$"};
+		String[] cleaners = new String[] { "^(.*)[\\s-,\\/]+$"};
+		
+		String[] groups ;
 		
 		// extract issue number first if possible
 		int issueNumber = -1;
-		String issueExtractorRegExp = "(.*)-\\s+Issue\\s+(\\d+),(.*)";
-		String[] groups = RegExp.parseGroups( remainingString, issueExtractorRegExp );
-		if (groups != null) {
-			remainingString = groups[0] + "-" + groups[2];
-			issueNumber = Integer.parseInt( groups[1] );
-			remainingString = RegExp.clean(remainingString, cleaners);
+		String[] issueNumberExtractors = new String[] {
+				"(.*)[-\\s]+Issue\\s+(\\d+),(.*)",
+				"(.*)[-\\s]+N¬∞\\s*(\\d+)[-\\s]+(.*)"
+		};
+		for (String issueExtractorRegExp : issueNumberExtractors) {
+			groups = RegExp.parseGroups( remainingString, issueExtractorRegExp );
+			if (groups != null) {
+				remainingString = groups[0] + " " + groups[2];
+				issueNumber = Integer.parseInt( groups[1] );
+				remainingString = RegExp.clean(remainingString, cleaners);
+				break;
+			}
 		}
 
 		for (DayParser parser: DayParser.values()) {
@@ -349,7 +355,7 @@ public class MagazineNameParser {
 		}
 
 		if ( issueNumber == -1) {
-			String[] issueNumberRegExps = new String[] {"(.*) NumÈro (\\d+)", "(.*)No?∞(\\d+)", "(.*) Issue No.\\s*(\\d+)", "(.*) Issue #?(\\d+)", "(.*) Vol\\.(\\d+)", "(.*) No?\\.(\\d+)", "(.*) #(\\d+)", "(.*) Nr?\\.?\\s?(\\d+)"};
+			String[] issueNumberRegExps = new String[] {"(.*) Num√©ro (\\d+)", "(.*)No?(\\d+)", "(.*) Issue No.\\s*(\\d+)", "(.*) Issue #?(\\d+)", "(.*) Vol\\.(\\d+)", "(.*) No?\\.(\\d+)", "(.*) #(\\d+)", "(.*) Nr?\\.?\\s?(\\d+)"};
 			for (String regExp : issueNumberRegExps) {
 				groups = RegExp.parseGroups( remainingString, regExp );
 				if (groups != null) {
