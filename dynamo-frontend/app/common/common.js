@@ -280,7 +280,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     return BackendService.delete('downloadable/' + downloadableId);
   }
   downloadableService.updateImage = function( downloadableId ) {
-    return BackendService.post('downloadable/updateImage/' + downloadableId);
+    return BackendService.post('downloadable/update-cover-image/' + downloadableId);
   }
 
   return downloadableService;

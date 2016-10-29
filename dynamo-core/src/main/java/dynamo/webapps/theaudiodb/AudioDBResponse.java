@@ -6,8 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AudioDBResponse {
 
-	@JsonProperty(value="album")
+	@JsonProperty(value = "album")
 	private List<AudioDBAlbum> album;
+
+	@JsonProperty(value = "artists")
+	private List<AudioDBArtist> artists;
 
 	public List<AudioDBAlbum> getAlbum() {
 		return album;
@@ -15,6 +18,14 @@ public class AudioDBResponse {
 
 	public void setAlbum(List<AudioDBAlbum> album) {
 		this.album = album;
+	}
+
+	public List<AudioDBArtist> getArtists() {
+		return artists;
+	}
+
+	public void setArtists(List<AudioDBArtist> artists) {
+		this.artists = artists;
 	}
 
 }

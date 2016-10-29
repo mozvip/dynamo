@@ -39,6 +39,8 @@ import dynamo.model.music.MusicQuality;
 import dynamo.music.jdbi.MusicAlbumDAO;
 import dynamo.suggesters.RefreshMusicSuggestionsTask;
 import dynamo.suggesters.music.MusicAlbumSuggester;
+import dynamo.webapps.theaudiodb.AudioDBResponse;
+import dynamo.webapps.theaudiodb.TheAudioDB;
 import hclient.HTTPClient;
 
 public class MusicManager implements Reconfigurable {
@@ -271,7 +273,7 @@ public class MusicManager implements Reconfigurable {
 			albumName = "<Unknown>";
 		}
 		
-		MusicArtist artist = getArtist( artistName, true );
+		MusicArtist artist = getOrCreateArtist( artistName );
 
 		// clean album name
 		albumName = getAlbumName( albumName );
@@ -279,64 +281,67 @@ public class MusicManager implements Reconfigurable {
 		String searchString = getSearchString(artist.getName(), albumName);
 		
 		album = musicDAO.findBySearchString(searchString);
-		if ( album != null && !DownloadableManager.hasImage(album)) {
-			BackLogProcessor.getInstance().schedule( new FindMusicAlbumImageTask( album ), false );
-		}
-		
-		if (album != null) {
+		if ( album != null ) {
+			if (!DownloadableManager.hasImage(album)) {
+				BackLogProcessor.getInstance().schedule( new FindMusicAlbumImageTask( album ), false );
+			}
 			if ( status == DownloadableStatus.DOWNLOADED && album.getStatus() != status) {
 				DownloadableManager.getInstance().updateStatus(album, status);
 			}
-		}
-
-		if (folder == null) {
-			folder = getPath( artistName, albumName );
+		} else {
+			if (createIfMissing) {
+				if (folder == null) {
+					folder = getPath( artistName, albumName );
+				}
+				album = new MusicAlbum(
+						DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, status),
+						albumName, null, 
+						status, -1, new Date(), folder, null, 
+						artist.getName(), null, quality, null, null
+				);
+				musicDAO.save(album.getId(), artist.getName(), null, genre, quality, searchString, folder, album.getTadbAlbumId());
+			}
 		}
 		
-		if (album == null && createIfMissing ) {
-			album = new MusicAlbum(
-					DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, status),
-					albumName, null, 
-					status, -1, new Date(), folder, null, 
-					artist.getName(), null, quality, null, null
-			);
-			musicDAO.save(album.getId(), artist.getName(), null, genre, quality, searchString, folder, album.getTadbAlbumId());
-		}
-
 		return album;
 	}
 
-	public synchronized MusicArtist getArtist( String albumArtist, boolean createIfMissing ) {
+	public synchronized MusicArtist getOrCreateArtist( String albumArtist ) {
 
 		albumArtist = getArtistName( albumArtist );
 
 		MusicArtist artist = musicDAO.findArtist( albumArtist );	
 		if (artist == null) {
-			if (createIfMissing) {
-
-				List<String> aka = new ArrayList<String>();
-				aka.add( albumArtist.toUpperCase() );
-				String albumArtistWithoutThe = RegExp.extract( albumArtist, "(.+)\\s+,the");
-				if ( albumArtistWithoutThe != null ) {
-					aka.add( albumArtistWithoutThe.toUpperCase() );
-				}
-				albumArtistWithoutThe = RegExp.extract( albumArtist, "the\\s+(.+)");
-				if ( albumArtistWithoutThe != null ) {
-					aka.add( albumArtistWithoutThe.toUpperCase() );
-				}
-				String[] split = albumArtist.split(" ");
-				if (split.length == 2) {
-					aka.add( (split[1] + " " + split[0]).toUpperCase() );
-					aka.add( (split[1] + ", " + split[0]).toUpperCase() );
-					aka.add( (split[1] + "," + split[0]).toUpperCase() );
-				}
-
-				String akas = StringUtils.join( aka, ';');
-				artist = new MusicArtist( albumArtist, false, false, null, akas );
-
-				musicDAO.createArtist( artist.getName(), artist.getAllMusicURL(), artist.isBlackListed(), artist.isFavorite(), artist.getAka());
+			
+			Long tadbArtistId = null;
+			AudioDBResponse searchResult = TheAudioDB.getInstance().searchArtist( albumArtist );
+			if (searchResult.getArtists() != null && searchResult.getArtists().size() == 1) {
+				tadbArtistId = searchResult.getArtists().get(0).getIdArtist();
 			}
-		}
+
+			List<String> aka = new ArrayList<String>();
+			aka.add( albumArtist.toUpperCase() );
+			String albumArtistWithoutThe = RegExp.extract( albumArtist, "(.+)\\s+,the");
+			if ( albumArtistWithoutThe != null ) {
+				aka.add( albumArtistWithoutThe.toUpperCase() );
+			}
+			albumArtistWithoutThe = RegExp.extract( albumArtist, "the\\s+(.+)");
+			if ( albumArtistWithoutThe != null ) {
+				aka.add( albumArtistWithoutThe.toUpperCase() );
+			}
+			String[] split = albumArtist.split(" ");
+			if (split.length == 2) {
+				aka.add( (split[1] + " " + split[0]).toUpperCase() );
+				aka.add( (split[1] + ", " + split[0]).toUpperCase() );
+				aka.add( (split[1] + "," + split[0]).toUpperCase() );
+			}
+
+			String akas = StringUtils.join( aka, ';');
+			artist = new MusicArtist( albumArtist, false, false, null, akas );
+
+			musicDAO.createArtist( artist.getName(), tadbArtistId, artist.isBlackListed(), artist.isFavorite(), artist.getAka());
+
+			}
 		
 		return artist;
 		
@@ -438,7 +443,7 @@ public class MusicManager implements Reconfigurable {
 			}
 			
 			String fileName = p.getFileName().toString();
-			if ( Files.size(p) == 0 || fileName.endsWith(".txt") || fileName.endsWith(".jpg") || fileName.endsWith(".m3u") || fileName.endsWith(".lnk") || fileName.endsWith(".sfv") || fileName.endsWith(".nfo") || fileName.equalsIgnoreCase("thumbs.db") || fileName.equalsIgnoreCase("desktop.ini") ) {
+			if ( Files.size(p) == 0 || fileName.endsWith(".txt") || fileName.endsWith(".lnk") || fileName.endsWith(".sfv") || fileName.equalsIgnoreCase("thumbs.db") || fileName.equalsIgnoreCase("desktop.ini") ) {
 				toDelete.add( p );
 			}
 		}

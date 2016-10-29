@@ -49,12 +49,6 @@ public interface MusicAlbumDAO extends DownloadableDAO<MusicAlbum> {
 
 	@SqlUpdate("UPDATE MUSICARTIST SET BLACKLISTED=true WHERE UPPER(name) = :artistName")
 	void blackList(@BindUpper("artistName") String artistName);
-
-	@SqlUpdate("UPDATE MUSICARTIST SET ALLMUSICURL=:url WHERE name=:artistName")
-	void updateAllMusicURL(@Bind("artistName") String artistName, @Bind("url") String url);
-
-	@SqlUpdate("UPDATE MUSICALBUM SET ALLMUSICURL=:allMusicURL WHERE id=:albumId")
-	void updateAllMusicURL(@Bind("albumId") long albumId, @Bind("allMusicURL") String allMusicURL);
 	
 	@SqlUpdate("MERGE INTO MUSICALBUM(ID, ARTIST_NAME, ALLMUSICURL, GENRE, QUALITY, SEARCHSTRING, FOLDER, TADB_ALBUM_ID) VALUES(:albumId, :artistName, :allMusicURL, :genre, :quality, :searchString, :folder, :tadbAlbumId)")
 	public void save(@Bind("albumId") long albumId, @Bind("artistName") String artistName, @Bind("allMusicURL") String allMusicURL, @Bind("genre") String genre, @BindEnum("quality") MusicQuality quality, @Bind("searchString") String searchString, @BindPath("folder") Path folder, @Bind("tadbAlbumId") String tadbAlbumId);
@@ -71,8 +65,8 @@ public interface MusicAlbumDAO extends DownloadableDAO<MusicAlbum> {
 	void createMusicFile(@BindPath("path") Path path, @Bind("albumId") long albumId, 
 			@Bind("songTitle") String songTitle, @Bind("songArtist") String songArtist, @Bind("track") int track, @Bind("year") int year, @Bind("size") long size, @Bind("tagsModified") boolean tagsModified);
 
-	@SqlUpdate("INSERT INTO MUSICARTIST(NAME, ALLMUSICURL, BLACKLISTED, FAVORITE, AKA) VALUES(:name, :allMusicURL, :blackListed, :favorite, :aka)")
-	void createArtist(@Bind("name") String name, @Bind("allMusicURL") String allMusicURL, @Bind("blackListed") boolean blackListed, @Bind("favorite") boolean favorite, @Bind("aka") String aka);
+	@SqlUpdate("INSERT INTO MUSICARTIST(NAME, TADB_ARTIST_ID, BLACKLISTED, FAVORITE, AKA) VALUES(:name, :tadbArtistId, :blackListed, :favorite, :aka)")
+	void createArtist(@Bind("name") String name, @Bind("tadbArtistId") Long tadbArtistId, @Bind("blackListed") boolean blackListed, @Bind("favorite") boolean favorite, @Bind("aka") String aka);
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, MUSICALBUM.* FROM MUSICALBUM INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS='SUGGESTED' ORDER BY MUSICALBUM.ARTIST_NAME ASC")
 	@Mapper(MusicAlbumMapper.class)

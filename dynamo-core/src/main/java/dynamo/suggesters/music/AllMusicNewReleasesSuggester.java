@@ -40,7 +40,7 @@ public class AllMusicNewReleasesSuggester implements MusicAlbumSuggester {
 				String albumName = album.ownText();
 				
 				artistName = MusicManager.getArtistName(artistName);
-				MusicArtist artist = MusicManager.getInstance().getArtist( artistName, true );
+				MusicArtist artist = MusicManager.getInstance().getOrCreateArtist( artistName );
 
 				MusicAlbum mAlbum = MusicManager.getInstance().getAlbum( artistName, albumName );
 				if (mAlbum == null) {

@@ -6,6 +6,9 @@ import retrofit.http.Query;
 
 public interface TheAudioDBService {
 
+	@GET("/api/v1/json/{apiKey}/search.php")
+	AudioDBResponse searchArtist(@Path("apiKey") String apiKey, @Query("s") String artistName );
+
 	@GET("/api/v1/json/{apiKey}/searchalbum.php")
 	AudioDBResponse searchAlbum(@Path("apiKey") String apiKey, @Query("s") String artistName, @Query("a") String albumName);
 

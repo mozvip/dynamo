@@ -12,14 +12,14 @@ public class MusicArtist implements Serializable {
 	private String name;
 	private boolean favorite;
 	private boolean blackListed;
-	private String allMusicURL;
+	private Long tadbArtistId;
 	private String aka;
 
-	public MusicArtist(String name, boolean favorite, boolean blackListed, String allMusicURL, String aka) {
+	public MusicArtist(String name, boolean favorite, boolean blackListed, Long tadbArtistId, String aka) {
 		this.name = name;
 		this.favorite = favorite;
 		this.blackListed = blackListed;
-		this.allMusicURL = allMusicURL;
+		this.tadbArtistId = tadbArtistId;
 		this.aka = aka;
 	}
 
@@ -38,15 +38,15 @@ public class MusicArtist implements Serializable {
 	public boolean isBlackListed() {
 		return blackListed;
 	}
+	
+	public Long getTadbArtistId() {
+		return tadbArtistId;
+	}
 
-	public String getAllMusicURL() {
-		return allMusicURL;
+	public void setTadbArtistId(Long tadbArtistId) {
+		this.tadbArtistId = tadbArtistId;
 	}
-	
-	public void setAllMusicURL(String allMusicURL) {
-		this.allMusicURL = allMusicURL;
-	}
-	
+
 	public String getAka() {
 		return aka;
 	}

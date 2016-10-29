@@ -35,7 +35,7 @@ public class MusicService {
 	@POST
 	@Path("/save")
 	public long saveAlbum( MusicAlbum musicAlbum ) {
-		MusicArtist artist = MusicManager.getInstance().getArtist( musicAlbum.getArtistName(), true );
+		MusicArtist artist = MusicManager.getInstance().getOrCreateArtist( musicAlbum.getArtistName() );
 		String newSearchString = MusicManager.getSearchString(artist.getName(), musicAlbum.getName());		
 		MusicAlbum existingAlbum = dao.findBySearchString( newSearchString );
 
@@ -74,13 +74,6 @@ public class MusicService {
 	public List<MusicFile> getFiles( @PathParam("downloadableId") long downloadableId ) {
 		MusicAlbumDAO dao = DAOManager.getInstance().getDAO(MusicAlbumDAO.class);
 		return dao.getMusicFiles( downloadableId );
-	}
-
-	@POST
-	@Path("/update-cover-image/{downloadableId}")
-	public void changeImage( @PathParam("downloadableId") long downloadableId ) {
-		MusicAlbum musicAlbum = (MusicAlbum) DownloadableFactory.getInstance().createInstance(downloadableId);
-		BackLogProcessor.getInstance().schedule( new FindMusicAlbumImageTask( musicAlbum ) );
 	}
 
 }

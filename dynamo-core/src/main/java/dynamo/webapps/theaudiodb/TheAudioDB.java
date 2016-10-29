@@ -34,5 +34,9 @@ public class TheAudioDB {
 		return service.searchAlbums( API_KEY, artistName );
 	}
 
+	public AudioDBResponse searchArtist(String artistName) {
+		return service.searchArtist( API_KEY, artistName );
+	}
+
 
 }

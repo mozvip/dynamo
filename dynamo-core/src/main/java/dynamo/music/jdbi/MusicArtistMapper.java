@@ -13,7 +13,7 @@ public class MusicArtistMapper implements ResultSetMapper<MusicArtist> {
 	@Override
 	public MusicArtist map(int index, ResultSet r, StatementContext ctx)
 			throws SQLException {
-		return new MusicArtist(r.getString("NAME"), r.getBoolean("FAVORITE"), r.getBoolean("BLACKLISTED"), r.getString("ALLMUSICURL"), r.getString("AKA"));
+		return new MusicArtist(r.getString("NAME"), r.getBoolean("FAVORITE"), r.getBoolean("BLACKLISTED"), r.getLong("TADB_ARTIST_ID"), r.getString("AKA"));
 	}
 
 }
