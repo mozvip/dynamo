@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -20,11 +19,9 @@ import com.google.common.cache.LoadingCache;
 
 import dynamo.core.configuration.ClassDescription;
 
-public class DynamoObjectFactory<T> {
+public class DynamoObjectFactory {
 	
 	private static Reflections reflections = new Reflections("dynamo", new FieldAnnotationsScanner(), new SubTypesScanner( false ), new TypeAnnotationsScanner());
-
-    private Class<T> interfaceToImplement = null;
 	
 	private static final String NO_INSTANCE_MARKER = "NO_INSTANCE";
 	
@@ -56,14 +53,10 @@ public class DynamoObjectFactory<T> {
 	public static Reflections getReflections() {
 		return reflections;
 	}
-	
-	public DynamoObjectFactory( Class<T> interfaceToImplement ) {
-		this.interfaceToImplement = interfaceToImplement;
-	}
 
-	public static Object getInstance( Class<?> klass ) {
+	public static <T> T getInstance( Class<T> klass ) {
 		try {
-			Object object = instancesCache.get( klass );
+			T object = (T) instancesCache.get( klass );
 			if (object instanceof String && object.equals( NO_INSTANCE_MARKER )) {
 				return null;
 			}

@@ -22,10 +22,10 @@ import dynamo.music.jdbi.MusicAlbumDAO;
 
 @Path("/music")
 public class MusicService {
-	
+
 	private static MusicAlbumDAO dao = DAOManager.getInstance().getDAO(MusicAlbumDAO.class);
 	private static DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO(DownloadableUtilsDAO.class);
-	
+
 	@GET
 	@Path("/album/{musicAlbumId}")
 	public MusicAlbum getAlbum( @PathParam("musicAlbumId") long musicAlbumId ) {
@@ -62,22 +62,20 @@ public class MusicService {
 		return id;
 	}
 
-	
 	@GET
 	@Path("/suggest/artist/{prefix}")
 	public List<String> suggestArtist( @PathParam("prefix") String prefix ) {
 		MusicAlbumDAO dao = DAOManager.getInstance().getDAO(MusicAlbumDAO.class);
 		return dao.suggestArtists( prefix );
 	}
-	
+
 	@GET
 	@Path("/files/{downloadableId}")
 	public List<MusicFile> getFiles( @PathParam("downloadableId") long downloadableId ) {
 		MusicAlbumDAO dao = DAOManager.getInstance().getDAO(MusicAlbumDAO.class);
 		return dao.getMusicFiles( downloadableId );
 	}
-	
-	
+
 	@POST
 	@Path("/update-cover-image/{downloadableId}")
 	public void changeImage( @PathParam("downloadableId") long downloadableId ) {

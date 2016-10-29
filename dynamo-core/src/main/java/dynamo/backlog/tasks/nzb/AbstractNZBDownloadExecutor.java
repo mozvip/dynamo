@@ -30,7 +30,7 @@ public abstract class AbstractNZBDownloadExecutor extends TaskExecutor<DownloadN
 		Path nzbFilePath = null;
 
 		if (task.getSearchResult() != null) {
-			DownloadFinder finder = (DownloadFinder) DynamoObjectFactory.getInstance(task.getSearchResult().getProviderClass());
+			DownloadFinder finder = DynamoObjectFactory.getInstance(task.getSearchResult().getProviderClass());
 			nzbFilePath = finder.download(task.getNzbURL(), task.getSearchResult().getReferer());
 		} else {
 			nzbFilePath = HTTPClient.getInstance().download(task.getNzbURL(), null);

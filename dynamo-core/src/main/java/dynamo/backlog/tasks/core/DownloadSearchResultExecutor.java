@@ -24,7 +24,7 @@ public class DownloadSearchResultExecutor extends TaskExecutor<DownloadSearchRes
 		SearchResult result = task.getSearchResult();
 
 		if (result.getUrl().startsWith("http") ) {
-			DownloadFinder finder = (DownloadFinder) DynamoObjectFactory.getInstance( task.getSearchResult().getProviderClass() );
+			DownloadFinder finder = DynamoObjectFactory.getInstance( task.getSearchResult().getProviderClass() );
 			// download the file locally
 			Path filePath = finder.download( result.getUrl(), task.getSearchResult().getReferer() );
 			if (filePath != null) {

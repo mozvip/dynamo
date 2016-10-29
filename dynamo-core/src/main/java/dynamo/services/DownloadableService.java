@@ -17,10 +17,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import dynamo.backlog.BackLogProcessor;
+import dynamo.backlog.tasks.core.FindDownloadableImageTask;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.music.FindMusicAlbumImageTask;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.DownloadableFactory;
+import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.model.DownloableCount;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.core.model.DownloadableUtilsDAO;
@@ -82,6 +84,16 @@ public class DownloadableService {
 			BackLogProcessor.getInstance().schedule( new FindMusicAlbumImageTask( (MusicAlbum) downloadable ), true );
 		} else {
 			// FIXME
+		}
+	}
+	
+	@POST
+	@Path("/update-cover-image/{downloadableId}")
+	public void changeImage( @PathParam("downloadableId") long downloadableId ) {
+		Downloadable downloadable = DownloadableFactory.getInstance().createInstance(downloadableId);
+		FindDownloadableImageTask task = DynamoObjectFactory.createInstance( FindDownloadableImageTask.class, downloadable);
+		if (task != null) {
+			BackLogProcessor.getInstance().schedule( task );
 		}
 	}
 	

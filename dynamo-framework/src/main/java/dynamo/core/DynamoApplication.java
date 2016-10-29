@@ -83,7 +83,7 @@ public abstract class DynamoApplication {
 			BackLogProcessor.getInstance().start();
 		}
 
-		server = (DynamoServer) DynamoObjectFactory.getInstance(DynamoServer.class);
+		server = DynamoObjectFactory.getInstance(DynamoServer.class);
 
 		DynamoApplication.instance = this;
 	}
