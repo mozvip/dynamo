@@ -475,4 +475,11 @@
 		</addColumn>
 	</changeSet>
 
+	<changeSet author="mozvip" id="35-temp">
+		<delete tableName="MUSICALBUM"></delete>
+		<delete tableName="MUSICFILE"></delete>
+		<delete tableName="MUSICARTIST"></delete>
+		<delete tableName="MAGAZINEISSUE"></delete>
+	</changeSet>
+
 </databaseChangeLog>
