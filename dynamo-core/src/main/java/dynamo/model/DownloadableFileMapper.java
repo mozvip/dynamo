@@ -14,6 +14,7 @@ public class DownloadableFileMapper implements ResultSetMapper<DownloadableFile>
 	@Override
 	public DownloadableFile map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 		return new DownloadableFile(
+				r.getLong("FILE_ID"),
 				r.getLong("DOWNLOADABLE_ID"),
 				MapperUtils.getPath(r, "FILE_PATH"),
 				r.getInt("FILE_INDEX"),

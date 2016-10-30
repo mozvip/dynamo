@@ -39,6 +39,9 @@
       <button class="btn btn-sm btn-default" ng-click="selectAll()"><span class="glyphicon glyphicon-ok" /></button>
     </th>
     <th>
+			Track #
+    </th>
+    <th>
       File name
     </th>
     <th>
@@ -48,6 +51,9 @@
 	<tr ng-repeat="file in files | orderBy: index" ng-class="{success:!file.wrongFolder, danger:file.wrongFolder}">
 		<td>
 			<input type="checkbox" ng-model="file.selected" />
+		</td>
+		<td>
+			{{file.index}}
 		</td>
 		<td>
 			<span style="font-family: 'Courier New'">{{file.fileName}}</span>

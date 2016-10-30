@@ -11,22 +11,21 @@ public class MusicAlbum extends Downloadable {
 
 	private String searchString;
 	private MusicQuality quality = MusicQuality.COMPRESSED;
-	private String allMusicURL;
 	private String artistName;
 	private String genre;
 	private Path folder;
-	private String tadbAlbumId;
+	private Long tadbAlbumId;
 	
 	// empty constructor for JSON
 	public MusicAlbum() {
 		super();
 	}
 
-	public MusicAlbum( Long id,  String albumName, String label, DownloadableStatus status, int year, Date creationDate, Path folder, String aka, String artistName, String genre, MusicQuality quality, String allMusicURL, String tadbAlbumId) {
+	public MusicAlbum( Long id,  String albumName, String label, DownloadableStatus status, int year, Date creationDate, Path folder, String aka, String artistName, String genre, MusicQuality quality, Long tadbAlbumId) {
 		super( id, albumName, label, status, aka, year, creationDate );
 		this.artistName = artistName;
 		this.genre = genre;
-		this.allMusicURL = allMusicURL;
+		this.tadbAlbumId = tadbAlbumId;
 		this.quality = quality;
 		this.folder = folder;
 
@@ -46,14 +45,6 @@ public class MusicAlbum extends Downloadable {
 
 	public String getArtistName() {
 		return artistName;
-	}
-
-	public String getAllMusicURL() {
-		return allMusicURL;
-	}
-
-	public void setAllMusicURL(String allMusicURL) {
-		this.allMusicURL = allMusicURL;
 	}
 
 	public String getGenre() {
@@ -91,7 +82,7 @@ public class MusicAlbum extends Downloadable {
 		return folder;
 	}
 	
-	public String getTadbAlbumId() {
+	public Long getTadbAlbumId() {
 		return tadbAlbumId;
 	}
 	

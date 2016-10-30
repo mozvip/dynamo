@@ -1,71 +1,32 @@
 package dynamo.model.music;
 
-import java.beans.Transient;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.apache.commons.lang3.StringUtils;
+import dynamo.core.model.DownloadableFile;
 
-public class MusicFile implements Comparable<MusicFile> {
+public class MusicFile extends DownloadableFile {
 
-	private Path path;
-
-	private long size = -1;
-
-	// extracted from tags
-	private String songTitle;
+	private long fileId;
 	private String songArtist;
-	private int track;
+	private String songTitle;
 	private int year;
-	
-	private long albumId;
-	
 	private boolean tagsModified;
 
-	public MusicFile( Path filePath, long albumId, String songTitle, String songArtist, int track, int year, long size, boolean tagsModified ) {
-		this.path = filePath.toAbsolutePath();
-		this.albumId = albumId;
+	public MusicFile(long fileId, long downloadableId, Path filePath, int index, long size, String fileIdentifier, String songArtist, String songTitle, int year, boolean tagsModified) {
+		super(fileId, downloadableId, filePath, index, size, fileIdentifier);
+		this.fileId = fileId;
 		this.songArtist = songArtist;
 		this.songTitle = songTitle;
-		this.track = track;
 		this.year = year;
-		this.size = size;
 		this.tagsModified = tagsModified;
 	}
-	
-	public long getAlbumId() {
-		return albumId;
+
+	public long getFileId() {
+		return fileId;
 	}
 
-	public Path getPath() {
-		return path;
-	}
-
-	public long getSize() {
-		return size;
-	}
-
-	@Transient
-	public String getFileName() {
-		return path.getFileName().toString();
-	}
-	
-	@Override
-	public int hashCode() {
-		return path.hashCode();
-	}
-
-	public String getSongTitle() {
-		if (!StringUtils.isBlank( songTitle )) {
-			return songTitle;
-		} else {
-			return path.getFileName().toString();
-		}
-	}
-
-	public void setSongTitle(String songTitle) {
-		this.songTitle = songTitle;
+	public void setFileId(long fileId) {
+		this.fileId = fileId;
 	}
 
 	public String getSongArtist() {
@@ -75,13 +36,13 @@ public class MusicFile implements Comparable<MusicFile> {
 	public void setSongArtist(String songArtist) {
 		this.songArtist = songArtist;
 	}
-	
-	public int getTrack() {
-		return track;
+
+	public String getSongTitle() {
+		return songTitle;
 	}
 
-	public void setTrack(int track) {
-		this.track = track;
+	public void setSongTitle(String songTitle) {
+		this.songTitle = songTitle;
 	}
 
 	public int getYear() {
@@ -92,27 +53,12 @@ public class MusicFile implements Comparable<MusicFile> {
 		this.year = year;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof MusicFile && ((MusicFile)obj).getPath().equals( path );
-	}
-	
 	public boolean isTagsModified() {
 		return tagsModified;
 	}
-	
+
 	public void setTagsModified(boolean tagsModified) {
 		this.tagsModified = tagsModified;
-	}
-
-	@Override
-	public String toString() {
-		return path.getFileName().toString();
-	}
-
-	@Override
-	public int compareTo(MusicFile o) {
-		return toString().compareTo(o.toString());
 	}
 
 }

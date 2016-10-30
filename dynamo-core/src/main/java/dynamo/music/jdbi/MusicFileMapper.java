@@ -14,9 +14,16 @@ public class MusicFileMapper implements ResultSetMapper<MusicFile> {
 	@Override
 	public MusicFile map(int index, ResultSet r, StatementContext ctx)
 			throws SQLException {
-		return new MusicFile(MapperUtils.getPath(r, "PATH"),
-				r.getLong("ALBUM_ID"), r.getString("SONGTITLE"),
-				r.getString("SONGARTIST"), r.getInt("TRACK"), r.getInt("YEAR"), r.getLong("SIZE"),
+		return new MusicFile(
+				r.getLong("FILE_ID"),
+				r.getLong("DOWNLOADABLE_ID"),
+				MapperUtils.getPath(r, "FILE_PATH"),
+				r.getInt("FILE_INDEX"),
+				r.getLong("SIZE"),
+				r.getString("FILE_IDENTIFIER"),
+				r.getString("SONGARTIST"),
+				r.getString("SONGTITLE"),
+				r.getInt("YEAR"),
 				r.getBoolean("TAGSMODIFIED"));
 	}
 

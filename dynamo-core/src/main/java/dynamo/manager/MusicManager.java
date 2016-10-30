@@ -25,7 +25,6 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.AudioFileFilter;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.backlog.tasks.files.FileUtils;
-import dynamo.backlog.tasks.music.FindMusicAlbumImageTask;
 import dynamo.backlog.tasks.music.ImportMusicFolderTask;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
@@ -39,6 +38,7 @@ import dynamo.model.music.MusicQuality;
 import dynamo.music.jdbi.MusicAlbumDAO;
 import dynamo.suggesters.RefreshMusicSuggestionsTask;
 import dynamo.suggesters.music.MusicAlbumSuggester;
+import dynamo.webapps.theaudiodb.AudioDBAlbum;
 import dynamo.webapps.theaudiodb.AudioDBResponse;
 import dynamo.webapps.theaudiodb.TheAudioDB;
 import hclient.HTTPClient;
@@ -255,8 +255,8 @@ public class MusicManager implements Reconfigurable {
 
 	}
 	
-	public void suggest( String artistName, String albumName, String genre, String imageURL, String referer, String suggestionURL) throws ExecutionException, IOException {
-		MusicAlbum album = getAlbum(artistName, albumName, genre, DownloadableStatus.SUGGESTED, null, musicQuality, true);
+	public void suggest( String artistName, String albumName, String imageURL, String referer, String suggestionURL) throws ExecutionException, IOException {
+		MusicAlbum album = getAlbum(artistName, albumName, DownloadableStatus.SUGGESTED, null, musicQuality, true);
 		if (imageURL != null) {
 			DownloadableManager.downloadImage(album, imageURL, referer);
 		}
@@ -265,7 +265,7 @@ public class MusicManager implements Reconfigurable {
 		}
 	}
 
-	public synchronized MusicAlbum getAlbum( String artistName, String albumName, String genre, DownloadableStatus status, Path folder, MusicQuality quality, boolean createIfMissing ) throws ExecutionException, IOException {
+	public synchronized MusicAlbum getAlbum( String artistName, String albumName, DownloadableStatus status, Path folder, MusicQuality quality, boolean createIfMissing ) throws ExecutionException, IOException {
 		
 		MusicAlbum album = null;
 
@@ -282,9 +282,6 @@ public class MusicManager implements Reconfigurable {
 		
 		album = musicDAO.findBySearchString(searchString);
 		if ( album != null ) {
-			if (!DownloadableManager.hasImage(album)) {
-				BackLogProcessor.getInstance().schedule( new FindMusicAlbumImageTask( album ), false );
-			}
 			if ( status == DownloadableStatus.DOWNLOADED && album.getStatus() != status) {
 				DownloadableManager.getInstance().updateStatus(album, status);
 			}
@@ -293,13 +290,20 @@ public class MusicManager implements Reconfigurable {
 				if (folder == null) {
 					folder = getPath( artistName, albumName );
 				}
+				
+				AudioDBAlbum audioDBAlbum = null;
+				AudioDBResponse response = TheAudioDB.getInstance().searchAlbum(artistName, albumName);
+				if (response.getAlbum() != null && response.getAlbum().size() == 1) {
+					audioDBAlbum = response.getAlbum().get( 0 );
+				}
+
 				album = new MusicAlbum(
 						DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, status),
 						albumName, null, 
 						status, -1, new Date(), folder, null, 
-						artist.getName(), null, quality, null, null
+						artist.getName(), null, quality, audioDBAlbum != null ? audioDBAlbum.getIdAlbum() : null
 				);
-				musicDAO.save(album.getId(), artist.getName(), null, genre, quality, searchString, folder, album.getTadbAlbumId());
+				musicDAO.save(album.getId(), artist.getName(), audioDBAlbum != null ? audioDBAlbum.getIdAlbum() : null, audioDBAlbum != null ? audioDBAlbum.getStrGenre() : null, quality, searchString, folder);
 			}
 		}
 		
@@ -341,7 +345,7 @@ public class MusicManager implements Reconfigurable {
 
 			musicDAO.createArtist( artist.getName(), tadbArtistId, artist.isBlackListed(), artist.isFavorite(), artist.getAka());
 
-			}
+		}
 		
 		return artist;
 		
@@ -493,20 +497,8 @@ public class MusicManager implements Reconfigurable {
 		return musicDAO.getDownloadedAlbumsCount(artistsSearchFilter);
 	}
 
-	public int getMusicFilesCount(String artistsSearchFilter, String albumNameFilter) {
-		return musicDAO.getMusicFilesCount(artistsSearchFilter, albumNameFilter);
-	}
-
-	public List<MusicFile> getMusicFiles(String artistsSearchFilter, String albumNameFilter, int start, int count) {
-		return musicDAO.getMusicFiles(artistsSearchFilter, albumNameFilter, start, count);
-	}
-
 	public List<MusicAlbum> findAlbumsWithImage() {
 		return musicDAO.findAlbumsWithImage();
-	}
-
-	public int getMusicFilesCount(long albumId) {
-		return musicDAO.getMusicFilesCount( albumId );
 	}
 
 }

@@ -29,15 +29,15 @@ public interface MusicAlbumDAO extends DownloadableDAO<MusicAlbum> {
 	@Mapper(MusicAlbumMapper.class)
 	List<MusicAlbum> findByStatus(@BindEnum("status") DownloadableStatus status);
 
-	@SqlQuery("SELECT * FROM MUSICFILE WHERE TAGSMODIFIED=true")
+	@SqlQuery("SELECT DOWNLOADABLE_FILE.*, MUSIC_FILE.* FROM DOWNLOADABLE_FILE INNER JOIN MUSIC_FILE ON DOWNLOADABLE_FILE.FILE_ID = MUSIC_FILE.FILE_ID WHERE TAGSMODIFIED=true")
 	@Mapper(MusicFileMapper.class)
 	List<MusicFile> findModifiedTags();
 
-	@SqlQuery("SELECT * FROM MUSICFILE WHERE PATH=:path")
+	@SqlQuery("SELECT DOWNLOADABLE_FILE.*, MUSIC_FILE.* FROM DOWNLOADABLE_FILE INNER JOIN MUSIC_FILE ON DOWNLOADABLE_FILE.FILE_ID = MUSIC_FILE.FILE_ID WHERE FILE_PATH=:path")
 	@Mapper(MusicFileMapper.class)
 	MusicFile findMusicFile(@BindPath("path") Path path);
 	
-	@SqlQuery("select * from MUSICALBUM INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = 'DOWNLOADED' AND NOT EXISTS( SELECT * FROM MUSICFILE WHERE MUSICFILE.ALBUM_ID = MUSICALBUM.ID)")
+	@SqlQuery("select * from MUSICALBUM INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS = 'DOWNLOADED' AND NOT EXISTS( SELECT * FROM MUSIC_FILE WHERE MUSIC_FILE.ALBUM_ID = MUSICALBUM.ID)")
 	List<MusicAlbum> findDeadAlbums();
 
 	@SqlQuery("SELECT NAME FROM MUSICARTIST WHERE UPPER(NAME) LIKE :param ORDER BY NAME")
@@ -50,20 +50,20 @@ public interface MusicAlbumDAO extends DownloadableDAO<MusicAlbum> {
 	@SqlUpdate("UPDATE MUSICARTIST SET BLACKLISTED=true WHERE UPPER(name) = :artistName")
 	void blackList(@BindUpper("artistName") String artistName);
 	
-	@SqlUpdate("MERGE INTO MUSICALBUM(ID, ARTIST_NAME, ALLMUSICURL, GENRE, QUALITY, SEARCHSTRING, FOLDER, TADB_ALBUM_ID) VALUES(:albumId, :artistName, :allMusicURL, :genre, :quality, :searchString, :folder, :tadbAlbumId)")
-	public void save(@Bind("albumId") long albumId, @Bind("artistName") String artistName, @Bind("allMusicURL") String allMusicURL, @Bind("genre") String genre, @BindEnum("quality") MusicQuality quality, @Bind("searchString") String searchString, @BindPath("folder") Path folder, @Bind("tadbAlbumId") String tadbAlbumId);
+	@SqlUpdate("MERGE INTO MUSICALBUM(ID, ARTIST_NAME, TADB_ALBUM_ID, GENRE, QUALITY, SEARCHSTRING, FOLDER) VALUES(:albumId, :artistName, :tadbAlbumId, :genre, :quality, :searchString, :folder)")
+	public void save(@Bind("albumId") long albumId, @Bind("artistName") String artistName, @Bind("tadbAlbumId") Long tadbAlbumId, @Bind("genre") String genre, @BindEnum("quality") MusicQuality quality, @Bind("searchString") String searchString, @BindPath("folder") Path folder);
 
-	@SqlQuery("SELECT * FROM MUSICFILE WHERE ALBUM_ID=:albumId ORDER BY TRACK")
+	@SqlQuery("SELECT DOWNLOADABLE_FILE.*, MUSIC_FILE.* FROM DOWNLOADABLE_FILE INNER JOIN MUSIC_FILE ON DOWNLOADABLE_FILE.FILE_ID = MUSIC_FILE.FILE_ID WHERE DOWNLOADABLE_ID=:albumId ORDER BY FILE_INDEX")
 	@Mapper(MusicFileMapper.class)
 	List<MusicFile> findMusicFiles(@Bind("albumId") long albumId);
 
-	@SqlQuery("SELECT * FROM MUSICFILE INNER JOIN MUSICALBUM ON MUSICFILE.ALBUM_ID=MUSICALBUM.ID WHERE MUSICALBUM.ARTIST_NAME=:artistName ORDER BY TRACK")
+	@SqlQuery("SELECT DOWNLOADABLE_FILE.*, MUSIC_FILE.* FROM DOWNLOADABLE_FILE INNER JOIN MUSIC_FILE ON DOWNLOADABLE_FILE.FILE_ID = MUSIC_FILE.FILE_ID INNER JOIN MUSICALBUM ON DOWNLOADABLE_FILE.DOWNLOADABLE_ID=MUSICALBUM.ID WHERE MUSICALBUM.ARTIST_NAME=:artistName ORDER BY FILE_INDEX")
 	@Mapper(MusicFileMapper.class)
 	List<MusicFile> findMusicFiles(@Bind("artistName") String artistName);
 
-	@SqlUpdate("MERGE INTO MUSICFILE(PATH, ALBUM_ID, SONGTITLE, SONGARTIST, TRACK, YEAR, SIZE, TAGSMODIFIED) VALUES(:path, :albumId, :songTitle, :songArtist, :track, :year, :size, :tagsModified)")
-	void createMusicFile(@BindPath("path") Path path, @Bind("albumId") long albumId, 
-			@Bind("songTitle") String songTitle, @Bind("songArtist") String songArtist, @Bind("track") int track, @Bind("year") int year, @Bind("size") long size, @Bind("tagsModified") boolean tagsModified);
+	@SqlUpdate("MERGE INTO MUSIC_FILE(FILE_ID, SONGTITLE, SONGARTIST, YEAR, TAGSMODIFIED) VALUES(:fileId, :songTitle, :songArtist, :year, :tagsModified)")
+	void createMusicFile(@Bind("fileId") long fileId, 
+			@Bind("songTitle") String songTitle, @Bind("songArtist") String songArtist, @Bind("year") int year, @Bind("tagsModified") boolean tagsModified);
 
 	@SqlUpdate("INSERT INTO MUSICARTIST(NAME, TADB_ARTIST_ID, BLACKLISTED, FAVORITE, AKA) VALUES(:name, :tadbArtistId, :blackListed, :favorite, :aka)")
 	void createArtist(@Bind("name") String name, @Bind("tadbArtistId") Long tadbArtistId, @Bind("blackListed") boolean blackListed, @Bind("favorite") boolean favorite, @Bind("aka") String aka);
@@ -95,23 +95,20 @@ public interface MusicAlbumDAO extends DownloadableDAO<MusicAlbum> {
 	@SqlUpdate("UPDATE MUSICARTIST SET FAVORITE = :favorite WHERE NAME = :name")
 	void updateFavorite(@Bind("name") String name, @Bind("favorite") boolean favorite);
 
-	@SqlUpdate("DELETE FROM MUSICFILE WHERE PATH=:path")
-	void deleteMusicFile(@BindPath("path") Path path);
-
 	@SqlUpdate("DELETE FROM MUSICARTIST WHERE NAME=:artistName")
 	void deleteArtist(@Bind("artistName") String artistName);
 
-	@SqlUpdate("UPDATE MUSICFILE SET ALBUM_ID=:albumId, SONGARTIST=:songArtist, SONGTITLE=:songTitle, TRACK=:track, YEAR=:year, SIZE=:size, TAGSMODIFIED=:tagsModified WHERE PATH=:path")
-	void updateMusicFile(@BindPath("path") Path path, @Bind("albumId") long albumId, @Bind("songArtist") String songArtist, @Bind("songTitle") String songTitle,  @Bind("track") int track,  @Bind("year") int year,  @Bind("size") long size, @Bind("tagsModified") boolean tagsModified);
+	@SqlUpdate("UPDATE MUSIC_FILE SET SONGARTIST=:songArtist, SONGTITLE=:songTitle, YEAR=:year, TAGSMODIFIED=:tagsModified WHERE FILE_ID=:fileId")
+	void updateMusicFile(@Bind("fileId") long fileId, @Bind("songArtist") String songArtist, @Bind("songTitle") String songTitle, @Bind("year") int year, @Bind("tagsModified") boolean tagsModified);
 
-	@SqlUpdate("UPDATE MUSICFILE SET TAGSMODIFIED=:tagsModified WHERE PATH=:path")
-	void updateTagsModified(@BindPath("path") Path path, @Bind("tagsModified") boolean tagsModified);
+	@SqlUpdate("UPDATE MUSIC_FILE SET TAGSMODIFIED=:tagsModified WHERE FILE_ID=:fileId")
+	void updateTagsModified(@Bind("fileId") long fileId, @Bind("tagsModified") boolean tagsModified);
 
 	@SqlQuery("SELECT DOWNLOADABLE.*, MUSICALBUM.* FROM MUSICALBUM INNER JOIN DOWNLOADABLE ON DOWNLOADABLE.ID = MUSICALBUM.ID WHERE ARTIST_NAME = :artistName AND (DOWNLOADABLE.STATUS='DOWNLOADED' OR DOWNLOADABLE.STATUS='WANTED')")
 	@Mapper(MusicAlbumMapper.class)
 	List<MusicAlbum> findAllAlbumsToDisplayForArtist(@Bind("artistName") String artistName);
 
-	@SqlQuery("SELECT * FROM MUSICFILE WHERE POSITION(:folder, PATH) = 1")
+	@SqlQuery("SELECT DOWNLOADABLE_FILE.*, MUSIC_FILE.* FROM DOWNLOADABLE_FILE INNER JOIN MUSIC_FILE ON DOWNLOADABLE_FILE.FILE_ID = MUSIC_FILE.FILE_ID WHERE POSITION(:folder, FILE_PATH) = 1")
 	@Mapper(MusicFileMapper.class)
 	List<MusicFile> findFilesInFolder(@BindPath("folder") Path folder);
 
@@ -121,18 +118,8 @@ public interface MusicAlbumDAO extends DownloadableDAO<MusicAlbum> {
 
 	@SqlQuery("SELECT COUNT(*) FROM MUSICALBUM INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.STATUS='DOWNLOADED' AND UPPER(ARTIST_NAME) LIKE :artistsSearchFilter")
 	int getDownloadedAlbumsCount(@BindContains("artistsSearchFilter") String artistsSearchFilter);
-
-	@SqlQuery("SELECT COUNT(*) FROM MUSICFILE INNER JOIN MUSICALBUM ON MUSICALBUM.ID = MUSICFILE.ALBUM_ID INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE UPPER(ARTIST_NAME) LIKE :artistsSearchFilter AND UPPER(NAME) LIKE :albumNameFilter")
-	int getMusicFilesCount(@BindContains("artistsSearchFilter") String artistsSearchFilter, @BindContains("albumNameFilter") String albumNameFilter );
-
-	@SqlQuery("SELECT COUNT(*) FROM MUSICFILE WHERE MUSICFILE.ALBUM_ID = :albumId")
-	int getMusicFilesCount(@Bind("albumId") long albumId );
-
-	@SqlQuery("SELECT MUSICFILE.* FROM MUSICFILE INNER JOIN MUSICALBUM ON MUSICALBUM.ID = MUSICFILE.ALBUM_ID INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE UPPER(ARTIST_NAME) LIKE :artistsSearchFilter AND UPPER(NAME) LIKE :albumNameFilter ORDER BY NAME LIMIT :limit OFFSET :start")
-	@Mapper(MusicFileMapper.class)
-	List<MusicFile> getMusicFiles(@BindContains("artistsSearchFilter") String artistsSearchFilter, @BindContains("albumNameFilter") String albumNameFilter, @Bind("start") int start, @Bind("limit") int limit );
-
-	@SqlQuery("SELECT MUSICFILE.* FROM MUSICFILE INNER JOIN MUSICALBUM ON MUSICALBUM.ID = MUSICFILE.ALBUM_ID INNER JOIN DOWNLOADABLE ON MUSICALBUM.ID = DOWNLOADABLE.ID WHERE DOWNLOADABLE.ID = :downloadableId")
+	
+	@SqlQuery("SELECT DOWNLOADABLE_FILE.*, MUSIC_FILE.* FROM DOWNLOADABLE_FILE INNER JOIN MUSIC_FILE ON DOWNLOADABLE_FILE.FILE_ID = MUSIC_FILE.FILE_ID WHERE DOWNLOADABLE_FILE.DOWNLOADABLE_ID = :downloadableId")
 	@Mapper(MusicFileMapper.class)
 	List<MusicFile> getMusicFiles(@Bind("downloadableId") long downloadableId );
 

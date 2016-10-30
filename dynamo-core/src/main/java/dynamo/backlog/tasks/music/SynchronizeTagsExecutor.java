@@ -20,7 +20,7 @@ public class SynchronizeTagsExecutor extends TaskExecutor<SynchronizeTagsTask> {
 		List<MusicFile> files = musicDAO.findModifiedTags();
 		if ( files != null ) {
 			for (MusicFile musicFile : files) {
-				queue( new SynchronizeMusicTagsTask(musicFile.getPath()), false );
+				queue( new SynchronizeMusicTagsTask(musicFile.getFilePath()), false );
 			}
 		}
 	}

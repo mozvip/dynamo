@@ -66,25 +66,29 @@ public interface DownloadableUtilsDAO {
 	@Mapper(DownloadInfoMapper.class)
 	public List<DownloadInfo> findDownloadedByPath(@BindPath("path") Path path);
 	
-	@SqlUpdate("MERGE INTO DOWNLOADABLE_FILES(DOWNLOADABLE_ID, FILE_PATH, SIZE, FILE_INDEX) VALUES (:downloadableId, :path, :size, :index)")
-	void addFile(@Bind("downloadableId") long downloadableId, @BindPath("path") Path filePath, @Bind("size") long size, @Bind("index") int index);
+	@SqlUpdate("INSERT INTO DOWNLOADABLE_FILE(DOWNLOADABLE_ID, FILE_PATH, SIZE, FILE_INDEX) VALUES (:downloadableId, :path, :size, :index)")
+	@GetGeneratedKeys
+	long createFile(@Bind("downloadableId") long downloadableId, @BindPath("path") Path filePath, @Bind("size") long size, @Bind("index") int index);
 
-	@SqlQuery("SELECT * FROM DOWNLOADABLE_FILES WHERE DOWNLOADABLE_ID = :downloadableId")
+	@SqlQuery("SELECT * FROM DOWNLOADABLE_FILE WHERE DOWNLOADABLE_ID = :downloadableId")
 	@Mapper(DownloadableFileMapper.class)
 	public Set<DownloadableFile> getFiles(@Bind("downloadableId") long downloadableId);
 
-	@SqlQuery("SELECT * FROM DOWNLOADABLE_FILES INNER JOIN DOWNLOADABLE ON DOWNLOADABLE.ID = DOWNLOADABLE_FILES.DOWNLOADABLE_ID WHERE DTYPE = :className")
+	@SqlQuery("SELECT * FROM DOWNLOADABLE_FILE INNER JOIN DOWNLOADABLE ON DOWNLOADABLE.ID = DOWNLOADABLE_FILE.DOWNLOADABLE_ID WHERE DTYPE = :className")
 	@Mapper(DownloadableFileMapper.class)
 	public Set<DownloadableFile> getAllFiles( @BindClassName("className") Class<? extends Downloadable> className );
 
-	@SqlQuery("SELECT * FROM DOWNLOADABLE_FILES INNER JOIN DOWNLOADABLE ON DOWNLOADABLE.ID = DOWNLOADABLE_FILES.DOWNLOADABLE_ID WHERE DOWNLOADABLE_FILES.DOWNLOADABLE_ID = :downloadableId ORDER BY FILE_INDEX")
+	@SqlQuery("SELECT * FROM DOWNLOADABLE_FILE INNER JOIN DOWNLOADABLE ON DOWNLOADABLE.ID = DOWNLOADABLE_FILE.DOWNLOADABLE_ID WHERE DOWNLOADABLE_FILE.DOWNLOADABLE_ID = :downloadableId ORDER BY FILE_INDEX")
 	@Mapper(DownloadableFileMapper.class)
 	public List<DownloadableFile> getAllFiles( @Bind("downloadableId") long downloadableId );
 
-	@SqlUpdate("DELETE FROM DOWNLOADABLE_FILES WHERE FILE_PATH = :path")
+	@SqlUpdate("DELETE FROM DOWNLOADABLE_FILE WHERE FILE_PATH = :path")
 	public void deleteFile(@BindPath("path") Path path);
 
-	@SqlQuery("SELECT * FROM DOWNLOADABLE_FILES WHERE FILE_PATH = :path")
+	@SqlUpdate("DELETE FROM DOWNLOADABLE_FILE WHERE FILE_ID = :fileId")
+	public void deleteFile(@Bind("fileId") long fileId);
+
+	@SqlQuery("SELECT * FROM DOWNLOADABLE_FILE WHERE FILE_PATH = :path")
 	@Mapper(DownloadableFileMapper.class)
 	public DownloadableFile getFile(@BindPath("path") Path path);
 
@@ -94,5 +98,8 @@ public interface DownloadableUtilsDAO {
 	@SqlQuery("SELECT DTYPE, STATUS, COUNT(*) AS C FROM DOWNLOADABLE GROUP BY DTYPE, STATUS")
 	@Mapper(DownloableCountMapper.class)
 	public List<DownloableCount> getCounts();
+
+	@SqlUpdate("UPDATE DOWNLOADABLE_FILE SET DOWNLOADABLE_ID=:downloadableId WHERE FILE_ID = :fileId")
+	public void updateDownloadableId(@Bind("fileId") long fileId, @Bind("downloadableId") long downloadableId);
 
 }

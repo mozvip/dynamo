@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,7 +20,6 @@ import dynamo.backlog.tasks.core.CancelDownloadTask;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.DeleteTask;
-import dynamo.core.DownloadFinder;
 import dynamo.core.DynamoApplication;
 import dynamo.core.DynamoServer;
 import dynamo.core.EventManager;
@@ -200,15 +200,11 @@ public class DownloadableManager {
 		addFile( downloadable, newFile, 0 );
 	}
 
-	public void addFile( Downloadable downloadable, Path newFile, int fileIndex ) throws IOException {
-		
-		if (Files.isDirectory( newFile )) {
-			return;
-		}
+	public long addFile( Downloadable downloadable, Path newFile, int fileIndex ) throws IOException {
 		
 		Long id = downloadable.getId();
 
-		downloadableDAO.addFile( id, newFile, Files.size( newFile ), fileIndex );
+		long fileId = downloadableDAO.createFile( id, newFile, Files.size( newFile ), fileIndex );
 		downloadableDAO.updateStatus( id, DownloadableStatus.DOWNLOADED );
 
 		unrecognizedDAO.deleteUnrecognizedFile( newFile );
@@ -257,6 +253,8 @@ public class DownloadableManager {
 			}
 
 		}
+		
+		return fileId;
 
 	}
 
@@ -480,6 +478,13 @@ public class DownloadableManager {
 		return downloadImage(downloadable.getClass(), downloadable.getId(), url, referer); 
 	}
 	
+	public static boolean downloadImage( Downloadable downloadable, Path imageFile ) throws IOException {
+		Path localFile = resolveImage(downloadable);
+		Files.createDirectories( localFile.getParent() );
+		Files.copy(imageFile, localFile, StandardCopyOption.REPLACE_EXISTING); 
+		return true;
+	}
+
 	public static boolean downloadImage(Path localFile, String url, String referer ) throws IOException {
 		if (url != null) {
 			return HTTPClient.getInstance().downloadImage(url, referer, localFile );

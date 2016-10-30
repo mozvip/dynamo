@@ -111,7 +111,9 @@
             <column name="SUBTITLELANGUAGE" type="VARCHAR(50)"/>
             <column name="AUTODOWNLOAD" type="BOOLEAN(1)"/>
             <column name="ENDED" type="BOOLEAN(1)"/>
-            <column name="FOLDER" type="VARCHAR(2147483647)"/>
+            <column name="FOLDER" type="VARCHAR(4096)">
+            	<constraints nullable="false"/>
+           	</column>
             <column name="IMDBID" type="VARCHAR(2147483647)"/>
             <column name="NETWORK" type="VARCHAR(2147483647)"/>
             <column name="USEABSOLUTENUMBERING" type="BOOLEAN(1)"/>
@@ -151,7 +153,7 @@
             	<constraints nullable="false"/>
             </column>
             <column name="PATH" type="VARCHAR(2048)"/>
-            <column name="ALLMUSICURL" type="VARCHAR(2147483647)"/>
+			<column name="TADB_ALBUM_ID" type="INT(12)"></column>
             <column name="GENRE" type="VARCHAR(2147483647)"/>
             <column name="IMAGE" type="VARCHAR(2147483647)"/>
             <column name="QUALITY" type="VARCHAR(50)"/>
@@ -163,27 +165,45 @@
             <column name="NAME" type="VARCHAR(255)">
                 <constraints primaryKey="true" primaryKeyName="PK_MUSICARTIST"/>
             </column>
-            <column name="ALLMUSICURL" type="VARCHAR(2147483647)"/>
+			<column name="TADB_ARTIST_ID" type="INT(12)" />
             <column name="BLACKLISTED" type="BOOLEAN(1)"/>
+			<column name="IMAGE" type="VARCHAR(255)"/>
+			<column name="BACKGROUND_IMAGE" type="VARCHAR(255)"/>
             <column name="FAVORITE" type="BOOLEAN(1)"/>
             <column name="AKA" type="VARCHAR(2147483647)"/>
         </createTable>
     </changeSet>
+	<changeSet author="mozvip" id="25">
+		<createTable tableName="DOWNLOADABLE_FILE">
+			<column name="FILE_ID" type="INT(10)" autoIncrement="true">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="PK_DOWNLOADABLE_FILE"/>
+			</column>
+			<column name="DOWNLOADABLE_ID" type="INT(10)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="FILE_PATH" type="VARCHAR(2048)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SIZE" type="BIGINT(19)"/>
+			<column name="FILE_INDEX" type="INT(10)" defaultValue="0">
+				<constraints nullable="false"/>
+			</column>
+			<column name="FILE_IDENTIFIER" type="VARCHAR(255)" />
+		</createTable>
+		<addForeignKeyConstraint constraintName="FK_DOWNLOADABLE_FILE_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="DOWNLOADABLE_ID" baseTableName="DOWNLOADABLE_FILE" referencedColumnNames="ID" onDelete="CASCADE"/>
+	</changeSet>
     <changeSet author="mozvip" id="1406620788324-22">
-        <createTable tableName="MUSICFILE">
-            <column name="PATH" type="VARCHAR(2147483647)">
-                <constraints primaryKey="true" primaryKeyName="PK_MUSICFILE"/>
+        <createTable tableName="MUSIC_FILE">
+            <column name="FILE_ID" type="INT(10)">
+            	<constraints nullable="false" primaryKey="true" primaryKeyName="PK_MUSIC_FILE"/>
             </column>
-            <column name="SIZE" type="BIGINT(19)"/>
             <column name="SONGARTIST" type="VARCHAR(2147483647)"/>
             <column name="SONGTITLE" type="VARCHAR(2147483647)"/>
-            <column name="TAGSMODIFIED" type="BOOLEAN(1)"/>
-            <column name="TRACK" type="INT(10)"/>
             <column name="YEAR" type="INT(10)"/>
-            <column name="ALBUM_ID" type="INT(10)">
-            	<constraints nullable="false"/>
-            </column>
+			<column name="TADB_TRACK_ID" type="INT(12)"></column>
+            <column name="TAGSMODIFIED" type="BOOLEAN(1)"/>
         </createTable>
+        <addForeignKeyConstraint constraintName="FK_MUSIC_FILE_DOWNLOADABLE_FILE" referencedTableName="DOWNLOADABLE_FILE" baseColumnNames="FILE_ID" baseTableName="MUSIC_FILE" referencedColumnNames="FILE_ID" onDelete="CASCADE"/>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-23">
         <createTable tableName="REMOTESUBTITLES">
@@ -216,6 +236,8 @@
             	<constraints nullable="false"/>
             </column>
             <column name="CLIENTID" type="VARCHAR(100)"/>
+    		<column name="BLACKLISTED" type="BOOLEAN" defaultValueBoolean="false" />
+			<column name="DOWNLOADED" type="BOOLEAN" defaultValueBoolean="false" />
         </createTable>
     </changeSet>
     <changeSet author="mozvip" id="1406620788324-25">
@@ -325,9 +347,6 @@
     <changeSet author="mozvip" id="1406620788324-65">
         <addForeignKeyConstraint baseColumnNames="ID" baseTableName="MUSICALBUM" constraintName="FK_MUSICALBUM_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
     </changeSet>
-    <changeSet author="mozvip" id="1406620788324-67">
-        <addForeignKeyConstraint baseColumnNames="ALBUM_ID" baseTableName="MUSICFILE" constraintName="FK_MUSICFILE_ALBUM_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="MUSICALBUM"/>
-    </changeSet>
     <changeSet author="mozvip" id="1406620788324-68">
         <addForeignKeyConstraint baseColumnNames="RESULT_URL" baseTableName="SEARCHRESULTFILE" constraintName="FK_SEARCHRESULTFILE_RESULT_URL" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="URL" referencedTableName="SEARCHRESULT"/>
     </changeSet>
@@ -360,18 +379,6 @@
     	<dropColumn tableName="SEARCHRESULTFILE" columnName="EXPIREDATE"/>
     </changeSet>
 
-
-	<changeSet author="mozvip" id="10">
-		<addColumn tableName="MUSICARTIST">
-			<column name="IMAGE" type="VARCHAR(255)"/>
-			<column name="BACKGROUND_IMAGE" type="VARCHAR(255)"/>
-		</addColumn>
-	</changeSet>
-    <changeSet author="mozvip" id="11">
-    	<addColumn tableName="SEARCHRESULT">
-    		<column name="BLACKLISTED" type="BOOLEAN(1)" />
-    	</addColumn>
-    </changeSet>
     <changeSet author="mozvip" id="13">
     	<modifyDataType tableName="MANAGEDSERIES" columnName="IMDBID" newDataType="VARCHAR(10)"/>
     	<modifyDataType tableName="MOVIE" columnName="IMDBID" newDataType="VARCHAR(10)"/>
@@ -392,23 +399,6 @@
         </createTable>    
     </changeSet>
 
-	<changeSet author="mozvip" id="25">
-		<createTable tableName="DOWNLOADABLE_FILES">
-			<column name="DOWNLOADABLE_ID" type="INT(10)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="FILE_PATH" type="VARCHAR(2048)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="SIZE" type="BIGINT(19)"/>
-			<column name="FILE_INDEX" type="INT(10)" defaultValue="0">
-				<constraints nullable="false"/>
-			</column>
-			<column name="FILE_IDENTIFIER" type="VARCHAR(255)" />
-		</createTable>
-		<addPrimaryKey constraintName="PK_DOWNLOADABLE_FILES" tableName="DOWNLOADABLE_FILES" columnNames="DOWNLOADABLE_ID,FILE_PATH"/>
-		<addForeignKeyConstraint constraintName="FK_DOWNLOADABLE_FILES_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="DOWNLOADABLE_ID" baseTableName="DOWNLOADABLE_FILES" referencedColumnNames="ID" onDelete="CASCADE"/>
-	</changeSet>
 	<changeSet author="mozvip" id="28">
 		<createTable tableName="VIDEO_METADATA">
 			<column name="VIDEO_ID" type="INT(10)">
@@ -436,19 +426,6 @@
 		<dropColumn tableName="DOWNLOADABLE" columnName="SUGGESTEDBY"/>
 	</changeSet>
 	
-	<changeSet author="mozvip" id="30">
-		<addColumn tableName="SEARCHRESULT">
-			<column name="DOWNLOADED" type="BOOLEAN" defaultValueBoolean="false" />
-		</addColumn>
-	</changeSet>
-
-	<changeSet author="mozvip" id="31">
-		<delete tableName="MANAGEDSERIES">
-			<where>FOLDER IS NULL</where>
-		</delete>
-		<addNotNullConstraint tableName="MANAGEDSERIES" columnName="FOLDER" columnDataType="VARCHAR(4096)"/>
-	</changeSet>
-
 	<changeSet author="mozvip" id="32">
 		<dropColumn tableName="MUSICALBUM" columnName="PATH"/>
 		<addColumn tableName="MUSICALBUM">
@@ -461,25 +438,6 @@
 		<delete tableName="SEARCHRESULT"></delete>
 		<dropColumn tableName="SEARCHRESULT" columnName="PROVIDERNAME"/>
 		<addNotNullConstraint columnDataType="VARCHAR(1024)" tableName="SEARCHRESULT" columnName="PROVIDERCLASSNAME"/>
-	</changeSet>
-
-	<changeSet author="mozvip" id="34">
-		<addColumn tableName="MUSICALBUM">
-			<column name="TADB_ALBUM_ID" type="INT(12)"></column>
-		</addColumn>
-		<addColumn tableName="MUSICARTIST">
-			<column name="TADB_ARTIST_ID" type="INT(12)"></column>
-		</addColumn>
-		<addColumn tableName="MUSICFILE">
-			<column name="TADB_TRACK_ID" type="INT(12)"></column>
-		</addColumn>
-	</changeSet>
-
-	<changeSet author="mozvip" id="35-temp">
-		<delete tableName="MUSICALBUM"></delete>
-		<delete tableName="MUSICFILE"></delete>
-		<delete tableName="MUSICARTIST"></delete>
-		<delete tableName="MAGAZINEISSUE"></delete>
 	</changeSet>
 
 </databaseChangeLog>

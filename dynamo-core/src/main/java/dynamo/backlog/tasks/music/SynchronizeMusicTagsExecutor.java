@@ -12,6 +12,8 @@ import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 import org.jaudiotagger.tag.reference.ID3V2Version;
 
+import dynamo.core.manager.DAOManager;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.TaskExecutor;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.music.MusicAlbum;
@@ -20,11 +22,11 @@ import dynamo.music.jdbi.MusicAlbumDAO;
 
 public class SynchronizeMusicTagsExecutor extends TaskExecutor<SynchronizeMusicTagsTask> {
 	
-	private MusicAlbumDAO musicDAO;
+	private DownloadableUtilsDAO downloadableUtilsDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
+	private MusicAlbumDAO musicDAO = DAOManager.getInstance().getDAO( MusicAlbumDAO.class );
 
-	public SynchronizeMusicTagsExecutor(SynchronizeMusicTagsTask task, MusicAlbumDAO musicDAO) {
+	public SynchronizeMusicTagsExecutor(SynchronizeMusicTagsTask task) {
 		super(task);
-		this.musicDAO = musicDAO;
 	}
 
 	@Override
@@ -34,9 +36,9 @@ public class SynchronizeMusicTagsExecutor extends TaskExecutor<SynchronizeMusicT
 		
 		AudioFile audioFile;
 		try {
-			audioFile = AudioFileIO.read( musicFile.getPath().toFile() );
+			audioFile = AudioFileIO.read( musicFile.getFilePath().toFile() );
 		} catch (java.io.FileNotFoundException e) {
-			musicDAO.deleteMusicFile( musicFile.getPath() );
+			downloadableUtilsDAO.deleteFile( musicFile.getFilePath() );
 			throw e;
 		}
 
@@ -45,13 +47,13 @@ public class SynchronizeMusicTagsExecutor extends TaskExecutor<SynchronizeMusicT
 			audioTag = ((MP3File) audioFile).convertTag(audioTag, ID3V2Version.ID3_V24);
 		}	
 
-		MusicAlbum album = musicDAO.find( musicFile.getAlbumId() );
+		MusicAlbum album = musicDAO.find( musicFile.getDownloadableId() );
 		
 		audioTag.setField(FieldKey.ALBUM, album.getName() );
 		audioTag.setField(FieldKey.ALBUM_ARTIST, album.getArtistName() );
 		audioTag.setField(FieldKey.ARTIST, musicFile.getSongArtist() );
 		audioTag.setField(FieldKey.TITLE, musicFile.getSongTitle() );
-		audioTag.setField(FieldKey.TRACK, "" + musicFile.getTrack() );
+		audioTag.setField(FieldKey.TRACK, "" + musicFile.getIndex() );
 		if (musicFile.getYear() > 0) {
 			audioTag.setField(FieldKey.YEAR, "" + musicFile.getYear() );
 		}
@@ -64,7 +66,7 @@ public class SynchronizeMusicTagsExecutor extends TaskExecutor<SynchronizeMusicT
 
 		audioFile.commit();
 		
-		musicDAO.updateTagsModified( musicFile.getPath(), false );
+		musicDAO.updateTagsModified( musicFile.getFileId(), false );
 	}
 
 }

@@ -28,13 +28,15 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     });
   }])
 
-  .controller('MusicAlbumCtrl', ['$scope', 'downloadableService', 'BackendService', 'album', 'files', function ($scope, downloadableService, BackendService, album, files) {
+  .controller('MusicAlbumCtrl', ['$scope', 'downloadableService', 'BackendService', 'album', 'files', '$location', function ($scope, downloadableService, BackendService, album, files, $location) {
 
     $scope.album = album.data;
     $scope.files = files.data;
 
     $scope.saveData = function() {
-      BackendService.post('music/save', $scope.album);
+      BackendService.post('music/save', $scope.album).then( function( response ) {
+        $location.path('music-album/' + response.data);
+      });
     }
 
     $scope.files.forEach(function(file) {

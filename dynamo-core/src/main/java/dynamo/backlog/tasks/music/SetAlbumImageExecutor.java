@@ -26,7 +26,7 @@ public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 		List<MusicFile> files = musicDAO.findMusicFiles( albumId );
 		if (files != null && files.size() > 0) {
 			for (MusicFile file : files) {
-				queue( new SynchronizeMusicTagsTask( file.getPath() ), false );	// update file tag
+				queue( new SynchronizeMusicTagsTask( file.getFilePath() ), false );	// update file tag
 			}
 		}
 

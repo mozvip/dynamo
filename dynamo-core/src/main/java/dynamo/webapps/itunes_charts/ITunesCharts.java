@@ -40,7 +40,7 @@ public class ITunesCharts implements MusicAlbumSuggester, MovieSuggester {
 			
 			// FIXME : extract genre
 
-			MusicManager.getInstance().suggest(artistName, albumName, null, imageURL, referer, suggestionURL);
+			MusicManager.getInstance().suggest(artistName, albumName, imageURL, referer, suggestionURL);
 		}
 	}
 

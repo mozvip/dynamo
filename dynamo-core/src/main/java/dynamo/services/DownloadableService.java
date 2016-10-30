@@ -2,6 +2,7 @@ package dynamo.services;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +30,7 @@ import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
+import dynamo.model.music.MusicAlbum;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import model.UnrecognizedFile;
 
@@ -76,8 +78,11 @@ public class DownloadableService {
 	
 	@POST
 	@Path("/update-cover-image/{downloadableId}")
-	public void changeImage( @PathParam("downloadableId") long downloadableId ) {
+	public void changeImage( @PathParam("downloadableId") long downloadableId ) throws IOException {
 		Downloadable downloadable = DownloadableFactory.getInstance().createInstance(downloadableId);
+		if (downloadable instanceof MusicAlbum) {
+			Files.deleteIfExists( ((MusicAlbum) downloadable).getFolder().resolve("folder.jpg") );
+		}
 		FindDownloadableImageTask task = DynamoObjectFactory.createInstance( FindDownloadableImageTask.class, downloadable);
 		if (task != null) {
 			BackLogProcessor.getInstance().schedule( task );

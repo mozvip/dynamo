@@ -9,7 +9,10 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
 import core.RegExp;
+import dynamo.core.manager.DAOManager;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.TaskExecutor;
+import dynamo.manager.DownloadableManager;
 import dynamo.manager.MusicManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
@@ -20,11 +23,11 @@ import dynamo.webapps.acoustid.LookupResults;
 
 public class IdentifyMusicFileExecutor extends TaskExecutor<IdentifyMusicFileTask> {
 	
-	private MusicAlbumDAO musicDAO = null;
+	private DownloadableUtilsDAO downloadableUtilsDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
+	private MusicAlbumDAO musicDAO = DAOManager.getInstance().getDAO( MusicAlbumDAO.class );
 
-	public IdentifyMusicFileExecutor(IdentifyMusicFileTask task, MusicAlbumDAO musicDAO) {
+	public IdentifyMusicFileExecutor(IdentifyMusicFileTask task) {
 		super(task);
-		this.musicDAO = musicDAO;
 	}
 
 	@Override
@@ -63,21 +66,14 @@ public class IdentifyMusicFileExecutor extends TaskExecutor<IdentifyMusicFileTas
 		String albumArtist = audioTag.getFirst(FieldKey.ALBUM_ARTIST);
 		String albumName = audioTag.getFirst(FieldKey.ALBUM);
 
-		MusicAlbum album = MusicManager.getInstance().getAlbum( albumArtist, albumName, null, DownloadableStatus.DOWNLOADED, null, MusicQuality.COMPRESSED, true );
+		MusicAlbum album = MusicManager.getInstance().getAlbum( albumArtist, albumName, DownloadableStatus.DOWNLOADED, null, MusicQuality.COMPRESSED, true );
 
 		// delete existing files if exists
-		musicDAO.deleteMusicFile( task.getMusicFilePath() );
+		downloadableUtilsDAO.deleteFile( task.getMusicFilePath() );
 		
 		if (album != null) {
-			musicDAO.createMusicFile(
-					task.getMusicFilePath(),
-					album.getId(),
-					audioTag.getFirst(FieldKey.TITLE),
-					audioTag.getFirst(FieldKey.ARTIST),
-					track,
-					year,
-					Files.size(task.getMusicFilePath()),
-					false );
+			long fileId = DownloadableManager.getInstance().addFile( album, task.getMusicFilePath(), track );
+			musicDAO.createMusicFile( fileId, audioTag.getFirst(FieldKey.TITLE), audioTag.getFirst(FieldKey.ARTIST), year, false );
 		}
 
 	}

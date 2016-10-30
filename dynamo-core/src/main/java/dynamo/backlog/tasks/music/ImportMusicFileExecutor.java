@@ -19,9 +19,9 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.MoveFileTask;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
+import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.TaskExecutor;
 import dynamo.manager.DownloadableManager;
-import dynamo.manager.LocalImageCache;
 import dynamo.manager.MusicManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
@@ -33,6 +33,7 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 	
 	protected String[] intermediateFolders = new String[] {"Disc 1", "CD 1", "CD1", "Disc 2", "CD 2", "CD2"};
 	private MusicAlbumDAO musicDAO = DAOManager.getInstance().getDAO( MusicAlbumDAO.class );
+	private DownloadableUtilsDAO downloadableUtilsDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
 	public ImportMusicFileExecutor(ImportMusicFileTask task) {
 		super(task);
@@ -79,22 +80,16 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 				albumName = "<Unknown>";
 			}
 
-			String localImage = String.format("albums/%s.jpg", MusicManager.getSearchString(artistName, albumName));
 			Path folderImage = folder.resolve("folder.jpg");
-			if (LocalImageCache.getInstance().missFile(localImage)) {
-				if (Files.exists( folderImage )) {
-					LocalImageCache.getInstance().download( localImage, Files.readAllBytes( folderImage ) );
-				} else {
-					Artwork artwork = audioTag.getFirstArtwork();
-					if ( artwork != null ) {
-						// FIXME: .jpg is hardcoded
-						LocalImageCache.getInstance().download( localImage, artwork.getBinaryData() );
-						// save to folder.jpg
-						Files.write( folderImage, artwork.getBinaryData() );
-					}
+			if (!Files.exists( folderImage)) {
+				Artwork artwork = audioTag.getFirstArtwork();
+				if ( artwork != null ) {
+					// FIXME: .jpg is hardcoded
+					// save to folder.jpg
+					Files.write( folderImage, artwork.getBinaryData() );
 				}
 			}
-			
+
 			if (StringUtils.isBlank(songArtist)) {
 				songArtist = audioTag.getFirst(FieldKey.ORIGINAL_ARTIST);
 			}
@@ -118,13 +113,16 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 			}
 			
 			MusicAlbum musicAlbum = MusicManager.getInstance().getAlbum(
-					artistName, albumName, null, DownloadableStatus.DOWNLOADED,
+					artistName, albumName, DownloadableStatus.DOWNLOADED,
 					albumDestinationFolder, audioTag instanceof FlacTag ? MusicQuality.LOSSLESS : MusicQuality.COMPRESSED, true);
 			
-			if (albumDestinationFolder == null) {
-				// default destination folder
-				albumDestinationFolder = MusicManager.getInstance().getPath(artistName, albumName);
+			if (Files.exists( folderImage)) {
+				DownloadableManager.getInstance().downloadImage(musicAlbum, folderImage);
+			} else {
+				BackLogProcessor.getInstance().schedule( new FindMusicAlbumImageTask( musicAlbum ) );
 			}
+
+			albumDestinationFolder = musicAlbum.getFolder();
 
 			try {
 				newMusicFile( musicFilePath, albumDestinationFolder, musicAlbum, songTitle, songArtist, track, year, task.isKeepSourceFile() );
@@ -158,8 +156,9 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 		if (songTitle != null ) {
 			songTitle = StringUtils.capitalize( songTitle ).trim();
 		}
-		musicDAO.createMusicFile( targetPath, musicAlbum.getId(), songTitle, songArtist, track, year, Files.size(musicFilePath), false );
-		DownloadableManager.getInstance().addFile( musicAlbum, musicFilePath, track );
+		
+		long fileId = DownloadableManager.getInstance().addFile( musicAlbum, musicFilePath, track );
+		musicDAO.createMusicFile( fileId, songTitle, songArtist, year, false );
 	}	
 
 }

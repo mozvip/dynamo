@@ -13,6 +13,7 @@ import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
+import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
 import dynamo.finders.core.MovieProvider;
 import dynamo.finders.music.MusicAlbumFinder;
@@ -69,7 +70,7 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 		WebDocument loginPage = client.getDocument("https://www.usenet-crawler.com/login");
 		SimpleResponse result = client.submit(loginPage.jsoupSingle("#content form"), "username=" + login, "password=" + password, "rememberme=on");
 		if (result.getLastRedirectLocation() == null || !result.getLastRedirectLocation().toString().equals( "https://www.usenet-crawler.com/")) {
-			ErrorManager.getInstance().reportError("Login failed for " + toString() + ", disabling provider");
+			ErrorManager.getInstance().reportError("Login failed for " + DynamoObjectFactory.getClassDescription( this.getClass() ) + ", disabling provider");
 			setEnabled( false );
 		}
 	}

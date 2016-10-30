@@ -1,9 +1,9 @@
 package dynamo.backlog.tasks.music;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
-import core.WebDocument;
 import core.WebResource;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.FindDownloadableImageExecutor;
@@ -12,7 +12,8 @@ import dynamo.manager.DownloadableManager;
 import dynamo.manager.MusicManager;
 import dynamo.model.music.MusicAlbum;
 import dynamo.webapps.googleimages.GoogleImages;
-import hclient.HTTPClient;
+import dynamo.webapps.theaudiodb.AudioDBResponse;
+import dynamo.webapps.theaudiodb.TheAudioDB;
 
 public class FindMusicAlbumImageExecutor extends FindDownloadableImageExecutor<MusicAlbum> {
 
@@ -27,39 +28,45 @@ public class FindMusicAlbumImageExecutor extends FindDownloadableImageExecutor<M
 
 	@Override
 	public boolean downloadImageTo(Path localImage) {
-		String referer = null;
 		
 		MusicAlbum album = task.getDownloadable();
 		
-		if (album.getAllMusicURL() != null) {
-			
-			referer = album.getAllMusicURL();
+		Path folderImage = album.getFolder().resolve("folder.jpg");
+		if (Files.exists( folderImage )) {
 			
 			try {
-				WebDocument document = client.getDocument( referer, HTTPClient.REFRESH_ONE_WEEK );
-				String imageURL = document.jsoup("div.album-contain > img").attr("abs:src");
-				return DownloadableManager.downloadImage(localImage, imageURL, referer);
+				return DownloadableManager.downloadImage( album, folderImage );
 			} catch (IOException e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
 			
-		} else {
-
-			// google images search
-			String albumName = MusicManager.getAlbumName(  album.getName() );
+		}
+		
+		if (album.getTadbAlbumId() != null && album.getTadbAlbumId() > 0) {
 			
-			String[] searchStrings = new String[] { String.format("%s \"%s\"", album.getArtistName(), albumName), String.format("%s+%s+album", album.getArtistName(), albumName) };
-			for (String string : searchStrings) {
-				WebResource googleResult = GoogleImages.findImage( string, 1.0f );
-				if (googleResult != null) {
-					try {
-						return DownloadableManager.downloadImage(localImage, googleResult.getUrl(), googleResult.getReferer());
-					} catch (IOException e) {
-						ErrorManager.getInstance().reportThrowable( e );
-					}
+			AudioDBResponse response = TheAudioDB.getInstance().getAlbum( album.getTadbAlbumId() );
+			
+			try {
+				return DownloadableManager.downloadImage( album, response.getAlbum().get(0).getStrAlbumThumb(), null );
+			} catch (IOException e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}
+			
+		}
+
+		// google images search
+		String albumName = MusicManager.getAlbumName(  album.getName() );
+		
+		String[] searchStrings = new String[] { String.format("%s \"%s\"", album.getArtistName(), albumName), String.format("%s+%s+album", album.getArtistName(), albumName) };
+		for (String string : searchStrings) {
+			WebResource googleResult = GoogleImages.findImage( string, 1.0f );
+			if (googleResult != null) {
+				try {
+					return DownloadableManager.downloadImage(localImage, googleResult.getUrl(), googleResult.getReferer());
+				} catch (IOException e) {
+					ErrorManager.getInstance().reportThrowable( e );
 				}
 			}
-
 		}
 		
 		return false;

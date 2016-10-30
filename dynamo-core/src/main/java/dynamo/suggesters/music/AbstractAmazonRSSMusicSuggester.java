@@ -13,7 +13,7 @@ public abstract class AbstractAmazonRSSMusicSuggester extends AmazonRSSSuggester
 		}
 		title = MusicManager.getAlbumName( title );
 
-		MusicManager.getInstance().suggest(artistName, title, null, imageURL, rssURL, suggestionURL);
+		MusicManager.getInstance().suggest(artistName, title, imageURL, rssURL, suggestionURL);
 	}
 
 }

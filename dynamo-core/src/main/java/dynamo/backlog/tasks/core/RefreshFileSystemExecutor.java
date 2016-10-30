@@ -11,17 +11,13 @@ import java.util.stream.Collectors;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.files.DeleteFileTask;
-import dynamo.backlog.tasks.music.DeleteMusicFileTask;
 import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
 import dynamo.manager.DownloadableManager;
-import dynamo.manager.MusicManager;
 import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
-import dynamo.model.music.MusicAlbum;
-import dynamo.model.music.MusicFile;
 import model.ManagedEpisode;
 import model.backlog.ScanTVShowTask;
 
@@ -61,11 +57,8 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 			
 			List<DownloadableFile> files = DownloadableManager.getInstance().getAllFiles( downloadInfo.getId() ).collect( Collectors.toList() );
 
-			if ( downloadable instanceof MusicAlbum ) {
-				int musicFiles = MusicManager.getInstance().getMusicFilesCount( downloadable.getId() );
-				if (musicFiles == 0) {
-					DownloadableManager.getInstance().delete( downloadInfo.getId() );
-				}
+			if ( files == null || files.size() == 0 ) {
+				DownloadableManager.getInstance().delete( downloadInfo.getId() );
 			}
 
 			for (DownloadableFile downloadableFile : files) {
@@ -82,17 +75,6 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 
 					if (downloadable instanceof ManagedEpisode) {
 						queue(new ScanTVShowTask(((ManagedEpisode) downloadable).getSeries()));
-					} else if (downloadable instanceof MusicAlbum) {
-						List<MusicFile> musicFiles = MusicManager.getInstance().findMusicFiles(downloadInfo.getId());
-						if (!musicFiles.isEmpty()) {
-							for (MusicFile musicFile : musicFiles) {
-								if (Files.notExists(musicFile.getPath())) {
-									queue(new DeleteMusicFileTask(musicFile), false);
-								}
-							}
-						} else {
-							queue( new DeleteDownloadableTask(downloadable));
-						}
 					} else {
 						// was deleted manually
 						queue( new DeleteDownloadableTask(downloadable), false );
