@@ -2,8 +2,8 @@ package dynamo.backlog.tasks.tvshows;
 
 import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Path;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.omertron.thetvdbapi.model.Series;
@@ -60,11 +60,7 @@ public class NewTVShowFolderExecutor extends AbstractNewFolderExecutor<NewTVShow
 		} else {
 
 			boolean mustRefresh = !managed.isEnded(); 
-			Date nextRefreshDate = null;
-
-			Calendar nextMonthCal = Calendar.getInstance();
-			nextMonthCal.add(Calendar.MONTH, 1);
-			nextRefreshDate = nextMonthCal.getTime();
+			LocalDateTime nextRefreshDate = LocalDateTime.now().plusMonths(1);
 
 			List<ManagedEpisode> futureEpisodes = managedEpisodeDAO.findEpisodesForTVShowAndStatus( managed.getId(), DownloadableStatus.FUTURE );
 			if (futureEpisodes != null && futureEpisodes.size() > 0) {
@@ -74,8 +70,8 @@ public class NewTVShowFolderExecutor extends AbstractNewFolderExecutor<NewTVShow
 					if (managedEpisode.getFirstAired() == null) {
 						nextRefreshDate = null;
 						break;
-					} else if ( nextRefreshDate == null || managedEpisode.getFirstAired().before( nextRefreshDate )) {
-						nextRefreshDate = managedEpisode.getFirstAired();
+					} else if ( nextRefreshDate == null || managedEpisode.getFirstAired().isBefore( nextRefreshDate.toLocalDate() )) {
+						nextRefreshDate = LocalDateTime.from( managedEpisode.getFirstAired() );
 					}
 				}
 			}

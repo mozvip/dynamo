@@ -51,9 +51,9 @@ public interface DownloadableUtilsDAO {
 	@SqlUpdate("DELETE FROM DOWNLOADABLE WHERE DTYPE = :className AND status = :statusToDelete")
 	public void delete(@BindClassName("className") Class<? extends Downloadable> className, @BindEnum("statusToDelete") DownloadableStatus statusToDelete);
 
-	@SqlUpdate("INSERT INTO DOWNLOADABLE(DTYPE, NAME, STATUS, CREATION_DATE) VALUES (:className, :name, :status, CURRENT_TIMESTAMP())")
+	@SqlUpdate("INSERT INTO DOWNLOADABLE(DTYPE, NAME, STATUS, YEAR, CREATION_DATE) VALUES (:className, :name, :status, :year, CURRENT_TIMESTAMP())")
 	@GetGeneratedKeys
-	public long createDownloadable(@BindClassName("className") Class<?> klass, @Bind("name") String name, @BindEnum("status") DownloadableStatus status);
+	public long createDownloadable(@BindClassName("className") Class<?> klass,  @Bind("name") String name, @BindEnum("status") DownloadableStatus status, @Bind("year") int year );
 
 	@SqlUpdate("UPDATE DOWNLOADABLE SET AKA = :akas WHERE ID = :downloadableId")
 	public void saveAka(@Bind("downloadableId") Long downloadableId, @BindStringList("akas") Collection<String> akas);

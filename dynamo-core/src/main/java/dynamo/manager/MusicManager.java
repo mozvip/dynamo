@@ -297,10 +297,11 @@ public class MusicManager implements Reconfigurable {
 					audioDBAlbum = response.getAlbum().get( 0 );
 				}
 
+				int year = audioDBAlbum != null ? audioDBAlbum.getIntYearReleased() : -1;
 				album = new MusicAlbum(
-						DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, status),
+						DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, year, status),
 						albumName, null, 
-						status, -1, new Date(), folder, null, 
+						status, year, new Date(), folder, null, 
 						artist.getName(), null, quality, audioDBAlbum != null ? audioDBAlbum.getIdAlbum() : null
 				);
 				musicDAO.save(album.getId(), artist.getName(), audioDBAlbum != null ? audioDBAlbum.getIdAlbum() : null, audioDBAlbum != null ? audioDBAlbum.getStrGenre() : null, quality, searchString, folder);

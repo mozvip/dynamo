@@ -220,7 +220,7 @@ public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> i
 					if (destinationFolder != null ) {
 						String gameName = path.getFileName().toString();
 
-						long videoGameId = downloadableDAO.createDownloadable( VideoGame.class, gameName, DownloadableStatus.DOWNLOADED );
+						long videoGameId = downloadableDAO.createDownloadable( VideoGame.class, gameName, DownloadableStatus.DOWNLOADED, -1 );
 						videoGameDAO.save( videoGameId, isoType.getGamePlatform(), null );
 						VideoGame videoGame = new VideoGame( videoGameId, DownloadableStatus.DOWNLOADED, gameName, isoType.getGamePlatform(), null );
 

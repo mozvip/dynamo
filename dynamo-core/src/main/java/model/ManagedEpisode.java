@@ -2,6 +2,7 @@ package model;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.Date;
 
 import dynamo.core.VideoQuality;
@@ -26,7 +27,7 @@ public class ManagedEpisode extends Downloadable implements Video {
 	private int episodeNumber;
 	private Integer absoluteNumber;
 
-	private Date firstAired;
+	private LocalDate firstAired;
 
 	private boolean subtitled = false;
 	private boolean watched = false;
@@ -37,7 +38,7 @@ public class ManagedEpisode extends Downloadable implements Video {
 			VideoQuality quality, VideoSource source,
 			String releaseGroup, String seriesId, long seasonId, int seasonNumber,
 			int episodeNumber, Integer absoluteNumber, String episodeName,
-			Date firstAired, boolean subtitled, boolean watched, String label) {
+			LocalDate firstAired, boolean subtitled, boolean watched, String label) {
 
 		super(id, episodeName, label, status, null, -1, null);
 		
@@ -96,11 +97,11 @@ public class ManagedEpisode extends Downloadable implements Video {
 		this.episodeNumber = episodeNumber;
 	}
 
-	public Date getFirstAired() {
+	public LocalDate getFirstAired() {
 		return firstAired;
 	}
 
-	public void setFirstAired(Date firstAired) {
+	public void setFirstAired(LocalDate firstAired) {
 		this.firstAired = firstAired;
 	}
 

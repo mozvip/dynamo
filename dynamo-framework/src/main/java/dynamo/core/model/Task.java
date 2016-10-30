@@ -1,18 +1,18 @@
 package dynamo.core.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public abstract class Task {
 
-	private Date minDate;
+	private LocalDateTime minDate;
 	
-	public Date getMinDate() {
+	public LocalDateTime getMinDate() {
 		return minDate;
 	}
 
-	public void setMinDate(Date minDate) {
+	public void setMinDate(LocalDateTime minDate) {
 		this.minDate = minDate;
 	}
 	

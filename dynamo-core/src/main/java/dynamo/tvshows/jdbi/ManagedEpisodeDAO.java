@@ -1,7 +1,7 @@
 package dynamo.tvshows.jdbi;
 
 import java.nio.file.Path;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.skife.jdbi.v2.sqlobject.Bind;
@@ -34,7 +34,7 @@ public interface ManagedEpisodeDAO extends DownloadableDAO<ManagedEpisode>{
 	public void saveEpisode(
 			@Bind("episodeId") long episodeId,
 			@Bind("episodeNumber")int episodeNumber,
-			@Bind("firstAired") Date firstAired,
+			@Bind("firstAired") LocalDate firstAired,
 			@BindEnum("videoQuality") VideoQuality videoQuality,
 			@Bind("releaseGroup") String releaseGroup,
 			@BindEnum("videoSource") VideoSource videoSource,

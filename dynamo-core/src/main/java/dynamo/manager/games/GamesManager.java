@@ -139,7 +139,7 @@ public class GamesManager implements Reconfigurable {
 
 	public VideoGame createGame( String title, String platform, long theGamesDbId, DownloadableStatus status ) throws IOException  {
 
-		long videoGameId = DownloadableManager.getInstance().createDownloadable(VideoGame.class, title, status );
+		long videoGameId = DownloadableManager.getInstance().createDownloadable(VideoGame.class, title, -1, status );
 
 		GamePlatform newGamePlatform = GamePlatform.match( platform );
 		VideoGame game = new VideoGame(videoGameId, status, title, newGamePlatform, theGamesDbId );

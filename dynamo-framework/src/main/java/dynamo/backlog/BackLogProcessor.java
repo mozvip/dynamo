@@ -1,9 +1,8 @@
 package dynamo.backlog;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -122,7 +121,7 @@ public class BackLogProcessor extends Thread {
 					queue.refresh();
 				}
 
-				Date now = new Date();
+				LocalDateTime now = LocalDateTime.now();
 
 				Task currentItem = null;
 				for (Task item : pendingTasks) {
@@ -134,7 +133,7 @@ public class BackLogProcessor extends Thread {
 					if (item instanceof Enableable && !((Enableable) item).isEnabled()) {
 						continue;
 					}
-					if (item.getMinDate() == null || item.getMinDate().before( now )) {
+					if (item.getMinDate() == null || item.getMinDate().isBefore( now )) {
 						currentItem = item;
 						break;
 					}
@@ -149,9 +148,7 @@ public class BackLogProcessor extends Thread {
 					pendingTasks.remove( currentItem );
 				} else {
 					DaemonTask daemon = (DaemonTask) currentItem;
-					Calendar calendar = Calendar.getInstance();
-					calendar.add( Calendar.MINUTE, daemon.getMinutesFrequency() );
-					daemon.setMinDate( calendar.getTime() );
+					daemon.setMinDate( LocalDateTime.now().plusMinutes( daemon.getMinutesFrequency() ) );
 				}
 
 				AbstractDynamoQueue queue = getQueueForTaskClass( currentItem.getClass() );

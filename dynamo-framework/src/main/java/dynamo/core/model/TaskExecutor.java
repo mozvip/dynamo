@@ -1,7 +1,6 @@
 package dynamo.core.model;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,10 +156,8 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 		return isDone() || isFailed() || isCancelled();
 	}
 
-	public Date getNextDate( int minutes ) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.add( Calendar.MINUTE, minutes );
-		return calendar.getTime();
+	public LocalDateTime getNextDate( int minutes ) {
+		return LocalDateTime.now().plusMinutes( minutes );
 	}
 
 	public abstract void execute() throws Exception; 

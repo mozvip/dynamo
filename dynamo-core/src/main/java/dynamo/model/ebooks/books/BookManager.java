@@ -115,7 +115,7 @@ public class BookManager implements Enableable {
 	}
 
 	private long createSuggestion(String title, String author, Language language, String imageURL, String referer, String suggestionURL) throws IOException {
-		long downloadableId = DownloadableManager.getInstance().createSuggestion( Book.class, title, suggestionURL);
+		long downloadableId = DownloadableManager.getInstance().createSuggestion( Book.class, title, -1, suggestionURL);
 		DownloadableManager.downloadImage( Book.class, downloadableId, imageURL, referer);
 		bookDAO.save( downloadableId, author, language );
 		return downloadableId;

@@ -5,6 +5,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -240,7 +242,13 @@ public class MovieManager implements Reconfigurable {
 				movieDb = getMovieInfo( movieDb.getId() );
 			}
 
-			long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, movieDb.getTitle(), status );
+			int year = -1;
+			if (StringUtils.isNotBlank( movieDb.getReleaseDate() )) {
+				LocalDate date = LocalDate.parse( movieDb.getReleaseDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+				year = date.getYear();
+			}
+
+			long downloadableId = DownloadableManager.getInstance().createDownloadable( Movie.class, movieDb.getTitle(), year, status );
 			if (defaultImage != null) {
 				DownloadableManager.downloadImage(Movie.class, downloadableId, defaultImage.getUrl(), defaultImage.getReferer() );
 			}
@@ -251,19 +259,6 @@ public class MovieManager implements Reconfigurable {
 				originalLanguage = Language.getByShortName( l.getCode() );	// FIXME : may not always match
 			}
 
-			int year = -1;
-			if (StringUtils.isNotBlank( movieDb.getReleaseDate() )) {
-				Date releaseDate;
-				try {
-					releaseDate = new SimpleDateFormat("yyyy-MM-dd").parse(movieDb.getReleaseDate());
-					Calendar calendar = Calendar.getInstance();
-					calendar.setTime(releaseDate);
-					year = calendar.get(Calendar.YEAR);
-				} catch (ParseException e) {
-					ErrorManager.getInstance().reportThrowable( e );
-				}
-			}
-			
 			float rating = imdbRating <= 0 ? movieDb.getVoteAverage() : imdbRating;
 			
 			movie = new Movie( downloadableId, status, null, movieDb.getTitle(), null, null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, rating, year, watched );

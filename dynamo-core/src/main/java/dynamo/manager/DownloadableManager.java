@@ -145,12 +145,12 @@ public class DownloadableManager {
 		return downloadableDAO.updateStatus(downloadable.getId(), newStatus);
 	}
 
-	public long createDownloadable(Class<?> klass, String name, DownloadableStatus status) {
-		return downloadableDAO.createDownloadable( klass, name, status );
+	public long createDownloadable(Class<?> klass, String name, int year, DownloadableStatus status) {
+		return downloadableDAO.createDownloadable( klass, name, status, year );
 	}
 	
-	public long createSuggestion(Class<?> klass, String name, String suggestionURL) {
-		long downloadableId = downloadableDAO.createDownloadable( klass, name, DownloadableStatus.SUGGESTED );
+	public long createSuggestion(Class<?> klass, String name, int year, String suggestionURL) {
+		long downloadableId = downloadableDAO.createDownloadable( klass, name, DownloadableStatus.SUGGESTED, year );
 		suggestionURLDAO.saveSuggestionURL(downloadableId, suggestionURL);
 		return downloadableId;
 	}
@@ -487,6 +487,7 @@ public class DownloadableManager {
 
 	public static boolean downloadImage(Path localFile, String url, String referer ) throws IOException {
 		if (url != null) {
+			Files.createDirectories( localFile.getParent() );
 			return HTTPClient.getInstance().downloadImage(url, referer, localFile );
 		}
 		return false;

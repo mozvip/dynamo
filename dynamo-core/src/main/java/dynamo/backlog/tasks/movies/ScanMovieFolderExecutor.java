@@ -6,6 +6,8 @@ import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -160,8 +162,14 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 		} else {
 			// create new movie
 			String movieName = movieDb != null ? movieDb.getTitle() : movieFile.getFileName().toString();
+
+			int year = -1;
+			if (movieDb != null && StringUtils.isNotBlank( movieDb.getReleaseDate()))	{
+				LocalDate date = LocalDate.parse( movieDb.getReleaseDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+				year = date.getYear();
+			}
 			
-			long id = downloadableDAO.createDownloadable( Movie.class, movieName, DownloadableStatus.DOWNLOADED );
+			long id = downloadableDAO.createDownloadable( Movie.class, movieName, DownloadableStatus.DOWNLOADED, year );
 			movie = new Movie(
 					id, DownloadableStatus.DOWNLOADED, null, movieName, null, null, false, null, null, null, null, null, null, null, -1, null, null, -1, -1, false );
 			if ( movieInfo != null ) {
