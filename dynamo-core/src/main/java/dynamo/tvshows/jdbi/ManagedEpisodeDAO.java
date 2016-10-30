@@ -13,9 +13,10 @@ import dynamo.core.VideoQuality;
 import dynamo.core.VideoSource;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.jdbi.core.BindEnum;
+import dynamo.jdbi.core.BindLocalDate;
 import dynamo.jdbi.core.BindPath;
 import dynamo.model.DownloadableStatus;
-import model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedEpisode;
 
 public interface ManagedEpisodeDAO extends DownloadableDAO<ManagedEpisode>{
 	
@@ -34,7 +35,7 @@ public interface ManagedEpisodeDAO extends DownloadableDAO<ManagedEpisode>{
 	public void saveEpisode(
 			@Bind("episodeId") long episodeId,
 			@Bind("episodeNumber")int episodeNumber,
-			@Bind("firstAired") LocalDate firstAired,
+			@BindLocalDate("firstAired") LocalDate firstAired,
 			@BindEnum("videoQuality") VideoQuality videoQuality,
 			@Bind("releaseGroup") String releaseGroup,
 			@BindEnum("videoSource") VideoSource videoSource,

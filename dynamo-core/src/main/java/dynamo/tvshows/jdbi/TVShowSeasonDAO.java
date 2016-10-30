@@ -10,7 +10,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.jdbi.core.BindEnum;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.tvshows.TVShowSeason;
+import dynamo.tvshows.model.TVShowSeason;
 
 public interface TVShowSeasonDAO extends DownloadableDAO<TVShowSeason> {
 	

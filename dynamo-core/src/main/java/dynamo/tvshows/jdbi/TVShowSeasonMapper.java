@@ -7,7 +7,7 @@ import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import dynamo.model.DownloadableStatus;
-import dynamo.model.tvshows.TVShowSeason;
+import dynamo.tvshows.model.TVShowSeason;
 
 public class TVShowSeasonMapper implements ResultSetMapper<TVShowSeason> {
 

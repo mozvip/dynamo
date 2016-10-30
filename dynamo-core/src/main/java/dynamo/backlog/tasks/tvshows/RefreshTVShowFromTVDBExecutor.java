@@ -19,12 +19,12 @@ import dynamo.core.model.TaskExecutor;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.LocalImageCache;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.tvshows.TVShowManager;
-import dynamo.model.tvshows.TVShowSeason;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowSeasonDAO;
-import model.ManagedEpisode;
-import model.ManagedSeries;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedSeries;
+import dynamo.tvshows.model.TVShowManager;
+import dynamo.tvshows.model.TVShowSeason;
 import model.backlog.RefreshTVShowTask;
 import model.backlog.ScanTVShowTask;
 

@@ -32,7 +32,7 @@ import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
-import model.UnrecognizedFile;
+import dynamo.tvshows.model.UnrecognizedFile;
 
 @Path("downloadable")
 @Produces(MediaType.APPLICATION_JSON)

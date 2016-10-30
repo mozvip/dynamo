@@ -12,9 +12,9 @@ import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.tvshows.TVShowManager;
-import dynamo.model.tvshows.TVShowSeason;
-import model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.TVShowManager;
+import dynamo.tvshows.model.TVShowSeason;
 
 public class RefreshWantedExecutor extends TaskExecutor<RefreshWantedTask> {
 

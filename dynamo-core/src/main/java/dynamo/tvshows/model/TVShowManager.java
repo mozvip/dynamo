@@ -1,4 +1,4 @@
-package dynamo.model.tvshows;
+package dynamo.tvshows.model;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -42,10 +42,6 @@ import dynamo.tvshows.jdbi.TVShowSeasonDAO;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import hclient.HTTPClient;
 import hclient.RegExpMatcher;
-import model.ManagedEpisode;
-import model.ManagedSeries;
-import model.UnrecognizedFile;
-import model.UnrecognizedFolder;
 import model.backlog.NewTVShowFolderTask;
 import model.backlog.RefreshTVShowTask;
 import model.backlog.ScanTVShowTask;

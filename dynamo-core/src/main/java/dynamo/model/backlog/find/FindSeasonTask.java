@@ -1,7 +1,7 @@
 package dynamo.model.backlog.find;
 
 import dynamo.model.backlog.core.FindDownloadableTask;
-import dynamo.model.tvshows.TVShowSeason;
+import dynamo.tvshows.model.TVShowSeason;
 
 public class FindSeasonTask extends FindDownloadableTask<TVShowSeason> {
 

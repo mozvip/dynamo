@@ -46,8 +46,6 @@ import dynamo.model.backlog.core.FindDownloadableTask;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
-import dynamo.model.tvshows.TVShowManager;
-import dynamo.model.tvshows.TVShowSeason;
 import dynamo.movies.jdbi.MovieDAO;
 import dynamo.movies.model.Movie;
 import dynamo.movies.model.MovieManager;
@@ -55,10 +53,12 @@ import dynamo.parsers.TVShowEpisodeInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedSeries;
+import dynamo.tvshows.model.TVShowManager;
+import dynamo.tvshows.model.TVShowSeason;
 import dynamo.webapps.pushbullet.PushBullet;
 import hclient.HTTPClient;
-import model.ManagedEpisode;
-import model.ManagedSeries;
 import model.backlog.ScanTVShowTask;
 
 

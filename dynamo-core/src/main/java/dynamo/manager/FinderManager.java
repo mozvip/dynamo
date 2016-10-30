@@ -6,7 +6,7 @@ import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.parsers.VideoNameParser;
-import model.ManagedSeries;
+import dynamo.tvshows.model.ManagedSeries;
 
 public class FinderManager {
 

@@ -17,11 +17,11 @@ import com.omertron.thetvdbapi.TvDbException;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.FileUtils;
 import dynamo.backlog.tasks.tvshows.DeleteShowTask;
-import dynamo.model.tvshows.TVShowManager;
-import model.ManagedEpisode;
-import model.ManagedSeries;
-import model.UnrecognizedFile;
-import model.UnrecognizedFolder;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedSeries;
+import dynamo.tvshows.model.TVShowManager;
+import dynamo.tvshows.model.UnrecognizedFile;
+import dynamo.tvshows.model.UnrecognizedFolder;
 import model.backlog.ScanTVShowTask;
 
 @Path("tvshows")

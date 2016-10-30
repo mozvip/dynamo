@@ -11,7 +11,7 @@ import dynamo.core.VideoQuality;
 import dynamo.core.VideoSource;
 import dynamo.core.model.MapperUtils;
 import dynamo.model.DownloadableStatus;
-import model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedEpisode;
 
 public class ManagedEpisodeMapper implements ResultSetMapper<ManagedEpisode> {
 

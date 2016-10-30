@@ -9,7 +9,7 @@ import javax.ws.rs.QueryParam;
 import com.omertron.thetvdbapi.model.Series;
 
 import dynamo.core.Language;
-import dynamo.model.tvshows.TVShowManager;
+import dynamo.tvshows.model.TVShowManager;
 
 @Path("tvdb")
 public class TheTVDBService {

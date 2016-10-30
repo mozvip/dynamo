@@ -1,7 +1,7 @@
 package dynamo.suggesters;
 
 import dynamo.core.model.DaemonTask;
-import dynamo.model.tvshows.TVShowManager;
+import dynamo.tvshows.model.TVShowManager;
 
 public class RefreshTVShowSuggestionsTask extends DaemonTask {
 	

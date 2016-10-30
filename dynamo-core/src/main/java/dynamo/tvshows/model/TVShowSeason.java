@@ -1,10 +1,9 @@
-package dynamo.model.tvshows;
+package dynamo.tvshows.model;
 
 import java.nio.file.Path;
 
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
-import model.ManagedSeries;
 
 public class TVShowSeason extends Downloadable {
 

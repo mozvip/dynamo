@@ -5,9 +5,9 @@ import java.nio.file.Path;
 
 import dynamo.backlog.tasks.tvshows.DeleteShowTask;
 import dynamo.core.model.TaskExecutor;
-import dynamo.model.tvshows.TVShowManager;
-import model.ManagedSeries;
-import model.UnrecognizedFolder;
+import dynamo.tvshows.model.ManagedSeries;
+import dynamo.tvshows.model.TVShowManager;
+import dynamo.tvshows.model.UnrecognizedFolder;
 
 public class RemoveOrphansExecutor extends TaskExecutor<RemoveOrphansTask> {
 

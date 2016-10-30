@@ -7,7 +7,7 @@ import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import dynamo.core.model.MapperUtils;
-import model.UnrecognizedFile;
+import dynamo.tvshows.model.UnrecognizedFile;
 
 public class UnrecognizedFileMapper implements ResultSetMapper<UnrecognizedFile> {
 	

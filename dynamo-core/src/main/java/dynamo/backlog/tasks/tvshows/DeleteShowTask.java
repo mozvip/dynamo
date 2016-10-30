@@ -2,7 +2,7 @@ package dynamo.backlog.tasks.tvshows;
 
 import dynamo.core.LogQueuing;
 import dynamo.core.model.Task;
-import model.ManagedSeries;
+import dynamo.tvshows.model.ManagedSeries;
 
 public class DeleteShowTask extends Task implements LogQueuing {
 	

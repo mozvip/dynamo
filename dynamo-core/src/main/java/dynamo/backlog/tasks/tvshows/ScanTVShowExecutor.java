@@ -19,16 +19,16 @@ import dynamo.core.model.TaskExecutor;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
-import dynamo.model.tvshows.TVShowManager;
-import dynamo.model.tvshows.TVShowSeason;
 import dynamo.parsers.TVShowEpisodeInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowSeasonDAO;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedSeries;
+import dynamo.tvshows.model.TVShowManager;
+import dynamo.tvshows.model.TVShowSeason;
 import dynamo.video.VideoManager;
-import model.ManagedEpisode;
-import model.ManagedSeries;
 import model.backlog.ScanTVShowTask;
 
 public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {

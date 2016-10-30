@@ -13,11 +13,11 @@ import dynamo.core.model.video.VideoMetaData;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
-import dynamo.model.tvshows.TVShowManager;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedSeries;
+import dynamo.tvshows.model.TVShowManager;
 import dynamo.video.VideoManager;
-import model.ManagedEpisode;
-import model.ManagedSeries;
 
 public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisodeTask> {
 	

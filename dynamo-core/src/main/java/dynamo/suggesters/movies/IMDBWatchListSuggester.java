@@ -26,9 +26,9 @@ import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.manager.ErrorManager;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.tvshows.TVShowManager;
 import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.TVShowSuggester;
+import dynamo.tvshows.model.TVShowManager;
 import hclient.HTTPClient;
 
 @ClassDescription(label="IMDB Watch Lists")

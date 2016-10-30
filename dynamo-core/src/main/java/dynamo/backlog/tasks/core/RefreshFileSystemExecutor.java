@@ -18,7 +18,7 @@ import dynamo.core.model.TaskExecutor;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
-import model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedEpisode;
 import model.backlog.ScanTVShowTask;
 
 public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTask> implements ReportProgress {

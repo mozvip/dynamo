@@ -1,8 +1,8 @@
 package dynamo.backlog.tasks.movies;
 
 import dynamo.core.model.DaemonTask;
-import dynamo.model.tvshows.TVShowManager;
 import dynamo.trakt.TraktManager;
+import dynamo.tvshows.model.TVShowManager;
 
 public class RefreshWatchedEpisodesTask extends DaemonTask {
 	

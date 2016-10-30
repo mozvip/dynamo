@@ -12,9 +12,11 @@ import com.omertron.themoviedbapi.MovieDbException;
 import core.WebDocument;
 import core.WebResource;
 import dynamo.core.Language;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.movies.model.MovieManager;
 import hclient.HTTPClient;
 
+@ClassDescription(label="SortiesDVD.com")
 public class SortiesDVDSuggester implements MovieSuggester {
 
 	private static int MAX_URLS = 10;

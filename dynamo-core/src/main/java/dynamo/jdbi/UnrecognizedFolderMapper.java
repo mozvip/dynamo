@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
-import model.UnrecognizedFolder;
+import dynamo.tvshows.model.UnrecognizedFolder;
 
 public class UnrecognizedFolderMapper implements ResultSetMapper<UnrecognizedFolder> {
 

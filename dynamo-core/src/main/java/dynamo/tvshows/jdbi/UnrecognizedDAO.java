@@ -12,8 +12,8 @@ import dynamo.jdbi.UnrecognizedFileMapper;
 import dynamo.jdbi.UnrecognizedFolderMapper;
 import dynamo.jdbi.core.BindPath;
 import dynamo.jdbi.core.DAO;
-import model.UnrecognizedFile;
-import model.UnrecognizedFolder;
+import dynamo.tvshows.model.UnrecognizedFile;
+import dynamo.tvshows.model.UnrecognizedFolder;
 
 @DAO(databaseId="dynamo")
 public interface UnrecognizedDAO {

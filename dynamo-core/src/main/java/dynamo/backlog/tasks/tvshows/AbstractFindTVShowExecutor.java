@@ -12,8 +12,8 @@ import dynamo.jdbi.SearchResultDAO;
 import dynamo.model.Downloadable;
 import dynamo.model.backlog.core.FindDownloadableTask;
 import dynamo.model.result.SearchResult;
-import dynamo.model.tvshows.TVShowManager;
-import model.ManagedSeries;
+import dynamo.tvshows.model.ManagedSeries;
+import dynamo.tvshows.model.TVShowManager;
 
 public abstract class AbstractFindTVShowExecutor<T extends Downloadable> extends FindDownloadableExecutor<T> {
 	

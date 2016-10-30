@@ -14,9 +14,9 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.Video;
 import dynamo.model.backlog.find.FindSeasonTask;
 import dynamo.model.music.MusicAlbum;
-import dynamo.model.tvshows.TVShowManager;
 import dynamo.movies.model.Movie;
-import model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.TVShowManager;
 
 public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableTask> implements LogSuccess {
 	

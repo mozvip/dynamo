@@ -3,7 +3,7 @@ package model.backlog;
 import dynamo.backlog.tasks.tvshows.ScanFileSystemQueue;
 import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
-import model.ManagedSeries;
+import dynamo.tvshows.model.ManagedSeries;
 
 @DynamoTask(queueClass=ScanFileSystemQueue.class)
 public class ScanTVShowTask extends Task {

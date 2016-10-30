@@ -68,9 +68,15 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 	@Override
 	public void configureProvider() throws Exception {
 		WebDocument loginPage = client.getDocument("https://www.usenet-crawler.com/login");
-		SimpleResponse result = client.submit(loginPage.jsoupSingle("#content form"), "username=" + login, "password=" + password, "rememberme=on");
-		if (result.getLastRedirectLocation() == null || !result.getLastRedirectLocation().toString().equals( "https://www.usenet-crawler.com/")) {
-			ErrorManager.getInstance().reportError("Login failed for " + DynamoObjectFactory.getClassDescription( this.getClass() ) + ", disabling provider");
+		Element loginForm = loginPage.jsoupSingle("#content form");
+		if (loginForm != null) {
+			SimpleResponse result = client.submit(loginForm, "username=" + login, "password=" + password, "rememberme=on");
+			if (result.getLastRedirectLocation() == null || !result.getLastRedirectLocation().toString().equals( "https://www.usenet-crawler.com/")) {
+				ErrorManager.getInstance().reportError("Login failed for " + DynamoObjectFactory.getClassDescription( this.getClass() ) + ", disabling provider");
+				setEnabled( false );
+			}
+		} else {
+			ErrorManager.getInstance().reportError("Login page is not responsing for " + DynamoObjectFactory.getClassDescription( this.getClass() ) + ", disabling provider");
 			setEnabled( false );
 		}
 	}

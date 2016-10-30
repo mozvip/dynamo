@@ -1,4 +1,4 @@
-package model;
+package dynamo.tvshows.model;
 
 import java.io.Serializable;
 import java.nio.file.Path;

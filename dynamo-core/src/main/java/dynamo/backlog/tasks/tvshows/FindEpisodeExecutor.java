@@ -19,8 +19,8 @@ import dynamo.manager.FinderManager;
 import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.find.FindSeasonTask;
 import dynamo.model.result.SearchResult;
-import dynamo.model.tvshows.TVShowManager;
-import model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.TVShowManager;
 
 public class FindEpisodeExecutor extends AbstractFindTVShowExecutor<ManagedEpisode> {
 	

@@ -1,7 +1,7 @@
 package dynamo.model.backlog.find;
 
 import dynamo.model.backlog.core.FindDownloadableTask;
-import model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedEpisode;
 
 public class FindEpisodeTask extends FindDownloadableTask<ManagedEpisode> {
 

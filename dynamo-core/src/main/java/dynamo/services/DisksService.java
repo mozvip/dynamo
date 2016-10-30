@@ -18,8 +18,8 @@ import javax.ws.rs.core.MediaType;
 import dynamo.magazines.MagazineManager;
 import dynamo.manager.MusicManager;
 import dynamo.model.ebooks.books.BookManager;
-import dynamo.model.tvshows.TVShowManager;
 import dynamo.movies.model.MovieManager;
+import dynamo.tvshows.model.TVShowManager;
 
 @Path("disks")
 @Produces(MediaType.APPLICATION_JSON)

@@ -12,7 +12,7 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.core.model.MapperUtils;
-import model.ManagedSeries;
+import dynamo.tvshows.model.ManagedSeries;
 
 public class ManagedSeriesMapper implements ResultSetMapper<ManagedSeries> {
 

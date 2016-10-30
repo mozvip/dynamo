@@ -15,9 +15,9 @@ import dynamo.model.backlog.core.FindDownloadableTask;
 import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.find.FindSeasonTask;
 import dynamo.model.result.SearchResult;
-import dynamo.model.tvshows.TVShowManager;
-import dynamo.model.tvshows.TVShowSeason;
-import model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.TVShowManager;
+import dynamo.tvshows.model.TVShowSeason;
 
 public class FindSeasonExecutor extends AbstractFindTVShowExecutor<TVShowSeason> {
 

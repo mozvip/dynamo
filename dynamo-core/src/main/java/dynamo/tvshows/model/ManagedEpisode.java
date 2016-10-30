@@ -1,16 +1,17 @@
-package model;
+package dynamo.tvshows.model;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.Date;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import dynamo.core.VideoQuality;
 import dynamo.core.VideoSource;
+import dynamo.core.jackson.LocalDateSerializer;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.Video;
-import dynamo.model.tvshows.TVShowManager;
 
 public class ManagedEpisode extends Downloadable implements Video {
 
@@ -27,6 +28,7 @@ public class ManagedEpisode extends Downloadable implements Video {
 	private int episodeNumber;
 	private Integer absoluteNumber;
 
+	@JsonSerialize(using=LocalDateSerializer.class)
 	private LocalDate firstAired;
 
 	private boolean subtitled = false;

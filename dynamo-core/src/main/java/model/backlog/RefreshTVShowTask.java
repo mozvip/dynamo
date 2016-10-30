@@ -3,7 +3,7 @@ package model.backlog;
 import dynamo.backlog.queues.TVDBQueue;
 import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
-import model.ManagedSeries;
+import dynamo.tvshows.model.ManagedSeries;
 
 @DynamoTask(queueClass=TVDBQueue.class)
 public class RefreshTVShowTask extends Task {

@@ -5,15 +5,15 @@ import java.util.List;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.core.model.TaskExecutor;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.tvshows.TVShowManager;
 import dynamo.trakt.TraktManager;
 import dynamo.trakt.TraktShowEpisode;
 import dynamo.trakt.TraktShowSeason;
 import dynamo.trakt.TraktWatchedEntry;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowDAO;
-import model.ManagedEpisode;
-import model.ManagedSeries;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedSeries;
+import dynamo.tvshows.model.TVShowManager;
 
 public class RefreshWatchedEpisodesTraktExecutor extends TaskExecutor<RefreshWatchedEpisodesTask> {
 	

@@ -12,7 +12,7 @@ import dynamo.core.model.TaskExecutor;
 import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import dynamo.tvshows.jdbi.TVShowDAO;
-import model.ManagedSeries;
+import dynamo.tvshows.model.ManagedSeries;
 import model.backlog.RefreshTVShowTask;
 import model.backlog.ScanTVShowTask;
 

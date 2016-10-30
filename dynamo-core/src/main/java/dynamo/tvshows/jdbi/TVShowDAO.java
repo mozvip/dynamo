@@ -15,7 +15,7 @@ import dynamo.jdbi.core.BindPath;
 import dynamo.jdbi.core.BindStringList;
 import dynamo.jdbi.core.BindUpper;
 import dynamo.jdbi.core.DAO;
-import model.ManagedSeries;
+import dynamo.tvshows.model.ManagedSeries;
 
 @DAO(databaseId="dynamo")
 public interface TVShowDAO {

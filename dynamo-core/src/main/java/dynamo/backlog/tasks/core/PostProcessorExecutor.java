@@ -37,16 +37,16 @@ import dynamo.model.ISOType;
 import dynamo.model.backlog.core.PostProcessFolderTask;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultFile;
-import dynamo.model.tvshows.TVShowManager;
 import dynamo.movies.model.MovieManager;
 import dynamo.parsers.ParsedMovieInfo;
 import dynamo.parsers.TVShowEpisodeInfo;
 import dynamo.parsers.VideoInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedSeries;
+import dynamo.tvshows.model.TVShowManager;
 import dynamo.utils.ISOFileIdentifier;
-import model.ManagedEpisode;
-import model.ManagedSeries;
 
 public class PostProcessorExecutor extends TaskExecutor<PostProcessFolderTask> implements Reconfigurable {
 	

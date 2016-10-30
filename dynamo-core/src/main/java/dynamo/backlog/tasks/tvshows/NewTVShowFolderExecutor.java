@@ -4,6 +4,7 @@ import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import com.omertron.thetvdbapi.model.Series;
@@ -12,12 +13,12 @@ import dynamo.backlog.tasks.core.AbstractNewFolderExecutor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.Language;
 import dynamo.model.DownloadableStatus;
-import dynamo.model.tvshows.TVShowManager;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowDAO;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
-import model.ManagedEpisode;
-import model.ManagedSeries;
+import dynamo.tvshows.model.ManagedEpisode;
+import dynamo.tvshows.model.ManagedSeries;
+import dynamo.tvshows.model.TVShowManager;
 import model.backlog.NewTVShowFolderTask;
 import model.backlog.RefreshTVShowTask;
 
@@ -71,7 +72,7 @@ public class NewTVShowFolderExecutor extends AbstractNewFolderExecutor<NewTVShow
 						nextRefreshDate = null;
 						break;
 					} else if ( nextRefreshDate == null || managedEpisode.getFirstAired().isBefore( nextRefreshDate.toLocalDate() )) {
-						nextRefreshDate = LocalDateTime.from( managedEpisode.getFirstAired() );
+						nextRefreshDate = LocalDateTime.of( managedEpisode.getFirstAired(), LocalTime.now() );
 					}
 				}
 			}
