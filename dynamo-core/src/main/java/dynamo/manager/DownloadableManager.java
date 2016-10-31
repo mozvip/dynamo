@@ -204,8 +204,8 @@ public class DownloadableManager {
 		downloadableDAO.updateStatus( id, DownloadableStatus.DOWNLOADED );
 
 		unrecognizedDAO.deleteUnrecognizedFile( newFile );
-		
-		if (downloadable instanceof Video) {
+
+		if (downloadable instanceof Video && VideoFileFilter.getInstance().accept( newFile )) {
 			
 			Optional<Path> mainVideoFile = VideoManager.getInstance().getMainVideoFile( id );
 			if (mainVideoFile.isPresent()) {
@@ -229,7 +229,6 @@ public class DownloadableManager {
 		}
 		
 		return fileId;
-
 	}
 
 	public List<DownloadInfo> findWanted() {

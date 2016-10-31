@@ -56,12 +56,12 @@
   	<dependency>
   		<groupId>org.glassfish.jersey.containers</groupId>
   		<artifactId>jersey-container-servlet</artifactId>
-  		<version>2.22.1</version>
+  		<version>${jersey.version}</version>
   	</dependency>
   	<dependency>
   		<groupId>org.glassfish.jersey.media</groupId>
   		<artifactId>jersey-media-json-jackson</artifactId>
-  		<version>2.22.1</version>
+  		<version>${jersey.version}</version>
   	</dependency>
   	<dependency>
   		<groupId>io.undertow</groupId>
@@ -120,4 +120,7 @@
   		<version>1.1.7</version>
   	</dependency>
   </dependencies>
+  <properties>
+  	<jersey.version>2.23.1</jersey.version>
+  </properties>
 </project>

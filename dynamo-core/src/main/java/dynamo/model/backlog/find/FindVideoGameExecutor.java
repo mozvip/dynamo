@@ -7,7 +7,7 @@ import java.util.List;
 import dynamo.backlog.tasks.core.FindDownloadableExecutor;
 import dynamo.core.DownloadFinder;
 import dynamo.core.manager.ErrorManager;
-import dynamo.finders.core.GameFinder;
+import dynamo.games.GameFinder;
 import dynamo.games.model.VideoGame;
 import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.games.GamesManager;

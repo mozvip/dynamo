@@ -17,7 +17,7 @@ import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.ConfigAnnotationManager;
 import dynamo.core.manager.DAOManager;
-import dynamo.finders.core.GameFinder;
+import dynamo.games.GameFinder;
 import dynamo.games.model.GamePlatform;
 import dynamo.games.model.VideoGame;
 import dynamo.games.model.VideoGameDAO;

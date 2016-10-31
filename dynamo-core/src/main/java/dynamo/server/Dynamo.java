@@ -14,6 +14,9 @@ public class Dynamo extends DynamoApplication {
 	}
 
 	public static void main(String[] args) throws Exception {
+		
+		Class.forName("org.glassfish.jersey.servlet.internal.ServletContainerProviderFactory");
+		
 		new Dynamo().init();
 	}
 

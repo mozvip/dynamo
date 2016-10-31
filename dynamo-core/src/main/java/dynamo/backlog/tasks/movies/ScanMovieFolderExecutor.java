@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -161,7 +162,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 			// create new movie
 			String movieName = movieDb != null ? movieDb.getTitle() : movieFile.getFileName().toString();
 
-			int year = -1;
+			int year = movieInfo != null ? movieInfo.getYear() : -1;
 			if (movieDb != null && StringUtils.isNotBlank( movieDb.getReleaseDate()))	{
 				LocalDate date = LocalDate.parse( movieDb.getReleaseDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 				year = date.getYear();
@@ -169,7 +170,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 			
 			long id = downloadableDAO.createDownloadable( Movie.class, movieName, DownloadableStatus.DOWNLOADED, year );
 			movie = new Movie(
-					id, DownloadableStatus.DOWNLOADED, null, movieName, null, null, null, null, null, null, null, null, -1, null, null, -1, -1, false );
+					id, DownloadableStatus.DOWNLOADED, null, movieName, null, null, null, null, null, null, null, null, -1, null, null, -1, year, false );
 			if ( movieInfo != null ) {
 				try {
 					MovieManager.getInstance().setMovieInfo( movie, movieInfo );

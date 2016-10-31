@@ -1,4 +1,4 @@
-package dynamo.finders.core;
+package dynamo.games;
 
 import java.util.List;
 
