@@ -44,19 +44,12 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 
 		// FIXME: create sub classes for the different downloadable types
 		if ( downloadable instanceof Video ) {
-			Video subtitled = (Video) downloadable;
-			if (subtitled.getSubtitlesPath() != null) {
-				queue( new DeleteTask( subtitled.getSubtitlesPath(), true ), false );
-				((Video) downloadable).setSubtitlesPath( null );
-			}
-
 			if (downloadable instanceof ManagedEpisode) {
 				ManagedEpisode episode = (ManagedEpisode) downloadable;
 				
 				episode.setReleaseGroup( null );
 				episode.setSource( null );
 				episode.setQuality( null );
-				episode.setSubtitled( false );
 				
 				TVShowManager.getInstance().saveEpisode(episode);
 				

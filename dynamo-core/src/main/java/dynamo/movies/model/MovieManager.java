@@ -261,7 +261,7 @@ public class MovieManager implements Reconfigurable {
 
 			float rating = imdbRating <= 0 ? movieDb.getVoteAverage() : imdbRating;
 			
-			movie = new Movie( downloadableId, status, null, movieDb.getTitle(), null, null, false, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, rating, year, watched );
+			movie = new Movie( downloadableId, status, null, movieDb.getTitle(), null, getDefaultQuality(), getAudioLanguage(), getSubtitlesLanguage(), originalLanguage, null, null, null, movieDb.getId(), movieDb.getImdbID(), null, rating, year, watched );
 		}
 		associate( movie, movieDb );
 		save( movie );
@@ -383,7 +383,7 @@ public class MovieManager implements Reconfigurable {
 	public void save(Movie movie) {
 		movieDAO.save(
 				movie.getId(), movie.getImdbID(), movie.getMovieDbId(), movie.getOriginalLanguage(),
-				movie.getQuality(), movie.getRating(), movie.getReleaseGroup(), movie.getSource(), movie.isSubtitled(), movie.getSubtitlesPath(),
+				movie.getQuality(), movie.getRating(), movie.getReleaseGroup(), movie.getSource(),
 				movie.getTraktUrl(), movie.getWantedAudioLanguage(), movie.getWantedSubtitlesLanguage(), movie.getQuality(), movie.isWatched()
 		);
 		DownloadableManager.getInstance().updateYear( movie.getId(), movie.getYear() );	

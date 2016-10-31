@@ -1,6 +1,5 @@
 package dynamo.tvshows.model;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 
@@ -14,8 +13,6 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.Video;
 
 public class ManagedEpisode extends Downloadable implements Video {
-
-	private Path subtitlesPath;
 
 	private VideoQuality quality;
 	private VideoSource source;
@@ -31,21 +28,19 @@ public class ManagedEpisode extends Downloadable implements Video {
 	@JsonSerialize(using=LocalDateSerializer.class)
 	private LocalDate firstAired;
 
-	private boolean subtitled = false;
 	private boolean watched = false;
 	
 	private String seriesName;
 
-	public ManagedEpisode(Long id, DownloadableStatus status, String seriesName, Path subtitlesPath,
+	public ManagedEpisode(Long id, DownloadableStatus status, String seriesName,
 			VideoQuality quality, VideoSource source,
 			String releaseGroup, String seriesId, long seasonId, int seasonNumber,
 			int episodeNumber, Integer absoluteNumber, String episodeName,
-			LocalDate firstAired, boolean subtitled, boolean watched, String label) {
+			LocalDate firstAired, boolean watched, String label) {
 
 		super(id, episodeName, label, status, null, -1, null);
 		
 		this.seriesName = seriesName;
-		this.subtitlesPath = subtitlesPath;
 		this.quality = quality;
 		this.source = source;
 		this.releaseGroup = releaseGroup;
@@ -55,7 +50,6 @@ public class ManagedEpisode extends Downloadable implements Video {
 		this.episodeNumber = episodeNumber;
 		this.absoluteNumber = absoluteNumber;
 		this.firstAired = firstAired;
-		this.subtitled = subtitled;
 		this.watched = watched;
 	}
 	
@@ -109,32 +103,6 @@ public class ManagedEpisode extends Downloadable implements Video {
 
 	public boolean isAired() {
 		return !getStatus().equals( DownloadableStatus.FUTURE );
-	}
-
-	@Override
-	public Path getSubtitlesPath() {
-		return subtitlesPath;
-	}
-
-	@Override
-	public void setSubtitlesPath(Path subtitlesPath) {
-		this.subtitlesPath = subtitlesPath;
-		if ( subtitlesPath != null && Files.exists( subtitlesPath ) ) {
-			subtitled = true;
-		}
-	}
-
-	@Override
-	public boolean isSubtitled() {
-		return subtitled;
-	}
-
-	@Override
-	public void setSubtitled(boolean subtitled) {
-		this.subtitled = subtitled;
-		if (!subtitled) {
-			subtitlesPath = null;
-		}
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package dynamo.movies.model;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import dynamo.backlog.tasks.files.FileUtils;
@@ -12,9 +11,6 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.Video;
 
 public class Movie extends Downloadable implements Video {
-
-	private Path subtitlesPath;
-	private boolean subtitled;
 
 	private VideoQuality wantedQuality;
 	private Language wantedAudioLanguage;
@@ -33,7 +29,7 @@ public class Movie extends Downloadable implements Video {
 	
 	private boolean watched;
 
-	public Movie( Long id, DownloadableStatus status, String aka, String name, String label, Path subtitlesPath, boolean subtitled,
+	public Movie( Long id, DownloadableStatus status, String aka, String name, String label,
 			VideoQuality wantedQuality, Language wantedAudioLanguage,
 			Language wantedSubtitlesLanguage, Language originalLanguage,
 			VideoQuality quality, VideoSource source,
@@ -42,8 +38,6 @@ public class Movie extends Downloadable implements Video {
 			boolean watched) {
 		super( id, name, label, status, aka, year, null );
 
-		this.subtitlesPath = subtitlesPath;
-		this.subtitled = subtitled;
 		this.wantedQuality = wantedQuality;
 		this.wantedAudioLanguage = wantedAudioLanguage;
 		this.wantedSubtitlesLanguage = wantedSubtitlesLanguage;
@@ -56,29 +50,6 @@ public class Movie extends Downloadable implements Video {
 		this.traktUrl = traktUrl;
 		this.rating = rating;
 		this.watched = watched;
-	}
-
-	@Override
-	public Path getSubtitlesPath() {
-		return subtitlesPath;
-	}
-
-	@Override
-	public void setSubtitlesPath( Path subtitlesPath) {
-		this.subtitlesPath = subtitlesPath;
-		if ( subtitlesPath != null && Files.exists( subtitlesPath ) ) {
-			setSubtitled( true );
-		}
-	}
-
-	@Override
-	public boolean isSubtitled() {
-		return subtitled;
-	}
-
-	@Override
-	public void setSubtitled(boolean subtitled) {
-		this.subtitled = subtitled;
 	}
 
 	public VideoQuality getQuality() {

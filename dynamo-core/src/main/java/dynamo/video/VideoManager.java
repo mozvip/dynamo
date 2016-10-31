@@ -5,12 +5,16 @@ import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import core.WebDocument;
+import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
@@ -21,6 +25,7 @@ import dynamo.core.model.video.VideoDAO;
 import dynamo.core.model.video.VideoMetaData;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
+import dynamo.model.Video;
 
 public class VideoManager {
 	
@@ -125,6 +130,59 @@ public class VideoManager {
 				.findFirst();
 		return optionalFile.isPresent() ? Optional.of( optionalFile.get().getFilePath() ) : Optional.empty();
 	}
+	
+	public static boolean isAlreadySubtitled( Downloadable videoDownloadable, Language subtitlesLanguage ) throws IOException, InterruptedException {
+		
+		Optional<Path> mainVideoFile = getInstance().getMainVideoFile( videoDownloadable.getId() );
+		if (!mainVideoFile.isPresent()) {
+			throw new IOException( String.format( "No video file found for %s", videoDownloadable.getName()));
+		}
+		Path mainVideoFilePath = mainVideoFile.get();
+		
+		if (subtitlesLanguage == null) {
+			return true;
+		}
+		
+		String filename = mainVideoFilePath.getFileName().toString();
+
+		if (subtitlesLanguage.getSubTokens() != null) {
+			// Test if the filename contains an indication of the subtitles (VOSTFR, ...)
+			for (String subToken : subtitlesLanguage.getSubTokens()) {
+				if ( StringUtils.containsIgnoreCase( filename, subToken) ) {
+					return true;
+				}
+			}
+		}
+
+		VideoMetaData metaData = getInstance().getMetaData(videoDownloadable, mainVideoFilePath);
+		if (metaData.getSubtitleLanguages() != null && metaData.getSubtitleLanguages().contains( subtitlesLanguage )) {
+			return true;
+		}
+
+		List<DownloadableFile> subtitleFiles =
+				DownloadableManager.getInstance().getAllFiles( videoDownloadable.getId() )
+				.filter( file -> SubtitlesFileFilter.getInstance().accept( file.getFilePath() ) )
+				.collect( Collectors.toList() );
+
+		String filenameWithoutExtension = filename; 
+		if ( filenameWithoutExtension.lastIndexOf('.') > 0 ) {
+			filenameWithoutExtension = filenameWithoutExtension.substring( 0, filenameWithoutExtension.lastIndexOf('.'));
+		}
+
+		String targetFileName = filenameWithoutExtension + "." + subtitlesLanguage.getShortName() + ".srt";
+		for (DownloadableFile downloadableFile : subtitleFiles) {
+			if (downloadableFile.getFilePath().getFileName().toString().equals( targetFileName )) {
+				return true;
+			}
+		}
+
+		// FIXME : this last test will accept any subtitle file without checking the language
+		if (!subtitleFiles.isEmpty()) {
+			return true;
+		}
+
+		return false;
+	}	
 	
 
 }

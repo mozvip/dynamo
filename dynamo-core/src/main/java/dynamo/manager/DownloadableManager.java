@@ -2,6 +2,7 @@ package dynamo.manager;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -17,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.CancelDownloadTask;
-import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.DynamoApplication;
@@ -46,17 +47,14 @@ import dynamo.model.backlog.core.FindDownloadableTask;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
-import dynamo.movies.jdbi.MovieDAO;
-import dynamo.movies.model.Movie;
-import dynamo.movies.model.MovieManager;
 import dynamo.parsers.TVShowEpisodeInfo;
 import dynamo.parsers.VideoNameParser;
-import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import dynamo.tvshows.model.ManagedEpisode;
 import dynamo.tvshows.model.ManagedSeries;
 import dynamo.tvshows.model.TVShowManager;
 import dynamo.tvshows.model.TVShowSeason;
+import dynamo.video.VideoManager;
 import dynamo.webapps.pushbullet.PushBullet;
 import hclient.HTTPClient;
 import model.backlog.ScanTVShowTask;
@@ -64,8 +62,6 @@ import model.backlog.ScanTVShowTask;
 
 public class DownloadableManager {
 	
-	private ManagedEpisodeDAO managedEpisodeDAO = DAOManager.getInstance().getDAO( ManagedEpisodeDAO.class );
-	private MovieDAO movieDAO = DAOManager.getInstance().getDAO( MovieDAO.class );
 	private HistoryDAO historyDAO = DAOManager.getInstance().getDAO( HistoryDAO.class );
 	private SearchResultDAO searchResultDAO = DAOManager.getInstance().getDAO( SearchResultDAO.class );
 	private SuggestionURLDAO suggestionURLDAO = DAOManager.getInstance().getDAO( SuggestionURLDAO.class );
@@ -211,31 +207,9 @@ public class DownloadableManager {
 		
 		if (downloadable instanceof Video) {
 			
-			if ( VideoFileFilter.getInstance().accept( newFile ) ) {
-				String fileName = newFile.getFileName().toString();
-				try {
-					if (fileName.contains("-sample") || fileName.startsWith("sample-") || Files.size(newFile) < (50*1024*1024)) {
-						BackLogProcessor.getInstance().schedule( new DeleteTask( newFile, false ));	// FIXME : should have been done earlier, by the post processor ?
-					} else {
-						if (downloadable instanceof ManagedEpisode) {
-							ManagedSeries series = TVShowManager.getInstance().getManagedSeries(((ManagedEpisode) downloadable).getSeriesId());
-							if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, series.getSubtitlesLanguage() )) {
-								managedEpisodeDAO.setSubtitled( id, ((ManagedEpisode) downloadable).getSubtitlesPath() );
-							}
-						} else if (downloadable instanceof Movie) {
-							if ( TVShowManager.getInstance().isAlreadySubtitled( downloadable, MovieManager.getInstance().getSubtitlesLanguage() )) {
-								movieDAO.setSubtitled( id, ((Movie) downloadable).getSubtitlesPath() );
-							}
-						}
-						downloadableDAO.updateLabel( id, fileName );
-					}
-				} catch (IOException e) {
-					ErrorManager.getInstance().reportThrowable(e);
-				}
-				
-			} else if (SubtitlesFileFilter.getInstance().accept( newFile )) {
-				((Video)downloadable).setSubtitlesPath( newFile );								
-				((Video)downloadable).setSubtitled( true );								
+			Optional<Path> mainVideoFile = VideoManager.getInstance().getMainVideoFile( id );
+			if (mainVideoFile.isPresent()) {
+				downloadableDAO.updateLabel( id, mainVideoFile.get().getFileName().toString() );
 			}
 
 		} else if (downloadable instanceof TVShowSeason) {
@@ -496,6 +470,19 @@ public class DownloadableManager {
 	public static boolean downloadImage( Class<? extends Downloadable> downloadableClass, long downloadableId, String url, String referer ) throws IOException {
 		Path localFile = resolveImage(downloadableClass, downloadableId);
 		return downloadImage(localFile, url, referer);
-	}	
+	}
+	
+	public void addAssociatedFiles(Path p, Downloadable downloadable) throws IOException {
+		DirectoryStream<Path> associatedFiles = Files.newDirectoryStream( p.getParent() );
+		String filePrefix = p.getFileName().toString();
+		filePrefix = filePrefix.substring(0,  filePrefix.lastIndexOf('.'));
+		for (Path relatedFile : associatedFiles) {
+			if (!Files.isSameFile(relatedFile, p)) {
+				if (relatedFile.getFileName().toString().startsWith( filePrefix )) {
+					addFile( downloadable, relatedFile );
+				}
+			}
+		}
+	}
 
 }

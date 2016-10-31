@@ -23,7 +23,6 @@ public class ManagedEpisodeMapper implements ResultSetMapper<ManagedEpisode> {
 		return new ManagedEpisode(r.getLong("ID"),
 				MapperUtils.getEnum(r, "STATUS",
 				DownloadableStatus.class), r.getString("SERIESNAME"),
-				MapperUtils.getPath(r, "SUBTITLESPATH"),
 				MapperUtils.getEnum(r, "QUALITY", VideoQuality.class),
 				MapperUtils.getEnum(r, "SOURCE", VideoSource.class),
 				r.getString("RELEASEGROUP"), r.getString("SERIES_ID"),
@@ -33,7 +32,7 @@ public class ManagedEpisodeMapper implements ResultSetMapper<ManagedEpisode> {
 				r.getInt("ABSOLUTENUMBER"),
 				r.getString("NAME"),
 				firstAiredDate != null ? firstAiredDate.toLocalDate() : null,
-				r.getBoolean("SUBTITLED"), r.getBoolean("WATCHED"), r.getString("LABEL"));
+				r.getBoolean("WATCHED"), r.getString("LABEL"));
 	}
 
 }

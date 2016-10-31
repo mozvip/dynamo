@@ -52,11 +52,11 @@ public interface MovieDAO extends DownloadableDAO<Movie>{
 	List<Movie> find();
 
 	@SqlUpdate("MERGE INTO MOVIE("
-			+ "ID, IMDBID, MOVIEDBID, ORIGINALLANGUAGE, QUALITY, RATING, RELEASEGROUP, SOURCE, SUBTITLED, SUBTITLESPATH, TRAKTURL, WANTEDAUDIOLANGUAGE, WANTEDSUBTITLESLANGUAGE, WANTEDQUALITY, WATCHED) VALUES("
-			+ ":moviedId, :imdbId, :movieDbId, :originalLanguage, :quality, :rating, :releasegroup, :videoSource, :subtitled, :subtitlesPath, :trakURL, :wantedAudioLanguage, :wantedSubtitlesLanguage, :wantedQuality, :watched)")
+			+ "ID, IMDBID, MOVIEDBID, ORIGINALLANGUAGE, QUALITY, RATING, RELEASEGROUP, SOURCE, TRAKTURL, WANTEDAUDIOLANGUAGE, WANTEDSUBTITLESLANGUAGE, WANTEDQUALITY, WATCHED) VALUES("
+			+ ":moviedId, :imdbId, :movieDbId, :originalLanguage, :quality, :rating, :releasegroup, :videoSource, :trakURL, :wantedAudioLanguage, :wantedSubtitlesLanguage, :wantedQuality, :watched)")
 	void save(@Bind("moviedId") long movieId, @Bind("imdbId") String imdbId, @Bind("movieDbId") int movieDbId, @BindEnum("originalLanguage") Language originalLanguage,
 			@BindEnum("quality") VideoQuality quality, @Bind("rating") Float rating, @Bind("releasegroup") String releasegroup, @BindEnum("videoSource") VideoSource videoSource,
-			@Bind("subtitled") boolean subtitled, @BindPath("subtitlesPath") Path subtitlesPath, @Bind("trakURL") String trakURL, @BindEnum("wantedAudioLanguage") Language wantedAudioLanguage,
+			@Bind("trakURL") String trakURL, @BindEnum("wantedAudioLanguage") Language wantedAudioLanguage,
 			@BindEnum("wantedSubtitlesLanguage") Language wantedSubtitlesLanguage, @BindEnum("wantedQuality") VideoQuality wantedQuality, @Bind("watched") boolean watched	);
 
 	@SqlUpdate("UPDATE MOVIE SET SUBTITLED = true, SUBTITLESPATH=:subTitlesPath WHERE ID = :movieId")

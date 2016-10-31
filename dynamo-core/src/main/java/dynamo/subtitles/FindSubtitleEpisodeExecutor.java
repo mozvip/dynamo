@@ -1,5 +1,6 @@
 package dynamo.subtitles;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -46,13 +47,7 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 			return;
 		}
 
-		if (episode.isSubtitled() || series.getSubtitlesLanguage() == null) {
-			return;
-		}
-
-		VideoMetaData metaData = VideoManager.getInstance().getMetaData(episode, mainVideoFilePath);
-		if (metaData.getSubtitleLanguages() != null && metaData.getSubtitleLanguages().contains( series.getSubtitlesLanguage() )) {
-			episodeDAO.setSubtitled(episode.getId());
+		if (series.getSubtitlesLanguage() == null || VideoManager.isAlreadySubtitled(episode, series.getSubtitlesLanguage())) {
 			return;
 		}
 
@@ -77,8 +72,6 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 					series.getSubtitlesLanguage(), destinationSRT );
 			
 			if ( downloaded ) {
-
-				episodeDAO.updateSubtitlesPath( episode.getId(), destinationSRT );
 				
 				String message = String.format("Subtitles for <a href='%s'>%s</a> have been found", episode.getRelativeLink(), episode.toString());
 				historyDAO.insert( message, DownloadableStatus.SUBTITLED, episode.getId() );
@@ -98,9 +91,13 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 	@Override
 	public void rescheduleTask(FindSubtitleEpisodeTask item) {
 		ManagedEpisode episode = item.getEpisode();
-		if ( !TVShowManager.getInstance().isAlreadySubtitled( episode, series.getSubtitlesLanguage() )) {
-			item.setMinDate( getNextDate( 60 * 24 ) );
-			BackLogProcessor.getInstance().schedule( item, false );
+		try {
+			if ( !VideoManager.isAlreadySubtitled( episode, series.getSubtitlesLanguage() )) {
+				item.setMinDate( getNextDate( 60 * 24 ) );
+				BackLogProcessor.getInstance().schedule( item, false );
+			}
+		} catch (IOException | InterruptedException e) {
+			ErrorManager.getInstance().reportThrowable( e );
 		}
 	}
 

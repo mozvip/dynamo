@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
@@ -61,14 +60,12 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 				int seasonNumber = -1;
 				List<Integer> episodes = new ArrayList<Integer>();
 				
-				DownloadableFile downloadableFile = DownloadableManager.getInstance().getFile( p );
-				
 				TVShowEpisodeInfo episodeInfo = VideoNameParser.getTVShowEpisodeInfo(series, p);
 				
 				boolean episodeInfoFound = false;
 				
 				if ( episodeInfo == null ) {
-					
+					DownloadableFile downloadableFile = DownloadableManager.getInstance().getFile( p );
 					if ( downloadableFile != null) {
 						Optional<ManagedEpisode> optEpisode = existingEpisodes.stream()
 								.filter( episode -> downloadableFile.getDownloadableId() == episode.getId() )
@@ -96,6 +93,8 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 						if (!managedEpisode.isDownloaded()) {
 							// cancel search for this episode
 							BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("this.episode.id == %d", managedEpisode.getId()) );
+
+							DownloadableManager.getInstance().addAssociatedFiles(p, managedEpisode);
 							DownloadableManager.getInstance().addFile( managedEpisode, p );
 						}
 
@@ -105,13 +104,10 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 							managedEpisode.setReleaseGroup( ReleaseGroup.firstMatch( episodeInfo.getRelease() ).name() );
 						}
 
-						managedEpisode.setSubtitlesPath( null );
-						managedEpisode.setSubtitled( false );
 						managedEpisode.setAbsoluteNumber( managedEpisode.getEpisodeNumber() );
 
 						if ( task.getSeries().getSubtitlesLanguage() != null ) {
-							if ( TVShowManager.getInstance().isAlreadySubtitled( managedEpisode, task.getSeries().getSubtitlesLanguage() )) {
-								managedEpisode.setSubtitled( true );
+							if ( VideoManager.isAlreadySubtitled( managedEpisode, task.getSeries().getSubtitlesLanguage() )) {
 								BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format("this.episode.id == %d", managedEpisode.getId()) );
 							} else {
 								BackLogProcessor.getInstance().schedule( new FindSubtitleEpisodeTask( managedEpisode ), false );
@@ -133,6 +129,8 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 		}
 	}
 
+
+
 	@Override
 	public void execute() throws IOException, InterruptedException {
 
@@ -144,20 +142,13 @@ public class ScanTVShowExecutor extends TaskExecutor<ScanTVShowTask> {
 		
 		for ( ManagedEpisode managedEpisode : managedEpisodes ) {
 			if (managedEpisode.isDownloaded()) {
-				List<Path> episodePaths = DownloadableManager.getInstance().getAllFiles( managedEpisode.getId() ).map( downloadedFile -> downloadedFile.getFilePath() ).collect( Collectors.toList() );
-				boolean videoFileFound = false;
-				if (episodePaths != null && !episodePaths.isEmpty()) {
-					for (Path path : episodePaths) {
-						if (Files.exists( path)) {
-							if (VideoFileFilter.getInstance().accept(path) && !path.getFileName().toString().contains("-sample")) {
-								videoFileFound = true;
-							}
-						} else {
-							BackLogProcessor.getInstance().schedule( new DeleteFileTask( path ));
-						}
+				Optional<Path> mainVideoFile = VideoManager.getInstance().getMainVideoFile( managedEpisode.getId() );
+				if (mainVideoFile.isPresent()) {
+					Path path = mainVideoFile.get();
+					if (!Files.exists( path )) {
+						BackLogProcessor.getInstance().schedule( new DeleteFileTask( path ), false);
 					}
-				}
-				if (!videoFileFound) {
+				} else {
 					TVShowManager.getInstance().ignoreOrDeleteEpisode( managedEpisode );
 				}
 			}

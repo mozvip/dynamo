@@ -29,9 +29,9 @@ public interface ManagedEpisodeDAO extends DownloadableDAO<ManagedEpisode>{
 	public List<ManagedEpisode> findByStatus(@BindEnum("status") DownloadableStatus status);
 
 	@SqlUpdate("MERGE INTO MANAGEDEPISODE ("
-			+ "ID, EPISODENUMBER, FIRSTAIRED, QUALITY, RELEASEGROUP, SOURCE, SUBTITLED, SUBTITLESPATH, WATCHED, SEASON_ID) "
+			+ "ID, EPISODENUMBER, FIRSTAIRED, QUALITY, RELEASEGROUP, SOURCE, WATCHED, SEASON_ID) "
 			+ "KEY(SEASON_ID, EPISODENUMBER) VALUES ("
-			+ ":episodeId, :episodeNumber, :firstAired, :videoQuality, :releaseGroup, :videoSource, :subtitled, :subtitlesPath, :watched, :seasonId)")
+			+ ":episodeId, :episodeNumber, :firstAired, :videoQuality, :releaseGroup, :videoSource, :watched, :seasonId)")
 	public void saveEpisode(
 			@Bind("episodeId") long episodeId,
 			@Bind("episodeNumber")int episodeNumber,
@@ -39,21 +39,10 @@ public interface ManagedEpisodeDAO extends DownloadableDAO<ManagedEpisode>{
 			@BindEnum("videoQuality") VideoQuality videoQuality,
 			@Bind("releaseGroup") String releaseGroup,
 			@BindEnum("videoSource") VideoSource videoSource,
-			@Bind("subtitled") boolean subtitled,
-			@BindPath("subtitlesPath") Path subtitlesPath,
 			@Bind("watched") boolean watched,
 			@Bind("seasonId") long seasonId
 			);
 	
-	@SqlUpdate("UPDATE MANAGEDEPISODE SET SUBTITLED = true, SUBTITLESPATH=:path WHERE ID = :episodeId")
-	public void setSubtitled(@Bind("episodeId") long episodeId, @BindPath("path") Path path);
-
-	@SqlUpdate("UPDATE MANAGEDEPISODE SET SUBTITLED = true WHERE ID = :episodeId")
-	public void setSubtitled(@Bind("episodeId") long episodeId);
-
-	@SqlUpdate("UPDATE MANAGEDEPISODE SET SUBTITLESPATH = :path, SUBTITLED = true WHERE ID = :episodeId")
-	public void updateSubtitlesPath( @Bind("episodeId") long episodeId, @BindPath("path") Path path );	
-
 	@SqlUpdate("UPDATE MANAGEDEPISODE SET WATCHED = true WHERE ID = :episodeId")
 	public void setWatched(@Bind("episodeId") long episodeId);
 

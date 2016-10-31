@@ -47,7 +47,7 @@
             <column name="SEARCHNAME" type="VARCHAR(512)">
                 <constraints primaryKey="true" primaryKeyName="PK_MAGAZINE"/>
             </column>
-            <column name="LANGUAGE" type="INT(10)" />
+            <column name="LANGUAGE" type="VARCHAR(255)" />           
             <column name="NAME" type="VARCHAR(512)">
             	<constraints nullable="false"/>
            	</column>
@@ -90,8 +90,6 @@
             <column name="QUALITY" type="VARCHAR(100)"/>
             <column name="RELEASEGROUP" type="VARCHAR(100)"/>
             <column name="SOURCE" type="VARCHAR(100)"/>
-            <column name="SUBTITLED" type="BOOLEAN(1)"/>
-            <column name="SUBTITLESPATH" type="VARCHAR(2147483647)"/>
             <column name="WATCHED" type="BOOLEAN(1)"/>
         </createTable>
     </changeSet>
@@ -114,7 +112,7 @@
             <column name="FOLDER" type="VARCHAR(4096)">
             	<constraints nullable="false"/>
            	</column>
-            <column name="IMDBID" type="VARCHAR(2147483647)"/>
+            <column name="IMDBID" type="VARCHAR(10)"/>
             <column name="NETWORK" type="VARCHAR(2147483647)"/>
             <column name="USEABSOLUTENUMBERING" type="BOOLEAN(1)"/>
             <column name="AKA" type="VARCHAR(2147483647)" />
@@ -127,7 +125,7 @@
             <column name="ID" type="INT(10)">
                 <constraints nullable="false"/>
             </column>
-            <column name="IMDBID" type="VARCHAR(9)"/>
+            <column name="IMDBID" type="VARCHAR(10)"/>
             <column name="MOVIEDBID" type="INT(10)"/>
             <column name="ORIGINALLANGUAGE" type="VARCHAR(100)"/>
             <column name="POSTERPATH" type="VARCHAR(2147483647)"/>
@@ -135,8 +133,6 @@
             <column name="RATING" type="DOUBLE(17)"/>
             <column name="RELEASEGROUP" type="VARCHAR(100)"/>
             <column name="SOURCE" type="VARCHAR(100)"/>
-            <column name="SUBTITLED" type="BOOLEAN(1)"/>
-            <column name="SUBTITLESPATH" type="VARCHAR(2147483647)"/>
             <column name="TRAKTURL" type="VARCHAR(2147483647)"/>
             <column name="WANTEDAUDIOLANGUAGE" type="VARCHAR(100)"/>
             <column name="WANTEDSUBTITLESLANGUAGE" type="VARCHAR(100)"/>
@@ -152,7 +148,7 @@
             <column name="ARTIST_NAME" type="VARCHAR(255)">
             	<constraints nullable="false"/>
             </column>
-            <column name="PATH" type="VARCHAR(2048)"/>
+            <column name="FOLDER" type="VARCHAR(2048)"/>
 			<column name="TADB_ALBUM_ID" type="INT(12)"></column>
             <column name="GENRE" type="VARCHAR(2147483647)"/>
             <column name="IMAGE" type="VARCHAR(2147483647)"/>
@@ -220,10 +216,9 @@
             <column name="URL" type="VARCHAR(2147483647)">
                 <constraints primaryKey="true" primaryKeyName="PK_SEARCHRESULT"/>
             </column>
-			<column name="PROVIDERNAME" type="VARCHAR(255)">
+            <column name="PROVIDERCLASSNAME" type="VARCHAR(500)">
             	<constraints nullable="false"/>
             </column>
-            <column name="PROVIDERCLASSNAME" type="VARCHAR(500)"/>
             <column name="REFERER" type="VARCHAR(500)"/>
             <column name="SIZEINMEGS" type="DOUBLE(17)"/>
             <column name="TITLE" type="VARCHAR(500)">
@@ -245,8 +240,6 @@
             <column autoIncrement="true" name="ID" type="INT(10)">
                 <constraints primaryKey="true" primaryKeyName="PK_SEARCHRESULTFILE"/>
             </column>
-            <column name="DESTINATION" type="VARCHAR(2147483647)"/>
-            <column name="EXPIREDATE" type="TIMESTAMP"/>
             <column name="NAME" type="VARCHAR(2147483647)"/>
             <column name="SIZE" type="BIGINT(19)"/>
             <column name="RESULT_URL" type="VARCHAR(2147483647)"/>
@@ -366,27 +359,6 @@
         <addForeignKeyConstraint baseColumnNames="ID" baseTableName="VIDEOGAME" constraintName="FK_VIDEOGAME_ID" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="DOWNLOADABLE"/>
     </changeSet>
     
-    <changeSet author="mozvip" id="2">
-    	<modifyDataType tableName="MAGAZINE" columnName="LANGUAGE" newDataType="VARCHAR(255)"/>
-    </changeSet>
-    
-    <changeSet author="mozvip" id="3">
-    	<addColumn tableName="SEARCHRESULT">
-    		<column name="DESTINATION" type="VARCHAR(2048)" />
-    	</addColumn>
-    	<sql>UPDATE SEARCHRESULT SET DESTINATION = (SELECT DISTINCT SEARCHRESULTFILE.DESTINATION FROM SEARCHRESULTFILE WHERE SEARCHRESULTFILE.RESULT_URL = SEARCHRESULT.URL)</sql>
-    	<dropColumn tableName="SEARCHRESULTFILE" columnName="DESTINATION"/>
-    	<dropColumn tableName="SEARCHRESULTFILE" columnName="EXPIREDATE"/>
-    </changeSet>
-
-    <changeSet author="mozvip" id="13">
-    	<modifyDataType tableName="MANAGEDSERIES" columnName="IMDBID" newDataType="VARCHAR(10)"/>
-    	<modifyDataType tableName="MOVIE" columnName="IMDBID" newDataType="VARCHAR(10)"/>
-    </changeSet>
-    <changeSet author="mozvip" id="15">
-    	<dropColumn tableName="SEARCHRESULT" columnName="DESTINATION"/>
-    </changeSet>    
-
     <changeSet author="mozvip" id="21">
         <createTable tableName="BOOK">
             <column name="ID" type="INT(10)">
@@ -424,20 +396,6 @@
 		<addPrimaryKey tableName="SUGGESTION_URL" columnNames="DOWNLOADABLE_ID,SUGGESTION_URL"/>
 		<addForeignKeyConstraint constraintName="FK_SUGGESTION_URL_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="DOWNLOADABLE_ID" baseTableName="SUGGESTION_URL" referencedColumnNames="ID" onDelete="CASCADE"/>
 		<dropColumn tableName="DOWNLOADABLE" columnName="SUGGESTEDBY"/>
-	</changeSet>
-	
-	<changeSet author="mozvip" id="32">
-		<dropColumn tableName="MUSICALBUM" columnName="PATH"/>
-		<addColumn tableName="MUSICALBUM">
-			<column name="FOLDER" type="VARCHAR(2048)"></column>
-		</addColumn>
-		<delete tableName="MUSICALBUM"></delete>
-	</changeSet>
-	
-	<changeSet author="mozvip" id="33">
-		<delete tableName="SEARCHRESULT"></delete>
-		<dropColumn tableName="SEARCHRESULT" columnName="PROVIDERNAME"/>
-		<addNotNullConstraint columnDataType="VARCHAR(1024)" tableName="SEARCHRESULT" columnName="PROVIDERCLASSNAME"/>
 	</changeSet>
 
 </databaseChangeLog>

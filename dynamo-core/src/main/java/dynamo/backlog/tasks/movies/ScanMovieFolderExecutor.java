@@ -135,7 +135,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 			}
 		}
 
-		if (!movie.isSubtitled() && subtitlesLanguage != null) {
+		if (subtitlesLanguage != null && !VideoManager.isAlreadySubtitled( movie, subtitlesLanguage)) {
 			queue( new FindMovieSubtitleTask( movie, subtitlesLanguage ), false );
 		}
 
@@ -149,10 +149,8 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 		MovieInfo movieDb = null;
 		if (movieInfo != null) {
 			movieDb = MovieManager.getInstance().searchByName( movieInfo.getName(), movieInfo.getYear(), null, false);
-			if (movieDb != null) {
-				if (movieDb.getImdbID() != null) {
-					movie = MovieManager.getInstance().findByImdbId( movieDb.getImdbID() );
-				}
+			if (movieDb != null && movieDb.getImdbID() != null) {
+				movie = MovieManager.getInstance().findByImdbId( movieDb.getImdbID() );
 			}
 		}
 		if (movie != null) {
@@ -171,7 +169,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 			
 			long id = downloadableDAO.createDownloadable( Movie.class, movieName, DownloadableStatus.DOWNLOADED, year );
 			movie = new Movie(
-					id, DownloadableStatus.DOWNLOADED, null, movieName, null, null, false, null, null, null, null, null, null, null, -1, null, null, -1, -1, false );
+					id, DownloadableStatus.DOWNLOADED, null, movieName, null, null, null, null, null, null, null, null, -1, null, null, -1, -1, false );
 			if ( movieInfo != null ) {
 				try {
 					MovieManager.getInstance().setMovieInfo( movie, movieInfo );
@@ -180,6 +178,7 @@ public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovie
 				}
 			}
 		}
+		DownloadableManager.getInstance().addAssociatedFiles(movieFile, movie);
 		DownloadableManager.getInstance().addFile( movie, movieFile );
 
 		if (movie.getRating() <= 0 || movie.getYear() <=0 && movie.getImdbID() != null ) {

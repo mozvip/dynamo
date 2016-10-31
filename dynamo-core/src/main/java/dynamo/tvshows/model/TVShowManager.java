@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,7 +17,6 @@ import com.omertron.thetvdbapi.model.Series;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
-import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.files.DeleteFileTask;
 import dynamo.backlog.tasks.files.DeleteTask;
@@ -28,13 +26,10 @@ import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.model.DownloadableFile;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.TVShowSeasonProvider;
 import dynamo.httpclient.YAMJHttpClient;
 import dynamo.manager.DownloadableManager;
-import dynamo.model.Downloadable;
-import dynamo.model.Video;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowDAO;
@@ -317,56 +312,6 @@ public class TVShowManager implements Reconfigurable {
 		episode.setIgnored();
 		BackLogProcessor.getInstance().schedule( new DeleteDownloadableTask( episode ), false );		
 	}
-	
-	public boolean isAlreadySubtitled( Downloadable videoDownloadable, Language subtitlesLanguage ) {
-		
-		if (subtitlesLanguage == null) {
-			return true;
-		}
-		
-		if (!videoDownloadable.isDownloaded()) {
-			return true;
-		}
-
-		String filename = null;
-		Path folder = null;
-		List<DownloadableFile> allFiles = DownloadableManager.getInstance().getAllFiles( videoDownloadable.getId() ).collect( Collectors.toList() );
-		for (DownloadableFile downloadableFile : allFiles) {
-			if (VideoFileFilter.getInstance().accept( downloadableFile.getFilePath())) {
-				filename = downloadableFile.getFilePath().getFileName().toString();
-				folder = downloadableFile.getFilePath().getParent();
-				break;
-			}
-		}
-		
-		if (filename == null) {
-			// log error ?
-			return true;
-		}
-
-		if (subtitlesLanguage.getSubTokens() != null) {
-			for (String subToken : subtitlesLanguage.getSubTokens()) {
-				if ( StringUtils.containsIgnoreCase( filename, subToken) ) {
-					((Video)videoDownloadable).setSubtitlesPath( null );
-					return true;
-				}
-			}
-		}
-
-		String filenameWithoutExtension = filename; 
-		if ( filenameWithoutExtension.lastIndexOf('.') > 0 ) {
-			filenameWithoutExtension = filenameWithoutExtension.substring( 0, filenameWithoutExtension.lastIndexOf('.'));
-		}
-
-		Path[] subtitlesPaths = new Path[] { folder.resolve( filenameWithoutExtension + "." + subtitlesLanguage.getShortName() + ".srt" ), folder.resolve( filenameWithoutExtension + ".srt" ) };
-		for (Path destinationPath : subtitlesPaths) {
-			if (Files.exists( destinationPath )) {
-				((Video)videoDownloadable).setSubtitlesPath( destinationPath );
-				return true;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	public void reconfigure() {
@@ -388,7 +333,7 @@ public class TVShowManager implements Reconfigurable {
 
 	public void saveEpisode(ManagedEpisode episode) {
 		managedEpisodeDAO.saveEpisode( episode.getId(), episode.getEpisodeNumber(), episode.getFirstAired(), episode.getQuality(), episode.getReleaseGroup(),  
-			 	episode.getSource(), episode.isSubtitled(),  episode.getSubtitlesPath(), episode.isWatched(), episode.getSeasonId() );
+			 	episode.getSource(), episode.isWatched(), episode.getSeasonId() );
 	}
 
 	public List<UnrecognizedFile> getUnrecognizedFiles( String seriesId ) {

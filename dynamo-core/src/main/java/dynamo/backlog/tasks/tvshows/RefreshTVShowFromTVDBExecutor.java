@@ -114,9 +114,9 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 			
 				existingEpisode = new ManagedEpisode(
 						DownloadableManager.getInstance().createDownloadable( ManagedEpisode.class, episode.getEpisodeName(), year, newStatusForEpisode ),
-						newStatusForEpisode, series.getName(), null, null, null, null,
-						episode.getSeriesId(), seasonId, episode.getSeasonNumber(), episode.getEpisodeNumber(), null,
-						episode.getEpisodeName(), firstAiredDate, false, false, null );
+						newStatusForEpisode, series.getName(), null, null, null, episode.getSeriesId(), seasonId,
+						episode.getSeasonNumber(), episode.getEpisodeNumber(), null,
+						episode.getEpisodeName(), firstAiredDate, false, null );
 			
 			} else if ( existingEpisode.getStatus() == DownloadableStatus.FUTURE && newStatusForEpisode != DownloadableStatus.FUTURE) {
 				
@@ -138,7 +138,7 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 
 			managedEpisodeDAO.saveEpisode(
 					existingEpisode.getId(), episode.getEpisodeNumber(), firstAiredDate, existingEpisode.getQuality(), existingEpisode.getReleaseGroup(),  
-				 	existingEpisode.getSource(), existingEpisode.isSubtitled(),  existingEpisode.getSubtitlesPath(), existingEpisode.isWatched(), existingEpisode.getSeasonId() );
+				 	existingEpisode.getSource(), existingEpisode.isWatched(), existingEpisode.getSeasonId() );
 		}
 		
 		Path banner = LocalImageCache.getInstance().resolveLocal( "banners/" + series.getId() + ".jpg" );

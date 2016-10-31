@@ -25,8 +25,6 @@ public class MovieMapper implements ResultSetMapper<Movie> {
 				r.getString("AKA"),
 				r.getString("NAME"),
 				r.getString("LABEL"),
-				MapperUtils.getPath(r, "SUBTITLESPATH"),
-				r.getBoolean("SUBTITLED"),
 				MapperUtils.getEnum(r, "WANTEDQUALITY", VideoQuality.class),
 				MapperUtils.getEnum(r, "WANTEDAUDIOLANGUAGE", Language.class),
 				MapperUtils.getEnum(r, "WANTEDSUBTITLESLANGUAGE", Language.class),
