@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.CancelDownloadTask;
 import dynamo.backlog.tasks.core.VideoFileFilter;
-import dynamo.backlog.tasks.files.DeleteTask;
+import dynamo.backlog.tasks.files.DeleteFileTask;
 import dynamo.core.DynamoApplication;
 import dynamo.core.DynamoServer;
 import dynamo.core.EventManager;
@@ -304,7 +304,8 @@ public class DownloadableManager {
 			searchResultDAO.blacklistDownloaded( downloadableId );
 		}
 		// delete all corresponding files
-		getAllFiles(downloadableId).forEach( downloadedFile -> BackLogProcessor.getInstance().schedule( new DeleteTask(downloadedFile.getFilePath(), true), false ));
+		getAllFiles(downloadableId).forEach(
+				downloadedFile -> BackLogProcessor.getInstance().schedule( new DeleteFileTask(downloadedFile.getFilePath()), true));
 		want(downloadableId);
 	}
 	
