@@ -23,6 +23,10 @@
     "Trak.PIN" : "Trakt PIN code",
     "TraktManager.username" : "Trakt Username",
 
+    "MovieManager.minimumSuggestionRating" : "Do not sugest movies with rating <",
+    "MovieManager.audioLanguage": "Preferred Audio language",
+    "MovieManager.wordsBlackList": "Blacklisted words in search results",
+
     "VideoManager.mediaInfoBinaryPath" : "Path to mediainfo binary",
 
     "SabNzbd.sabnzbdUrl" : "URL for SABNZBD (ex : http://ipaddress:8080/)",

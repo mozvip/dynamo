@@ -1,17 +1,26 @@
 <div class="panel">
+
     <div class="panel-heading">
-        <h3>Files</h3>
+        <h3>Files of "{{downloadable.name}}"</h3>
     </div>
-    <div class="panel-body">
-      <table class="table table-condensed table-striped">
+    <div class="panel-body" ng-if="videoPlaying">
+      <video autoplay="autoplay" controls="controls">
+        <source ng-src="{{downloadURL(videoFile.filePath)}}" />
+      </video>
+    </div>
+    <div class="panel-body" ng-if="!videoPlaying">
+      <table class="table table-striped">
         <tr ng-repeat="item in files">
           <td>
-            <div class="btn-group" role="group">
+            <div class="btn-group btn-group-sm" style="min-width: 100px;" role="group">
               <button class="btn btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{item.filePath}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No,  cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="delete(item)">
                 <span class="glyphicon glyphicon-trash" />
               </button>
               <a class="btn btn-default" ng-href="{{downloadURL(item.filePath)}}" target="_blank">
                 <span class="glyphicon glyphicon-download" />
+              </a>
+              <a ng-click="playVideo(item)" class="btn btn-default" ng-if="item.filePath.endsWith('.mkv') || item.filePath.endsWith('.mp4') || item.filePath.endsWith('.avi')">
+                <span class="glyphicon glyphicon-play" />
               </a>
             </div>
           </td>

@@ -27,7 +27,7 @@ public interface SABNzbdService {
 	public SabNzbdResponse delete(@Query("value") String id, @Query("apikey") String apiKey);
 
 	@GET("/sabnzbd/api?mode=history&name=delete&del_files=1")
-	public SabNzbdResponse deleteFromHistory(@Query("value") String id, @Query("apikey") String apiKey);
+	public boolean deleteFromHistory(@Query("value") String id, @Query("apikey") String apiKey);
 
 	@GET("/sabnzbd/api?mode=history&limit=1000&output=json")
 	public SabNzbdResponse getHistory(@Query("apikey") String apiKey);

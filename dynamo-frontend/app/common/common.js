@@ -102,6 +102,9 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
       resolve: {
         fileList: function () {
           return fileListService.get( downloadable.id );
+        },
+        downloadable: function() {
+          return downloadable;
         }
       }
     });    
@@ -109,16 +112,24 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   return fileListService;
 }])
 
-.controller('FileListCtrl', ['$scope', '$uibModalInstance', 'filterFilter', 'fileList', 'fileListService', function($scope, $uibModalInstance, filterFilter, fileList, fileListService) {
+.controller('FileListCtrl', ['$scope', '$sce', '$uibModalInstance', 'filterFilter', 'fileList', 'fileListService', 'downloadable', function($scope, $sce, $uibModalInstance, filterFilter, fileList, fileListService, downloadable) {
 
   $scope.files = fileList.data;
+  $scope.downloadable = downloadable;
 
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel');
   };
 
   $scope.downloadURL = function( file ) {
-    return fileListService.downloadURL( file );
+    return $sce.trustAsResourceUrl(fileListService.downloadURL( file ));
+  }
+
+  $scope.videoPlaying = false;
+  $scope.videoFile = undefined;
+  $scope.playVideo = function( file ) {
+    $scope.videoPlaying = true;
+    $scope.videoFile = file;
   }
 
   $scope.delete = function( file ) {

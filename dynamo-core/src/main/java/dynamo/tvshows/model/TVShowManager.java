@@ -19,7 +19,6 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.files.DeleteFileTask;
-import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.core.configuration.Configurable;
@@ -282,13 +281,13 @@ public class TVShowManager implements Reconfigurable {
 			}
 		}
 
-		// remvove tasks to obtain subtitles if applicable
+		// remove tasks to obtain subtitles if applicable
 		if (series.getSubtitlesLanguage() == null) {
 			// remove existing subtitles
 			try {
 				for ( Path subtitle : Files.newDirectoryStream( series.getFolder(), SubtitlesFileFilter.getInstance() )) {
 					if (Files.isRegularFile(subtitle)) {
-						BackLogProcessor.getInstance().schedule( new DeleteTask(subtitle, false), false );
+						BackLogProcessor.getInstance().schedule( new DeleteFileTask(subtitle), false );
 					}
 				}
 			} catch (IOException e) {

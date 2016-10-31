@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import core.RegExp;
 import core.WebDocument;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
@@ -169,9 +170,10 @@ public class VideoManager {
 			filenameWithoutExtension = filenameWithoutExtension.substring( 0, filenameWithoutExtension.lastIndexOf('.'));
 		}
 
-		String targetFileName = filenameWithoutExtension + "." + subtitlesLanguage.getShortName() + ".srt";
-		for (DownloadableFile downloadableFile : subtitleFiles) {
-			if (downloadableFile.getFilePath().getFileName().toString().equals( targetFileName )) {
+		String targetFileNameRegExp = filenameWithoutExtension + "." + subtitlesLanguage.getShortName() + "\\.srt";
+		for (DownloadableFile subTitleFile : subtitleFiles) {
+			String subtitleFileName = subTitleFile.getFilePath().getFileName().toString();
+			if (RegExp.matches(subtitleFileName, targetFileNameRegExp )) {
 				return true;
 			}
 		}

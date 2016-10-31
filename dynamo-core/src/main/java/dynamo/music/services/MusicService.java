@@ -7,6 +7,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import org.apache.commons.lang3.StringUtils;
+
 import dynamo.core.EventManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.model.DownloadableUtilsDAO;
@@ -40,9 +42,10 @@ public class MusicService {
 		String newSearchString = MusicManager.getSearchString(artist.getName(), musicAlbum.getName());		
 		MusicAlbum existingAlbum = dao.findBySearchString( newSearchString );
 
+		List<MusicFile> musicFiles = dao.getMusicFiles( musicAlbum.getId() );
+		
 		long id = musicAlbum.getId();
 		if (existingAlbum != null && existingAlbum.getId() != musicAlbum.getId()) {
-			List<MusicFile> musicFiles = dao.getMusicFiles( musicAlbum.getId() );
 			if ( musicFiles != null && musicFiles.size() > 0) {
 				for (MusicFile musicFile : musicFiles) {
 					downloadableDAO.updateDownloadableId( musicFile.getFileId(), existingAlbum.getId() );
@@ -64,6 +67,12 @@ public class MusicService {
 			
 			DownloadableManager.getInstance().updateName(musicAlbum.getId(), musicAlbum.getName());
 			dao.save(musicAlbum.getId(), artist.getName(), audioDBAlbum != null ? audioDBAlbum.getIdAlbum() : musicAlbum.getTadbAlbumId(), audioDBAlbum != null ? audioDBAlbum.getStrGenre() : musicAlbum.getGenre(), musicAlbum.getQuality(), newSearchString, musicAlbum.getFolder());
+		}
+		
+		for (MusicFile musicFile : musicFiles) {
+			if (!StringUtils.equals(musicFile.getSongArtist(), artist.getName())) {
+				
+			}
 		}
 		
 		EventManager.getInstance().reportSuccess(String.format("'%s - %s' has been saved", artist.getName(), musicAlbum.getName()));
