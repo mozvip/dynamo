@@ -111,13 +111,15 @@ angular.module('dynamo.configuration', ['ngRoute'])
             $scope.config['T411Provider.password'],
             $scope.config['CPasBienProvider.enabled'],
             $scope.config['RARBGProvider.enabled'],
+            $scope.config['RARBGProvider.baseURL'],
             $scope.config['PirateBayProvider.enabled'],
             $scope.config['TorrentProjectSE.enabled'],
             $scope.config['UsenetCrawlerProvider.enabled'],
             $scope.config['UsenetCrawlerProvider.login'],
             $scope.config['UsenetCrawlerProvider.password'],
             $scope.config['NZBIndexNLProvider.enabled'],
-            $scope.config['BTKitty.enabled']
+            $scope.config['BTKitty.enabled'],
+            $scope.config['BTKitty.baseURL']
         ];
 
         $scope.saveSettings = function () {

@@ -45,7 +45,7 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 	
 	private final WebClient webClient = new WebClient();
 	
-	@Configurable(ifExpression="RARBGProvider.enabled", defaultValue="https://rarbg.to")
+	@Configurable(ifExpression="RARBGProvider.enabled", required=true, defaultValue="https://rarbg.to")
 	private String baseURL = "https://rarbg.to";
 	
 	public String getBaseURL() {

@@ -25,15 +25,15 @@ import hclient.SimpleResponse;
 @ClassDescription(label="BTKitty")
 public class BTKitty extends DownloadFinder implements MagazineProvider, EpisodeFinder, MovieProvider {
 	
-	@Configurable
-	private String rootURL = "http://btkitty.bid";
+	@Configurable(ifExpression="BTKitty.enabled", required=true, defaultValue="http://btkitty.bid")
+	private String baseURL = "http://btkitty.bid";
 	
-	public String getRootURL() {
-		return rootURL;
+	public String getBaseURL() {
+		return baseURL;
 	}
 	
-	public void setRootURL(String rootURL) {
-		this.rootURL = rootURL;
+	public void setBaseURL(String rootURL) {
+		this.baseURL = rootURL;
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class BTKitty extends DownloadFinder implements MagazineProvider, Episode
 		Map<String, Object> params = new HashMap<>();
 		params.put("keyword", searchString);
 		params.put("hidden", true);
-		SimpleResponse response = client.post( rootURL, rootURL, params);
+		SimpleResponse response = client.post( baseURL, baseURL, params);
 		
 		List<SearchResult> results = new ArrayList<>();
 
