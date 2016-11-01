@@ -9,9 +9,9 @@
   </div>
 </div>
 
-<div class="row" ng-show="filteredList.length > 24">
+<div class="row" ng-show="filteredList.length >itemsPerPage">
   <p class="text-center">
-    <uib-pagination total-items="filteredList.length" items-per-page="24" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+    <uib-pagination total-items="filteredList.length" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
   </p>
 </div>
 
@@ -28,6 +28,12 @@
     </button>
     {{downloadable.name}}
   </div>
+</div>
+
+<div class="row col-md-12" ng-show="filteredList.length > itemsPerPage">
+	<p class="text-center">
+		<uib-pagination total-items="filteredList.length" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+	</p>
 </div>
 
 <ng-include src="'common/templates.html'" />

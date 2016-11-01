@@ -372,6 +372,7 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   $scope.currentPage = 1;
   $scope.allItems = [];
   $scope.filteredList = [];
+  $scope.itemsPerPage = 24;
 
   $scope.unrecognizeds = unrecognizeds.data;
 
@@ -384,13 +385,13 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   $scope.pageContents = [];
   tvShowsService.find().then( function( response ) {
     $scope.allItems = response.data;
-    $scope.pageContents = $scope.allItems.slice( 0, 24 );
+    $scope.pageContents = $scope.allItems.slice( 0, $scope.itemsPerPage );
     $scope.filteredList = $scope.allItems.slice( 0 );
   });
 
   $scope.pageChanged = function() {
-    var start = ($scope.currentPage - 1) * 24;
-    $scope.pageContents = $scope.filteredList.slice( start, start + 24);
+    var start = ($scope.currentPage - 1) * $scope.itemsPerPage;
+    $scope.pageContents = $scope.filteredList.slice( start, start + $scope.itemsPerPage);
   }
 
   $scope.filterChanged = function() {
