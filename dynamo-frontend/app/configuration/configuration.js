@@ -117,7 +117,7 @@ angular.module('dynamo.configuration', ['ngRoute'])
             $scope.config['UsenetCrawlerProvider.login'],
             $scope.config['UsenetCrawlerProvider.password'],
             $scope.config['NZBIndexNLProvider.enabled'],
-            $scope.config['BTDigg.enabled']
+            $scope.config['BTKitty.enabled']
         ];
 
         $scope.saveSettings = function () {
