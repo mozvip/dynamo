@@ -279,10 +279,21 @@ public class ConfigurationManager {
 			.forEach( instance -> configureInstance( instance ));
 		
 		// second pass : reconfigure
-		instances.parallelStream()
+		List<?> runnables = instances.parallelStream()
 			.filter(instance -> instance instanceof Reconfigurable)
 			.filter(instance -> !(instance instanceof Enableable) || ((Enableable) instance).isEnabled())
-			.forEach( instance -> ((Reconfigurable) instance).reconfigure() );
+			.map( instance -> 
+				new Runnable() {
+					@Override
+					public void run() {
+						((Reconfigurable) instance).reconfigure();
+					}
+			}).collect( Collectors.toList() );
+		
+		for (Object runnable : runnables) {
+			new Thread( (Runnable)runnable ).start();
+		}
+
 
 		Set<InitTask> initTasks = (Set<InitTask>) DynamoObjectFactory.getInstances( InitTask.class );
 		for (InitTask initTask : initTasks) {
