@@ -21,7 +21,7 @@ import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 
-public class FindAlbumExecutor extends FindDownloadableExecutor {
+public class FindAlbumExecutor extends FindDownloadableExecutor<MusicAlbum> {
 	
 	private MusicAlbum musicAlbum;
 	
@@ -33,7 +33,7 @@ public class FindAlbumExecutor extends FindDownloadableExecutor {
 	}
 
 	@Override
-	public Collection<String> getWordsBlackList(Downloadable downloadable) {
+	public Collection<String> getWordsBlackList(MusicAlbum album) {
 		// TODO
 		return null;
 	}
@@ -67,7 +67,7 @@ public class FindAlbumExecutor extends FindDownloadableExecutor {
 	}
 	
 	@Override
-	public List<SearchResult> getResults(DownloadFinder finder, Downloadable downloadable) {
+	public List<SearchResult> getResults(DownloadFinder finder, MusicAlbum album) {
 		MusicAlbumFinder musicAlbumFinder =  (MusicAlbumFinder) finder;
 		List<SearchResult> allResults = new ArrayList<SearchResult>();
 		try {
@@ -80,12 +80,12 @@ public class FindAlbumExecutor extends FindDownloadableExecutor {
 			albumNames.add( albumName.replace('/', ' ') );
 			albumNames.add( albumName );
 			
-			for (String album : albumNames) {
-				List<SearchResult> results = musicAlbumFinder.findMusicAlbum( musicAlbum.getArtistName(), album, musicAlbum.getQuality() );
+			for (String testName : albumNames) {
+				List<SearchResult> results = musicAlbumFinder.findMusicAlbum( musicAlbum.getArtistName(), testName, musicAlbum.getQuality() );
 				if (results != null && !results.isEmpty()) {
 					allResults.addAll( results );
 				} else if ("Various Artists".equals(musicAlbum.getArtistName())) {
-					results = musicAlbumFinder.findMusicAlbum( "", albumName, musicAlbum.getQuality() );
+					results = musicAlbumFinder.findMusicAlbum( "", testName, musicAlbum.getQuality() );
 					if (results != null && !results.isEmpty()) {
 						allResults.addAll( results );
 					}

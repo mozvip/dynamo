@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.DownloadFinder;
 import dynamo.core.manager.DynamoObjectFactory;
+import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.SearchResultDAO;
@@ -101,50 +102,65 @@ public abstract class FindDownloadableExecutor<T extends Downloadable> extends T
 						break;
 					}
 					
-					setCurrentLabel( String.format("%s - Searching from %s", baseLabel, DynamoObjectFactory.getClassDescription(provider.getClass()))); 
-	
-					while (!provider.isReady()) {
-						try {
-							Thread.sleep( 1000 );
-						} catch (InterruptedException e) {
-						}
-					}
-	
-					List<SearchResult> resultsForProvider = getResults(provider, getDownloadable() );
-					if (resultsForProvider != null && resultsForProvider.size() > 0) {
-						for (Iterator<SearchResult> iterator = resultsForProvider.iterator(); iterator.hasNext();) {
-							SearchResult searchResult = iterator.next();
-							// remove blacklisted results
-							
-							if (blackListedUrls != null && blackListedUrls.contains( searchResult.getUrl() )) {
-								iterator.remove();
-								continue;
+					if (!provider.isReady()) {
+						setCurrentLabel( String.format("%s - Waiting for %s to be ready", baseLabel, DynamoObjectFactory.getClassDescription(provider.getClass())));
+						while (!provider.isReady()) {
+							try {
+								Thread.sleep( 1000 );
+							} catch (InterruptedException e) {
+								break;
 							}
-							
-							if (blackList != null) {
-								for (String word : blackList) {
-									if ( StringUtils.isNoneBlank( word ) && StringUtils.containsIgnoreCase(searchResult.getTitle(), word)) {
-										iterator.remove();
-										break;
-									}
-								}
-							}
-						}
-						
-						if (resultsForProvider.size() > 0) {
-							filterResults( resultsForProvider );
-							for (SearchResult searchResult : resultsForProvider) {
-								int score = evaluateResult( searchResult );
-								if (score > currentScore ) {
-									selectedResult = searchResult;
-									currentScore = score;
-								}
-							}
-							
-							if ( currentScore >= SCORE_THRESHOLD) {
+							if (!provider.isEnabled()) {
 								break;
 							}
 						}
+					}
+	
+					if (!provider.isEnabled()) {
+						continue;
+					}
+
+					setCurrentLabel( String.format("%s - Searching from %s", baseLabel, DynamoObjectFactory.getClassDescription(provider.getClass()))); 
+
+					try {
+						List<SearchResult> resultsForProvider = getResults(provider, getDownloadable() );
+						if (resultsForProvider != null && resultsForProvider.size() > 0) {
+							for (Iterator<SearchResult> iterator = resultsForProvider.iterator(); iterator.hasNext();) {
+								SearchResult searchResult = iterator.next();
+								// remove blacklisted results
+								
+								if (blackListedUrls != null && blackListedUrls.contains( searchResult.getUrl() )) {
+									iterator.remove();
+									continue;
+								}
+								
+								if (blackList != null) {
+									for (String word : blackList) {
+										if ( StringUtils.isNoneBlank( word ) && StringUtils.containsIgnoreCase(searchResult.getTitle(), word)) {
+											iterator.remove();
+											break;
+										}
+									}
+								}
+							}
+							
+							if (resultsForProvider.size() > 0) {
+								filterResults( resultsForProvider );
+								for (SearchResult searchResult : resultsForProvider) {
+									int score = evaluateResult( searchResult );
+									if (score > currentScore ) {
+										selectedResult = searchResult;
+										currentScore = score;
+									}
+								}
+								
+								if ( currentScore >= SCORE_THRESHOLD) {
+									break;
+								}
+							}
+						}
+					} catch (Exception e) {
+						ErrorManager.getInstance().reportThrowable(getTask(), e);
 					}
 					itemsDone ++;
 				}
