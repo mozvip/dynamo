@@ -289,7 +289,7 @@ public class ConfigurationManager {
 						((Reconfigurable) instance).reconfigure();
 					}
 			}).collect( Collectors.toList() );
-		
+
 		for (Object runnable : runnables) {
 			new Thread( (Runnable)runnable ).start();
 		}

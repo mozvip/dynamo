@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import core.RegExp;
-import dynamo.backlog.tasks.core.AbstractNewFolderExecutor;
+import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.DownloadableUtilsDAO;
@@ -23,7 +23,7 @@ import dynamo.webapps.thegamesdb.net.GetGamesListResponse;
 import dynamo.webapps.thegamesdb.net.TheGamesDB;
 import dynamo.webapps.thegamesdb.net.TheGamesDBGame;
 
-public class ScanGamesFolderExecutor extends AbstractNewFolderExecutor<ScanGamesFolderTask> {
+public class ScanGamesFolderExecutor extends ScanFolderExecutor<ScanGamesFolderTask> {
 
 	private GamePlatform platform;
 	private Set<DownloadableFile> files;

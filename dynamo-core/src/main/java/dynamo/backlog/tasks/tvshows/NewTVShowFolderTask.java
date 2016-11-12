@@ -1,10 +1,10 @@
-package model.backlog;
+package dynamo.backlog.tasks.tvshows;
 
 import java.nio.file.Path;
 
-import dynamo.model.backlog.core.NewFolderTask;
+import dynamo.backlog.tasks.files.ScanFolderTask;
 
-public class NewTVShowFolderTask extends NewFolderTask {
+public class NewTVShowFolderTask extends ScanFolderTask {
 
 	public NewTVShowFolderTask(Path path) {
 		super( path );

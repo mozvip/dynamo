@@ -19,6 +19,9 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.files.DeleteFileTask;
+import dynamo.backlog.tasks.tvshows.NewTVShowFolderTask;
+import dynamo.backlog.tasks.tvshows.RefreshTVShowTask;
+import dynamo.backlog.tasks.tvshows.ScanTVShowTask;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.core.configuration.Configurable;
@@ -36,9 +39,6 @@ import dynamo.tvshows.jdbi.TVShowSeasonDAO;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import hclient.HTTPClient;
 import hclient.RegExpMatcher;
-import model.backlog.NewTVShowFolderTask;
-import model.backlog.RefreshTVShowTask;
-import model.backlog.ScanTVShowTask;
 
 
 public class TVShowManager implements Reconfigurable {

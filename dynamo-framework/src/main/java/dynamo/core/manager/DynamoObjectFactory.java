@@ -81,8 +81,8 @@ public class DynamoObjectFactory {
 		return label;
 	}
     
-	public static <T> T createInstance( Class<T> abstractClass, Object parameter ) {
-		Set<Class<? extends T>> klasses = DynamoObjectFactory.getReflections().getSubTypesOf( abstractClass );
+	public static <T> T createInstance( Class<T> superClass, Object parameter ) {
+		Set<Class<? extends T>> klasses = DynamoObjectFactory.getReflections().getSubTypesOf( superClass );
 		for (Class<?> klass : klasses) {
 			if (Modifier.isAbstract( klass.getModifiers() )) {
 				continue;

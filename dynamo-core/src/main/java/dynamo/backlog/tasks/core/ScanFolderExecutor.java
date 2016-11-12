@@ -8,14 +8,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import dynamo.backlog.tasks.files.ScanFolderTask;
 import dynamo.core.manager.ErrorManager;
+import dynamo.core.manager.FileSystemManager;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
-import dynamo.model.backlog.core.NewFolderTask;
 
-public abstract class AbstractNewFolderExecutor<T extends NewFolderTask> extends TaskExecutor<NewFolderTask> implements ReportProgress {
+public abstract class ScanFolderExecutor<T extends ScanFolderTask> extends TaskExecutor<ScanFolderTask> implements ReportProgress {
 	
-	NewFolderTask newFolderTask;
 	protected int totalItems;
 	protected int itemsDone;
 	
@@ -29,18 +29,29 @@ public abstract class AbstractNewFolderExecutor<T extends NewFolderTask> extends
 		return itemsDone;
 	}
 
-	public AbstractNewFolderExecutor(NewFolderTask task) {
+	public ScanFolderExecutor(T task) {
 		super( task );
-		newFolderTask = task;
 	}
 	
 	@Override
-	public void execute() throws Exception {
-		Path rootFolder = newFolderTask.getFolder();
-		if (!Files.exists( rootFolder )) {
-			ErrorManager.getInstance().reportWarning( String.format("Folder %s does not exist or is unreachable", rootFolder.toAbsolutePath().toString()) );
-			return;
+	public void init() throws Exception {
+		if (! Files.isReadable( task.getFolder() )) {
+			throw new IOException( String.format("Folder %s is not readable", task.getFolder().toAbsolutePath().toString()));
 		}
+		String taskLabel = getCurrentLabel();
+		setCurrentLabel( String.format("%s - Waiting for availability of %s", taskLabel, Files.getFileStore(task.getFolder())));
+		FileSystemManager.getInstance().acquireRead( task.getFolder() );
+		setCurrentLabel( taskLabel);
+	}
+	
+	@Override
+	public void shutdown() throws Exception {
+		FileSystemManager.getInstance().releaseRead( task.getFolder() );
+	}
+
+	@Override
+	public void execute() throws Exception {
+		Path rootFolder = task.getFolder();
 
 		List<Path> topLevelPaths = getTopLevelPathList( rootFolder );
 
@@ -65,7 +76,7 @@ public abstract class AbstractNewFolderExecutor<T extends NewFolderTask> extends
 	public abstract void parsePath(Path folder) throws Exception;
 
 	@Override
-	public void rescheduleTask(NewFolderTask taskToReschedule) {
+	public void rescheduleTask(ScanFolderTask taskToReschedule) {
 		if (isFailed()) {
 			taskToReschedule.setMinDate( getNextDate( 30 ) );
 			queue( taskToReschedule, false );

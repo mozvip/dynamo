@@ -1,16 +1,16 @@
-package model.backlog;
+package dynamo.backlog.tasks.tvshows;
 
-import dynamo.backlog.tasks.tvshows.ScanFileSystemQueue;
+import dynamo.backlog.tasks.files.ScanFolderTask;
 import dynamo.core.DynamoTask;
-import dynamo.core.model.Task;
 import dynamo.tvshows.model.ManagedSeries;
 
-@DynamoTask(queueClass=ScanFileSystemQueue.class)
-public class ScanTVShowTask extends Task {
+@DynamoTask(queueClass=FileSystemQueue.class)
+public class ScanTVShowTask extends ScanFolderTask {
 
 	private ManagedSeries series;
 
 	public ScanTVShowTask(ManagedSeries series) {
+		super( series.getFolder() );
 		this.series = series;
 	}
 

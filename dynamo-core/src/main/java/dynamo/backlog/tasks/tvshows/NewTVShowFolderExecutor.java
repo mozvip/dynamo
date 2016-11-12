@@ -1,17 +1,20 @@
 package dynamo.backlog.tasks.tvshows;
 
+import java.io.IOException;
 import java.nio.file.DirectoryStream.Filter;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 import com.omertron.thetvdbapi.model.Series;
 
-import dynamo.backlog.tasks.core.AbstractNewFolderExecutor;
+import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
+import dynamo.backlog.tasks.files.ScanFolderTask;
 import dynamo.core.Language;
+import dynamo.core.manager.FileSystemManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowDAO;
@@ -19,22 +22,22 @@ import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import dynamo.tvshows.model.ManagedEpisode;
 import dynamo.tvshows.model.ManagedSeries;
 import dynamo.tvshows.model.TVShowManager;
-import model.backlog.NewTVShowFolderTask;
-import model.backlog.RefreshTVShowTask;
 
-public class NewTVShowFolderExecutor extends AbstractNewFolderExecutor<NewTVShowFolderTask> {
+public class NewTVShowFolderExecutor extends ScanFolderExecutor<ScanFolderTask> {
 	
 	private TVShowDAO tvShowDAO;
 	private ManagedEpisodeDAO managedEpisodeDAO;
 	private UnrecognizedDAO unrecognizedDAO;
 
-	public NewTVShowFolderExecutor( NewTVShowFolderTask item, TVShowDAO tvShowDAO, ManagedEpisodeDAO managedEpisodeDAO, UnrecognizedDAO unrecognizedDAO ) {
-		super(item);
+	public NewTVShowFolderExecutor( NewTVShowFolderTask task, TVShowDAO tvShowDAO, ManagedEpisodeDAO managedEpisodeDAO, UnrecognizedDAO unrecognizedDAO ) {
+		super(task);
 		this.tvShowDAO = tvShowDAO;
 		this.managedEpisodeDAO = managedEpisodeDAO;
 		this.unrecognizedDAO = unrecognizedDAO;
 	}
 	
+
+
 	@Override
 	public void parsePath(Path folder) throws Exception {
 		

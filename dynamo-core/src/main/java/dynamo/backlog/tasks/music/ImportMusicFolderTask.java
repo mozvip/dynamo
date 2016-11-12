@@ -2,9 +2,9 @@ package dynamo.backlog.tasks.music;
 
 import java.nio.file.Path;
 
-import dynamo.model.backlog.core.NewFolderTask;
+import dynamo.backlog.tasks.files.ScanFolderTask;
 
-public class ImportMusicFolderTask extends NewFolderTask {
+public class ImportMusicFolderTask extends ScanFolderTask {
 
 	private boolean keepSourceFiles;
 	

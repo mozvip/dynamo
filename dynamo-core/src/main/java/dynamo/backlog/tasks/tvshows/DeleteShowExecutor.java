@@ -13,8 +13,6 @@ import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import dynamo.tvshows.jdbi.TVShowDAO;
 import dynamo.tvshows.model.ManagedSeries;
-import model.backlog.RefreshTVShowTask;
-import model.backlog.ScanTVShowTask;
 
 public class DeleteShowExecutor extends TaskExecutor<DeleteShowTask> {
 

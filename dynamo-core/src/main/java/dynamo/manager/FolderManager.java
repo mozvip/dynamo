@@ -11,10 +11,8 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.CopyFileTask;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.backlog.tasks.files.MoveFileTask;
-import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.Task;
 import dynamo.model.Downloadable;
-import dynamo.model.backlog.core.NewFolderTask;
 
 public class FolderManager {
 
@@ -86,24 +84,6 @@ public class FolderManager {
 		}
 		
 		return associatedFiles;
-	}
-
-	public boolean newFolder( Path folder, Class<? extends NewFolderTask> newFolderBackLogItemClass ) {
-
-		if (folder == null || (!Files.isDirectory( folder )) ) {
-			return false ;
-		}
-
-		NewFolderTask item;
-		try {
-			item = newFolderBackLogItemClass.newInstance();
-			item.setFolder( folder );
-			BackLogProcessor.getInstance().schedule( item );
-		} catch (InstantiationException | IllegalAccessException e1) {
-			ErrorManager.getInstance().reportThrowable( e1 );
-		}
-
-		return true;
 	}
 
 }

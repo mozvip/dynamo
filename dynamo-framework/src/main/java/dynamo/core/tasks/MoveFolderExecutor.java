@@ -9,6 +9,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import dynamo.core.manager.FileSystemManager;
 import dynamo.core.model.TaskExecutor;
 
 public class MoveFolderExecutor extends TaskExecutor<MoveFolderTask> {
@@ -21,6 +22,21 @@ public class MoveFolderExecutor extends TaskExecutor<MoveFolderTask> {
 	public void execute() throws Exception {
 		Files.walkFileTree(task.getSourceFolder(), new MoveDirVisitor( task.getSourceFolder(), task.getDestinationFolder() ));
 	}
+	
+	@Override
+	public void init() throws Exception {
+		FileSystemManager.getInstance().acquireRead( task.getSourceFolder() );
+		FileSystemManager.getInstance().acquireWrite( task.getDestinationFolder() );
+	}
+	
+	@Override
+	public void shutdown() throws Exception {
+		try {
+			FileSystemManager.getInstance().releaseRead( task.getSourceFolder() );
+		} finally {
+			FileSystemManager.getInstance().releaseWrite( task.getDestinationFolder() );
+		}
+	}	
 	
 	class MoveDirVisitor extends SimpleFileVisitor<Path> {
 	    private Path sourceFolder;

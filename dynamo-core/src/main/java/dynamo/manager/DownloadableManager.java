@@ -21,6 +21,7 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.CancelDownloadTask;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.DeleteFileTask;
+import dynamo.backlog.tasks.tvshows.ScanTVShowTask;
 import dynamo.core.DynamoApplication;
 import dynamo.core.DynamoServer;
 import dynamo.core.EventManager;
@@ -57,7 +58,6 @@ import dynamo.tvshows.model.TVShowSeason;
 import dynamo.video.VideoManager;
 import dynamo.webapps.pushbullet.PushBullet;
 import hclient.HTTPClient;
-import model.backlog.ScanTVShowTask;
 
 
 public class DownloadableManager {

@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import dynamo.backlog.tasks.core.AbstractNewFolderExecutor;
+import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.backlog.tasks.core.AudioFileFilter;
 import dynamo.backlog.tasks.files.DeleteFileTask;
 import dynamo.core.manager.ErrorManager;
@@ -14,7 +14,7 @@ import dynamo.manager.MusicManager;
 import dynamo.model.music.MusicFile;
 import dynamo.music.jdbi.MusicAlbumDAO;
 
-public class ImportMusicFolderExecutor extends AbstractNewFolderExecutor<ImportMusicFolderTask> {
+public class ImportMusicFolderExecutor extends ScanFolderExecutor<ImportMusicFolderTask> {
 
 	boolean keepSourceFiles = false;
 

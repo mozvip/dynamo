@@ -25,8 +25,6 @@ import dynamo.tvshows.model.ManagedEpisode;
 import dynamo.tvshows.model.ManagedSeries;
 import dynamo.tvshows.model.TVShowManager;
 import dynamo.tvshows.model.TVShowSeason;
-import model.backlog.RefreshTVShowTask;
-import model.backlog.ScanTVShowTask;
 
 public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTask> {
 	

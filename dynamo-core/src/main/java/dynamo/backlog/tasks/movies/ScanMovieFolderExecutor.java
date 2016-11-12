@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.model.movie.MovieInfo;
 
-import dynamo.backlog.tasks.core.AbstractNewFolderExecutor;
+import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.Language;
 import dynamo.core.manager.DAOManager;
@@ -37,7 +37,7 @@ import dynamo.suggesters.movies.IMDBTitle;
 import dynamo.suggesters.movies.IMDBWatchListSuggester;
 import dynamo.video.VideoManager;
 
-public class ScanMovieFolderExecutor extends AbstractNewFolderExecutor<ScanMovieFolderTask> {
+public class ScanMovieFolderExecutor extends ScanFolderExecutor<ScanMovieFolderTask> {
 	
 	private Set<String> imdbIds = new HashSet<String>();
 

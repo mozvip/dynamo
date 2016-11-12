@@ -1,4 +1,4 @@
-package model.backlog;
+package dynamo.backlog.tasks.tvshows;
 
 import dynamo.backlog.queues.TVDBQueue;
 import dynamo.core.DynamoTask;

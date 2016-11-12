@@ -10,7 +10,7 @@ public class DynamoFileOperationQueue extends AbstractDynamoQueue {
 	}
 
 	public DynamoFileOperationQueue() {
-		super(1);
+		super(80);
 	}
 
 }

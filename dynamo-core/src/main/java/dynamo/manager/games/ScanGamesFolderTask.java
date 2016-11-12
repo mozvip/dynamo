@@ -2,10 +2,10 @@ package dynamo.manager.games;
 
 import java.nio.file.Path;
 
+import dynamo.backlog.tasks.files.ScanFolderTask;
 import dynamo.games.model.GamePlatform;
-import dynamo.model.backlog.core.NewFolderTask;
 
-public class ScanGamesFolderTask extends NewFolderTask {
+public class ScanGamesFolderTask extends ScanFolderTask {
 	
 	private GamePlatform platform;
 
