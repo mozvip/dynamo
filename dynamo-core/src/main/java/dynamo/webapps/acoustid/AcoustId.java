@@ -57,17 +57,17 @@ public class AcoustId implements Enableable {
 		return SingletonHolder.instance;
 	}
 
-	public LookupResults lookup( int duration, String fingerprint) {
+	public AcoustIdLookupResults lookup( int duration, String fingerprint) {
 		return service.lookup(client, duration, fingerprint);
 	}
 
-	public LookupResults lookup( String trackid) {
+	public AcoustIdLookupResults lookup( String trackid) {
 		return service.lookup(client, trackid);
 	}
 	
-	public void populateTag( LookupResults results, Tag audioTag, boolean overwrite ) throws KeyNotFoundException, FieldDataInvalidException {
+	public void populateTag( AcoustIdLookupResults results, Tag audioTag, boolean overwrite ) throws KeyNotFoundException, FieldDataInvalidException {
 		if (results.getResults().size() > 0) {
-			LookupResult preferedResult = results.getResults().get(0);
+			AcoustIdLookupResult preferedResult = results.getResults().get(0);
 
 			audioTag.setField(FieldKey.ACOUSTID_ID, preferedResult.getId());
 

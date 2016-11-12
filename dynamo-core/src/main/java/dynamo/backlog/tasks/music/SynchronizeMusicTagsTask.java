@@ -2,10 +2,8 @@ package dynamo.backlog.tasks.music;
 
 import java.nio.file.Path;
 
-import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
 
-@DynamoTask(queueClass=SynchronizeTagsQueue.class)
 public class SynchronizeMusicTagsTask extends Task {
 	
 	private Path musicFilePath;

@@ -1,5 +1,7 @@
 package dynamo.core;
 
+import java.util.concurrent.Semaphore;
+
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.ErrorManager;
@@ -7,6 +9,8 @@ import hclient.HTTPClient;
 
 
 public abstract class SubtitlesFinder implements Reconfigurable, Enableable {
+	
+	private Semaphore semaphore = new Semaphore(1);
 	
 	@Configurable(defaultValue="true")
 	private boolean enabled;
@@ -59,7 +63,12 @@ public abstract class SubtitlesFinder implements Reconfigurable, Enableable {
 			// currently being reconfigured
 			Thread.sleep( 500 );
 		}
-		return downloadSubtitle( details, language );
+		semaphore.acquire();
+		try {
+			return downloadSubtitle( details, language );
+		} finally {
+			semaphore.release();
+		}
 	}
 
 }

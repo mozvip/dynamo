@@ -424,7 +424,16 @@ public class MovieManager implements Reconfigurable {
 				return null;
 			}
 
-			return createMovieFromMovieDB( api.getMovieInfoImdb(imdbId, language.getShortName()), defaultImage, status, imdbTitle.getRating(), watched );
+			try {
+				MovieInfo movieInfoImdb = api.getMovieInfoImdb(imdbId, language.getShortName());
+				return createMovieFromMovieDB( movieInfoImdb, defaultImage, status, imdbTitle.getRating(), watched );
+			} catch (MovieDbException e) {
+				if (e.getResponseCode() != 404) {
+					throw e;
+				}
+			}
+			
+			return null;
 		}
 	}
 	

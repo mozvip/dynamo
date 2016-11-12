@@ -1,6 +1,6 @@
 package dynamo.core.services;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -9,17 +9,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import dynamo.backlog.BackLogProcessor;
-import dynamo.core.model.AbstractDynamoQueue;
+import dynamo.core.model.TaskExecutor;
 
 @Path("/backlog")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class BacklogService {
 	
-	@Path("/queues")
+	@Path("/executors")
 	@GET
-	public Collection<AbstractDynamoQueue> getQueues() {
-		return BackLogProcessor.getInstance().getQueues().values();
+	public List<TaskExecutor> getRunningExecutors() {
+		return BackLogProcessor.getInstance().getRunningExecutors();
 	}
 
 }

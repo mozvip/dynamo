@@ -1,0 +1,8 @@
+<div ng-repeat="executor in executors" class="well">
+    <h4>
+        <span ng-bind-html="executor.currentLabel" />
+    </h4>
+    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{executor.itemsPercent}}%">
+        {{executor.itemsPercent}}%
+    </div>
+</div>

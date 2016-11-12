@@ -81,7 +81,7 @@ public class NewTVShowFolderExecutor extends ScanFolderExecutor<ScanFolderTask> 
 			}
 
 			if (mustRefresh) {
-				RefreshTVShowTask task = new RefreshTVShowTask( managed );
+				RefreshFromTVDBTask task = new RefreshFromTVDBTask( managed );
 				task.setMinDate( nextRefreshDate );
 				queue( task, false );
 			}

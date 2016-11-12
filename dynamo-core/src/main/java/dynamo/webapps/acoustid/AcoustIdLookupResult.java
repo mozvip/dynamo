@@ -2,7 +2,7 @@ package dynamo.webapps.acoustid;
 
 import java.util.List;
 
-public class LookupResult {
+public class AcoustIdLookupResult {
 
 	private float score;
 	private String id;

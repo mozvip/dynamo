@@ -1,11 +1,9 @@
 package dynamo.core.manager;
 
-import dynamo.core.DynamoTask;
 import dynamo.core.logging.LogItemSeverity;
 import dynamo.core.model.NoLogging;
 import dynamo.core.model.Task;
 
-@DynamoTask(queueClass=LoggingQueue.class)
 public class LogTask extends Task implements NoLogging {
 	
 	private String message;

@@ -2,11 +2,8 @@ package dynamo.core.tasks;
 
 import java.nio.file.Path;
 
-import dynamo.backlog.queues.DynamoFileOperationQueue;
-import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
 
-@DynamoTask(queueClass=DynamoFileOperationQueue.class)
 public class MoveFolderTask extends Task {
 	
 	Path sourceFolder;

@@ -19,12 +19,12 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
         return BackendService.get('downloadable/wanted');
       }]
     }   
-  }).when('/queues', {
-    templateUrl: 'log/queues.html',
+  }).when('/activity', {
+    templateUrl: 'log/activity.html',
     controller: 'QueuesCtrl',
     resolve: {
-      queues: ['BackendService', function(  BackendService  ) {
-        return BackendService.get('backlog/queues');
+      executors: ['BackendService', function(  BackendService  ) {
+        return BackendService.get('backlog/executors');
       }]
     }   
   }).when('/history', {
@@ -62,14 +62,14 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('QueuesCtrl', ['$scope', '$timeout', 'BackendService', 'queues', function( $scope, $timeout, BackendService, queues ) {
+.controller('QueuesCtrl', ['$scope', '$timeout', 'BackendService', 'executors', function( $scope, $timeout, BackendService, executors ) {
 
-  $scope.queues = queues.data;
+  $scope.executors = executors.data;
 
   var tickTimeout;
 
   (function tick() {
-      BackendService.get('backlog/queues').then(function(response){
+      BackendService.get('backlog/executors').then(function(response){
         $scope.queues = response.data;
         tickTimeout = $timeout(tick, 1000);
       });

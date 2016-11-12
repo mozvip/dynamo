@@ -2,11 +2,8 @@ package dynamo.model.backlog.core;
 
 import java.nio.file.Path;
 
-import dynamo.backlog.queues.HTTPDownloadQueue;
-import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
 
-@DynamoTask(queueClass=HTTPDownloadQueue.class)
 public class HTTPDownloadTask extends Task {
 	
 	private String url;

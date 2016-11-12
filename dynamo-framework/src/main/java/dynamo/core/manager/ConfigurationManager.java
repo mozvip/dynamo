@@ -27,7 +27,6 @@ import dynamo.core.Enableable;
 import dynamo.core.EventManager;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
-import dynamo.core.model.AbstractDynamoQueue;
 import dynamo.core.model.DaemonTask;
 import dynamo.core.model.InitTask;
 import dynamo.core.model.ServiceTask;
@@ -263,11 +262,6 @@ public class ConfigurationManager {
 		
 		return instance;
     }
-
-	public static Object configureQueue(Class<? extends AbstractDynamoQueue> queueClass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, ClassNotFoundException {
-		return getInstance().configureInstance( queueClass.newInstance() );
-	}
-	
 
 	public void configureApplication() throws Exception {
 		

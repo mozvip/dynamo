@@ -2,11 +2,11 @@ package dynamo.webapps.acoustid;
 
 import java.util.List;
 
-public class LookupResults {
+public class AcoustIdLookupResults {
 	
 	private String status;
 	
-	private List<LookupResult> results;
+	private List<AcoustIdLookupResult> results;
 
 	public String getStatus() {
 		return status;
@@ -16,11 +16,11 @@ public class LookupResults {
 		this.status = status;
 	}
 
-	public List<LookupResult> getResults() {
+	public List<AcoustIdLookupResult> getResults() {
 		return results;
 	}
 
-	public void setResults(List<LookupResult> results) {
+	public void setResults(List<AcoustIdLookupResult> results) {
 		this.results = results;
 	}
 	

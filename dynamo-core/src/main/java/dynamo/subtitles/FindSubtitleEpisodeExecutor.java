@@ -10,11 +10,9 @@ import dynamo.core.EventManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.HistoryDAO;
 import dynamo.core.model.TaskExecutor;
-import dynamo.core.model.video.VideoMetaData;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
-import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.model.ManagedEpisode;
 import dynamo.tvshows.model.ManagedSeries;
 import dynamo.tvshows.model.TVShowManager;
@@ -23,14 +21,12 @@ import dynamo.video.VideoManager;
 public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisodeTask> {
 	
 	private HistoryDAO historyDAO;
-	private ManagedEpisodeDAO episodeDAO;
 	
 	private ManagedEpisode episode;
 	private ManagedSeries series;
 	
-	public FindSubtitleEpisodeExecutor( FindSubtitleEpisodeTask item, ManagedEpisodeDAO tvShowDAO, HistoryDAO historyDAO ) {
+	public FindSubtitleEpisodeExecutor( FindSubtitleEpisodeTask item, HistoryDAO historyDAO ) {
 		super(item);
-		this.episodeDAO = tvShowDAO;
 		this.historyDAO = historyDAO;
 
 		episode = task.getEpisode();
@@ -82,10 +78,7 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 
 				break;				
 			}
-
 		}
-
-		
 	}
 	
 	@Override
