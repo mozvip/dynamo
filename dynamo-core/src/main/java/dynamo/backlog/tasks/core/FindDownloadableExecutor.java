@@ -201,8 +201,7 @@ public abstract class FindDownloadableExecutor<T extends Downloadable> extends T
 	@Override
 	public void rescheduleTask(FindDownloadableTask<T> item) {
 		if ( mustReschedule && item.getDownloadable().getStatus() == DownloadableStatus.WANTED) {
-			item.setMinDate( getNextDate(60 * 24) );
-			BackLogProcessor.getInstance().schedule( item, false );
+			BackLogProcessor.getInstance().schedule( item, getNextDate(60 * 24), false );
 		}
 	}
 	

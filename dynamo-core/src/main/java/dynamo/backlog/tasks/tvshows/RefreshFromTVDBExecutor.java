@@ -14,6 +14,7 @@ import com.omertron.thetvdbapi.TvDbException;
 import com.omertron.thetvdbapi.model.Episode;
 import com.omertron.thetvdbapi.model.Series;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.core.Language;
 import dynamo.core.model.TaskExecutor;
 import dynamo.manager.DownloadableManager;
@@ -155,15 +156,14 @@ public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 		TVShowManager.getInstance().saveTVShow( series );
 
 		if (Files.exists( series.getFolder() )) {
-			queue( new ScanTVShowTask( series ), false );
+			BackLogProcessor.getInstance().schedule( new ScanTVShowTask( series ), false );
 		}
 	}
 	
 	@Override
 	public void rescheduleTask(RefreshFromTVDBTask task) {
 		if ( !task.getSeries().isEnded() ) {
-			task.setMinDate( nextRefreshDate );
-			queue( task, false );
+			BackLogProcessor.getInstance().schedule( task, nextRefreshDate, false );
 		}
 	}
 

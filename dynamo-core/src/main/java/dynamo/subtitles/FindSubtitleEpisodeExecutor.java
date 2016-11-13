@@ -3,13 +3,21 @@ package dynamo.subtitles;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Optional;
+import java.util.Set;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.EventManager;
+import dynamo.core.Language;
+import dynamo.core.RemoteSubTitles;
+import dynamo.core.SubtitlesFinder;
+import dynamo.core.VideoDetails;
+import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.HistoryDAO;
 import dynamo.core.model.TaskExecutor;
+import dynamo.core.model.video.VideoMetaData;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
@@ -24,6 +32,12 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 	
 	private ManagedEpisode episode;
 	private ManagedSeries series;
+	private static Set<SubtitlesFinder> finders;
+	
+	static {
+		finders = (Set<SubtitlesFinder>) DynamoObjectFactory.getInstances( SubtitlesFinder.class );
+	}
+	
 	
 	public FindSubtitleEpisodeExecutor( FindSubtitleEpisodeTask item, HistoryDAO historyDAO ) {
 		super(item);
@@ -31,6 +45,10 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 
 		episode = task.getEpisode();
 		series = TVShowManager.getInstance().getManagedSeries( episode.getSeriesId() );
+	}
+	
+	private RemoteSubTitles findFromFinder( SubtitlesFinder subTitleFinder, VideoDetails details, Language subtitlesLanguage ) throws Exception {
+		return subTitleFinder.findSubtitles( details, subtitlesLanguage );
 	}
 
 	@Override
@@ -46,13 +64,11 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 		if (series.getSubtitlesLanguage() == null || VideoManager.isAlreadySubtitled(episode, series.getSubtitlesLanguage())) {
 			return;
 		}
+		
+		VideoMetaData metaData = VideoManager.getInstance().getMetaData(episode, mainVideoFilePath );
 
 		for (String seriesName : series.getAka()) {
 			
-			if (cancelled) {
-				break;
-			}
-
 			String filename = mainVideoFilePath.getFileName().toString();
 			String filenameWithoutExtension = filename; 
 			if ( filenameWithoutExtension.lastIndexOf('.') > 0 ) {
@@ -60,38 +76,36 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 			}
 			
 			Path destinationSRT = mainVideoFilePath.getParent().resolve( filenameWithoutExtension + ".srt" );
-
-			boolean downloaded = SubTitleDownloader.getInstance().downloadSubTitle(
-					episode,
-					mainVideoFilePath,
-					seriesName,
-					episode.getQuality(),
-					episode.getSource(),
-					episode.getReleaseGroup(),
-					episode.getSeasonNumber(), episode.getEpisodeNumber(),
-					series.getSubtitlesLanguage(), destinationSRT );
 			
-			if ( downloaded && !cancelled) {
-				
-				String message = String.format("Subtitles for <a href='%s'>%s</a> have been found", episode.getRelativeLink(), episode.toString());
-				historyDAO.insert( message, DownloadableStatus.SUBTITLED, episode.getId() );
-				EventManager.getInstance().reportSuccess( message );
-				
-				// add subtitles to the list of files for this downloadable
-				DownloadableManager.getInstance().addFile( episode, destinationSRT, 1 );
+			VideoDetails details = new VideoDetails( mainVideoFilePath, seriesName, episode.getQuality(), episode.getSource(), episode.getReleaseGroup(), episode.getSeasonNumber(), episode.getEpisodeNumber(), metaData.getOpenSubtitlesHash() );		
+			RemoteSubTitles selectedSubTitles = null;
+			
+			for (SubtitlesFinder subTitleFinder : finders) {
+				if (subTitleFinder.isEnabled()) {
+					selectedSubTitles = findFromFinder(subTitleFinder, details, series.getSubtitlesLanguage());
+				}
+				if (selectedSubTitles != null && selectedSubTitles.getScore() >= 6) {
+					Files.write(destinationSRT, selectedSubTitles.getData(), StandardOpenOption.CREATE);
 
-				break;				
+					String message = String.format("Subtitles for <a href='%s'>%s</a> have been found", episode.getRelativeLink(), episode.toString());
+					historyDAO.insert( message, DownloadableStatus.SUBTITLED, episode.getId() );
+					EventManager.getInstance().reportSuccess( message );
+					
+					// add subtitles to the list of files for this downloadable
+					DownloadableManager.getInstance().addFile( episode, destinationSRT, 1 );
+
+					break;				
+				}
 			}
 		}
 	}
-	
+
 	@Override
-	public void rescheduleTask(FindSubtitleEpisodeTask item) {
-		ManagedEpisode episode = item.getEpisode();
+	public void rescheduleTask(FindSubtitleEpisodeTask task) {
+		ManagedEpisode episode = task.getEpisode();
 		try {
 			if ( !VideoManager.isAlreadySubtitled( episode, series.getSubtitlesLanguage() )) {
-				item.setMinDate( getNextDate( 60 * 24 ) );
-				BackLogProcessor.getInstance().schedule( item, false );
+				BackLogProcessor.getInstance().schedule(task, getNextDate( 60 * 24 ), false);
 			}
 		} catch (IOException | InterruptedException e) {
 			ErrorManager.getInstance().reportThrowable( e );

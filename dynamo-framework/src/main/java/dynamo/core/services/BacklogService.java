@@ -1,25 +1,33 @@
 package dynamo.core.services;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import dynamo.backlog.BackLogProcessor;
-import dynamo.core.model.TaskExecutor;
+import dynamo.backlog.TaskSubmission;
 
 @Path("/backlog")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class BacklogService {
 	
-	@Path("/executors")
+	@Path("/submissions")
 	@GET
-	public List<TaskExecutor> getRunningExecutors() {
-		return BackLogProcessor.getInstance().getRunningExecutors();
+	public Collection<TaskSubmission> getSubmissions() {
+		return BackLogProcessor.getInstance().getSubmissions();
+	}
+	
+	@Path("/cancel/{submissionId}")
+	@POST
+	public void cancel( @PathParam("submissionId") long submissionId ) {
+		BackLogProcessor.getInstance().cancel( submissionId );
 	}
 
 }

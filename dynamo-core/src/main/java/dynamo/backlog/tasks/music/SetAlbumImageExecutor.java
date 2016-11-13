@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.core.model.TaskExecutor;
 import dynamo.model.music.MusicFile;
 import dynamo.music.jdbi.MusicAlbumDAO;
@@ -26,7 +27,7 @@ public class SetAlbumImageExecutor extends TaskExecutor<SetAlbumImageTask> {
 		List<MusicFile> files = musicDAO.findMusicFiles( albumId );
 		if (files != null && files.size() > 0) {
 			for (MusicFile file : files) {
-				queue( new SynchronizeMusicTagsTask( file.getFilePath() ), false );	// update file tag
+				BackLogProcessor.getInstance().schedule( new SynchronizeMusicTagsTask( file.getFilePath() ), false );	// update file tag
 			}
 		}
 

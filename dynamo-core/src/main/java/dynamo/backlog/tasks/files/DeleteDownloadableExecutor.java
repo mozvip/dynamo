@@ -33,7 +33,7 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 
 		List<DownloadableFile> allFiles = downloadableDAO.getAllFiles(downloadable.getId());
 		for (DownloadableFile downloadableFile : allFiles) {
-			queue( new DeleteTask( downloadableFile.getFilePath(), true ), false );
+			BackLogProcessor.getInstance().schedule( new DeleteTask( downloadableFile.getFilePath(), true ), false );
 		}
 
 		// unschedule any associated tasks

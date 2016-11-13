@@ -189,20 +189,8 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 		return false;
 	}
 
-	protected void queue( Task task ) {
-		queue(task, true );
-	}	
-
-	protected void queue( Task task, boolean reportQueued ) {
-		BackLogProcessor.getInstance().schedule(task, reportQueued );
-	}	
-
 	protected void runSync( Task task ) throws Exception {
 		BackLogProcessor.getInstance().runSync( task, false );
-	}
-	
-	public String getDescription() {
-		return getClass().getName();
 	}
 
 }

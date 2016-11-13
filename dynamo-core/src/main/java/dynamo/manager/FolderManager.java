@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dynamo.backlog.BackLogProcessor;
+import dynamo.backlog.TaskSubmission;
 import dynamo.backlog.tasks.files.CopyFileTask;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.backlog.tasks.files.MoveFileTask;
-import dynamo.core.model.Task;
 import dynamo.model.Downloadable;
 
 public class FolderManager {
@@ -27,11 +27,11 @@ public class FolderManager {
 		return SingletonHolder.instance;
 	}
 	
-	public static Task moveFile( Path source, Path destinationFile, Downloadable downloadable ) {
+	public static TaskSubmission moveFile( Path source, Path destinationFile, Downloadable downloadable ) {
 		return BackLogProcessor.getInstance().schedule( new MoveFileTask( source, destinationFile, downloadable ), false );
 	}
 
-	public static Task copyFile( Path source, Path destinationFile, Downloadable downloadable ) {
+	public static TaskSubmission copyFile( Path source, Path destinationFile, Downloadable downloadable ) {
 		return BackLogProcessor.getInstance().schedule( new CopyFileTask( source, destinationFile, downloadable ), false );
 	}
 	

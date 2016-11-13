@@ -21,10 +21,10 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
     }   
   }).when('/activity', {
     templateUrl: 'log/activity.html',
-    controller: 'QueuesCtrl',
+    controller: 'ActivityCtrl',
     resolve: {
-      executors: ['BackendService', function(  BackendService  ) {
-        return BackendService.get('backlog/executors');
+      submissions: ['BackendService', function(  BackendService  ) {
+        return BackendService.get('backlog/submissions');
       }]
     }   
   }).when('/history', {
@@ -62,18 +62,22 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('QueuesCtrl', ['$scope', '$timeout', 'BackendService', 'executors', function( $scope, $timeout, BackendService, executors ) {
+.controller('ActivityCtrl', ['$scope', '$timeout', 'BackendService', 'submissions', function( $scope, $timeout, BackendService, submissions ) {
 
-  $scope.executors = executors.data;
+  $scope.submissions = submissions.data;
 
   var tickTimeout;
 
   (function tick() {
-      BackendService.get('backlog/executors').then(function(response){
-        $scope.queues = response.data;
+      BackendService.get('backlog/submissions').then(function(response){
+        $scope.submissions = response.data;
         tickTimeout = $timeout(tick, 1000);
       });
   })();
+
+  $scope.cancel = function( executor ) {
+    BackendService.post('backlog/cancel/' + executor.submissionId);
+  }
 
   $scope.$on('$destroy', function() {
       $timeout.cancel(tickTimeout);

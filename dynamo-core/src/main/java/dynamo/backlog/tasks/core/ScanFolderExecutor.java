@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.ScanFolderTask;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.manager.FileSystemManager;
@@ -78,8 +79,7 @@ public abstract class ScanFolderExecutor<T extends ScanFolderTask> extends TaskE
 	@Override
 	public void rescheduleTask(ScanFolderTask taskToReschedule) {
 		if (isFailed()) {
-			taskToReschedule.setMinDate( getNextDate( 30 ) );
-			queue( taskToReschedule, false );
+			BackLogProcessor.getInstance().schedule( taskToReschedule, getNextDate( 30 ), false );
 		}
 	}
 

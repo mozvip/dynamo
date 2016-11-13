@@ -2,6 +2,7 @@ package dynamo.backlog.tasks.core;
 
 import java.nio.file.Path;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.nzb.DownloadNZBTask;
 import dynamo.backlog.tasks.torrent.DownloadTorrentTask;
 import dynamo.core.DownloadFinder;
@@ -29,9 +30,9 @@ public class DownloadSearchResultExecutor extends TaskExecutor<DownloadSearchRes
 			Path filePath = finder.download( result.getUrl(), task.getSearchResult().getReferer() );
 			if (filePath != null) {
 				if ( result.getType() == SearchResultType.TORRENT) {
-					queue( new DownloadTorrentTask(filePath, result, task.getDownloadable()), false);
+					BackLogProcessor.getInstance().schedule( new DownloadTorrentTask(filePath, result, task.getDownloadable()), false);
 				} else if ( result.getType() == SearchResultType.NZB ) {
-					queue( new DownloadNZBTask(filePath, result, task.getDownloadable()), false);
+					BackLogProcessor.getInstance().schedule( new DownloadNZBTask(filePath, result, task.getDownloadable()), false);
 				}
 			} else {
 				// blacklist this result : the URL can't be retrieved
@@ -41,7 +42,7 @@ public class DownloadSearchResultExecutor extends TaskExecutor<DownloadSearchRes
 
 		} else if (result.getUrl().startsWith("magnet")) {
 
-			queue( new DownloadTorrentTask( result.getUrl(), result, task.getDownloadable()), false );
+			BackLogProcessor.getInstance().schedule( new DownloadTorrentTask( result.getUrl(), result, task.getDownloadable()), false );
 			
 		} else {
 
@@ -54,8 +55,7 @@ public class DownloadSearchResultExecutor extends TaskExecutor<DownloadSearchRes
 	@Override
 	public void rescheduleTask(DownloadSearchResultTask taskToReschedule) {
 		if (isFailed()) {
-			taskToReschedule.setMinDate( getNextDate(30) );
-			queue(taskToReschedule);
+			BackLogProcessor.getInstance().schedule(taskToReschedule, getNextDate(30), false);
 		}
 	}
 

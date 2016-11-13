@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.model.movie.MovieInfo;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.Language;
@@ -137,7 +138,7 @@ public class ScanMovieFolderExecutor extends ScanFolderExecutor<ScanMovieFolderT
 		}
 
 		if (subtitlesLanguage != null && !VideoManager.isAlreadySubtitled( movie, subtitlesLanguage)) {
-			queue( new FindMovieSubtitleTask( movie, subtitlesLanguage ), false );
+			BackLogProcessor.getInstance().schedule( new FindMovieSubtitleTask( movie, subtitlesLanguage ), false );
 		}
 
 		imdbIds.add( movie.getImdbID() );		
@@ -179,8 +180,6 @@ public class ScanMovieFolderExecutor extends ScanFolderExecutor<ScanMovieFolderT
 				}
 			}
 		}
-		DownloadableManager.getInstance().addAssociatedFiles(movieFile, movie);
-		DownloadableManager.getInstance().addFile( movie, movieFile );
 
 		if (movie.getRating() <= 0 || movie.getYear() <=0 && movie.getImdbID() != null ) {
 			IMDBTitle imdbInfo = IMDBWatchListSuggester.extractIMDBTitle( movie.getImdbID() );
@@ -191,6 +190,10 @@ public class ScanMovieFolderExecutor extends ScanFolderExecutor<ScanMovieFolderT
 		}
 
 		MovieManager.getInstance().save( movie );
+
+		DownloadableManager.getInstance().addAssociatedFiles(movieFile, movie);
+		DownloadableManager.getInstance().addFile( movie, movieFile );
+
 		VideoManager.getInstance().getMetaData( movie, movieFile );
 		return movie;
 	}

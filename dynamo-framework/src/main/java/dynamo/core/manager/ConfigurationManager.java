@@ -294,7 +294,7 @@ public class ConfigurationManager {
 			if ( initTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( initTask, false );
 			} else {
-				BackLogProcessor.getInstance().cancel( initTask );
+				BackLogProcessor.getInstance().unschedule( initTask.getClass() );
 			}
 		}
 
@@ -303,7 +303,7 @@ public class ConfigurationManager {
 			if ( serviceTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( serviceTask, false );
 			} else {
-				BackLogProcessor.getInstance().cancel( serviceTask );
+				BackLogProcessor.getInstance().unschedule( serviceTask.getClass() );
 			}
 		}
 
@@ -312,7 +312,7 @@ public class ConfigurationManager {
 			if ( daemonTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( daemonTask, false );
 			} else {
-				BackLogProcessor.getInstance().cancel( daemonTask );
+				BackLogProcessor.getInstance().unschedule( daemonTask.getClass() );
 			}
 		}
 

@@ -52,8 +52,7 @@ public class CopyFileExecutor extends TaskExecutor<CopyFileTask> {
 	public void rescheduleTask( CopyFileTask task ) {
 		if (Files.exists(source) && !Files.exists( destination )) {
 			// we will try again in 10 minutes
-			task.setMinDate( getNextDate( 10 ) );
-			BackLogProcessor.getInstance().schedule( task, false );
+			BackLogProcessor.getInstance().schedule( task, getNextDate( 10 ), false );
 		}
 	}	
 

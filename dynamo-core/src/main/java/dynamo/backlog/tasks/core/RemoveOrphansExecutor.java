@@ -3,6 +3,7 @@ package dynamo.backlog.tasks.core;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.tvshows.DeleteShowTask;
 import dynamo.core.model.TaskExecutor;
 import dynamo.tvshows.model.ManagedSeries;
@@ -46,7 +47,7 @@ public class RemoveOrphansExecutor extends TaskExecutor<RemoveOrphansTask> {
 				}
 				
 				if (!found) {
-					queue( new DeleteShowTask( tvShow, false ), false );
+					BackLogProcessor.getInstance().schedule( new DeleteShowTask( tvShow, false ), false );
 				}
 			}
 		}

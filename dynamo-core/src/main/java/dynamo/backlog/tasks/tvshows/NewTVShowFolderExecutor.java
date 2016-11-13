@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.omertron.thetvdbapi.model.Series;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.ScanFolderTask;
@@ -81,9 +82,7 @@ public class NewTVShowFolderExecutor extends ScanFolderExecutor<ScanFolderTask> 
 			}
 
 			if (mustRefresh) {
-				RefreshFromTVDBTask task = new RefreshFromTVDBTask( managed );
-				task.setMinDate( nextRefreshDate );
-				queue( task, false );
+				BackLogProcessor.getInstance().schedule( new RefreshFromTVDBTask( managed ), nextRefreshDate, false );
 			}
 		}
 	}

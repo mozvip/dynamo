@@ -9,6 +9,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.core.manager.FileSystemManager;
 import dynamo.core.model.TaskExecutor;
 
@@ -86,8 +87,7 @@ public class MoveFolderExecutor extends TaskExecutor<MoveFolderTask> {
 	public void rescheduleTask(MoveFolderTask item) {
 		// FIXME : reuse FileOperationTaskExecutor
 		if (isFailed()) {
-			item.setMinDate( getNextDate( 30 ));
-			queue( item );
+			BackLogProcessor.getInstance().schedule(task, getNextDate( 30 ), false);
 		}
 	}
 
