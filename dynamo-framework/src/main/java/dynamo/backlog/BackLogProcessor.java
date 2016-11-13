@@ -30,7 +30,7 @@ public class BackLogProcessor extends Thread {
 	private boolean shutdownRequested = false;
 
 	private Set<Class> blackListedTaskClass = new HashSet<>();
-	private ExecutorService pool = Executors.newFixedThreadPool(60);
+	private ExecutorService pool = Executors.newFixedThreadPool(15);
 	private TaskSubmission nextInLine = null;
 
 	private List<TaskSubmission> submissions = new ArrayList<>();
