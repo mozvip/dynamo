@@ -73,12 +73,14 @@ public class BackLogProcessor extends Thread {
 					break;
 				}
 				
+				TaskSubmission submission = null;
+
 				synchronized (submissions) {
 
 					// cancel requested
 					while (!toUnschedule.isEmpty()) {
 						UnscheduleSpecs specs = toUnschedule.pop();
-						submissions.stream().filter( submission -> match( submission.getTask(), specs.taskClass, specs.expressionToVerify)).forEach( submission -> cancel( submission.getSubmissionId() ) );
+						submissions.stream().filter( s -> match( s.getTask(), specs.taskClass, specs.expressionToVerify)).forEach( s -> cancel( s.getSubmissionId() ) );
 					}
 					
 					submissions.removeAll(
@@ -89,8 +91,6 @@ public class BackLogProcessor extends Thread {
 					);
 					
 					LocalDateTime now = LocalDateTime.now();
-
-					TaskSubmission submission;
 					
 					if (nextInLine == null) {
 						
@@ -106,22 +106,21 @@ public class BackLogProcessor extends Thread {
 						nextInLine = null;
 
 					}
-
-					if (submission == null) {
-						Thread.sleep( 1000 );
-						continue;
-					}
-
-					Task task = submission.getTask();
-
-					if (task instanceof DaemonTask) {
-						// daemon tasks stay in the pending tasks list forever
-						DaemonTask daemon = (DaemonTask) task;
-						submission.setMinDate( LocalDateTime.now().plusMinutes( daemon.getMinutesFrequency() ) );
-					}
-
-					submission.setFuture( pool.submit( submission.getExecutor() ) );
 				}
+
+				if (submission == null) {
+					Thread.sleep( 1000 );
+					continue;
+				}
+
+				Task task = submission.getTask();
+
+				if (task instanceof DaemonTask) {
+					DaemonTask daemon = (DaemonTask) task;
+					submission.setMinDate( LocalDateTime.now().plusMinutes( daemon.getMinutesFrequency() ) );
+				}
+
+				submission.setFuture( pool.submit( submission.getExecutor() ) );
 
 			}
 		} catch (Exception e) {
