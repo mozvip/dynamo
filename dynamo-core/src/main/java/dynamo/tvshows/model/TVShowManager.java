@@ -296,7 +296,7 @@ public class TVShowManager implements Reconfigurable {
 			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "this.episode.seriesId == '%s'", series.getId() ) );
 		}
 
-		BackLogProcessor.getInstance().runNow( new RefreshFromTVDBTask( series ), false );
+		BackLogProcessor.getInstance().schedule( new RefreshFromTVDBTask( series ), false );
 
 	}
 
@@ -388,7 +388,7 @@ public class TVShowManager implements Reconfigurable {
 	public void deleteUnrecognizedFile(long id) {
 		UnrecognizedFile file = unrecognizedDAO.getUnrecognizedFile(id);
 		unrecognizedDAO.deleteUnrecognizedFile(id);
-		BackLogProcessor.getInstance().runNow( new DeleteFileTask( file.getPath()), false );
+		BackLogProcessor.getInstance().schedule( new DeleteFileTask( file.getPath()), false );
 	}
 	
 }

@@ -15,7 +15,9 @@ import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.finders.core.EpisodeFinder;
 import dynamo.jdbi.SearchResultDAO;
+import dynamo.manager.DownloadableManager;
 import dynamo.manager.FinderManager;
+import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.find.FindSeasonTask;
 import dynamo.model.result.SearchResult;
@@ -75,6 +77,14 @@ public class FindEpisodeExecutor extends AbstractFindTVShowExecutor<ManagedEpiso
 	@Override
 	public int evaluateResult(SearchResult result) {
 		return FinderManager.getInstance().evaluateResultForSeries( series, result );
-	}	
+	}
+	
+	
+	@Override
+	public void cancel() {
+		super.cancel();
+		DownloadableManager.getInstance().logStatusChange( getDownloadable(), DownloadableStatus.IGNORED );
+	}
+	
 
 }

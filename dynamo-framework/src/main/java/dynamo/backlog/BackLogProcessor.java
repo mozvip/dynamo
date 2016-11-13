@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -22,7 +23,6 @@ import dynamo.core.LogQueuing;
 import dynamo.core.el.DynamoELContext;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.model.CancellableTask;
 import dynamo.core.model.DaemonTask;
 import dynamo.core.model.Task;
 import dynamo.core.model.TaskExecutor;
@@ -37,6 +37,8 @@ public class BackLogProcessor extends Thread {
 	private Set<Class> blackListedTaskClass = new HashSet<>();
 	private ExecutorService pool = Executors.newFixedThreadPool(60);
 	private List<Future> futures = new ArrayList<>();
+	
+	private LinkedList<Task> tasksToRemove = new LinkedList<>();
 
 	private BackLogProcessor() {
 		setDaemon( true );
@@ -68,7 +70,16 @@ public class BackLogProcessor extends Thread {
 					break;
 				}
 				
-				runningExecutors = runningExecutors.stream().filter( executor-> !executor.isFinished() ).collect( Collectors.toList() );
+				runningExecutors =
+						runningExecutors.stream()
+							.filter( executor-> !executor.isFinished() ).collect( Collectors.toList() );
+				
+				// cancel requested
+				while (!tasksToRemove.isEmpty()) {
+					Task task = tasksToRemove.pop();
+					pendingTasks.remove( task );
+					runningExecutors.stream().filter( executor-> executor.isRunning() && executor.getTask().equals( task )).forEach( executor -> executor.cancel() );
+				}
 
 				LocalDateTime now = LocalDateTime.now();
 				
@@ -79,7 +90,7 @@ public class BackLogProcessor extends Thread {
 					.findFirst();
 				
 				if (!selectedTask.isPresent()) {
-					Thread.sleep( 2000 );
+					Thread.sleep( 1000 );
 					continue;
 				}
 				
@@ -138,12 +149,6 @@ public class BackLogProcessor extends Thread {
 		shutdownRequested = true;
 	}
 
-	public void runNow( Task item, boolean reportQueued ) {
-		unschedule( item );
-		item.setMinDate( null );
-		schedule( item, reportQueued );
-	}
-
 	public void unschedule( Class<? extends Task> taskClass ) {
 		unschedule(taskClass, null);
 	}
@@ -186,19 +191,12 @@ public class BackLogProcessor extends Thread {
 	}
 	
 	public void unschedule( Class<? extends Task> taskClass, String expressionToVerify ) {
-		runningExecutors.stream().filter( executor-> executor.isRunning() && match( executor.getTask(), taskClass, expressionToVerify )).forEach( executor -> executor.cancel() );
-		pendingTasks.stream().filter( task -> match( task, taskClass, expressionToVerify) ).forEach( task -> unschedule( task ) );
+		runningExecutors.stream().filter( executor-> executor.isRunning() && match( executor.getTask(), taskClass, expressionToVerify )).forEach( executor -> tasksToRemove.add( executor.getTask() ) );
+		pendingTasks.stream().filter( task -> match( task, taskClass, expressionToVerify) ).forEach( task -> tasksToRemove.add( task ) );
 	}
 
-
-	private void unschedule(Task task) {
-		pendingTasks.remove( task );
-		runningExecutors.stream().filter( executor-> executor.isRunning() && executor.getTask().equals( task )).forEach( executor -> executor.cancel() );
-	}
-	
 	public void cancel(Task task) {
-		unschedule(task);
-		if (task instanceof CancellableTask) { ((CancellableTask) task).cancel(); }
+		tasksToRemove.add(task);
 	}	
 
 	public void runSync(Task task, boolean reportQueued) throws Exception {

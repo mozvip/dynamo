@@ -42,5 +42,4 @@ public class FindBookExecutor extends FindDownloadableExecutor<Book> {
 		return 0;
 	}
 
-
 }

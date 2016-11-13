@@ -17,6 +17,7 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.SearchResultDAO;
+import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.core.FindDownloadableTask;
@@ -203,6 +204,12 @@ public abstract class FindDownloadableExecutor<T extends Downloadable> extends T
 			item.setMinDate( getNextDate(60 * 24) );
 			BackLogProcessor.getInstance().schedule( item, false );
 		}
-	}	
+	}
+	
+	@Override
+	public void cancel() {
+		super.cancel();
+		DownloadableManager.getInstance().logStatusChange( getDownloadable(), DownloadableStatus.SUGGESTED );
+	}
 
 }

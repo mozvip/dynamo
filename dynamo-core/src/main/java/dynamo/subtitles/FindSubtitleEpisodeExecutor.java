@@ -48,6 +48,10 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 		}
 
 		for (String seriesName : series.getAka()) {
+			
+			if (cancelled) {
+				break;
+			}
 
 			String filename = mainVideoFilePath.getFileName().toString();
 			String filenameWithoutExtension = filename; 
@@ -67,7 +71,7 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 					episode.getSeasonNumber(), episode.getEpisodeNumber(),
 					series.getSubtitlesLanguage(), destinationSRT );
 			
-			if ( downloaded ) {
+			if ( downloaded && !cancelled) {
 				
 				String message = String.format("Subtitles for <a href='%s'>%s</a> have been found", episode.getRelativeLink(), episode.toString());
 				historyDAO.insert( message, DownloadableStatus.SUBTITLED, episode.getId() );

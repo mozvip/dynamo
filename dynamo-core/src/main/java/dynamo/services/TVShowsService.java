@@ -43,7 +43,7 @@ public class TVShowsService {
 	@DELETE
 	@Path("/{id}")
 	public void deleteTVShow(@PathParam("id") String id) {
-		BackLogProcessor.getInstance().runNow( new DeleteShowTask( TVShowManager.getInstance().getManagedSeries( id ), true ), true );
+		BackLogProcessor.getInstance().schedule( new DeleteShowTask( TVShowManager.getInstance().getManagedSeries( id ), true ), true );
 	}
 
 	@GET
@@ -67,7 +67,7 @@ public class TVShowsService {
 	@POST
 	@Path("/rescan/{id}")
 	public void rescan(@PathParam("id") String id) {
-		BackLogProcessor.getInstance().runNow( new ScanTVShowTask( TVShowManager.getInstance().getManagedSeries( id ) ), true );
+		BackLogProcessor.getInstance().schedule( new ScanTVShowTask( TVShowManager.getInstance().getManagedSeries( id ) ), true );
 	}
 	
 	@POST
