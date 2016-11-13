@@ -53,37 +53,5 @@ public class FolderManager {
 		}
 		return paths;
 	}
-	
-	public static void moveAssociatedFiles( Path mainFilePath, Path destinationFolder, Downloadable downloadable ) throws IOException {
-		
-		// FIXME: move additional files like subtitles, ... which may have a different name			
-
-		// move associated files ( all files with same name and different extension )
-		List<Path> associatedFiles = getAssociatedFiles( mainFilePath ); 
-		for (Path path : associatedFiles) {
-			moveFile( path, destinationFolder.resolve( path.getFileName().toString() ), downloadable);
-		}
-	}
-	
-	public static List<Path> getAssociatedFiles( Path mainFilePath ) throws IOException {
-		
-		List<Path> associatedFiles = new ArrayList<Path>();
-		
-		String fileNameWithoutExtension = mainFilePath.getFileName().toString();
-		fileNameWithoutExtension = fileNameWithoutExtension.substring(0, fileNameWithoutExtension.lastIndexOf('.'));
-		try (DirectoryStream<Path> ds = Files.newDirectoryStream( mainFilePath.getParent() )) {
-			for (Path entry : ds) {
-				if (entry.equals( mainFilePath )) {
-					continue;
-				}
-				String entryFilename = entry.getFileName().toString();
-				if (entryFilename.startsWith( fileNameWithoutExtension )) {
-					associatedFiles.add( entry );
-				}
-			}
-		}
-		
-		return associatedFiles;
-	}
 
 }

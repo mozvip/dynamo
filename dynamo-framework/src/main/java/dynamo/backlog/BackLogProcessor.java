@@ -40,6 +40,18 @@ public class BackLogProcessor extends Thread {
 	
 	private LinkedList<Task> tasksToRemove = new LinkedList<>();
 
+	private class UnscheduleSpecs {
+		Class<? extends Task> taskClass;
+		String expressionToVerify;
+		public UnscheduleSpecs(Class<? extends Task> taskClass, String expressionToVerify) {
+			super();
+			this.taskClass = taskClass;
+			this.expressionToVerify = expressionToVerify;
+		}
+	}
+	
+	private LinkedList<UnscheduleSpecs> toUnschedule = new LinkedList<>();
+
 	private BackLogProcessor() {
 		setDaemon( true );
 	}
@@ -75,6 +87,12 @@ public class BackLogProcessor extends Thread {
 							.filter( executor-> !executor.isFinished() ).collect( Collectors.toList() );
 				
 				// cancel requested
+				while (!toUnschedule.isEmpty()) {
+					UnscheduleSpecs specs = toUnschedule.pop();
+					runningExecutors.stream().filter( executor-> executor.isRunning() && match( executor.getTask(), specs.taskClass, specs.expressionToVerify )).forEach( executor -> cancel( executor.getTask()) );
+					pendingTasks.stream().filter( task -> match( task, specs.taskClass, specs.expressionToVerify)).forEach( task -> cancel( task ) );
+				}
+
 				while (!tasksToRemove.isEmpty()) {
 					Task task = tasksToRemove.pop();
 					pendingTasks.remove( task );
@@ -181,7 +199,7 @@ public class BackLogProcessor extends Thread {
 		return result;
 		
 	}
-
+	
 	public boolean isRunningOrPending( Class<? extends Task> taskClass ) {
 		boolean isRunning = runningExecutors.stream().filter( executor-> executor.isRunning() && match( executor.getTask(), taskClass, null )).findAny().isPresent();
 		if (isRunning) {
@@ -191,8 +209,7 @@ public class BackLogProcessor extends Thread {
 	}
 	
 	public void unschedule( Class<? extends Task> taskClass, String expressionToVerify ) {
-		runningExecutors.stream().filter( executor-> executor.isRunning() && match( executor.getTask(), taskClass, expressionToVerify )).forEach( executor -> tasksToRemove.add( executor.getTask() ) );
-		pendingTasks.stream().filter( task -> match( task, taskClass, expressionToVerify) ).forEach( task -> tasksToRemove.add( task ) );
+		toUnschedule.add( new UnscheduleSpecs( taskClass, expressionToVerify ) );
 	}
 
 	public void cancel(Task task) {
