@@ -62,7 +62,7 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('ActivityCtrl', ['$scope', '$timeout', 'BackendService', 'submissions', function( $scope, $timeout, BackendService, submissions ) {
+.controller('ActivityCtrl', ['$scope', '$timeout', 'BackendService', 'submissions', 'filterFilter', function( $scope, $timeout, BackendService, submissions, filterFilter ) {
 
   $scope.submissions = submissions.data;
 
@@ -77,6 +77,7 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
 
   $scope.cancel = function( executor ) {
     BackendService.post('backlog/cancel/' + executor.submissionId);
+    $scope.submissions = filterFilter($scope.submissions, {'submissionId': '!' + executor.submissionId });
   }
 
   $scope.$on('$destroy', function() {

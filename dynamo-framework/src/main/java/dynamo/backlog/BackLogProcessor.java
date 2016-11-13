@@ -239,15 +239,17 @@ public class BackLogProcessor extends Thread {
 	}
 
 	public void cancel(long submissionId) {
-		for (Iterator<TaskSubmission> iterator = submissions.iterator(); iterator.hasNext();) {
-			TaskSubmission submission = iterator.next();
-			if (submission.getSubmissionId() == submissionId ) {
-				if (submission.getFuture() != null) {
-					submission.getFuture().cancel( false );
+		synchronized (submissions) {
+			for (Iterator<TaskSubmission> iterator = submissions.iterator(); iterator.hasNext();) {
+				TaskSubmission submission = iterator.next();
+				if (submission.getSubmissionId() == submissionId ) {
+					if (submission.getFuture() != null) {
+						submission.getFuture().cancel( false );
+					}
+					submission.getExecutor().cancel();
+					iterator.remove();
+					break;
 				}
-				submission.getExecutor().cancel();
-				iterator.remove();
-				break;
 			}
 		}
 	}
