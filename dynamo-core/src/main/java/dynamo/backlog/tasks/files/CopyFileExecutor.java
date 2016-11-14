@@ -20,21 +20,16 @@ public class CopyFileExecutor extends TaskExecutor<CopyFileTask> {
 		this.source = task.getSource();
 		this.destination = task.getDestination();
 	}
-	
+
 	@Override
 	public void init() throws Exception {
-		FileSystemManager.getInstance().acquireRead( source );
-		FileSystemManager.getInstance().acquireWrite( destination.getParent() );
+		FileSystemManager.getInstance().acquireFileOperation();
 	}
 	
 	@Override
 	public void shutdown() throws Exception {
-		try {
-			FileSystemManager.getInstance().releaseRead( source );
-		} finally {
-			FileSystemManager.getInstance().releaseWrite( destination.getParent() );
-		}
-	}
+		FileSystemManager.getInstance().releaseFileOperation();
+	}	
 
 	@Override
 	public void execute() throws IOException {

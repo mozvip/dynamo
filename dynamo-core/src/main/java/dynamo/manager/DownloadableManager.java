@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -239,8 +238,6 @@ public class DownloadableManager {
 		
 		boolean filesFound = true;
 		
-		Set<Task> fileTasks = new HashSet<>();
-		
 		Path destinationFolder = downloadable.determineDestinationFolder();
 		for (Path source : sourceFiles) {
 			
@@ -359,9 +356,8 @@ public class DownloadableManager {
 		return downloadableDAO.getAllFiles( downloadableClass );
 	}
 
-	public Stream<DownloadableFile> getAllFiles(long downloadableId) {
-		List<DownloadableFile> files = downloadableDAO.getAllFiles( downloadableId );
-		return files.stream();
+	public List<DownloadableFile> getAllFiles(long downloadableId) {
+		return downloadableDAO.getAllFiles( downloadableId );
 	}
 
 	public void clearBlackList() {

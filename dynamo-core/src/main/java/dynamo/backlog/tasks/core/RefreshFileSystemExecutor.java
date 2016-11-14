@@ -55,7 +55,7 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 				continue;
 			}
 			
-			List<DownloadableFile> files = DownloadableManager.getInstance().getAllFiles( downloadInfo.getId() ).collect( Collectors.toList() );
+			List<DownloadableFile> files = DownloadableManager.getInstance().getAllFiles( downloadInfo.getId() );
 
 			if ( files == null || files.size() == 0 ) {
 				DownloadableManager.getInstance().delete( downloadInfo.getId() );

@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -145,12 +144,25 @@ public class ScanMovieFolderExecutor extends ScanFolderExecutor<ScanMovieFolderT
 	}
 
 	protected Movie handleNewMovie( Path movieFile ) throws IOException, InterruptedException, MovieDbException, ParseException {
+		
+		if (movieFile.getFileName().toString().contains("-sample")) {
+			return null;
+		}
 
 		Movie movie = null;
 		ParsedMovieInfo movieInfo = VideoNameParser.getMovieInfo( movieFile );
 		MovieInfo movieDb = null;
+		
+		String movieName = movieFile.getFileName().toString();
+		
 		if (movieInfo != null) {
-			movieDb = MovieManager.getInstance().searchByName( movieInfo.getName(), movieInfo.getYear(), null, false);
+			
+			movieName = movieInfo.getName();
+			
+			movieDb = MovieManager.getInstance().searchByName( movieName, movieInfo.getYear(), null, false);
+			if (movieDb == null && movieInfo.getYear() != -1) {
+				movieDb = MovieManager.getInstance().searchByName( movieInfo.getName(), -1, null, false);
+			}
 			if (movieDb != null && movieDb.getImdbID() != null) {
 				movie = MovieManager.getInstance().findByImdbId( movieDb.getImdbID() );
 			}
@@ -161,7 +173,7 @@ public class ScanMovieFolderExecutor extends ScanFolderExecutor<ScanMovieFolderT
 			}
 		} else {
 			// create new movie
-			String movieName = movieDb != null ? movieDb.getTitle() : movieFile.getFileName().toString();
+			movieName = movieDb != null ? movieDb.getTitle() : movieName;
 
 			int year = movieInfo != null ? movieInfo.getYear() : -1;
 			if (movieDb != null && StringUtils.isNotBlank( movieDb.getReleaseDate()))	{
