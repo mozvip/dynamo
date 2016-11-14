@@ -124,6 +124,7 @@ public abstract class FindDownloadableExecutor<T extends Downloadable> extends T
 					setCurrentLabel( String.format("%s - Searching from %s", baseLabel, DynamoObjectFactory.getClassDescription(provider.getClass()))); 
 
 					try {
+						provider.acquire();
 						List<SearchResult> resultsForProvider = getResults(provider, getDownloadable() );
 						if (resultsForProvider != null && resultsForProvider.size() > 0) {
 							for (Iterator<SearchResult> iterator = resultsForProvider.iterator(); iterator.hasNext();) {
@@ -162,6 +163,8 @@ public abstract class FindDownloadableExecutor<T extends Downloadable> extends T
 						}
 					} catch (Exception e) {
 						ErrorManager.getInstance().reportThrowable(getTask(), e);
+					} finally {
+						provider.release();
 					}
 					itemsDone ++;
 				}
