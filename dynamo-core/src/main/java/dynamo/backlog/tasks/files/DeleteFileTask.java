@@ -2,10 +2,8 @@ package dynamo.backlog.tasks.files;
 
 import java.nio.file.Path;
 
-import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
 
-@DynamoTask(queueClass=DeleteQueue.class)
 public class DeleteFileTask extends Task {
 	
 	private Path path;

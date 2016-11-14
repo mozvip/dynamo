@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.files.DeleteFileTask;
+import dynamo.backlog.tasks.tvshows.ScanTVShowTask;
 import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.ReportProgress;
@@ -19,7 +20,6 @@ import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadInfo;
 import dynamo.model.Downloadable;
 import dynamo.tvshows.model.ManagedEpisode;
-import model.backlog.ScanTVShowTask;
 
 public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTask> implements ReportProgress {
 
@@ -74,10 +74,10 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 					BackLogProcessor.getInstance().schedule( new DeleteFileTask( downloadableFile.getFilePath() ), false );
 
 					if (downloadable instanceof ManagedEpisode) {
-						queue(new ScanTVShowTask(((ManagedEpisode) downloadable).getSeries()));
+						BackLogProcessor.getInstance().schedule(new ScanTVShowTask(((ManagedEpisode) downloadable).getSeries()));
 					} else {
 						// was deleted manually
-						queue( new DeleteDownloadableTask(downloadable), false );
+						BackLogProcessor.getInstance().schedule( new DeleteDownloadableTask(downloadable), false );
 					}
 				}
 			}

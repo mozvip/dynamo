@@ -1,9 +1,8 @@
 package dynamo.subtitles.soustitres.eu;
 
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
-import org.w3c.dom.Node;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import core.WebDocument;
 import dynamo.core.FinderQuality;
@@ -32,21 +31,9 @@ public class SousTitresEU extends SubtitlesFinder {
 		
 		String url = null;
 		
-//		String baseKey = "sous-titres.eu.url.";
-//		List<String> configKeys = Config.getKeys( baseKey );
-//		for (String key : configKeys) {
-//			String pattern = key.substring( baseKey.length() );
-//			if (RegExpMatcher.matches( videoInfo.getFileName(), pattern)) {
-//				url = PersistenceUtils.getInstance().getConfigString(key);
-//			}
-//		}
-		
 		if (url == null) {
 			seriesName = seriesName.replace(' ', '_');
-			seriesName = StringUtils.remove(seriesName, '(');
-			seriesName = StringUtils.remove(seriesName, ')');
-			seriesName = StringUtils.remove(seriesName, ':');
-			seriesName = StringUtils.remove(seriesName, '.');
+			seriesName = seriesName.replaceAll("\\(\\):\\.", "");
 			url = seriesName;
 		
 			url = ROOT_URL + url + ".html";
@@ -58,21 +45,21 @@ public class SousTitresEU extends SubtitlesFinder {
 			return null;
 		}
 
-		List<Node> nodes = document.evaluateXPath( ".//*[@class='episodenum']" );
+		Elements nodes = document.jsoup( "a > span.episodenum" );
 		
 		RemoteSubTitles bestSubTitles = null;
 
-		for ( Node node : nodes ) {
-			String text = node.getTextContent();
+		for ( Element node : nodes ) {
+			String text = node.text();
 			if ( SubTitlesUtils.isExactMatch(text, details.getSeason(), details.getEpisode())) {
 				
 				// gets parent node (TR)
-				Node tableRow = node.getParentNode();
-				List<Node> flagImageNodes = WebDocument.evaluateXPath( tableRow, ".//img" );
+				Element tableRow = node.parent();
+				Elements flagImageNodes = tableRow.select("img" );
 
 				boolean hasLanguage = false;
-				for( Node flagImageNode : flagImageNodes ) {
-					String lang = flagImageNode.getAttributes().getNamedItem("title").getNodeValue();
+				for( Element flagImageNode : flagImageNodes ) {
+					String lang = flagImageNode.attr("title");
 					if (StringUtils.equalsIgnoreCase( lang, language.getShortName() )) {
 						hasLanguage = true;
 						break;
@@ -81,9 +68,9 @@ public class SousTitresEU extends SubtitlesFinder {
 				
 				if ( hasLanguage ) {	
 					
-					Node link = node.getParentNode();
-					String href = link.getAttributes().getNamedItem("href").getNodeValue();
-					RemoteSubTitles currentRemoteSubTitles = SubTitlesZip.getBestSubtitlesFromURL( this, ROOT_URL + href, document.getOriginalURL(), details, language, 0 );
+					Element link = node.parent();
+					String href = link.absUrl("href");
+					RemoteSubTitles currentRemoteSubTitles = SubTitlesZip.getBestSubtitlesFromURL( this, href, document.getOriginalURL(), details, language, 0 );
 					if (currentRemoteSubTitles != null) {
 						if (bestSubTitles == null || currentRemoteSubTitles.getScore() > bestSubTitles.getScore()) {
 							bestSubTitles = currentRemoteSubTitles;

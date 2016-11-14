@@ -13,8 +13,6 @@ import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import dynamo.tvshows.jdbi.TVShowDAO;
 import dynamo.tvshows.model.ManagedSeries;
-import model.backlog.RefreshTVShowTask;
-import model.backlog.ScanTVShowTask;
 
 public class DeleteShowExecutor extends TaskExecutor<DeleteShowTask> {
 
@@ -29,7 +27,7 @@ public class DeleteShowExecutor extends TaskExecutor<DeleteShowTask> {
 
 	@Override
 	public void execute() throws Exception {
-		BackLogProcessor.getInstance().unschedule(RefreshTVShowTask.class, String.format("this.series.id == %s", series.getId()));
+		BackLogProcessor.getInstance().unschedule(RefreshFromTVDBTask.class, String.format("this.series.id == %s", series.getId()));
 		BackLogProcessor.getInstance().unschedule(ScanTVShowTask.class, String.format("this.series.id == %s", series.getId()));
 		BackLogProcessor.getInstance().unschedule(FindSubtitleEpisodeTask.class, String.format("this.episode.seriesId == %s", series.getId()));
 		BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("this.episode.seriesId == %s", series.getId()));

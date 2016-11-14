@@ -44,10 +44,14 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 	
 	public void cancel() {
 		cancelled = true;
-		shutdown();
+		stop();
 	}
 	
-	public void shutdown() {
+	public void init() throws Exception {
+		// default implementation does nothing
+	}
+
+	public void shutdown() throws Exception {
 		// default implementation does nothing
 	}
 	
@@ -70,7 +74,7 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 	
 	@Override
 	protected void finalize() throws Throwable {
-		shutdown();
+		stop();
 		super.finalize();
 	}
 
@@ -81,9 +85,11 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 		long startTime = System.currentTimeMillis();
 		
 		Exception eTask = null;
-
+		
 		try {
-			
+
+			init();
+
 			if ( task instanceof ServiceTask ) {
 				execute();
 				while ( !cancelled ) {
@@ -97,7 +103,7 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 			failed = true;
 		} finally {
 
-			shutdown();
+			stop();
 
 			long endTime = System.currentTimeMillis();
 			
@@ -135,6 +141,14 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 			}
 		}
 
+	}
+
+	private void stop() {
+		try {
+			shutdown();
+		} catch (Exception e) {
+			ErrorManager.getInstance().reportThrowable( task, e );
+		}
 	}
 	
 	public void rescheduleTask( T taskToReschedule ) {
@@ -175,20 +189,8 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 		return false;
 	}
 
-	protected void queue( Task task ) {
-		queue(task, true );
-	}	
-
-	protected void queue( Task task, boolean reportQueued ) {
-		BackLogProcessor.getInstance().schedule(task, reportQueued );
-	}	
-
 	protected void runSync( Task task ) throws Exception {
 		BackLogProcessor.getInstance().runSync( task, false );
-	}
-	
-	public String getDescription() {
-		return getClass().getName();
 	}
 
 }

@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import dynamo.backlog.BackLogProcessor;
 import dynamo.core.EventManager;
 import dynamo.core.logging.LogDAO;
 import dynamo.core.logging.LogItem;
@@ -44,8 +43,8 @@ public class ErrorManager {
 		logThrowable(messageToLog, null, t);
 	}
 	
-	public void logThrowable( String messageToLog, Task task, Throwable t ) {
-		BackLogProcessor.getInstance().schedule( new LogTask(messageToLog, LogItemSeverity.ERROR, task, t, null), false);
+	public void logThrowable( String message, Task task, Throwable t ) {
+		log(message, LogItemSeverity.ERROR, task != null ? task.toString() : null, t.getStackTrace());
 	}
 
 	public void reportThrowable( Task task, String message, Throwable t ) {
@@ -63,8 +62,15 @@ public class ErrorManager {
 		}
 	}
 	
+	public void log( String message, LogItemSeverity severity, String taskName, StackTraceElement[] stackTrace ) {
+		long logItemId = logDAO.create( message, severity, taskName);
+		if (stackTrace != null) {
+			logDAO.insertStackTrace( stackTrace, logItemId );
+		}
+	}
+	
 	public void reportWarning( Task task, String message, boolean logOnly ) {
-		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.WARNING, task, null, Thread.currentThread().getStackTrace()), false);
+		log(message, LogItemSeverity.WARNING, task != null ? task.toString() : null, Thread.currentThread().getStackTrace());
 		if (!logOnly) {
 			EventManager.getInstance().reportWarning(message);
 		}
@@ -79,7 +85,7 @@ public class ErrorManager {
 	}
 
 	public void reportError( Task task, String message ) {
-		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.ERROR, task, null, Thread.currentThread().getStackTrace()), false);
+		log(message, LogItemSeverity.ERROR, task != null ? task.toString() : null, Thread.currentThread().getStackTrace());
 		EventManager.getInstance().reportError(message);
 	}
 
@@ -100,12 +106,12 @@ public class ErrorManager {
 	}
 	
 	public void reportInfo( Task task, String message ) {
-		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.INFO, task, null, Thread.currentThread().getStackTrace()), false);
+		log(message, LogItemSeverity.INFO, task != null ? task.toString() : null, Thread.currentThread().getStackTrace());
 		EventManager.getInstance().reportInfo(message);
 	}
 	
 	public void reportDebug( Task task, String message ) {
-		BackLogProcessor.getInstance().schedule( new LogTask(message, LogItemSeverity.DEBUG, task, null, Thread.currentThread().getStackTrace()), false);
+		log(message, LogItemSeverity.DEBUG, task != null ? task.toString() : null, Thread.currentThread().getStackTrace());
 	}
 
 	public List<StackTraceElement> getStackTrace(long id) {

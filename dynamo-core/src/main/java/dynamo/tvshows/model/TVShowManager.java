@@ -19,6 +19,9 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.files.DeleteFileTask;
+import dynamo.backlog.tasks.tvshows.NewTVShowFolderTask;
+import dynamo.backlog.tasks.tvshows.RefreshFromTVDBTask;
+import dynamo.backlog.tasks.tvshows.ScanTVShowTask;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.core.configuration.Configurable;
@@ -36,9 +39,6 @@ import dynamo.tvshows.jdbi.TVShowSeasonDAO;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
 import hclient.HTTPClient;
 import hclient.RegExpMatcher;
-import model.backlog.NewTVShowFolderTask;
-import model.backlog.RefreshTVShowTask;
-import model.backlog.ScanTVShowTask;
 
 
 public class TVShowManager implements Reconfigurable {
@@ -296,7 +296,7 @@ public class TVShowManager implements Reconfigurable {
 			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "this.episode.seriesId == '%s'", series.getId() ) );
 		}
 
-		BackLogProcessor.getInstance().runNow( new RefreshTVShowTask( series ), false );
+		BackLogProcessor.getInstance().schedule( new RefreshFromTVDBTask( series ), false );
 
 	}
 
@@ -346,7 +346,7 @@ public class TVShowManager implements Reconfigurable {
 	public List<ManagedEpisode> findEpisodes( ManagedSeries series ) {
 		List<ManagedEpisode> episodes = managedEpisodeDAO.findEpisodesForTVShow( series.getId() );
 		if (episodes == null) {
-			BackLogProcessor.getInstance().schedule( new RefreshTVShowTask( series ) );
+			BackLogProcessor.getInstance().schedule( new RefreshFromTVDBTask( series ) );
 		}
 		return episodes;
 	}
@@ -388,7 +388,7 @@ public class TVShowManager implements Reconfigurable {
 	public void deleteUnrecognizedFile(long id) {
 		UnrecognizedFile file = unrecognizedDAO.getUnrecognizedFile(id);
 		unrecognizedDAO.deleteUnrecognizedFile(id);
-		BackLogProcessor.getInstance().runNow( new DeleteFileTask( file.getPath()), false );
+		BackLogProcessor.getInstance().schedule( new DeleteFileTask( file.getPath()), false );
 	}
 	
 }

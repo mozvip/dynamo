@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import dynamo.backlog.BackLogProcessor;
+import dynamo.core.manager.FileSystemManager;
 import dynamo.manager.DownloadableManager;
 
 public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask> {
@@ -18,6 +19,21 @@ public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask
 		this.source = item.getSource();
 		this.destination = item.getDestination();
 	}
+	
+	@Override
+	public void init() throws Exception {
+		FileSystemManager.getInstance().acquireRead( source );
+		FileSystemManager.getInstance().acquireWrite( destination.getParent() );
+	}
+	
+	@Override
+	public void shutdown() throws Exception {
+		try {
+			FileSystemManager.getInstance().releaseRead( source );
+		} finally {
+			FileSystemManager.getInstance().releaseWrite( destination.getParent() );
+		}
+	}	
 
 	@Override
 	public void execute() throws IOException {

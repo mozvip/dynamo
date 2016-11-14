@@ -1,10 +1,8 @@
 package dynamo.model.backlog.subtitles;
 
-import dynamo.core.DynamoTask;
 import dynamo.core.model.DownloadableTask;
 import dynamo.tvshows.model.ManagedEpisode;
 
-@DynamoTask(queueClass=FindSubtitlesQueue.class)
 public class FindSubtitleEpisodeTask extends DownloadableTask {
 
 	public FindSubtitleEpisodeTask(ManagedEpisode episode) {

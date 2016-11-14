@@ -1,16 +1,13 @@
-package model.backlog;
+package dynamo.backlog.tasks.tvshows;
 
-import dynamo.backlog.queues.TVDBQueue;
-import dynamo.core.DynamoTask;
 import dynamo.core.model.Task;
 import dynamo.tvshows.model.ManagedSeries;
 
-@DynamoTask(queueClass=TVDBQueue.class)
-public class RefreshTVShowTask extends Task {
+public class RefreshFromTVDBTask extends Task {
 	
 	private ManagedSeries series = null;
 
-	public RefreshTVShowTask( ManagedSeries series ) {
+	public RefreshFromTVDBTask( ManagedSeries series ) {
 		this.series = series;
 	}
 

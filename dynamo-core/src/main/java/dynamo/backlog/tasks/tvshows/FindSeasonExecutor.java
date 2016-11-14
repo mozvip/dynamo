@@ -11,6 +11,7 @@ import dynamo.finders.core.TVShowSeasonProvider;
 import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.FinderManager;
+import dynamo.model.DownloadableStatus;
 import dynamo.model.backlog.core.FindDownloadableTask;
 import dynamo.model.backlog.find.FindEpisodeTask;
 import dynamo.model.backlog.find.FindSeasonTask;
@@ -74,6 +75,14 @@ public class FindSeasonExecutor extends AbstractFindTVShowExecutor<TVShowSeason>
 	public int evaluateResult(SearchResult result) {
 		return FinderManager.getInstance().evaluateResultForSeries( series, result );
 	}
+	
+	
+	@Override
+	public void cancel() {
+		super.cancel();
+		DownloadableManager.getInstance().logStatusChange( getDownloadable(), DownloadableStatus.IGNORED );
+	}
+	
 
 }
 

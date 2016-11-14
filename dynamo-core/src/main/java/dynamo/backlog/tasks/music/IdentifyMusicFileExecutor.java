@@ -19,7 +19,7 @@ import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicQuality;
 import dynamo.music.jdbi.MusicAlbumDAO;
 import dynamo.webapps.acoustid.AcoustId;
-import dynamo.webapps.acoustid.LookupResults;
+import dynamo.webapps.acoustid.AcoustIdLookupResults;
 
 public class IdentifyMusicFileExecutor extends TaskExecutor<IdentifyMusicFileTask> {
 	
@@ -47,7 +47,7 @@ public class IdentifyMusicFileExecutor extends TaskExecutor<IdentifyMusicFileTas
 			return;
 		}
 		
-		LookupResults results = AcoustId.getInstance().lookup( acoustId );
+		AcoustIdLookupResults results = AcoustId.getInstance().lookup( acoustId );
 		AcoustId.getInstance().populateTag(results, audioTag, true);
 		audioFile.commit();
 		

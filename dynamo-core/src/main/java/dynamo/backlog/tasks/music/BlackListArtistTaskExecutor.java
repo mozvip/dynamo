@@ -2,6 +2,7 @@ package dynamo.backlog.tasks.music;
 
 import java.util.List;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.core.model.TaskExecutor;
 import dynamo.model.music.MusicAlbum;
@@ -22,7 +23,7 @@ public class BlackListArtistTaskExecutor extends TaskExecutor<BlackListArtistTas
 		List<MusicAlbum> albums = musicDAO.findAllAlbumsForArtist( task.getArtistName() );
 		if (albums != null) {
 			for (MusicAlbum album : albums) {
-				queue( new DeleteDownloadableTask( album ));
+				BackLogProcessor.getInstance().schedule( new DeleteDownloadableTask( album ));
 			}
 		}
 	}

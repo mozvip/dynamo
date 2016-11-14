@@ -31,15 +31,15 @@ public class FindMusicAlbumImageExecutor extends FindDownloadableImageExecutor<M
 		
 		MusicAlbum album = task.getDownloadable();
 		
-		Path folderImage = album.getFolder().resolve("folder.jpg");
-		if (Files.exists( folderImage )) {
-			
-			try {
-				return DownloadableManager.downloadImage( album, folderImage );
-			} catch (IOException e) {
-				ErrorManager.getInstance().reportThrowable( e );
+		if (album.isDownloaded()) {
+			Path folderImage = album.getFolder().resolve("folder.jpg");
+			if (Files.exists( folderImage )) {
+				try {
+					return DownloadableManager.downloadImage( album, folderImage );
+				} catch (IOException e) {
+					ErrorManager.getInstance().reportThrowable( e );
+				}		
 			}
-			
 		}
 		
 		if (album.getTadbAlbumId() != null && album.getTadbAlbumId() > 0) {

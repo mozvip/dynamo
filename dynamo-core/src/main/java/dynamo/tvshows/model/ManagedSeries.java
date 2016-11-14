@@ -180,7 +180,7 @@ public class ManagedSeries implements Serializable {
 	}
 
 	public String getRelativeLink() {
-		return String.format("tvshow.jsf?id=%s", getId());
+		return String.format("index.html#/tvshow-detail/%s", getId());
 	}
 
 }

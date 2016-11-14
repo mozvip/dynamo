@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.manager.DownloadableFactory;
 import dynamo.core.manager.ErrorManager;
@@ -86,7 +87,7 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 								iterator.remove();
 							} else if (DownloadableManager.getInstance().isBlackListed(path, downloadable)) {
 								iterator.remove();
-								queue( new DeleteTask(path, false), false );
+								BackLogProcessor.getInstance().schedule( new DeleteTask(path, false), false );
 							}
 						}
 

@@ -27,7 +27,6 @@ import dynamo.core.Enableable;
 import dynamo.core.EventManager;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
-import dynamo.core.model.AbstractDynamoQueue;
 import dynamo.core.model.DaemonTask;
 import dynamo.core.model.InitTask;
 import dynamo.core.model.ServiceTask;
@@ -264,11 +263,6 @@ public class ConfigurationManager {
 		return instance;
     }
 
-	public static Object configureQueue(Class<? extends AbstractDynamoQueue> queueClass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException, ClassNotFoundException {
-		return getInstance().configureInstance( queueClass.newInstance() );
-	}
-	
-
 	public void configureApplication() throws Exception {
 		
 		// get all instances to configure
@@ -289,7 +283,7 @@ public class ConfigurationManager {
 						((Reconfigurable) instance).reconfigure();
 					}
 			}).collect( Collectors.toList() );
-		
+
 		for (Object runnable : runnables) {
 			new Thread( (Runnable)runnable ).start();
 		}
@@ -300,7 +294,7 @@ public class ConfigurationManager {
 			if ( initTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( initTask, false );
 			} else {
-				BackLogProcessor.getInstance().cancel( initTask );
+				BackLogProcessor.getInstance().unschedule( initTask.getClass() );
 			}
 		}
 
@@ -309,7 +303,7 @@ public class ConfigurationManager {
 			if ( serviceTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( serviceTask, false );
 			} else {
-				BackLogProcessor.getInstance().cancel( serviceTask );
+				BackLogProcessor.getInstance().unschedule( serviceTask.getClass() );
 			}
 		}
 
@@ -318,7 +312,7 @@ public class ConfigurationManager {
 			if ( daemonTask.isEnabled() ) {
 				BackLogProcessor.getInstance().schedule( daemonTask, false );
 			} else {
-				BackLogProcessor.getInstance().cancel( daemonTask );
+				BackLogProcessor.getInstance().unschedule( daemonTask.getClass() );
 			}
 		}
 

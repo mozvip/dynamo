@@ -14,6 +14,7 @@ import com.omertron.thetvdbapi.TvDbException;
 import com.omertron.thetvdbapi.model.Episode;
 import com.omertron.thetvdbapi.model.Series;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.core.Language;
 import dynamo.core.model.TaskExecutor;
 import dynamo.manager.DownloadableManager;
@@ -25,17 +26,15 @@ import dynamo.tvshows.model.ManagedEpisode;
 import dynamo.tvshows.model.ManagedSeries;
 import dynamo.tvshows.model.TVShowManager;
 import dynamo.tvshows.model.TVShowSeason;
-import model.backlog.RefreshTVShowTask;
-import model.backlog.ScanTVShowTask;
 
-public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTask> {
+public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 	
 	private	LocalDateTime nextRefreshDate = null;
 	
 	private TVShowSeasonDAO tvShowSeasonDAO;
 	private ManagedEpisodeDAO managedEpisodeDAO;
 
-	public RefreshTVShowFromTVDBExecutor( RefreshTVShowTask item, ManagedEpisodeDAO managedEpisodeDAO, TVShowSeasonDAO tvShowSeasonDAO ) {
+	public RefreshFromTVDBExecutor( RefreshFromTVDBTask item, ManagedEpisodeDAO managedEpisodeDAO, TVShowSeasonDAO tvShowSeasonDAO ) {
 		super( item );
 		this.tvShowSeasonDAO = tvShowSeasonDAO;
 		this.managedEpisodeDAO = managedEpisodeDAO;
@@ -157,15 +156,14 @@ public class RefreshTVShowFromTVDBExecutor extends TaskExecutor<RefreshTVShowTas
 		TVShowManager.getInstance().saveTVShow( series );
 
 		if (Files.exists( series.getFolder() )) {
-			queue( new ScanTVShowTask( series ), false );
+			BackLogProcessor.getInstance().schedule( new ScanTVShowTask( series ), false );
 		}
 	}
 	
 	@Override
-	public void rescheduleTask(RefreshTVShowTask task) {
+	public void rescheduleTask(RefreshFromTVDBTask task) {
 		if ( !task.getSeries().isEnded() ) {
-			task.setMinDate( nextRefreshDate );
-			queue( task, false );
+			BackLogProcessor.getInstance().schedule( task, nextRefreshDate, false );
 		}
 	}
 

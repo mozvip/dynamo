@@ -2,6 +2,7 @@ package dynamo.backlog.tasks.music;
 
 import java.util.List;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.model.TaskExecutor;
 import dynamo.model.music.MusicFile;
@@ -20,7 +21,7 @@ public class SynchronizeTagsExecutor extends TaskExecutor<SynchronizeTagsTask> {
 		List<MusicFile> files = musicDAO.findModifiedTags();
 		if ( files != null ) {
 			for (MusicFile musicFile : files) {
-				queue( new SynchronizeMusicTagsTask(musicFile.getFilePath()), false );
+				BackLogProcessor.getInstance().schedule( new SynchronizeMusicTagsTask(musicFile.getFilePath()), false );
 			}
 		}
 	}

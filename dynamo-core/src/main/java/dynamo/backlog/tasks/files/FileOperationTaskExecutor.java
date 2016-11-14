@@ -16,8 +16,7 @@ public abstract class FileOperationTaskExecutor<T extends FileOperationTask> ext
 	public void rescheduleTask( FileOperationTask item ) {
 		if (!isFinished()) {
 			// we will try again in 5 minutes
-			item.setMinDate( getNextDate( 5 ) );
-			BackLogProcessor.getInstance().schedule( item, false );
+			BackLogProcessor.getInstance().schedule( item, getNextDate( 5 ), false );
 		}
 	}
 

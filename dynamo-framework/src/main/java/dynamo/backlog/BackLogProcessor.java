@@ -1,55 +1,51 @@
 package dynamo.backlog;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import javax.el.ExpressionFactory;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-
-import dynamo.core.DynamoTask;
 import dynamo.core.Enableable;
 import dynamo.core.EventManager;
 import dynamo.core.LogQueuing;
 import dynamo.core.el.DynamoELContext;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.model.AbstractDynamoQueue;
-import dynamo.core.model.CancellableTask;
 import dynamo.core.model.DaemonTask;
-import dynamo.core.model.DynamoDefaultQueue;
 import dynamo.core.model.Task;
 import dynamo.core.model.TaskExecutor;
 
 public class BackLogProcessor extends Thread {
 
 	private boolean shutdownRequested = false;
-	protected Map<String, AbstractDynamoQueue> queues = new ConcurrentHashMap<String, AbstractDynamoQueue>();
-	private BlockingQueue<Task> pendingTasks = new LinkedBlockingQueue<Task>();
-	private Set<Class> blackListedTasks = new HashSet<>();
 
-	LoadingCache<Class<? extends Task>, Class<? extends AbstractDynamoQueue>> queueClassCache = CacheBuilder.newBuilder().maximumSize(1000)
-			.build(new CacheLoader<Class<? extends Task>, Class<? extends AbstractDynamoQueue>>() {
-				public Class<? extends AbstractDynamoQueue> load(Class<? extends Task> taskClass) throws Exception {
-					DynamoTask annotation = getAnnotation(taskClass);
-					if (annotation != null) {
-						return annotation.queueClass();
-					} else {
-						return DynamoDefaultQueue.class;
-					}
+	private Set<Class> blackListedTaskClass = new HashSet<>();
+	private ExecutorService pool = Executors.newFixedThreadPool(15);
+	private TaskSubmission nextInLine = null;
 
-				}
-			});
+	private List<TaskSubmission> submissions = new ArrayList<>();
+
+	private class UnscheduleSpecs {
+		Class<? extends Task> taskClass;
+		String expressionToVerify;
+		public UnscheduleSpecs(Class<? extends Task> taskClass, String expressionToVerify) {
+			super();
+			this.taskClass = taskClass;
+			this.expressionToVerify = expressionToVerify;
+		}
+	}
+	
+	private LinkedList<UnscheduleSpecs> toUnschedule = new LinkedList<>();
 
 	private BackLogProcessor() {
 		setDaemon( true );
@@ -62,49 +58,9 @@ public class BackLogProcessor extends Thread {
 	public static BackLogProcessor getInstance() {
 		return SingletonHolder.instance;
 	}
-
-	public Map<String, AbstractDynamoQueue> getQueues() {
-		return queues;
-	}
-
-	public Collection<Task> getTasks() {
-		return pendingTasks;
-	}
 	
-	private DynamoTask getAnnotation( Class<? extends Task> taskClass ) {
-		DynamoTask annotation = taskClass.getAnnotation( DynamoTask.class );
-		if (annotation == null && taskClass.getSuperclass() != null) {
-			return getAnnotation( (Class<? extends Task>) taskClass.getSuperclass() );
-		}
-		return annotation;
-	}
-	
-	protected AbstractDynamoQueue getQueueForTaskClass( Class<? extends Task> taskClass ) {
-		Class<? extends AbstractDynamoQueue> queueClass;
-		try {
-			queueClass = queueClassCache.get( taskClass );
-		} catch (ExecutionException e) {
-			ErrorManager.getInstance().reportThrowable(e);
-			queueClass = DynamoDefaultQueue.class;
-		}
-		AbstractDynamoQueue queue = null;
-		if (!queues.containsKey( queueClass.getName() )) {
-			synchronized (queueClass) {
-				queue = (AbstractDynamoQueue) queues.get( queueClass.getName() );
-				if (queue == null) {
-					try {
-						queue = (AbstractDynamoQueue) ConfigurationManager.configureQueue( queueClass );
-						queues.put( queueClass.getName(), queue );
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException
-							| ClassNotFoundException e) {
-						ErrorManager.getInstance().reportThrowable( e );
-					}
-				}	
-			}
-		} else {
-			queue = (AbstractDynamoQueue) queues.get( queueClass.getName() );
-		}
-		return queue;
+	public Collection<TaskSubmission> getSubmissions() {
+		return submissions;
 	}
 	
 	@Override
@@ -117,98 +73,120 @@ public class BackLogProcessor extends Thread {
 					break;
 				}
 				
-				for (AbstractDynamoQueue queue : queues.values()) {
-					queue.refresh();
-				}
+				TaskSubmission submission = null;
 
-				LocalDateTime now = LocalDateTime.now();
+				synchronized (submissions) {
 
-				Task currentItem = null;
-				for (Task item : pendingTasks) {
-					
-					if (blackListedTasks.contains( item.getClass() )) {
-						continue;
+					// cancel requested
+					while (!toUnschedule.isEmpty()) {
+						UnscheduleSpecs specs = toUnschedule.pop();
+						submissions.stream().filter( s -> match( s.getTask(), specs.taskClass, specs.expressionToVerify)).forEach( s -> cancel( s.getSubmissionId() ) );
 					}
 					
-					if (item instanceof Enableable && !((Enableable) item).isEnabled()) {
-						continue;
-					}
-					if (item.getMinDate() == null || item.getMinDate().isBefore( now )) {
-						currentItem = item;
-						break;
+					submissions.removeAll(
+						submissions.stream()
+							.filter( s -> !(s.getTask() instanceof DaemonTask))
+							.filter( s -> s.getFuture() != null && (s.getFuture().isDone() || s.getFuture().isCancelled()))
+							.collect(Collectors.toList())
+					);
+					
+					LocalDateTime now = LocalDateTime.now();
+					
+					if (nextInLine == null) {
+						
+						Optional<TaskSubmission> selectedSubmission = submissions.stream()
+							.filter( s -> s.getFuture() == null || s.getFuture().isDone())
+							.filter( s -> s.getMinDate() == null || s.getMinDate().isBefore( now ) )
+							.findFirst();					
+						submission = selectedSubmission.isPresent() ? selectedSubmission.get() : null;
+
+					} else {
+
+						submission = nextInLine;
+						nextInLine = null;
+
 					}
 				}
-				
-				if (currentItem == null) {
+
+				if (submission == null) {
 					Thread.sleep( 1000 );
 					continue;
 				}
-				
-				if (!(currentItem instanceof DaemonTask)) {
-					pendingTasks.remove( currentItem );
-				} else {
-					DaemonTask daemon = (DaemonTask) currentItem;
-					daemon.setMinDate( LocalDateTime.now().plusMinutes( daemon.getMinutesFrequency() ) );
+
+				Task task = submission.getTask();
+
+				if (task instanceof DaemonTask) {
+					DaemonTask daemon = (DaemonTask) task;
+					submission.setMinDate( LocalDateTime.now().plusMinutes( daemon.getMinutesFrequency() ) );
 				}
 
-				AbstractDynamoQueue queue = getQueueForTaskClass( currentItem.getClass() );
-				if (!queue.executeTask( currentItem )) {
-					// blacklist this task class : no executor can execute it
-					blackListedTasks.add( currentItem.getClass() );
-				}
-				
+				submission.setFuture( pool.submit( submission.getExecutor() ) );
+
 			}
 		} catch (Exception e) {
 			ErrorManager.getInstance().reportThrowable( e );
 		} finally {
-		
-			Collection<AbstractDynamoQueue> values = queues.values();
-			for (AbstractDynamoQueue queue : values) {
-				queue.shutdownNow();
-			}
+			pool.shutdownNow();
 		}
 	}
 
-	public void schedule( Task task ) {
-		schedule( task, true );
+	public TaskSubmission schedule( Task task ) {
+		return schedule( task, null, true );
 	}
 
-	public Task schedule( Task task, boolean reportQueued ) {
+	public TaskSubmission schedule( Task task, LocalDateTime minDate ) {
+		return schedule( task, minDate, true );
+	}
+
+	public TaskSubmission schedule( Task task, boolean reportQueued ) {
+		return schedule( task, null, reportQueued );
+	}
+
+	public TaskSubmission schedule( Task task, LocalDateTime minDate, boolean reportQueued ) {
 		if (task instanceof Enableable && !((Enableable) task).isEnabled()) {
 			return null;
 		}
 		
-		if (pendingTasks.contains( task )) {
-			pendingTasks.remove( task );
-		}
-		
-		for (AbstractDynamoQueue queue : getQueues().values()) {
-			if (queue.isExecuting(task)) {
-				// already scheduled in queue
-				return task;
+		TaskSubmission submission = null;
+
+		synchronized (submissions) {
+
+			for (Iterator<TaskSubmission> iterator = submissions.iterator(); iterator.hasNext();) {
+				TaskSubmission s = iterator.next();
+				if (s.getTask().equals( task )) {
+					iterator.remove();
+				}
 			}
+			
+			Class<? extends TaskExecutor> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
+			if (backLogTaskClass != null) {
+				TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
+				submission = new TaskSubmission(task, executor, minDate );
+				submissions.add( submission );
+	
+				if (task instanceof LogQueuing) {
+					ErrorManager.getInstance().reportDebug(task, String.format("%s was queued", task.toString()));
+				}
+				
+				if (nextInLine == null && (minDate == null || minDate.isBefore( LocalDateTime.now() ))) {
+					nextInLine = submission;
+				}
+	
+				if (reportQueued) {
+					EventManager.getInstance().reportInfo( String.format("%s has been queued", task.toString()));
+				}
+			} else {
+				ErrorManager.getInstance().reportWarning( String.format( "No Executor capable of executing '%s' was found", task ));				
+				blackListedTaskClass.add( task.getClass() );
+			}
+			
 		}
 		
-		if (task instanceof LogQueuing) {
-			ErrorManager.getInstance().reportDebug(task, String.format("%s was queued", task.toString()));
-		}
-		
-		pendingTasks.add( task );
-		if (reportQueued) {
-			EventManager.getInstance().reportInfo( String.format("%s has been queued", task.toString()));
-		}
-		
-		return task;
+		return submission;
 	}
 
 	public void shutdown() {
 		shutdownRequested = true;
-	}
-
-	public void runNow( Task item, boolean reportQueued ) {
-		unschedule( item );
-		item.setMinDate( null );
-		schedule( item, reportQueued );
 	}
 
 	public void unschedule( Class<? extends Task> taskClass ) {
@@ -245,63 +223,34 @@ public class BackLogProcessor extends Thread {
 	}
 
 	public boolean isRunningOrPending( Class<? extends Task> taskClass ) {
-		for (AbstractDynamoQueue queue : queues.values()) {
-			for (Task task : queue.getTasks()) {
-				if (match( task, taskClass, null)) {
-					return true;
-				}
-			}
-		}
-		for (Task task : pendingTasks) {
-			if (match( task, taskClass, null)) {
-				return true;
-			}
-		}
-		return false;
+		return submissions.stream().filter( submission -> match( submission.getTask(), taskClass, null )).findAny().isPresent();
 	}
-	
+
 	public void unschedule( Class<? extends Task> taskClass, String expressionToVerify ) {
-		if (taskClass != null) {
-			AbstractDynamoQueue queue = getQueueForTaskClass(taskClass);
-			cancelMatchingTasks(queue, taskClass, expressionToVerify);			
-		} else {
-			for (AbstractDynamoQueue queue : getQueues().values()) {
-				cancelMatchingTasks(queue, null, expressionToVerify);
-			}
-		}
-		for (Task task : pendingTasks) {
-			if (match( task, taskClass, expressionToVerify)) {
-				unschedule(task);
-			}
-		}
+		toUnschedule.add( new UnscheduleSpecs( taskClass, expressionToVerify ) );
 	}
-
-	protected void cancelMatchingTasks(AbstractDynamoQueue queue, Class<? extends Task> taskClass, String expressionToVerify) {
-		for (Task task : queue.getTasks()) {
-			if (match( task, taskClass, expressionToVerify)) {
-				queue.cancel(task);
-			}
-		}
-	}
-
-	private void unschedule(Task task) {
-		pendingTasks.remove( task );
-		AbstractDynamoQueue queue = getQueueForTaskClass(task.getClass());
-		if (queue != null) {
-			queue.cancel( task );
-		}
-	}
-	
-	public void cancel(Task task) {
-		unschedule(task);
-		if (task instanceof CancellableTask) { ((CancellableTask) task).cancel(); }
-	}	
 
 	public void runSync(Task task, boolean reportQueued) throws Exception {
 		Class<? extends TaskExecutor> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
 		if (backLogTaskClass != null) {
 			TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
 			executor.execute();
+		}
+	}
+
+	public void cancel(long submissionId) {
+		synchronized (submissions) {
+			for (Iterator<TaskSubmission> iterator = submissions.iterator(); iterator.hasNext();) {
+				TaskSubmission submission = iterator.next();
+				if (submission.getSubmissionId() == submissionId ) {
+					if (submission.getFuture() != null) {
+						submission.getFuture().cancel( false );
+					}
+					submission.getExecutor().cancel();
+					iterator.remove();
+					break;
+				}
+			}
 		}
 	}
 

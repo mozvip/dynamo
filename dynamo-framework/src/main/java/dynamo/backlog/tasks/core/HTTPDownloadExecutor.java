@@ -33,8 +33,7 @@ public class HTTPDownloadExecutor extends TaskExecutor<HTTPDownloadTask> {
 	@Override
 	public void rescheduleTask(HTTPDownloadTask item) {
 		if ( isFailed() ) {
-			item.setMinDate( getNextDate( 60 ) );
-			BackLogProcessor.getInstance().schedule(item, false);
+			BackLogProcessor.getInstance().schedule(item, getNextDate( 60 ), false);
 		}
 	}
 

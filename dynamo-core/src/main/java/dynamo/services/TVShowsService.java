@@ -17,12 +17,12 @@ import com.omertron.thetvdbapi.TvDbException;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.FileUtils;
 import dynamo.backlog.tasks.tvshows.DeleteShowTask;
+import dynamo.backlog.tasks.tvshows.ScanTVShowTask;
 import dynamo.tvshows.model.ManagedEpisode;
 import dynamo.tvshows.model.ManagedSeries;
 import dynamo.tvshows.model.TVShowManager;
 import dynamo.tvshows.model.UnrecognizedFile;
 import dynamo.tvshows.model.UnrecognizedFolder;
-import model.backlog.ScanTVShowTask;
 
 @Path("tvshows")
 @Produces(MediaType.APPLICATION_JSON)
@@ -43,7 +43,7 @@ public class TVShowsService {
 	@DELETE
 	@Path("/{id}")
 	public void deleteTVShow(@PathParam("id") String id) {
-		BackLogProcessor.getInstance().runNow( new DeleteShowTask( TVShowManager.getInstance().getManagedSeries( id ), true ), true );
+		BackLogProcessor.getInstance().schedule( new DeleteShowTask( TVShowManager.getInstance().getManagedSeries( id ), true ), true );
 	}
 
 	@GET
@@ -67,7 +67,7 @@ public class TVShowsService {
 	@POST
 	@Path("/rescan/{id}")
 	public void rescan(@PathParam("id") String id) {
-		BackLogProcessor.getInstance().runNow( new ScanTVShowTask( TVShowManager.getInstance().getManagedSeries( id ) ), true );
+		BackLogProcessor.getInstance().schedule( new ScanTVShowTask( TVShowManager.getInstance().getManagedSeries( id ) ), true );
 	}
 	
 	@POST

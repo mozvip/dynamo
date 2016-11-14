@@ -26,7 +26,6 @@ import dynamo.core.model.video.VideoDAO;
 import dynamo.core.model.video.VideoMetaData;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
-import dynamo.model.Video;
 
 public class VideoManager {
 	
@@ -109,7 +108,6 @@ public class VideoManager {
 	
 	public VideoMetaData getMetaData(Downloadable video, Path videoFilePath) throws IOException, InterruptedException { 
 		VideoMetaData metaData = videoDAO.getMetaData( video.getId() );
-		// FIXME : implement locking
 		if (metaData == null) {
 			String openSubtitlesHash = OpenSubtitlesHasher.computeHash( videoFilePath );
 
@@ -185,6 +183,5 @@ public class VideoManager {
 
 		return false;
 	}	
-	
 
 }

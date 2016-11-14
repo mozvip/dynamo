@@ -81,7 +81,13 @@ public class OpenSubtitlesOrg extends SubtitlesFinder {
 
 		String userAgent = "OS Test User Agent";
 
-		Map<String, Object> result = (Map<String, Object>) xmlRPCClient.execute( "LogIn", new Object[] { "", "", language.getShortName(), userAgent });
+		Map<String, Object> result;
+		try {
+			result = (Map<String, Object>) xmlRPCClient.execute( "LogIn", new Object[] { "", "", language.getShortName(), userAgent });
+		} catch (Exception e) {
+			ErrorManager.getInstance().reportThrowable( e );
+			return null;
+		}
 		String token = (String) result.get("token");
 		try {
 

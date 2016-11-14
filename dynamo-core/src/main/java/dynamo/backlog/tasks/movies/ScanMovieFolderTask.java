@@ -2,9 +2,9 @@ package dynamo.backlog.tasks.movies;
 
 import java.nio.file.Path;
 
-import dynamo.model.backlog.core.NewFolderTask;
+import dynamo.backlog.tasks.files.ScanFolderTask;
 
-public class ScanMovieFolderTask extends NewFolderTask {
+public class ScanMovieFolderTask extends ScanFolderTask {
 
 	public ScanMovieFolderTask(Path path) {
 		super( path );

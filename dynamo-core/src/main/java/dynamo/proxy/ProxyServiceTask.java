@@ -1,12 +1,9 @@
 
 package dynamo.proxy;
 
-import dynamo.backlog.queues.ServiceQueue;
-import dynamo.core.DynamoTask;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.model.ServiceTask;
 
-@DynamoTask(queueClass=ServiceQueue.class)
 public class ProxyServiceTask extends ServiceTask {
 	
 	@Configurable

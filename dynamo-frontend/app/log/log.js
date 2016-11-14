@@ -19,12 +19,12 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
         return BackendService.get('downloadable/wanted');
       }]
     }   
-  }).when('/queues', {
-    templateUrl: 'log/queues.html',
-    controller: 'QueuesCtrl',
+  }).when('/activity', {
+    templateUrl: 'log/activity.html',
+    controller: 'ActivityCtrl',
     resolve: {
-      queues: ['BackendService', function(  BackendService  ) {
-        return BackendService.get('backlog/queues');
+      submissions: ['BackendService', function(  BackendService  ) {
+        return BackendService.get('backlog/submissions');
       }]
     }   
   }).when('/history', {
@@ -62,18 +62,23 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('QueuesCtrl', ['$scope', '$timeout', 'BackendService', 'queues', function( $scope, $timeout, BackendService, queues ) {
+.controller('ActivityCtrl', ['$scope', '$timeout', 'BackendService', 'submissions', 'filterFilter', function( $scope, $timeout, BackendService, submissions, filterFilter ) {
 
-  $scope.queues = queues.data;
+  $scope.submissions = submissions.data;
 
   var tickTimeout;
 
   (function tick() {
-      BackendService.get('backlog/queues').then(function(response){
-        $scope.queues = response.data;
+      BackendService.get('backlog/submissions').then(function(response){
+        $scope.submissions = response.data;
         tickTimeout = $timeout(tick, 1000);
       });
   })();
+
+  $scope.cancel = function( executor ) {
+    BackendService.post('backlog/cancel/' + executor.submissionId);
+    $scope.submissions = filterFilter($scope.submissions, {'submissionId': '!' + executor.submissionId });
+  }
 
   $scope.$on('$destroy', function() {
       $timeout.cancel(tickTimeout);

@@ -89,8 +89,7 @@ public abstract class AbstractTorrentDownloadExecutor extends TaskExecutor<Downl
 	@Override
 	public void rescheduleTask(DownloadTorrentTask item) {
 		if (isFailed()) {
-			item.setMinDate( getNextDate( 60 ) );
-			BackLogProcessor.getInstance().schedule( item, true );
+			BackLogProcessor.getInstance().schedule( item, getNextDate( 60 ), false );
 		}
 	}
 

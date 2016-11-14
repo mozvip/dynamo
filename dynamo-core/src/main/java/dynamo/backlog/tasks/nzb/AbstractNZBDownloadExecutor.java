@@ -57,8 +57,7 @@ public abstract class AbstractNZBDownloadExecutor extends TaskExecutor<DownloadN
 	@Override
 	public void rescheduleTask(DownloadNZBTask item) {
 		if (isFailed()) {
-			item.setMinDate(getNextDate(60));
-			BackLogProcessor.getInstance().schedule(item, true);
+			BackLogProcessor.getInstance().schedule(item, getNextDate(60), true);
 		}
 	}
 }

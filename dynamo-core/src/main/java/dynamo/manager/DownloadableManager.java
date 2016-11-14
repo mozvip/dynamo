@@ -21,6 +21,7 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.CancelDownloadTask;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.DeleteFileTask;
+import dynamo.backlog.tasks.tvshows.ScanTVShowTask;
 import dynamo.core.DynamoApplication;
 import dynamo.core.DynamoServer;
 import dynamo.core.EventManager;
@@ -57,7 +58,6 @@ import dynamo.tvshows.model.TVShowSeason;
 import dynamo.video.VideoManager;
 import dynamo.webapps.pushbullet.PushBullet;
 import hclient.HTTPClient;
-import model.backlog.ScanTVShowTask;
 
 
 public class DownloadableManager {
@@ -235,7 +235,7 @@ public class DownloadableManager {
 		return downloadableDAO.findWanted();
 	}
 
-	public Set<Task> downloaded(Task task, Downloadable downloadable, SearchResult searchResult, Path sourceFolder, List<Path> sourceFiles, boolean moveFiles) throws IOException {
+	public void downloaded(Task task, Downloadable downloadable, SearchResult searchResult, Path sourceFolder, List<Path> sourceFiles, boolean moveFiles) throws IOException {
 		
 		boolean filesFound = true;
 		
@@ -264,9 +264,9 @@ public class DownloadableManager {
 			}
 
 			if (moveFiles) {
-				fileTasks.add( FolderManager.moveFile(source, destinationFile, downloadable) );
+				FolderManager.moveFile(source, destinationFile, downloadable);
 			} else {
-				fileTasks.add( FolderManager.copyFile(source, destinationFile, downloadable) );
+				FolderManager.copyFile(source, destinationFile, downloadable);
 			}
 		}
 		
@@ -277,8 +277,6 @@ public class DownloadableManager {
 		if (searchResult.getClientId() != null) {
 			searchResultDAO.freeClientId(searchResult.getClientId());
 		}
-		
-		return fileTasks;
 	}
 
 	public void delete(Class<? extends Downloadable> klass, DownloadableStatus statusToDelete) {

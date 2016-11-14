@@ -2,6 +2,7 @@ package dynamo.backlog.tasks.music;
 
 import java.nio.file.Path;
 
+import dynamo.backlog.BackLogProcessor;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.TaskExecutor;
@@ -49,7 +50,7 @@ public class SetMusicTagTaskExecutor extends TaskExecutor<SetMusicTagTask> {
 				musicFile.getYear(),
 				false );
 
-		queue( new SynchronizeMusicTagsTask(musicFile.getFilePath()), false);
+		BackLogProcessor.getInstance().schedule( new SynchronizeMusicTagsTask(musicFile.getFilePath()), false);
 	}
 
 }
