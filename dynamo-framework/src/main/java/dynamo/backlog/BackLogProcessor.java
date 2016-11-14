@@ -80,7 +80,9 @@ public class BackLogProcessor extends Thread {
 					// cancel requested
 					while (!toUnschedule.isEmpty()) {
 						UnscheduleSpecs specs = toUnschedule.pop();
-						submissions.stream().filter( s -> match( s.getTask(), specs.taskClass, specs.expressionToVerify)).forEach( s -> cancel( s.getSubmissionId() ) );
+						submissions.stream()
+							.filter( s -> s != null)
+							.filter( s -> match( s.getTask(), specs.taskClass, specs.expressionToVerify)).forEach( s -> cancel( s.getSubmissionId() ) );
 					}
 					
 					submissions.removeAll(
