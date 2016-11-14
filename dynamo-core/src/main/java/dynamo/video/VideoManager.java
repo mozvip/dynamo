@@ -126,6 +126,8 @@ public class VideoManager {
 		Optional<DownloadableFile> optionalFile = DownloadableManager.getInstance()
 				.getAllFiles( downloadableId ).stream()
 				.filter( file -> VideoFileFilter.getInstance().accept( file.getFilePath() ))
+				.filter( file -> file.getSize() > 550 * 1024 * 1024)	// FIXME : min 550 megs
+				.filter( file -> !file.getFilePath().getFileName().toString().contains("-sample"))
 				.findFirst();
 		return optionalFile.isPresent() ? Optional.of( optionalFile.get().getFilePath() ) : Optional.empty();
 	}
