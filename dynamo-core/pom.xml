@@ -104,7 +104,7 @@
 		<dependency>
 			<groupId>com.omertron</groupId>
 			<artifactId>thetvdbapi</artifactId>
-			<version>1.8</version>
+			<version>1.9</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>log4j</artifactId>
@@ -200,11 +200,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.21</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-net</groupId>
-			<artifactId>commons-net</artifactId>
-			<version>3.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.omertron</groupId>
