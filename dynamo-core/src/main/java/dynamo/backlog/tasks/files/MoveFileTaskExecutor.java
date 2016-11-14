@@ -23,7 +23,7 @@ public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask
 	@Override
 	public void init() throws Exception {
 		FileSystemManager.getInstance().acquireRead( source );
-		FileSystemManager.getInstance().acquireWrite( destination );
+		FileSystemManager.getInstance().acquireWrite( destination.getParent() );
 	}
 	
 	@Override
@@ -31,7 +31,7 @@ public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask
 		try {
 			FileSystemManager.getInstance().releaseRead( source );
 		} finally {
-			FileSystemManager.getInstance().releaseWrite( destination );
+			FileSystemManager.getInstance().releaseWrite( destination.getParent() );
 		}
 	}	
 

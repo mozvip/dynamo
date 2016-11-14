@@ -24,7 +24,7 @@ public class CopyFileExecutor extends TaskExecutor<CopyFileTask> {
 	@Override
 	public void init() throws Exception {
 		FileSystemManager.getInstance().acquireRead( source );
-		FileSystemManager.getInstance().acquireWrite( destination );
+		FileSystemManager.getInstance().acquireWrite( destination.getParent() );
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class CopyFileExecutor extends TaskExecutor<CopyFileTask> {
 		try {
 			FileSystemManager.getInstance().releaseRead( source );
 		} finally {
-			FileSystemManager.getInstance().releaseWrite( destination );
+			FileSystemManager.getInstance().releaseWrite( destination.getParent() );
 		}
 	}
 
