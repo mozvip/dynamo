@@ -30,7 +30,7 @@ public class BackLogProcessor extends Thread {
 	private boolean shutdownRequested = false;
 
 	private Set<Class> blackListedTaskClass = new HashSet<>();
-	private ExecutorService pool = Executors.newFixedThreadPool(15);
+	private ExecutorService pool = Executors.newFixedThreadPool(20);
 	private TaskSubmission nextInLine = null;
 
 	private List<TaskSubmission> submissions = new ArrayList<>();
@@ -79,10 +79,14 @@ public class BackLogProcessor extends Thread {
 
 					// cancel requested
 					while (!toUnschedule.isEmpty()) {
-						UnscheduleSpecs specs = toUnschedule.pop();
-						submissions.stream()
-							.filter( s -> s != null)
-							.filter( s -> match( s.getTask(), specs.taskClass, specs.expressionToVerify)).forEach( s -> cancel( s.getSubmissionId() ) );
+						try {
+							UnscheduleSpecs specs = toUnschedule.pop();
+							submissions.stream()
+								.filter( s -> s != null)
+								.filter( s -> match( s.getTask(), specs.taskClass, specs.expressionToVerify)).forEach( s -> cancel( s.getSubmissionId() ) );
+						} catch (Exception e) {
+							// yes I know
+						}
 					}
 					
 					submissions.removeAll(
