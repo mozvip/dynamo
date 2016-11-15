@@ -24,21 +24,6 @@ public class MoveFolderExecutor extends TaskExecutor<MoveFolderTask> {
 		Files.walkFileTree(task.getSourceFolder(), new MoveDirVisitor( task.getSourceFolder(), task.getDestinationFolder() ));
 	}
 	
-	@Override
-	public void init() throws Exception {
-		FileSystemManager.getInstance().acquireRead( task.getSourceFolder() );
-		FileSystemManager.getInstance().acquireWrite( task.getDestinationFolder() );
-	}
-	
-	@Override
-	public void shutdown() throws Exception {
-		try {
-			FileSystemManager.getInstance().releaseRead( task.getSourceFolder() );
-		} finally {
-			FileSystemManager.getInstance().releaseWrite( task.getDestinationFolder() );
-		}
-	}	
-	
 	class MoveDirVisitor extends SimpleFileVisitor<Path> {
 	    private Path sourceFolder;
 	    private Path destinationFolder;

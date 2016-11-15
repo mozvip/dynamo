@@ -124,8 +124,9 @@ public class VideoManager {
 	
 	public Optional<Path> getMainVideoFile( long downloadableId ) {
 		Optional<DownloadableFile> optionalFile = DownloadableManager.getInstance()
-				.getAllFiles( downloadableId )
+				.getAllFiles( downloadableId ).stream()
 				.filter( file -> VideoFileFilter.getInstance().accept( file.getFilePath() ))
+				.filter( file -> !file.getFilePath().getFileName().toString().contains("-sample"))
 				.findFirst();
 		return optionalFile.isPresent() ? Optional.of( optionalFile.get().getFilePath() ) : Optional.empty();
 	}
@@ -159,7 +160,7 @@ public class VideoManager {
 		}
 
 		List<DownloadableFile> subtitleFiles =
-				DownloadableManager.getInstance().getAllFiles( videoDownloadable.getId() )
+				DownloadableManager.getInstance().getAllFiles( videoDownloadable.getId() ).stream()
 				.filter( file -> SubtitlesFileFilter.getInstance().accept( file.getFilePath() ) )
 				.collect( Collectors.toList() );
 

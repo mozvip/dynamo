@@ -40,14 +40,14 @@ public abstract class ScanFolderExecutor<T extends ScanFolderTask> extends TaskE
 			throw new IOException( String.format("Folder %s is not readable", task.getFolder().toAbsolutePath().toString()));
 		}
 		String taskLabel = getCurrentLabel();
-		setCurrentLabel( String.format("%s - Waiting for availability of %s", taskLabel, Files.getFileStore(task.getFolder())));
-		FileSystemManager.getInstance().acquireRead( task.getFolder() );
+		setCurrentLabel( String.format("%s - On Hold", taskLabel));
+		FileSystemManager.getInstance().acquireFolderScan();
 		setCurrentLabel( taskLabel);
 	}
 	
 	@Override
 	public void shutdown() throws Exception {
-		FileSystemManager.getInstance().releaseRead( task.getFolder() );
+		FileSystemManager.getInstance().releaseFolderScan();
 	}
 
 	@Override

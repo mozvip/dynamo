@@ -1,16 +1,11 @@
 package dynamo.core.manager;
 
-import java.io.IOException;
-import java.nio.file.FileStore;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 
 public class FileSystemManager {
 	
-	private ConcurrentHashMap<FileStore, Semaphore> readSemaphores = new ConcurrentHashMap<>();
-	private ConcurrentHashMap<FileStore, Semaphore> writeSemaphores = new ConcurrentHashMap<>();
+	private Semaphore folderScanSemaphore = new Semaphore(1);
+	private Semaphore fileOperationSemaphore = new Semaphore(1);
 	
 	private FileSystemManager() {
 	}
@@ -23,25 +18,19 @@ public class FileSystemManager {
 		return SingletonHolder.instance;
 	}
 	
-	public void acquireRead( Path path ) throws IOException, InterruptedException {
-		FileStore fileStore = Files.getFileStore(path);
-		readSemaphores.putIfAbsent(fileStore, new Semaphore(1));
-		readSemaphores.get(fileStore).acquire();
+	public void acquireFolderScan() throws InterruptedException {
+		folderScanSemaphore.acquire();
 	}
 	
-	public void acquireWrite( Path path ) throws IOException, InterruptedException {
-		FileStore fileStore = Files.getFileStore(path);
-		writeSemaphores.putIfAbsent(fileStore, new Semaphore(1));
-		writeSemaphores.get(fileStore).acquire();
+	public void releaseFolderScan() {
+		folderScanSemaphore.release();
 	}
 
-	public void releaseRead( Path path ) throws IOException {
-		FileStore fileStore = Files.getFileStore(path);
-		readSemaphores.get(fileStore).release();	
+	public void acquireFileOperation() throws InterruptedException {
+		fileOperationSemaphore.acquire();
 	}
 	
-	public void releaseWrite( Path path ) throws IOException {
-		FileStore fileStore = Files.getFileStore(path);
-		writeSemaphores.get(fileStore).release();	
+	public void releaseFileOperation() {
+		fileOperationSemaphore.release();
 	}
 }

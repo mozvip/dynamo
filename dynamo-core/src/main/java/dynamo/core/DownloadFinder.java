@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Path;
+import java.util.concurrent.Semaphore;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,8 @@ import hclient.RegExpMatcher;
 public abstract class DownloadFinder implements Reconfigurable, Enableable, NotAlwaysReady {
 	
 	protected final static Logger logger = LoggerFactory.getLogger( DownloadFinder.class );
+	
+	private Semaphore semaphore = new Semaphore(1);
 
 	private boolean ready = false;
 	
@@ -35,6 +38,14 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 	
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	public void acquire() throws InterruptedException {
+		semaphore.acquire();
+	}
+	
+	public void release() {
+		semaphore.release();
 	}
 	
 	public abstract boolean needsLanguageInSearchString();

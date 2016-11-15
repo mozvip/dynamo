@@ -111,33 +111,37 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 
 			done = true;
 			running = false;
+			
+			if (!cancelled) {
 
-			if (!(task instanceof NoLogging)) {
-				if (failed) {
-					String messageToReport = eTask != null ? eTask.getMessage() : null;
-					if (messageToReport == null && eTask != null) {
-						messageToReport	= eTask.toString();
-					}
-					String label = String.format("Task failed (after %8.2f secs) : %s : %s", timeTaken, eTask.getClass().getName(), messageToReport);
-					ErrorManager.getInstance().reportThrowable( task, label, eTask );
-					if ( this instanceof ReportFinished ) {
-						EventManager.getInstance().reportError( String.format( "Task : %s failed !", task.toString() ) );
-					}
-				} else {
-					if ( this instanceof LogSuccess ) {
-						ErrorManager.getInstance().reportDebug( task, String.format("Task successful (in %8.2f secs)", timeTaken) );
-					}
-					if ( this instanceof  ReportFinished ) {
-						EventManager.getInstance().reportSuccess( String.format( "Task : %s is finished", task.toString() ) );
+				if (!(task instanceof NoLogging)) {
+					if (failed) {
+						String messageToReport = eTask != null ? eTask.getMessage() : null;
+						if (messageToReport == null && eTask != null) {
+							messageToReport	= eTask.toString();
+						}
+						String label = String.format("Task failed (after %8.2f secs) : %s : %s", timeTaken, eTask.getClass().getName(), messageToReport);
+						ErrorManager.getInstance().reportThrowable( task, label, eTask );
+						if ( this instanceof ReportFinished ) {
+							EventManager.getInstance().reportError( String.format( "Task : %s failed !", task.toString() ) );
+						}
+					} else {
+						if ( this instanceof LogSuccess ) {
+							ErrorManager.getInstance().reportDebug( task, String.format("Task successful (in %8.2f secs)", timeTaken) );
+						}
+						if ( this instanceof  ReportFinished ) {
+							EventManager.getInstance().reportSuccess( String.format( "Task : %s is finished", task.toString() ) );
+						}
 					}
 				}
-			}
-
-			try {
-				rescheduleTask( task );
-			} catch (Exception e) {
-				ErrorManager.getInstance().reportThrowable( task, e );
-				failed = true;
+	
+				try {
+					rescheduleTask( task );
+				} catch (Exception e) {
+					ErrorManager.getInstance().reportThrowable( task, e );
+					failed = true;
+				}
+				
 			}
 		}
 

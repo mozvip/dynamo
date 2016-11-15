@@ -78,7 +78,7 @@ public class SubTitlesZip {
 		// test for release
 		if ( details.getReleaseGroup() != null ) {
 			ReleaseGroup releaseGroup = ReleaseGroup.firstMatch( details.getReleaseGroup() );
-			if (releaseGroup != null) {
+			if (releaseGroup != null && releaseGroup != ReleaseGroup.UNKNOWN) {
 				if ( releaseGroup.match( subtitleName ) ) {
 					score += 10;
 				} else {
