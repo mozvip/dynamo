@@ -66,6 +66,10 @@ public class ScanMovieFolderExecutor extends ScanFolderExecutor<ScanMovieFolderT
 	}
 	
 	public void handleFile( Path p ) throws IOException, InterruptedException {
+		
+		if (p.getFileName().toString().contains("-sample")) {
+			return;
+		}
 
 		DownloadableFile file = DownloadableManager.getInstance().getFile( p );
 		
@@ -144,10 +148,6 @@ public class ScanMovieFolderExecutor extends ScanFolderExecutor<ScanMovieFolderT
 	}
 
 	protected Movie handleNewMovie( Path movieFile ) throws IOException, InterruptedException, MovieDbException, ParseException {
-		
-		if (movieFile.getFileName().toString().contains("-sample")) {
-			return null;
-		}
 
 		Movie movie = null;
 		ParsedMovieInfo movieInfo = VideoNameParser.getMovieInfo( movieFile );
@@ -203,8 +203,7 @@ public class ScanMovieFolderExecutor extends ScanFolderExecutor<ScanMovieFolderT
 
 		MovieManager.getInstance().save( movie );
 
-		DownloadableManager.getInstance().addAssociatedFiles(movieFile, movie);
-		DownloadableManager.getInstance().addFile( movie, movieFile );
+		DownloadableManager.getInstance().addAllSimilarNamedFiles(movieFile, movie);
 
 		VideoManager.getInstance().getMetaData( movie, movieFile );
 		return movie;
