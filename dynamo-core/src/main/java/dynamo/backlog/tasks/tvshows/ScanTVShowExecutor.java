@@ -89,9 +89,7 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 						if (!managedEpisode.isDownloaded()) {
 							// cancel search for this episode
 							BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("this.episode.id == %d", managedEpisode.getId()) );
-
-							DownloadableManager.getInstance().addAssociatedFiles(p, managedEpisode);
-							DownloadableManager.getInstance().addFile( managedEpisode, p );
+							DownloadableManager.getInstance().addAllSimilarNamedFiles(p, managedEpisode);
 						}
 
 						if ( episodeInfo != null ) {

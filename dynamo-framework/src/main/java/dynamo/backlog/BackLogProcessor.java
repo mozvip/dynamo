@@ -34,6 +34,7 @@ public class BackLogProcessor extends Thread {
 	private TaskSubmission nextInLine = null;
 
 	private List<TaskSubmission> submissions = new ArrayList<>();
+	private List<TaskSubmission> submissionsToDisplay = new ArrayList<>();
 
 	private class UnscheduleSpecs {
 		Class<? extends Task> taskClass;
@@ -60,7 +61,7 @@ public class BackLogProcessor extends Thread {
 	}
 	
 	public Collection<TaskSubmission> getSubmissions() {
-		return submissions;
+		return submissionsToDisplay;
 	}
 	
 	@Override
@@ -95,6 +96,10 @@ public class BackLogProcessor extends Thread {
 							.filter( s -> s.getFuture() != null && (s.getFuture().isDone() || s.getFuture().isCancelled()))
 							.collect(Collectors.toList())
 					);
+					
+					// copy for UI
+					submissionsToDisplay = new ArrayList<>();
+					submissionsToDisplay.addAll( submissions );
 					
 					LocalDateTime now = LocalDateTime.now();
 					
@@ -229,7 +234,9 @@ public class BackLogProcessor extends Thread {
 	}
 
 	public boolean isRunningOrPending( Class<? extends Task> taskClass ) {
-		return submissions.stream().filter( submission -> match( submission.getTask(), taskClass, null )).findAny().isPresent();
+		synchronized (submissions) {
+			return submissions.stream().filter( submission -> match( submission.getTask(), taskClass, null )).findAny().isPresent();
+		}
 	}
 
 	public void unschedule( Class<? extends Task> taskClass, String expressionToVerify ) {

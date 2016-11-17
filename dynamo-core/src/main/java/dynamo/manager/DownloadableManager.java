@@ -466,15 +466,13 @@ public class DownloadableManager {
 		return downloadImage(localFile, url, referer);
 	}
 	
-	public void addAssociatedFiles(Path p, Downloadable downloadable) throws IOException {
+	public void addAllSimilarNamedFiles(Path p, Downloadable downloadable) throws IOException {
 		DirectoryStream<Path> associatedFiles = Files.newDirectoryStream( p.getParent() );
 		String filePrefix = p.getFileName().toString();
 		filePrefix = filePrefix.substring(0,  filePrefix.lastIndexOf('.'));
 		for (Path relatedFile : associatedFiles) {
-			if (!Files.isSameFile(relatedFile, p)) {
-				if (relatedFile.getFileName().toString().startsWith( filePrefix )) {
-					addFile( downloadable, relatedFile );
-				}
+			if (relatedFile.getFileName().toString().startsWith( filePrefix )) {
+				addFile( downloadable, relatedFile );
 			}
 		}
 	}
