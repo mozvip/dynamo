@@ -23,7 +23,7 @@ public class FolderManager {
 	
 	private final static Logger LOGGER = LoggerFactory.getLogger( FolderManager.class );
 	
-	private Semaphore folderScanSemaphore = new Semaphore(1);
+	private Semaphore folderScanSemaphore = new Semaphore(2);
 	
 	DirectoryStream.Filter<Path> directoryFilter = new DirectoryStream.Filter<Path>() {
 		public boolean accept(Path file) throws IOException {
@@ -49,52 +49,56 @@ public class FolderManager {
 	public static TaskSubmission copyFile( Path source, Path destinationFile, Downloadable downloadable ) {
 		return BackLogProcessor.getInstance().schedule( new CopyFileTask( source, destinationFile, downloadable ), false );
 	}
-
-	public List<Path> getContents(Path folder, Filter<Path> filter, boolean recursive) throws InterruptedException, IOException {
+	
+	private List<Path> internal_getContents(Path folder, Filter<Path> filter, boolean recursive) throws InterruptedException, IOException {
 		List<Path> results = new ArrayList<>();
-		try {
-			acquire();
-			try (DirectoryStream<Path> ds = filter != null ? Files.newDirectoryStream(folder, filter) : Files.newDirectoryStream(folder)) {
-				for (Path p : ds) {
-					if (Files.isDirectory(p) && recursive) {
-						results.addAll( getContents( folder, filter, recursive) );
-					} else {
-						results.add( p );
-					}
+		try (DirectoryStream<Path> ds = filter != null ? Files.newDirectoryStream(folder, filter) : Files.newDirectoryStream(folder)) {
+			for (Path p : ds) {
+				if (Files.isDirectory(p) && recursive) {
+					results.addAll( internal_getContents( folder, filter, recursive) );
+				} else {
+					results.add( p );
 				}
 			}
-		} finally {
-			release();
 		}
 		return results;
 	}
 
+	public List<Path> getContents(Path folder, Filter<Path> filter, boolean recursive) throws InterruptedException, IOException {
+		try {
+			acquire();
+			return internal_getContents( folder, filter, recursive );
+		} finally {
+			release();
+		}
+	}
+
 	private void release() {
-		LOGGER.debug("Releasing FolderManager Semaphore");
 		folderScanSemaphore.release();
-		LOGGER.debug("Released FolderManager Semaphore");
 	}
 
 	private void acquire() throws InterruptedException {
-		LOGGER.debug("Acquiring FolderManager Semaphore");
 		folderScanSemaphore.acquire();
-		LOGGER.debug("Acquired FolderManager Semaphore");
 	}
 
 	public List<Path> getSubFolders(Path folder, boolean recursive) throws InterruptedException, IOException {			
-		List<Path> subFolders = new ArrayList<>();
 		try {
 			acquire();
-			try (DirectoryStream<Path> ds = Files.newDirectoryStream(folder, directoryFilter)) {
-				for (Path p : ds) {
-					subFolders.add( p );
-					if (recursive) {
-						subFolders.addAll( getSubFolders( folder, recursive) );
-					}
-				}
-			}
+			return internal_getSubFolders(folder, recursive);
 		} finally {
 			release();
+		}
+	}
+
+	private List<Path> internal_getSubFolders(Path folder, boolean recursive) throws IOException {
+		List<Path> subFolders = new ArrayList<>();
+		try (DirectoryStream<Path> ds = Files.newDirectoryStream(folder, directoryFilter)) {
+			for (Path p : ds) {
+				subFolders.add( p );
+				if (recursive) {
+					subFolders.addAll( internal_getSubFolders( folder, recursive) );
+				}
+			}
 		}
 		return subFolders;
 	}
