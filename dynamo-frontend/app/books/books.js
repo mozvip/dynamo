@@ -46,6 +46,7 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
     $scope.currentPage = 1;
     $scope.allItems = [];
     $scope.filteredList = [];
+    $scope.itemsPerPage = 24;
 
     $scope.languages = languages.data;
 
@@ -56,7 +57,7 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
     $scope.pageContents = [];
     downloadableService.find('BOOK', $routeParams.status).then(function (response) {
       $scope.allItems = response.data;
-      $scope.pageContents = $scope.allItems.slice(0, 24);
+      $scope.pageContents = $scope.allItems.slice(0, $scope.itemsPerPage);
       $scope.filteredList = $scope.allItems.slice(0);
     });
 
@@ -82,8 +83,8 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
     }
 
     $scope.pageChanged = function () {
-      var start = ($scope.currentPage - 1) * 24;
-      $scope.pageContents = $scope.filteredList.slice(start, start + 24);
+      var start = ($scope.currentPage - 1) * $scope.itemsPerPage;
+      $scope.pageContents = $scope.filteredList.slice(start, start + $scope.itemsPerPage);
     }
 
     $scope.filterChanged = function () {

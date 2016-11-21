@@ -44,6 +44,7 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
     $scope.currentPage = 1;
     $scope.allItems = [];
     $scope.filteredList = [];
+    $scope.itemsPerPage = 24;
 
     $scope.imageURL = function (url) {
       return BackendService.getImageURL(url);
@@ -54,7 +55,7 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
     $scope.pageContents = [];
     downloadableService.find('MAGAZINEISSUE', $routeParams.status).then(function (response) {
       $scope.allItems = $filter('orderBy')(response.data, '-creationDate');
-      $scope.pageContents = $scope.allItems.slice(0, 24);
+      $scope.pageContents = $scope.allItems.slice(0, $scope.itemsPerPage);
       $scope.filteredList = $scope.allItems.slice(0);
     });
 
@@ -83,8 +84,8 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
     }
 
     $scope.pageChanged = function () {
-      var start = ($scope.currentPage - 1) * 24;
-      $scope.pageContents = $scope.filteredList.slice(start, start + 24);
+      var start = ($scope.currentPage - 1) * $scope.itemsPerPage;
+      $scope.pageContents = $scope.filteredList.slice(start, start + $scope.itemsPerPage);
     }
 
     $scope.filterChanged = function () {
