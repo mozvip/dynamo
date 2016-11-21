@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.TaskSubmission;
 import dynamo.backlog.tasks.files.CopyFileTask;
@@ -17,6 +20,8 @@ import dynamo.backlog.tasks.files.MoveFileTask;
 import dynamo.model.Downloadable;
 
 public class FolderManager {
+	
+	private final static Logger LOGGER = LoggerFactory.getLogger( FolderManager.class );
 	
 	private Semaphore folderScanSemaphore = new Semaphore(1);
 	
@@ -48,7 +53,7 @@ public class FolderManager {
 	public List<Path> getContents(Path folder, Filter<Path> filter, boolean recursive) throws InterruptedException, IOException {
 		List<Path> results = new ArrayList<>();
 		try {
-			folderScanSemaphore.acquire();
+			acquire();
 			try (DirectoryStream<Path> ds = filter != null ? Files.newDirectoryStream(folder, filter) : Files.newDirectoryStream(folder)) {
 				for (Path p : ds) {
 					if (Files.isDirectory(p) && recursive) {
@@ -59,15 +64,27 @@ public class FolderManager {
 				}
 			}
 		} finally {
-			folderScanSemaphore.release();
+			release();
 		}
 		return results;
+	}
+
+	private void release() {
+		LOGGER.debug("Releasing FolderManager Semaphore");
+		folderScanSemaphore.release();
+		LOGGER.debug("Released FolderManager Semaphore");
+	}
+
+	private void acquire() throws InterruptedException {
+		LOGGER.debug("Acquiring FolderManager Semaphore");
+		folderScanSemaphore.acquire();
+		LOGGER.debug("Acquired FolderManager Semaphore");
 	}
 
 	public List<Path> getSubFolders(Path folder, boolean recursive) throws InterruptedException, IOException {			
 		List<Path> subFolders = new ArrayList<>();
 		try {
-			folderScanSemaphore.acquire();
+			acquire();
 			try (DirectoryStream<Path> ds = Files.newDirectoryStream(folder, directoryFilter)) {
 				for (Path p : ds) {
 					subFolders.add( p );
@@ -77,7 +94,7 @@ public class FolderManager {
 				}
 			}
 		} finally {
-			folderScanSemaphore.release();
+			release();
 		}
 		return subFolders;
 	}

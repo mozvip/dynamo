@@ -9,7 +9,7 @@
             <h4>
                 <span ng-bind-html="submission.executor.currentLabel" />
             </h4>
-            <div ng-show="submission.executor.running && submission.executor.itemsPercent > 0" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{submission.executor.itemsPercent}}%">
+            <div ng-show="submission.executor.itemsPercent > 0" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{submission.executor.itemsPercent}}%">
                 {{submission.executor.itemsPercent}}%
             </div>
         </div>
