@@ -2,10 +2,12 @@ package dynamo.manager;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
+import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.TaskSubmission;
@@ -15,6 +17,14 @@ import dynamo.backlog.tasks.files.MoveFileTask;
 import dynamo.model.Downloadable;
 
 public class FolderManager {
+	
+	private Semaphore folderScanSemaphore = new Semaphore(1);
+	
+	DirectoryStream.Filter<Path> directoryFilter = new DirectoryStream.Filter<Path>() {
+		public boolean accept(Path file) throws IOException {
+			return (Files.isDirectory(file));
+		}
+	};
 
 	private FolderManager() {
 	}
@@ -34,21 +44,57 @@ public class FolderManager {
 	public static TaskSubmission copyFile( Path source, Path destinationFile, Downloadable downloadable ) {
 		return BackLogProcessor.getInstance().schedule( new CopyFileTask( source, destinationFile, downloadable ), false );
 	}
-	
-	public static List<Path> getAllFilesFrom( Path folder, boolean deleteEmptyFolders ) throws IOException {
-		List<Path> paths = new ArrayList<>();
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream( folder )) {
-			for (Path entry: stream) {
-				if (Files.isDirectory(entry)) {
-					List<Path> folderContents = getAllFilesFrom(entry, deleteEmptyFolders); 
-					if (folderContents == null || folderContents.isEmpty()) {
-						BackLogProcessor.getInstance().schedule( new DeleteTask( folder, false ));
+
+	public List<Path> getContents(Path folder, Filter<Path> filter, boolean recursive) throws InterruptedException, IOException {
+		List<Path> results = new ArrayList<>();
+		try {
+			folderScanSemaphore.acquire();
+			try (DirectoryStream<Path> ds = filter != null ? Files.newDirectoryStream(folder, filter) : Files.newDirectoryStream(folder)) {
+				for (Path p : ds) {
+					if (Files.isDirectory(p) && recursive) {
+						results.addAll( getContents( folder, filter, recursive) );
 					} else {
-						paths.addAll( folderContents );
+						results.add( p );
 					}
-				} else {
-					paths.add(entry);
 				}
+			}
+		} finally {
+			folderScanSemaphore.release();
+		}
+		return results;
+	}
+
+	public List<Path> getSubFolders(Path folder, boolean recursive) throws InterruptedException, IOException {			
+		List<Path> subFolders = new ArrayList<>();
+		try {
+			folderScanSemaphore.acquire();
+			try (DirectoryStream<Path> ds = Files.newDirectoryStream(folder, directoryFilter)) {
+				for (Path p : ds) {
+					subFolders.add( p );
+					if (recursive) {
+						subFolders.addAll( getSubFolders( folder, recursive) );
+					}
+				}
+			}
+		} finally {
+			folderScanSemaphore.release();
+		}
+		return subFolders;
+	}
+
+	public List<Path> getAllFilesFrom( Path folder, boolean deleteEmptyFolders ) throws IOException, InterruptedException {
+		List<Path> paths = new ArrayList<>();
+		List<Path> contents = getInstance().getContents(folder, null, true);
+		for (Path entry : contents) {
+			if (Files.isDirectory(entry)) {
+				List<Path> folderContents = getAllFilesFrom(entry, deleteEmptyFolders); 
+				if (folderContents == null || folderContents.isEmpty()) {
+					BackLogProcessor.getInstance().schedule( new DeleteTask( folder, false ));
+				} else {
+					paths.addAll( folderContents );
+				}
+			} else {
+				paths.add(entry);
 			}
 		}
 		return paths;

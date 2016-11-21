@@ -1,4 +1,4 @@
-package dynamo.core.services;
+package dynamo.services;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.common.collect.Lists;
 
-import dynamo.backlog.tasks.files.FileUtils;
+import dynamo.manager.FolderManager;
 
 
 @Path("file-system")
@@ -25,8 +25,8 @@ public class FileSystemService {
 	}
 
 	@Path("/browse/{folder}")
-	public List<java.nio.file.Path> getChildren(@PathParam("folder") String folder) throws IOException {
-		return FileUtils.getChildFolders( Paths.get(folder));
+	public List<java.nio.file.Path> getChildren(@PathParam("folder") String folder) throws IOException, InterruptedException {
+		return FolderManager.getInstance().getSubFolders( Paths.get(folder), false);
 	}
 
 }

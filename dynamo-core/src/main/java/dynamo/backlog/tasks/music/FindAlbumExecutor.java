@@ -15,7 +15,6 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.finders.music.MusicAlbumFinder;
 import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.MusicManager;
-import dynamo.model.Downloadable;
 import dynamo.model.backlog.find.FindMusicAlbumTask;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicQuality;

@@ -1,8 +1,6 @@
 package dynamo.backlog.tasks.tvshows;
 
-import java.io.IOException;
 import java.nio.file.DirectoryStream.Filter;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,7 +13,6 @@ import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.ScanFolderTask;
 import dynamo.core.Language;
-import dynamo.core.manager.FileSystemManager;
 import dynamo.model.DownloadableStatus;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowDAO;

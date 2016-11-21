@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -466,11 +465,18 @@ public class DownloadableManager {
 		return downloadImage(localFile, url, referer);
 	}
 	
-	public void addAllSimilarNamedFiles(Path p, Downloadable downloadable) throws IOException {
-		DirectoryStream<Path> associatedFiles = Files.newDirectoryStream( p.getParent() );
-		String filePrefix = p.getFileName().toString();
-		filePrefix = filePrefix.substring(0,  filePrefix.lastIndexOf('.'));
-		for (Path relatedFile : associatedFiles) {
+	public void addAllSimilarNamedFiles(Path p, Downloadable downloadable) throws IOException, InterruptedException {
+		
+		String fileName = p.getFileName().toString();
+		final String filePrefix = fileName.substring(0,  fileName.lastIndexOf('.'));
+
+		List<Path> relatedFiles = FolderManager.getInstance().getContents(p.getParent(), new DirectoryStream.Filter<Path>() {
+			@Override
+			public boolean accept(Path path) {
+				return path.getFileName().toString().startsWith( filePrefix );
+			}
+		}, false);
+		for (Path relatedFile : relatedFiles) {
 			if (relatedFile.getFileName().toString().startsWith( filePrefix )) {
 				addFile( downloadable, relatedFile );
 			}

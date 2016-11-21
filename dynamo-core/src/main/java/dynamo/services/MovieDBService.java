@@ -21,21 +21,22 @@ import dynamo.core.Language;
 import dynamo.core.manager.ErrorManager;
 import dynamo.movies.model.Movie;
 import dynamo.movies.model.MovieManager;
+import dynamo.movies.model.TheMovieDB;
 
 @Path("movie-db")
 public class MovieDBService {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<MovieInfo> find(@QueryParam("name") String name, @QueryParam("year") int year, @QueryParam("lang") String language) throws MovieDbException {
-		ResultList<MovieInfo> result = MovieManager.getInstance().search(name, year, Language.getByShortName( language ));
+	public List<MovieInfo> find(@QueryParam("name") String name, @QueryParam("year") int year, @QueryParam("lang") String language) throws MovieDbException, InterruptedException {
+		ResultList<MovieInfo> result = TheMovieDB.getInstance().search(name, year, Language.getByShortName( language ));
 		if (result.getTotalResults() > 0) {
 			result.getResults().stream().forEach(movie -> {
 				movie.setOriginalLanguage(movie.getOriginalLanguage() != null ? movie.getOriginalLanguage().toUpperCase() : "EN");
 				if (StringUtils.isNotEmpty( movie.getPosterPath() )) {
 					try {
-						movie.setPosterPath( MovieManager.getInstance().getImageURL( movie.getPosterPath()) );
-					} catch (MovieDbException e) {
+						movie.setPosterPath( TheMovieDB.getInstance().getImageURL( movie.getPosterPath()) );
+					} catch (MovieDbException | InterruptedException e) {
 						ErrorManager.getInstance().reportThrowable( e );
 					}
 				}
@@ -46,8 +47,8 @@ public class MovieDBService {
 	}
 	
 	@PUT
-	public Movie selectMovie(@QueryParam("id") long id, @QueryParam("movieDbId") int movieDbId) throws MovieDbException, IOException {
-		MovieInfo movieDb = MovieManager.getInstance().getMovieInfo( movieDbId );
+	public Movie selectMovie(@QueryParam("id") long id, @QueryParam("movieDbId") int movieDbId) throws MovieDbException, IOException, InterruptedException {
+		MovieInfo movieDb = TheMovieDB.getInstance().getMovieInfo( movieDbId, null );
 		return MovieManager.getInstance().associate(id, movieDb);
 	}
 

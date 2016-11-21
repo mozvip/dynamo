@@ -1,5 +1,6 @@
 package dynamo.backlog.tasks.core;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 import dynamo.core.model.TaskExecutor;
@@ -12,7 +13,7 @@ public abstract class FindDownloadableImageExecutor<T extends Downloadable> exte
 		super(task);	
 	}
 	
-	public abstract boolean downloadImageTo( Path localImage );
+	public abstract boolean downloadImageTo( Path localImage ) throws IOException;
 	
 	public void onImageFound( Path localImage ) {
 		

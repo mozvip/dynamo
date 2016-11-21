@@ -78,7 +78,7 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 							files.add( sourceFolder );
 							sourceFolder = sourceFolder.getParent();
 						} else {
-							files = FolderManager.getAllFilesFrom( sourceFolder, true );
+							files = FolderManager.getInstance().getAllFilesFrom( sourceFolder, true );
 						}
 
 						for (Iterator<Path> iterator = files.iterator(); iterator.hasNext();) {

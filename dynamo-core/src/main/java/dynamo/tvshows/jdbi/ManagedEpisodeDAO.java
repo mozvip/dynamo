@@ -1,6 +1,5 @@
 package dynamo.tvshows.jdbi;
 
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import dynamo.core.VideoSource;
 import dynamo.core.model.DownloadableDAO;
 import dynamo.jdbi.core.BindEnum;
 import dynamo.jdbi.core.BindLocalDate;
-import dynamo.jdbi.core.BindPath;
 import dynamo.model.DownloadableStatus;
 import dynamo.tvshows.model.ManagedEpisode;
 

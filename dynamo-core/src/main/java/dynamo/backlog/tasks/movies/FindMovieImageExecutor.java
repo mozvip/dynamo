@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 
 import com.omertron.themoviedbapi.MovieDbException;
@@ -13,7 +14,7 @@ import dynamo.backlog.tasks.core.FindDownloadableImageExecutor;
 import dynamo.core.manager.ErrorManager;
 import dynamo.manager.DownloadableManager;
 import dynamo.movies.model.Movie;
-import dynamo.movies.model.MovieManager;
+import dynamo.movies.model.TheMovieDB;
 import dynamo.suggesters.movies.IMDBTitle;
 import dynamo.suggesters.movies.IMDBWatchListSuggester;
 import dynamo.video.VideoManager;
@@ -35,7 +36,7 @@ public class FindMovieImageExecutor extends FindDownloadableImageExecutor<Movie>
 				Path imageInFolder = getImageInFolderPath(mainVideoFile.get());
 				if (!Files.exists(imageInFolder)) {
 					try {
-						Files.copy( localImage, imageInFolder);
+						Files.copy(localImage, imageInFolder, StandardCopyOption.REPLACE_EXISTING);
 					} catch (IOException e) {
 						ErrorManager.getInstance().reportThrowable( e );
 					}
@@ -72,11 +73,11 @@ public class FindMovieImageExecutor extends FindDownloadableImageExecutor<Movie>
 		// try from MovieDB first
 		if (movie.getMovieDbId() > 0) {
 			try {
-				MovieInfo movieDb = MovieManager.getInstance().getMovieInfo( movie.getMovieDbId() );
+				MovieInfo movieDb = TheMovieDB.getInstance().getMovieInfo( movie.getMovieDbId(), null );
 				if ( movieDb.getPosterPath() != null ) {
-					return DownloadableManager.downloadImage(movie, MovieManager.getInstance().getImageURL( movieDb.getPosterPath()), null);
+					return DownloadableManager.downloadImage(movie, TheMovieDB.getInstance().getImageURL( movieDb.getPosterPath()), null);
 				}
-			} catch (MovieDbException | IOException e) {
+			} catch (MovieDbException | IOException | InterruptedException e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
 		}

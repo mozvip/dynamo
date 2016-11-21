@@ -34,13 +34,15 @@ public class ITunesCharts implements MusicAlbumSuggester, MovieSuggester {
 			Element img = element.select("img").first();
 			String albumName = img.attr("alt");
 			String artistName = element.select("h4").first().text();
-			String imageURL = img.absUrl("src");
 			
 			String suggestionURL = img.parent().absUrl("href");
 			
+			WebDocument albumPage = HTTPClient.getInstance().getDocument( suggestionURL, HTTPClient.REFRESH_ONE_WEEK );
+			String imageURL = albumPage.jsoupSingle("img[src-swap-high-dpi]").absUrl("src-swap-high-dpi");
+			imageURL = imageURL.replace("200x200bb", "340x340bb");
 			// FIXME : extract genre
 
-			MusicManager.getInstance().suggest(artistName, albumName, imageURL, referer, suggestionURL);
+			MusicManager.getInstance().suggest(artistName, albumName, imageURL, suggestionURL, suggestionURL);
 		}
 	}
 
@@ -55,10 +57,13 @@ public class ITunesCharts implements MusicAlbumSuggester, MovieSuggester {
 			Element img = element.select("img").first();
 			String movieName = img.attr("alt");
 			String genre = element.select("h4").first().text();
-			String imageURL = img.absUrl("src");
 			
 			String suggestionURL = img.parent().absUrl("href");
 			
+			WebDocument moviePage = HTTPClient.getInstance().getDocument( suggestionURL, HTTPClient.REFRESH_ONE_WEEK );
+			String imageURL = moviePage.jsoupSingle("img[src-swap-high-dpi]").absUrl("src-swap-high-dpi");
+			// imageURL = imageURL.replace("200x200bb", "340x340bb");
+
 			// TODO : use genre ?
 			
 			int year = -1;
