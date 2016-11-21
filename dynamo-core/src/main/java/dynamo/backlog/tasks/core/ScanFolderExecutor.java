@@ -1,19 +1,17 @@
 package dynamo.backlog.tasks.core;
 
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.ScanFolderTask;
 import dynamo.core.manager.ErrorManager;
-import dynamo.core.manager.FileSystemManager;
 import dynamo.core.model.ReportProgress;
 import dynamo.core.model.TaskExecutor;
+import dynamo.manager.FolderManager;
 
 public abstract class ScanFolderExecutor<T extends ScanFolderTask> extends TaskExecutor<ScanFolderTask> implements ReportProgress {
 	
@@ -41,20 +39,14 @@ public abstract class ScanFolderExecutor<T extends ScanFolderTask> extends TaskE
 		}
 		String taskLabel = getCurrentLabel();
 		setCurrentLabel( String.format("%s - On Hold", taskLabel));
-		FileSystemManager.getInstance().acquireFolderScan();
 		setCurrentLabel( taskLabel);
 	}
 	
 	@Override
-	public void shutdown() throws Exception {
-		FileSystemManager.getInstance().releaseFolderScan();
-	}
-
-	@Override
 	public void execute() throws Exception {
 		Path rootFolder = task.getFolder();
 
-		List<Path> topLevelPaths = getTopLevelPathList( rootFolder );
+		List<Path> topLevelPaths = getTopLevelPaths( rootFolder );
 
 		if (topLevelPaths != null) {
 			totalItems = topLevelPaths.size();
@@ -85,15 +77,10 @@ public abstract class ScanFolderExecutor<T extends ScanFolderTask> extends TaskE
 
 	public abstract Filter<Path> getFileFilter();
 
-	protected List<Path> getTopLevelPathList( Path rootFolder ) throws IOException {
-		List<Path> thisLevelFolders = new ArrayList<Path>();
-		try (DirectoryStream<Path> ds = getFileFilter() != null ? Files.newDirectoryStream( rootFolder, getFileFilter() ) : Files.newDirectoryStream( rootFolder )) {
-			for (Path currentPath : ds) {
-				thisLevelFolders.add( currentPath );
-			}
-		}
-		if (thisLevelFolders.size() > 0) {
-			return thisLevelFolders;
+	protected List<Path> getTopLevelPaths( Path rootFolder ) throws IOException, InterruptedException {
+		List<Path> topLevelPaths = FolderManager.getInstance().getContents( rootFolder, getFileFilter(), false );
+		if (topLevelPaths.size() > 0) {
+			return topLevelPaths;
 		} else {
 			// empty
 			return null;

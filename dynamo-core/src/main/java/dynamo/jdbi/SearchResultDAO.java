@@ -8,7 +8,6 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
-import dynamo.core.DownloadFinder;
 import dynamo.jdbi.core.BindClassName;
 import dynamo.jdbi.core.BindEnum;
 import dynamo.jdbi.core.DAO;

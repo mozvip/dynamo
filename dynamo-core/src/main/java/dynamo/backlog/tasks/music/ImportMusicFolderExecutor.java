@@ -1,16 +1,16 @@
 package dynamo.backlog.tasks.music;
 
-import java.nio.file.DirectoryStream;
 import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.AudioFileFilter;
+import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.backlog.tasks.files.DeleteFileTask;
 import dynamo.core.manager.ErrorManager;
+import dynamo.manager.FolderManager;
 import dynamo.manager.MusicManager;
 import dynamo.model.music.MusicFile;
 import dynamo.music.jdbi.MusicAlbumDAO;
@@ -38,34 +38,29 @@ public class ImportMusicFolderExecutor extends ScanFolderExecutor<ImportMusicFol
 		if (MusicManager.getInstance().isCleanDuringImport()) {
 			MusicManager.getInstance().cleanFolder(path);
 		}
-		
+
 		List<MusicFile> musicFilesInFolder = musicDAO.findFilesInFolder( path );
 		for (MusicFile musicFile : musicFilesInFolder) {
 			if (musicFile.getFilePath() != null && !Files.isReadable( musicFile.getFilePath() )) {
 				BackLogProcessor.getInstance().schedule( new DeleteFileTask( musicFile.getFilePath() ), false);
 			}
 		}
-
-		DirectoryStream<Path> ds = Files.newDirectoryStream(path, AudioFileFilter.getInstance());
-		for (Path currentPath : ds) {
-
+		
+		List<Path> audioFiles = FolderManager.getInstance().getContents(path, AudioFileFilter.getInstance(), true);
+		for (Path audioFile : audioFiles) {
 			if (cancelled) {
 				return;
 			}
-
-			if (Files.isDirectory(currentPath)) {
-				parsePath(currentPath);
-			} else {
-				importMusicFile(currentPath);
-			}
+			importMusicFile(audioFile);
+			
 		}
 	}
 
-	private void importMusicFile(Path currentPath) {
-		MusicFile musicFile = musicDAO.findMusicFile(currentPath);
+	private void importMusicFile(Path musicFilePath) {
+		MusicFile musicFile = musicDAO.findMusicFile(musicFilePath);
 		if (musicFile == null) {
 			try {
-				runSync(new ImportMusicFileTask( currentPath, keepSourceFiles ));
+				runSync(new ImportMusicFileTask( musicFilePath, keepSourceFiles ));
 			} catch (Exception e) {
 				ErrorManager.getInstance().reportThrowable( task, e );
 			}

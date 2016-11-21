@@ -56,7 +56,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	private String login;
 	@Configurable(ifExpression="T411Provider.enabled", required=true)
 	private String password;
-	@Configurable(ifExpression="T411Provider.enabled", required=true, defaultValue="http://www.t411.in")
+	@Configurable(ifExpression="T411Provider.enabled", required=true, defaultValue="http://www.t411.li")
 	private String baseURL;
 
 	public String getLogin() {

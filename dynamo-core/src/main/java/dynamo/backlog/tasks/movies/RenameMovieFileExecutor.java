@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import core.RegExp;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;

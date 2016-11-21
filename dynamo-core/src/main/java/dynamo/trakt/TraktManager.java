@@ -8,7 +8,6 @@ import java.util.List;
 import org.apache.http.client.ClientProtocolException;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import dynamo.core.Enableable;
 import dynamo.core.Language;

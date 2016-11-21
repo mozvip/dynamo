@@ -3,7 +3,7 @@ package dynamo.manager;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.nio.file.DirectoryStream;
+import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -22,7 +22,6 @@ import com.google.common.cache.CacheBuilder;
 import core.RegExp;
 import core.WebDocument;
 import dynamo.backlog.BackLogProcessor;
-import dynamo.backlog.tasks.core.AudioFileFilter;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.backlog.tasks.files.FileUtils;
 import dynamo.backlog.tasks.music.ImportMusicFolderTask;
@@ -432,33 +431,18 @@ public class MusicManager implements Reconfigurable {
 		}
 	}
 
-	public void cleanFolder(Path folder) throws IOException {
+	public void cleanFolder(Path folder) throws IOException, InterruptedException {
 		// clean folder contents
-		
-		DirectoryStream<Path> ds = Files.newDirectoryStream(folder);
-		List<Path> toDelete = new ArrayList<Path>();
-		boolean canDeleteFiles = true;
-		boolean emptyFolder = true;
-		for (Path p : ds) {
-			emptyFolder = false;
-			
-			if (Files.isDirectory(p) || AudioFileFilter.getInstance().accept( p )) {
-				canDeleteFiles = false;
-				break;
+		Filter<Path> filter = new Filter<Path>() {	
+			@Override
+			public boolean accept(Path p) throws IOException {
+				String fileName = p.getFileName().toString();
+				return Files.size(p) == 0 || fileName.endsWith(".txt") || fileName.endsWith(".lnk") || fileName.endsWith(".sfv") || fileName.equalsIgnoreCase("thumbs.db") || fileName.equalsIgnoreCase("desktop.ini");
 			}
-			
-			String fileName = p.getFileName().toString();
-			if ( Files.size(p) == 0 || fileName.endsWith(".txt") || fileName.endsWith(".lnk") || fileName.endsWith(".sfv") || fileName.equalsIgnoreCase("thumbs.db") || fileName.equalsIgnoreCase("desktop.ini") ) {
-				toDelete.add( p );
-			}
-		}
-		
-		if (emptyFolder) {
-			BackLogProcessor.getInstance().schedule( new DeleteTask( folder, true ));
-		} else if (canDeleteFiles && !toDelete.isEmpty()) {
-			for (Path path : toDelete) {
-				BackLogProcessor.getInstance().schedule(new DeleteTask( path, true ), false);
-			}
+		};
+		List<Path> contents = FolderManager.getInstance().getContents(folder, filter, true);
+		for (Path path : contents) {
+			BackLogProcessor.getInstance().schedule(new DeleteTask( path, true ), false);
 		}
 	}
 

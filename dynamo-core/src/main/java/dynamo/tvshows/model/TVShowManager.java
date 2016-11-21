@@ -32,6 +32,7 @@ import dynamo.finders.core.EpisodeFinder;
 import dynamo.finders.core.TVShowSeasonProvider;
 import dynamo.httpclient.YAMJHttpClient;
 import dynamo.manager.DownloadableManager;
+import dynamo.manager.FolderManager;
 import dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowDAO;
@@ -285,12 +286,11 @@ public class TVShowManager implements Reconfigurable {
 		if (series.getSubtitlesLanguage() == null) {
 			// remove existing subtitles
 			try {
-				for ( Path subtitle : Files.newDirectoryStream( series.getFolder(), SubtitlesFileFilter.getInstance() )) {
-					if (Files.isRegularFile(subtitle)) {
-						BackLogProcessor.getInstance().schedule( new DeleteFileTask(subtitle), false );
-					}
+				List<Path> subtitlesFiles = FolderManager.getInstance().getContents(series.getFolder(), SubtitlesFileFilter.getInstance(), true);
+				for ( Path subtitle : subtitlesFiles) {
+					BackLogProcessor.getInstance().schedule( new DeleteFileTask(subtitle), false );
 				}
-			} catch (IOException e) {
+			} catch (IOException | InterruptedException e) {
 				ErrorManager.getInstance().reportThrowable(e);
 			}
 			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "this.episode.seriesId == '%s'", series.getId() ) );

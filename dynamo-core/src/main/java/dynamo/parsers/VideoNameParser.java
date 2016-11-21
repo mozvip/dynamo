@@ -59,13 +59,7 @@ public class VideoNameParser {
 
 		title = clean( title, filters );
 
-		String[] groups = RegExp.parseGroups(title, "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(MULTI VFF 720p BluRay x264 AC3).*");
-		if (groups != null) {
-			String name = getName( groups[0] );
-			return new ParsedMovieInfo( name, -1, groups[1] );
-		}
-
-		groups = RegExp.parseGroups(title, "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(S\\d{2}E\\d{2}E\\d{2})(.*)");
+		String[] groups = RegExp.parseGroups(title, "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "(S\\d{2}E\\d{2}E\\d{2})(.*)");
 		if (groups != null) {
 			String name = getName( groups[0] ); 
 			String seasonEpisode = groups[1];
@@ -104,7 +98,7 @@ public class VideoNameParser {
 			return new TVShowEpisodeInfo( name, Integer.parseInt( groups[1]), Integer.parseInt( groups[2]), groups[3] );
 		}
 
-		groups = RegExp.parseGroups(title, "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "\\((\\d{4})\\)(.*)");
+		groups = RegExp.parseGroups(title, "(" + NAME_REGEXP + ")" + SEPARATOR_REGEXP + "\\(?(19\\d{2}|20\\d{2})\\)?(.*)");
 		if (groups != null) {
 			String name = getName( groups[0] );
 			return new ParsedMovieInfo( name, Integer.parseInt( groups[1]), groups[2] );
@@ -199,7 +193,7 @@ public class VideoNameParser {
 	public static VideoInfo getVideoInfo( Path path ) {
 		String fileNameWithoutExtension = path.getFileName().toString();
 		if (Files.isRegularFile( path )) {
-			fileNameWithoutExtension = fileNameWithoutExtension.substring(0, fileNameWithoutExtension.lastIndexOf('.'));			
+			fileNameWithoutExtension = fileNameWithoutExtension.substring(0, fileNameWithoutExtension.lastIndexOf('.'));
 		}
 		VideoInfo info = getVideoInfo( fileNameWithoutExtension );
 		if (info == null && Files.isRegularFile( path ) && path.getParent() != null) {

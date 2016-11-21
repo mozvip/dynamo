@@ -150,7 +150,11 @@ public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, 
 							}
 
 							IMDBTitle title = extractIMDBTitle(imdbId);
-							MovieManager.getInstance().createByImdbID(imdbId, title.getImage(), Language.EN, DownloadableStatus.SUGGESTED, false);
+							try {
+								MovieManager.getInstance().createByImdbID(imdbId, title.getImage(), Language.EN, DownloadableStatus.SUGGESTED, false);
+							} catch (MovieDbException | ParseException | InterruptedException e) {
+								ErrorManager.getInstance().reportThrowable( e );
+							}
 						}
 
 						Element nextPageLink = document

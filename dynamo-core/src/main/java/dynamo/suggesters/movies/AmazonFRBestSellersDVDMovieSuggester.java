@@ -1,10 +1,5 @@
 package dynamo.suggesters.movies;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import com.omertron.themoviedbapi.MovieDbException;
-
 import core.WebResource;
 import dynamo.core.Language;
 import dynamo.core.manager.ErrorManager;
@@ -38,19 +33,14 @@ public class AmazonFRBestSellersDVDMovieSuggester extends AmazonRSSSuggester imp
 
 	@Override
 	protected void createSuggestion(String title, String contributor, String imageURL, String rssURL, String suggestionURL) throws Exception {
-		try {
-			title = VideoNameParser.clean(title, filtersRegExps);
-			
-			WebResource image = new WebResource( imageURL.toString(), rssURL.toString() );
-
-			Movie movie = MovieManager.getInstance().suggestByName(title, 0, image, Language.FR, false, suggestionURL);
-			if (movie == null) {
-				ErrorManager.getInstance().reportWarning(String.format("Unable to parse movie name %s", title), true);
-			}
-		} catch ( MovieDbException | IOException | URISyntaxException e) {
-			ErrorManager.getInstance().reportThrowable( e );
-		}
+		title = VideoNameParser.clean(title, filtersRegExps);
 		
+		WebResource image = new WebResource( imageURL.toString(), rssURL.toString() );
+
+		Movie movie = MovieManager.getInstance().suggestByName(title, 0, image, Language.FR, false, suggestionURL);
+		if (movie == null) {
+			ErrorManager.getInstance().reportWarning(String.format("Unable to parse movie name %s", title), true);
+		}
 	}
 
 }

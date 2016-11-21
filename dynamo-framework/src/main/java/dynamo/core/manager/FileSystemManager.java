@@ -4,7 +4,6 @@ import java.util.concurrent.Semaphore;
 
 public class FileSystemManager {
 	
-	private Semaphore folderScanSemaphore = new Semaphore(1);
 	private Semaphore fileOperationSemaphore = new Semaphore(1);
 	
 	private FileSystemManager() {
@@ -16,14 +15,6 @@ public class FileSystemManager {
 	
 	public static FileSystemManager getInstance() {
 		return SingletonHolder.instance;
-	}
-	
-	public void acquireFolderScan() throws InterruptedException {
-		folderScanSemaphore.acquire();
-	}
-	
-	public void releaseFolderScan() {
-		folderScanSemaphore.release();
 	}
 
 	public void acquireFileOperation() throws InterruptedException {
