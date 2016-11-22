@@ -11,9 +11,9 @@
   </div>
 </div>
 
-<div class="row" ng-show="filteredList.length > 24">
+<div class="row" ng-show="filteredList.length > itemsPerPage">
   <p class="text-center">
-    <uib-pagination total-items="filteredList.length" max-size="30" items-per-page="24" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+    <uib-pagination total-items="filteredList.length" max-size="30" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
   </p>
 </div>
 
@@ -31,4 +31,8 @@
   </div>
 </div>
 
-<ng-include src="'common/templates.html'" />
+<div class="row" ng-show="filteredList.length > itemsPerPage">
+  <p class="text-center">
+    <uib-pagination total-items="filteredList.length" max-size="30" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+  </p>
+</div>
