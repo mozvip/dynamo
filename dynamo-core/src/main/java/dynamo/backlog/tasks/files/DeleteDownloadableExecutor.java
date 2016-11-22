@@ -40,7 +40,7 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 		if (downloadable.getStatus() == DownloadableStatus.SNATCHED) {
 			DownloadableManager.getInstance().cancelDownload( downloadable.getId() );
 		}
-		BackLogProcessor.getInstance().unschedule( String.format( "this.downloadable.id == %d", downloadable.getId() ) );
+		BackLogProcessor.getInstance().unschedule( String.format( "task.downloadable.id == %d", downloadable.getId() ) );
 
 		// FIXME: create sub classes for the different downloadable types
 		if ( downloadable instanceof Video ) {

@@ -13,17 +13,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import javax.el.ExpressionFactory;
+import javax.script.ScriptException;
 
 import dynamo.core.Enableable;
 import dynamo.core.EventManager;
 import dynamo.core.LogQueuing;
-import dynamo.core.el.DynamoELContext;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DaemonTask;
 import dynamo.core.model.Task;
 import dynamo.core.model.TaskExecutor;
+import dynamo.scripting.JavaScriptManager;
 
 public class BackLogProcessor extends Thread {
 
@@ -215,14 +215,12 @@ public class BackLogProcessor extends Thread {
 		if (taskClass == null || taskClass.isAssignableFrom( task.getClass() )) {
 			if (expressionToVerify != null) {
 				try {
-					DynamoELContext context = new DynamoELContext( task );
-					result = (Boolean) ExpressionFactory.newInstance().createValueExpression( context, "#{" + expressionToVerify + "}", Boolean.class ).getValue( context );
-				} catch (javax.el.PropertyNotFoundException e) {
-					if (taskClass != null) {
-						throw e;
-					} else {
-						// this is expected to happen
+					synchronized ( this ) {
+						JavaScriptManager.getInstance().put("task", task);
+						result = (Boolean) JavaScriptManager.getInstance().eval( expressionToVerify );
 					}
+				} catch (ScriptException e) {
+					ErrorManager.getInstance().reportThrowable(e);
 				}
 			} else {
 				result = true;

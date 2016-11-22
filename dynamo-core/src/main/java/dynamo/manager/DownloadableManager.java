@@ -308,7 +308,7 @@ public class DownloadableManager {
 
 	public void ignore(Downloadable downloadable) {
 		DownloadableManager.getInstance().logStatusChange( downloadable, DownloadableStatus.IGNORED, String.format("<a href='%s'>%s</a> is now ignored", downloadable.getRelativeLink(), downloadable.toString()) );
-		BackLogProcessor.getInstance().unschedule( String.format( "this.downloadable.id == %d", downloadable.getId() ) );
+		BackLogProcessor.getInstance().unschedule( String.format( "task.downloadable.id == %d", downloadable.getId() ) );
 	}
 
 	public void suggest( Downloadable downloadable, String url ) {

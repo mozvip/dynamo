@@ -246,8 +246,7 @@ public class TVShowManager implements Reconfigurable {
 	public String identifyFolder( Path path, String tvdbId, Language metadataLanguage, Language audioLang, Language subsLang ) throws IOException, TvDbException {
 		ManagedSeries series = tvShowDAO.getTVShowForFolder( path );
 		if ( series != null && !series.getId().equals( tvdbId ) ) {
-			BackLogProcessor.getInstance().unschedule( String.format( "this.episode.series_id == %s", series.getId() ));
-			BackLogProcessor.getInstance().unschedule( String.format( "this.series_id == %s", series.getId() ));
+			BackLogProcessor.getInstance().unschedule( String.format( "task.episode.series_id == %s || task.series_id == %s", series.getId(), series.getId() ));
 
 			unrecognizedDAO.deleteUnrecognizedFiles( series.getId() );
 			tvShowDAO.deleteTVShow( series.getId() );
