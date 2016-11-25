@@ -70,21 +70,23 @@ public class BTKitty extends DownloadFinder implements MagazineProvider, Episode
 		List<SearchResult> results = new ArrayList<>();
 
 		String lastRedirectLocationURL = response.getLastRedirectLocationURL();
-		String url = lastRedirectLocationURL.replace("/0/0.html", "/4/0.html");
-		
-		WebDocument resultsDocument = client.getDocument(url, lastRedirectLocationURL, 0);
-
-		Elements rows = resultsDocument.evaluateJSoup("dl.list-con");
-		for (Element element : rows) {
-			Element link = element.select("dt a").first();
-			String title = link.text();
+		if (lastRedirectLocationURL != null) {
+			String url = lastRedirectLocationURL.replace("/0/0.html", "/4/0.html");
 			
-			float sizeInMegs = parseSize( element.select("span.size").text() );
-
-			String magnetLink = element.select("a[href*=magnet:]").first().attr("href");
-			
-			SearchResult result = new SearchResult(this, SearchResultType.TORRENT, title, magnetLink, url, sizeInMegs);	
-			results.add( result );
+			WebDocument resultsDocument = client.getDocument(url, lastRedirectLocationURL, 0);
+	
+			Elements rows = resultsDocument.evaluateJSoup("dl.list-con");
+			for (Element element : rows) {
+				Element link = element.select("dt a").first();
+				String title = link.text();
+				
+				float sizeInMegs = parseSize( element.select("span.size").text() );
+	
+				String magnetLink = element.select("a[href*=magnet:]").first().attr("href");
+				
+				SearchResult result = new SearchResult(this, SearchResultType.TORRENT, title, magnetLink, url, sizeInMegs);	
+				results.add( result );
+			}
 		}
 
 		return results;
