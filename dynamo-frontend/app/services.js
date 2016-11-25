@@ -8,7 +8,7 @@ angular.module('dynamo')
 
     if ($location.host() == 'localhost') {
         //backendHostAndPort = '192.168.1.75:8081';
-        backendHostAndPort = $location.host() + ':8081';
+        backendHostAndPort = $location.host() + ':' + location.port;
     } else {
         backendHostAndPort = $location.host() + ':' + location.port;
     }
