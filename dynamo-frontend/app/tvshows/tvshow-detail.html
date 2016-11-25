@@ -78,7 +78,10 @@
 
         <div ng-repeat="(seasonNumber, seasonEpisodes) in episodes | groupBy: 'seasonNumber'">
             <a name="season{{seasonNumber}}" />
-            <h3>Season {{seasonNumber}} <button title="Want complete season" class="btn btn-sm btn-default" ng-click="wantSeason(seasonNumber)"><span class="glyphicon glyphicon-heart" /></button><button title="Delete complete season" class="btn btn-sm btn-danger" ng-click="deleteSeason(seasonNumber)"><span class="glyphicon glyphicon-trash" /></button></h3>
+            <h3>Season {{seasonNumber}}
+                <button ng-show="wantSeasonEnabled(seasonNumber)" title="Want complete season" class="btn btn-sm btn-default" ng-click="wantSeason(seasonNumber)"><span class="glyphicon glyphicon-heart" /></button>
+                <button ng-show="deleteSeasonEnabled(seasonNumber)" title="Delete complete season" class="btn btn-sm btn-danger" ng-click="deleteSeason(seasonNumber)"><span class="glyphicon glyphicon-trash" /></button>
+            </h3>
             <table class="table table-condensed table-striped">
                 <tr ng-repeat="episode in seasonEpisodes" ng-class="{success: episode.status=='DOWNLOADED', danger:episode.status=='WANTED', info:episode.status=='SNATCHED', warning:episode.status=='FUTURE'}">
                     <td>{{episode.episodeNumber}}</td>

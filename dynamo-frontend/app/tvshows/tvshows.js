@@ -123,10 +123,10 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   return tvShowsService;
 }])
 
-.controller('TVShowDetailsCtrl', ['$scope', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', 'languages', 'episodes', 'unrecognizedFiles', 'BackendService', '$location', function( $scope, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, searchResultsService, $uibModal, filterFilter, languages, episodes, unrecognizedFiles, BackendService, $location ) {
+.controller('TVShowDetailsCtrl', ['$scope', '$filter', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', 'languages', 'episodes', 'unrecognizedFiles', 'BackendService', '$location', function( $scope, $filter, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, searchResultsService, $uibModal, filterFilter, languages, episodes, unrecognizedFiles, BackendService, $location ) {
 
   $scope.tvshow = tvshow.data;
-  $scope.episodes = episodes.data;
+  $scope.episodes = $filter('orderBy')(episodes.data, '-seasonNumber');
   $scope.languages = languages.data;
   $scope.unrecognizedFiles = unrecognizedFiles.data;
 
@@ -147,6 +147,26 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   }
 
   $scope.selectedEpisode = {};
+
+  $scope.wantSeasonEnabled = function( seasonNumber ) {
+    var enabled = false;
+    $scope.episodes.forEach(function(episode) {
+      if (episode.seasonNumber == seasonNumber && episode.status == 'IGNORED') {
+        enabled = true;
+      }
+    }, this);
+    return enabled;
+  }
+
+  $scope.deleteSeasonEnabled = function( seasonNumber ) {
+    var enabled = false;
+    $scope.episodes.forEach(function(episode) {
+      if (episode.seasonNumber == seasonNumber && (episode.status == 'DOWNLOADED' || episode.status == 'SNATCHED' || episode.status == 'WANTED')) {
+        enabled = true;
+      }
+    }, this);
+    return enabled;
+  }
 
   $scope.wrongShow = function() {
     return $uibModal.open({
