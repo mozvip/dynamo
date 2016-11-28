@@ -33,9 +33,6 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
         return configurationService.getItems();
       }]
     }
-  }).when('/tvshows-wanted', {
-    templateUrl: 'tvshows/episodes.html',
-    controller: 'EpisodesCtrl'
   }).when('/tvshows-unrecognized', {
     templateUrl: 'tvshows/tvshows-unrecognized.html',
     controller: 'TVShowsUnrecognizedCtrl',

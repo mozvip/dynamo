@@ -1,5 +1,6 @@
 package dynamo.webapps.acoustid;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -16,10 +17,7 @@ import retrofit.RestAdapter;
 
 public class AcoustId implements Enableable {
 	
-	@Configurable
-	private boolean enabled;
-	
-	@Configurable(ifExpression="AcoustId.enabled", folder=false, required=true)
+	@Configurable(folder=false, required=true)
 	private Path fpcalcPath;
 
 	// registed on https://acoustid.org/applications for Dynamo 0.0.1-SNAPSHOT
@@ -27,11 +25,7 @@ public class AcoustId implements Enableable {
 	
 	@Override
 	public boolean isEnabled() {
-		return enabled;
-	}
-	
-	public void setEnabled(boolean value) {
-		this.enabled = value;
+		return fpcalcPath != null && Files.isExecutable( fpcalcPath );
 	}
 	
 	public Path getFpcalcPath() {
