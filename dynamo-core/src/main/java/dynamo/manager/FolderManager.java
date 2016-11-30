@@ -52,13 +52,17 @@ public class FolderManager {
 	
 	private List<Path> internal_getContents(Path folder, Filter<Path> filter, boolean recursive) throws InterruptedException, IOException {
 		List<Path> results = new ArrayList<>();
+		List<Path> folderResults = new ArrayList<>();
 		try (DirectoryStream<Path> ds = filter != null ? Files.newDirectoryStream(folder, filter) : Files.newDirectoryStream(folder)) {
 			for (Path p : ds) {
-				if (Files.isDirectory(p) && recursive) {
-					results.addAll( internal_getContents( folder, filter, recursive) );
-				} else {
-					results.add( p );
-				}
+				folderResults.add( p );
+			}
+		}
+		for (Path p : folderResults) {
+			if (Files.isDirectory(p) && recursive) {
+				results.addAll( internal_getContents( folder, filter, recursive) );
+			} else {
+				results.add( p );
 			}
 		}
 		return results;
