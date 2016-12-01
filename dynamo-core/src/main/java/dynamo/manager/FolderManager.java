@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class FolderManager {
 			}
 		}
 		for (Path p : folderResults) {
-			if (Files.isDirectory(p) && recursive) {
+			if (Files.isDirectory(p, LinkOption.NOFOLLOW_LINKS) && recursive) {
 				results.addAll( internal_getContents( folder, filter, recursive) );
 			} else {
 				results.add( p );
