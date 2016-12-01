@@ -207,19 +207,13 @@ public class TVShowManager implements Reconfigurable {
 		
 		ManagedSeries managed = TVShowManager.getInstance().getManagedSeries( series.getId() );
 		if (managed == null) {
-			
 			boolean ended = StringUtils.equalsIgnoreCase( series.getStatus(), "Ended" );
-			
 			List<String> aka = new ArrayList<>();
-			
-			aka.add ( series.getSeriesName() );
 			List<String> groups = RegExpMatcher.groups( series.getSeriesName(), "(.*)\\s+\\(\\d{4}\\)");	// removes (year)
 			if (groups != null) {
 				aka.add ( groups.get(0) );
 			}
-			
 			Language originalLanguage = Language.getByShortName( series.getLanguage() );
-
 			managed = new ManagedSeries(
 					series.getId(), series.getSeriesName(), series.getImdbId(), series.getNetwork(), folder, originalLanguage, metaLang, audioLang, subsLang, ended, false, false, aka, tvShowQualities, null );
 		} else {

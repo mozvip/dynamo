@@ -2,6 +2,7 @@ package dynamo.tvshows.model;
 
 import java.io.Serializable;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -72,6 +73,15 @@ public class ManagedSeries implements Serializable {
 
 	public List<String> getAka() {
 		return aka;
+	}
+
+	public List<String> getAllNames() {
+		List<String> allNames = new ArrayList<>();
+		allNames.add( getName() );
+		if (getAka() != null) {
+			allNames.addAll( getAka() );
+		}
+		return allNames;
 	}
 
 	public List<VideoQuality> getQualities() {

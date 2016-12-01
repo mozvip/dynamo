@@ -67,7 +67,7 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 		
 		VideoMetaData metaData = VideoManager.getInstance().getMetaData(episode, mainVideoFilePath );
 
-		for (String seriesName : series.getAka()) {
+		for (String seriesName : series.getAllNames()) {
 			
 			String filename = mainVideoFilePath.getFileName().toString();
 			String filenameWithoutExtension = filename; 

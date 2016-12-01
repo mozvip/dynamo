@@ -42,7 +42,7 @@ public abstract class AbstractFindTVShowExecutor<T extends Downloadable> extends
 	@Override
 	public List<SearchResult> getResults(DownloadFinder provider, T downloadable) {
 		List<SearchResult> allResults = new ArrayList<>();
-		for (String aka : series.getAka()) {
+		for (String aka : series.getAllNames()) {
 			try {
 				List<String> searchStrings = new ArrayList<>();
 				if (provider.needsLanguageInSearchString()) {
