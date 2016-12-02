@@ -80,14 +80,16 @@ public class BackLogProcessor extends Thread {
 
 					// cancel requested
 					while (toUnschedule.peek() != null) {
-						try {
-							UnscheduleSpecs specs = toUnschedule.pop();
-							submissions.stream()
-								.filter( s -> s != null)
-								.filter( s -> match( s.getTask(), specs.taskClass, specs.expressionToVerify)).forEach( s -> cancel( s.getSubmissionId() ) );
-						} catch (Exception e) {
-							// yes I know
-						}
+						UnscheduleSpecs specs = toUnschedule.pop();
+						submissions.stream()
+							.filter( s -> s != null)
+							.filter( s -> {
+								try {
+									return match( s.getTask(), specs.taskClass, specs.expressionToVerify);
+								} catch (ScriptException e) {
+									return false;
+								}
+							}).forEach( s -> cancel( s.getSubmissionId() ) );
 					}
 					
 					submissions.removeAll(
@@ -208,19 +210,15 @@ public class BackLogProcessor extends Thread {
 		unschedule(null, expressionToVerify);
 	}
 
-	private boolean match( Task task, Class<? extends Task> taskClass, String expressionToVerify ) {
+	private boolean match( Task task, Class<? extends Task> taskClass, String expressionToVerify ) throws ScriptException {
 
 		boolean result = false;
 
 		if (taskClass == null || taskClass.isAssignableFrom( task.getClass() )) {
 			if (expressionToVerify != null) {
-				try {
-					synchronized ( this ) {
-						JavaScriptManager.getInstance().put("task", task);
-						result = (Boolean) JavaScriptManager.getInstance().eval( expressionToVerify );
-					}
-				} catch (ScriptException e) {
-					ErrorManager.getInstance().reportThrowable(e);
+				synchronized ( this ) {
+					JavaScriptManager.getInstance().put("task", task);
+					result = (Boolean) JavaScriptManager.getInstance().eval( expressionToVerify );
 				}
 			} else {
 				result = true;
@@ -231,9 +229,13 @@ public class BackLogProcessor extends Thread {
 		
 	}
 
+	private boolean match( Task task, Class<? extends Task> taskClass ) {
+		return (taskClass.isAssignableFrom( task.getClass() ));
+	}
+
 	public boolean isRunningOrPending( Class<? extends Task> taskClass ) {
 		synchronized (submissions) {
-			return submissions.stream().filter( submission -> match( submission.getTask(), taskClass, null )).findAny().isPresent();
+			return submissions.stream().filter( submission -> match( submission.getTask(), taskClass )).findAny().isPresent();
 		}
 	}
 
