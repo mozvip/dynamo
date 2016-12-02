@@ -26,29 +26,34 @@ public class RLSBBCom implements KioskIssuesSuggester {
 	@Override
 	public void suggestIssues() throws KioskIssuesSuggesterException {
 		for (int i=1; i<=MAX_PAGES; i++) {
-			String url = String.format("http://rlsbb.com/category/ebooks-magazines/page/%d", i);
-			WebDocument document;
-			try {
-				document = HTTPClient.getInstance().getDocument( url, HTTPClient.REFRESH_ONE_HOUR );
-			} catch (IOException e) {
-				throw new KioskIssuesSuggesterException( e );
-			}
-			Elements titles = document.jsoup("div.post");
-			for (Element element : titles) {
-				String title = element.select("h2>a").first().text();
-				String coverImage = element.select(".postContent img").first().absUrl("src");
-				
-				Set<DownloadLocation> downloadLocations = new HashSet<>();
-				Elements links = element.select(".postContent a");
-				for (Element link : links) {
-					downloadLocations.add( new DownloadLocation(SearchResultType.HTTP, link.absUrl("href") ));
-				}
-				
-				Element readMoreLink = titles.select("a.postReadMore").first();
-
-				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, downloadLocations, Language.EN, -1.0f, getClass(), false, readMoreLink.absUrl("href")));
-			}
+			extractFromPage(i);
 		}
+	}
+
+	private WebDocument extractFromPage(int i) throws KioskIssuesSuggesterException {
+		String url = String.format("http://rlsbb.com/category/ebooks-magazines/page/%d", i);
+		WebDocument document;
+		try {
+			document = HTTPClient.getInstance().getDocument( url, HTTPClient.REFRESH_ONE_HOUR );
+		} catch (IOException e) {
+			throw new KioskIssuesSuggesterException( e );
+		}
+		Elements titles = document.jsoup("div.post");
+		for (Element element : titles) {
+			String title = element.select("h2>a").first().text();
+			String coverImage = element.select(".postContent img").first().absUrl("src");
+			
+			Set<DownloadLocation> downloadLocations = new HashSet<>();
+			Elements links = element.select(".postContent a");
+			for (Element link : links) {
+				downloadLocations.add( new DownloadLocation(SearchResultType.HTTP, link.absUrl("href") ));
+			}
+			
+			Element readMoreLink = titles.select("a.postReadMore").first();
+
+			MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, downloadLocations, Language.EN, -1.0f, getClass(), false, readMoreLink.absUrl("href")));
+		}
+		return document;
 	}
 	
 	@Override

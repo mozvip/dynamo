@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import core.WebDocument;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.manager.ErrorManager;
 import dynamo.magazines.KioskIssuesSuggester;
 import dynamo.magazines.KioskIssuesSuggesterException;
@@ -17,6 +18,7 @@ import dynamo.model.DownloadSuggestion;
 import dynamo.model.result.SearchResultType;
 import hclient.HTTPClient;
 
+@ClassDescription(label="EBookW")
 public class EBookW implements KioskIssuesSuggester {
 	
 	private final static int MAX_PAGES = 10;
@@ -73,11 +75,5 @@ public class EBookW implements KioskIssuesSuggester {
 		}
 		return locations;
 	}
-	
-	@Override
-	public String toString() {
-		return "EBookW.com";
-	}
-	
 
 }
