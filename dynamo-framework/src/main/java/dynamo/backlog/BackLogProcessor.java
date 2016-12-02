@@ -79,7 +79,7 @@ public class BackLogProcessor extends Thread {
 				synchronized (submissions) {
 
 					// cancel requested
-					while (!toUnschedule.isEmpty()) {
+					while (toUnschedule.peek() != null) {
 						try {
 							UnscheduleSpecs specs = toUnschedule.pop();
 							submissions.stream()
