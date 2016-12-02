@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import javax.script.ScriptException;
 
+import dynamo.backlog.tasks.core.ImmediateTask;
 import dynamo.core.Enableable;
 import dynamo.core.EventManager;
 import dynamo.core.LogQueuing;
@@ -160,6 +161,11 @@ public class BackLogProcessor extends Thread {
 			return null;
 		}
 		
+		if (task instanceof ImmediateTask) {
+			runImmediately(task, reportQueued);
+			return null;
+		} 
+		
 		TaskSubmission submission = null;
 
 		synchronized (submissions) {
@@ -243,11 +249,15 @@ public class BackLogProcessor extends Thread {
 		toUnschedule.add( new UnscheduleSpecs( taskClass, expressionToVerify ) );
 	}
 
-	public void runSync(Task task, boolean reportQueued) throws Exception {
+	public void runImmediately(Task task, boolean reportQueued) {
 		Class<? extends TaskExecutor> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
 		if (backLogTaskClass != null) {
 			TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
-			executor.execute();
+			try {
+				executor.execute();
+			} catch (Exception e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}
 		}
 	}
 

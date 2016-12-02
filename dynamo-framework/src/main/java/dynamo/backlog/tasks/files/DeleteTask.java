@@ -3,9 +3,10 @@ package dynamo.backlog.tasks.files;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import dynamo.backlog.tasks.core.ImmediateTask;
 import dynamo.core.model.Task;
 
-public class DeleteTask extends Task {
+public class DeleteTask extends Task implements ImmediateTask {
 
 	private Path path;
 	private boolean removeParentFolderIfEmpty = false;

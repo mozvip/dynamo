@@ -194,7 +194,7 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 	}
 
 	protected void runSync( Task task ) throws Exception {
-		BackLogProcessor.getInstance().runSync( task, false );
+		BackLogProcessor.getInstance().runImmediately( task, false );
 	}
 
 }

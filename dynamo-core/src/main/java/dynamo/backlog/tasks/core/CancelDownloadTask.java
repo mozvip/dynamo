@@ -3,7 +3,7 @@ package dynamo.backlog.tasks.core;
 import dynamo.core.model.Task;
 import dynamo.model.result.SearchResult;
 
-public class CancelDownloadTask extends Task {
+public class CancelDownloadTask extends Task implements ImmediateTask {
 
 	private SearchResult result;
 
