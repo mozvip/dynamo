@@ -12,7 +12,7 @@
     </select>
   </div>
   <div class="form-group">
-    <button class="btn btn-danger" ng-show="status == 'SUGGESTED'" ng-click="deleteSuggestions">Delete Suggestions</button>
+    <button class="btn btn-danger" ng-show="status == 'SUGGESTED'" ng-click="deleteSuggestions()">Delete Suggestions</button>
   </div>
 </div>
 
@@ -36,7 +36,7 @@
   </div>
 </div>
 
-<div class="row" ng-show="filteredList.length > itemsPerPage">
+<div class="row col-md-12" ng-show="filteredList.length > itemsPerPage">
   <p class="text-center">
     <uib-pagination total-items="filteredList.length" max-size="30" force-ellipses="true" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
   </p>
