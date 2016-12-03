@@ -11,6 +11,9 @@
       <option value="" />
     </select>
   </div>
+  <div class="form-group">
+    <button class="btn btn-danger" ng-show="status == 'SUGGESTED'" ng-click="deleteSuggestions">Delete Suggestions</button>
+  </div>
 </div>
 
 <div class="row" ng-show="filteredList.length > itemsPerPage">

@@ -8,6 +8,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import core.WebDocument;
+import dynamo.core.DownloadFinder;
+import dynamo.core.Language;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.manager.ErrorManager;
 import dynamo.magazines.KioskIssuesSuggester;
@@ -43,8 +45,17 @@ public class EBookW implements KioskIssuesSuggester {
 		Elements footerList = document.jsoup("#dle-content .foot");
 		int index = 0;
 		for (Element shortNews : shortNewsList) {
-			Elements imageElement = shortNews.select("img");
 			
+			String[] attributes = shortNews.select(".text-center").first().ownText().split("\\|");
+			
+			String languageStr = attributes[0];
+			Language language = Language.getByFullName( languageStr );
+			
+			String sizeExpression = attributes[ attributes.length -1 ];
+			
+			float size = DownloadFinder.parseSize(sizeExpression);
+			
+			Elements imageElement = shortNews.select("img");
 			if (imageElement != null && imageElement.size() > 0) {
 				String coverImage = imageElement.first().absUrl("src");
 				String title = imageElement.attr("alt");
@@ -54,7 +65,7 @@ public class EBookW implements KioskIssuesSuggester {
 				
 				Set<DownloadLocation> locations = extractLocations(magazineURL, url);
 
-				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, locations, null, -1.0f, getClass(), false, magazineURL));
+				MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, locations, language, size, getClass(), false, magazineURL));
 			}
 			index++;
 		}

@@ -483,4 +483,8 @@ public class DownloadableManager {
 		}
 	}
 
+	public void deleteSuggestions(Class<? extends Downloadable> klass) {
+		downloadableDAO.delete(klass, DownloadableStatus.SUGGESTED);
+	}
+
 }

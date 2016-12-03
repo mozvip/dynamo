@@ -12,7 +12,6 @@ import dynamo.core.manager.DAOManager;
 import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.DownloadSuggestion;
-import dynamo.model.DownloadableStatus;
 
 public class BookManager implements Enableable {
 
@@ -90,10 +89,6 @@ public class BookManager implements Enableable {
 
 	public List<Book> getWantedContents(Language language, String filter) {
 		return bookDAO.getWantedContents( language, filter );
-	}
-
-	public void deleteKiosk() {
-		downloadableDAO.delete( Book.class, DownloadableStatus.SUGGESTED);
 	}
 
 	public void suggest( DownloadSuggestion suggestion ) throws IOException {

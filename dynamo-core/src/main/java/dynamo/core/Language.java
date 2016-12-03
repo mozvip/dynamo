@@ -75,9 +75,10 @@ public enum Language implements Labelized {
 	}
 
 	public static Language getByFullName( String string ) {
+		String languageStr = string.trim();
 		for (Language language : Language.values()) {
 			for (String langName : language.getFullNames()) {
-				if (StringUtils.equalsIgnoreCase( langName, string)) {
+				if (StringUtils.equalsIgnoreCase( langName, languageStr)) {
 					return language;
 				}
 			}

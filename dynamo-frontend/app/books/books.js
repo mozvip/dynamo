@@ -54,6 +54,10 @@ angular.module('dynamo.books', ['ngRoute', 'ngResource'])
       return BackendService.getImageURL(url);
     }
 
+    $scope.deleteSuggestions = function() {
+      BackendService.post('downloadable/delete-suggestions/BOOK');
+    }    
+
     $scope.pageContents = [];
     downloadableService.find('BOOK', $routeParams.status).then(function (response) {
       $scope.allItems = response.data;

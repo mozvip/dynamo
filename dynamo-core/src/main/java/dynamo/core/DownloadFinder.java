@@ -74,7 +74,7 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 		return ready;
 	}
 	
-	protected float parseSize(String sizeExpression) {
+	public static float parseSize(String sizeExpression) {
 		if (RegExpMatcher.matches(sizeExpression, megsExpression)) {
 			return Float.parseFloat( RegExpMatcher.groups(sizeExpression, megsExpression).get(0).replaceAll(",", ".") );				
 		}

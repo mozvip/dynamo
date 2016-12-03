@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import core.WebDocument;
+import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.magazines.KioskIssuesSuggester;
@@ -30,7 +31,7 @@ public class RLSBBCom implements KioskIssuesSuggester {
 		}
 	}
 
-	private WebDocument extractFromPage(int i) throws KioskIssuesSuggesterException {
+	public WebDocument extractFromPage(int i) throws KioskIssuesSuggesterException {
 		String url = String.format("http://rlsbb.com/category/ebooks-magazines/page/%d", i);
 		WebDocument document;
 		try {
@@ -43,6 +44,13 @@ public class RLSBBCom implements KioskIssuesSuggester {
 			String title = element.select("h2>a").first().text();
 			String coverImage = element.select(".postContent img").first().absUrl("src");
 			
+			String[] attributes = element.select(".postContent p").last().ownText().split("\\|");
+			
+			String sizeStr = attributes[ attributes.length -1 ];
+			float size = DownloadFinder.parseSize( sizeStr );
+			
+			Language language = Language.getByFullName( attributes[0] );
+			
 			Set<DownloadLocation> downloadLocations = new HashSet<>();
 			Elements links = element.select(".postContent a");
 			for (Element link : links) {
@@ -51,7 +59,7 @@ public class RLSBBCom implements KioskIssuesSuggester {
 			
 			Element readMoreLink = titles.select("a.postReadMore").first();
 
-			MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, downloadLocations, Language.EN, -1.0f, getClass(), false, readMoreLink.absUrl("href")));
+			MagazineManager.getInstance().suggest( new DownloadSuggestion(title, coverImage, url, downloadLocations, language, size, getClass(), false, readMoreLink.absUrl("href")));
 		}
 		return document;
 	}

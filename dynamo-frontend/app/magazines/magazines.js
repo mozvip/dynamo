@@ -52,12 +52,18 @@ angular.module('dynamo.magazines', ['ngRoute', 'ngResource'])
 
     $scope.languages = languages.data;
 
+    $scope.status = $routeParams.status;
+
     $scope.pageContents = [];
     downloadableService.find('MAGAZINEISSUE', $routeParams.status).then(function (response) {
       $scope.allItems = $filter('orderBy')(response.data, '-creationDate');
       $scope.pageContents = $scope.allItems.slice(0, $scope.itemsPerPage);
       $scope.filteredList = $scope.allItems.slice(0);
     });
+
+    $scope.deleteSuggestions = function() {
+      BackendService.post('downloadable/delete-suggestions/MAGAZINEISSUE');
+    }
 
     $scope.want = function (downloadable) {
       downloadableService.want(downloadable.id);

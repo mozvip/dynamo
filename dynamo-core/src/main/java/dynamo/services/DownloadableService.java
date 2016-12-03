@@ -71,6 +71,13 @@ public class DownloadableService {
 	}
 	
 	@POST
+	@Path("/delete-suggestions/{type}")
+	public void redownload(@PathParam("type") String type) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException  {
+		Class<? extends Downloadable> klass = DownloadableManager.getInstance().getDownloadableTypeBySimpleName( type );
+		DownloadableManager.getInstance().deleteSuggestions( klass );
+	}
+
+	@POST
 	@Path("/force-search/{id}")
 	public void forceSearch(@PathParam("id") long id, @QueryParam("reset") boolean reset) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException  {
 		DownloadableManager.getInstance().redownload(id, reset);

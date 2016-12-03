@@ -140,10 +140,6 @@ public class MagazineManager implements Reconfigurable {
 		return magazineDAO.findIssues( magazine.getSearchName() );
 	}
 
-	public void deleteKiosk() {
-		downloadableDAO.delete( MagazineIssue.class, DownloadableStatus.SUGGESTED);
-	}
-
 	public List<MagazineIssue> getKioskContents( Language language, String filter ) {
 		return magazineDAO.getKioskContents(language, filter );
 	}

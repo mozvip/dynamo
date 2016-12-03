@@ -49,7 +49,7 @@ public interface DownloadableUtilsDAO {
 	public List<DownloadInfo> findByStatus(@BindClassName("className") Class<? extends Downloadable> klass, @BindEnum("status") DownloadableStatus status);
 
 	@SqlUpdate("DELETE FROM DOWNLOADABLE WHERE DTYPE = :className AND status = :statusToDelete")
-	public void delete(@BindClassName("className") Class<? extends Downloadable> className, @BindEnum("statusToDelete") DownloadableStatus statusToDelete);
+	public void delete(@BindClassName("className") Class<? extends Downloadable> klass, @BindEnum("statusToDelete") DownloadableStatus statusToDelete);
 
 	@SqlUpdate("INSERT INTO DOWNLOADABLE(DTYPE, NAME, STATUS, YEAR, CREATION_DATE) VALUES (:className, :name, :status, :year, CURRENT_TIMESTAMP())")
 	@GetGeneratedKeys
