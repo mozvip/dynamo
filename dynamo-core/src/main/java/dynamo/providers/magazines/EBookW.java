@@ -46,7 +46,13 @@ public class EBookW implements KioskIssuesSuggester {
 		int index = 0;
 		for (Element shortNews : shortNewsList) {
 			
-			String[] attributes = shortNews.select(".text-center").first().ownText().split("\\|");
+			Element attributeElement = shortNews.select(".text-center").first();
+			
+			if (attributeElement == null) {
+				continue;
+			}
+			
+			String[] attributes = attributeElement.ownText().split("\\|");
 			
 			String languageStr = attributes[0];
 			Language language = Language.getByFullName( languageStr );
