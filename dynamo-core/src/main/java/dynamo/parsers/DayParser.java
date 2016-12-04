@@ -5,9 +5,9 @@ import dynamo.magazines.parsers.MagazineNameParser;
 
 public enum DayParser {
 
-	FR_00("du" + MagazineNameParser.DAY_SEPARATOR_REGEXP + "(\\d{1,2})" + MagazineNameParser.SEPARATOR_REGEXP + "au" + MagazineNameParser.SEPARATOR_REGEXP + "\\d{1,2}" + MagazineNameParser.SEPARATOR_REGEXP + MagazineNameParser.MONTH + MagazineNameParser.SEPARATOR_REGEXP + "(\\d{4})", Language.FR),
-	FR_AND("du" + MagazineNameParser.DAY_SEPARATOR_REGEXP + "(\\d{1,2})" + MagazineNameParser.SEPARATOR_REGEXP + "et" + MagazineNameParser.SEPARATOR_REGEXP + "\\d{1,2}" + MagazineNameParser.SEPARATOR_REGEXP + MagazineNameParser.MONTH + MagazineNameParser.SEPARATOR_REGEXP + "(\\d{4})", Language.FR),
-	FR_01("du" + MagazineNameParser.DAY_SEPARATOR_REGEXP + "(\\d{1,2})" + MagazineNameParser.SEPARATOR_REGEXP + MagazineNameParser.MONTH + MagazineNameParser.SEPARATOR_REGEXP + "(\\d{4})", Language.FR),
+	FR_DU_AU("du\\s+(\\d{1,2})" + MagazineNameParser.SEPARATOR_REGEXP + "au" + MagazineNameParser.SEPARATOR_REGEXP + "\\d{1,2}" + MagazineNameParser.SEPARATOR_REGEXP + MagazineNameParser.MONTH + MagazineNameParser.SEPARATOR_REGEXP + "(\\d{4})", Language.FR),
+	FR_DU_ET("du\\s+(\\d{1,2})" + MagazineNameParser.SEPARATOR_REGEXP + "et" + MagazineNameParser.SEPARATOR_REGEXP + "\\d{1,2}" + MagazineNameParser.SEPARATOR_REGEXP + MagazineNameParser.MONTH + MagazineNameParser.SEPARATOR_REGEXP + "(\\d{4})", Language.FR),
+	FR_DU_DMY("du\\s+(\\d{1,2})" + MagazineNameParser.SEPARATOR_REGEXP + MagazineNameParser.MONTH + MagazineNameParser.SEPARATOR_REGEXP + "(\\d{4})", Language.FR),
 	FR_02("du\\s+\\w+" + MagazineNameParser.DAY_SEPARATOR_REGEXP + "(\\d{1,2})" + MagazineNameParser.SEPARATOR_REGEXP + MagazineNameParser.MONTH + MagazineNameParser.SEPARATOR_REGEXP + "(\\d{4})", Language.FR),
 	FR_03(
 			"du" + MagazineNameParser.DAY_SEPARATOR_REGEXP + "(\\d{1,2})" + MagazineNameParser.SEPARATOR_REGEXP + MagazineNameParser.MONTH + MagazineNameParser.SEPARATOR_REGEXP + "(\\d{4})" + MagazineNameParser.SEPARATOR_REGEXP +

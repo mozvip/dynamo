@@ -18,7 +18,7 @@ import dynamo.utils.DynamoStringUtils;
 
 public class MagazineNameParser {
 	
-	public static String NAME_REGEXP = "[\\wéè]+";
+	public static String NAME_REGEXP = "[\\w\\séè]+";
 	public static String SEPARATOR_REGEXP = "[\\s\\.\\-–_\\/]+";	
 
 	public static String DAY_SEPARATOR_REGEXP = "[\\s\\-_]+";	
