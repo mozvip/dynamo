@@ -61,7 +61,7 @@ public class FolderManager {
 		}
 		for (Path p : folderResults) {
 			if (Files.isDirectory(p, LinkOption.NOFOLLOW_LINKS) && recursive) {
-				results.addAll( internal_getContents( folder, filter, recursive) );
+				results.addAll( internal_getContents( p, filter, recursive) );
 			} else {
 				results.add( p );
 			}
