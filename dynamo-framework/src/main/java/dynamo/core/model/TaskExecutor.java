@@ -98,6 +98,12 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 			} else {
 				execute();
 			}
+		} catch (InterruptedException e) {
+			if (!cancelled) {
+				ErrorManager.getInstance().reportThrowable(getTask(), e);	
+				eTask = e;
+				failed = true;
+			}
 		} catch (Exception e) {
 			eTask = e;
 			failed = true;
@@ -112,7 +118,7 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 			done = true;
 			running = false;
 			
-			if (!cancelled) {
+			if (!cancelled) {	// FIXME: log cancelled tasks too
 
 				if (!(task instanceof NoLogging)) {
 					if (failed) {
