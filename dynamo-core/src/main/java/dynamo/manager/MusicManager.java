@@ -144,6 +144,7 @@ public class MusicManager implements Reconfigurable {
 	private static String[] nameExtractors = new String[] {
 		"(.*)\\s+\\(.dition limit.*\\)",
 		"(.*)\\s+\\(explicit\\)",
+		"(.*)\\s+\\(edited\\)",
 		"(.*)\\s+\\(\\d+CD\\)",
 		"(.*)\\s+\\(Music From the Motion Picture\\)",
 		"(.*)\\s+\\(Original Motion Picture Soundtrack\\)",
