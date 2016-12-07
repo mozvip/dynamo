@@ -17,7 +17,6 @@ the "dynamo" project is the parent pom.
 
 cd into this project folder then
 
-
 ```
 mvn install 
 ```
@@ -35,8 +34,6 @@ Dynamo uses 3 embbeded h2 databases :
 * one for the "core" data (mostly technical stuff like logs) : core.mv.db
 
 Both are automatically created (with liquibase) on the first run, in the current folder.
-
-The file that contains the application database is dynamo.mv.db.
 
 License
 =======
