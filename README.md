@@ -22,11 +22,11 @@ mvn install
 ```
 Dynamo is built in a single jar
 
-* Dependencies
+### Dependencies ###
 
 The only requirement is Java 8. Everything else is obtained through Maven dependencies.
 
-* Database configuration
+### Database configuration ###
 
 Dynamo uses 3 embbeded h2 databases :
 * one for the application data : dynamo.mv.db
