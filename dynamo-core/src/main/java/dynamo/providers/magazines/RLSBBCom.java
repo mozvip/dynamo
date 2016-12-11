@@ -27,12 +27,12 @@ public class RLSBBCom implements KioskIssuesSuggester {
 	@Override
 	public void suggestIssues() throws KioskIssuesSuggesterException {
 		for (int i=1; i<=MAX_PAGES; i++) {
-			extractFromPage(i);
+			extractFromPage("http://rlsbb.com/category/ebooks-magazines/page/%d", i);
 		}
 	}
 
-	public WebDocument extractFromPage(int i) throws KioskIssuesSuggesterException {
-		String url = String.format("http://rlsbb.com/category/ebooks-magazines/page/%d", i);
+	public WebDocument extractFromPage(String baseURL, int i) throws KioskIssuesSuggesterException {
+		String url = String.format(baseURL, i);
 		WebDocument document;
 		try {
 			document = HTTPClient.getInstance().getDocument( url, HTTPClient.REFRESH_ONE_HOUR );
@@ -63,11 +63,5 @@ public class RLSBBCom implements KioskIssuesSuggester {
 		}
 		return document;
 	}
-	
-	@Override
-	public String toString() {
-		return "http://rlsbb.com";
-	}
-	
 
 }

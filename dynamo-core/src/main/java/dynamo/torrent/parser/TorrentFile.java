@@ -38,7 +38,6 @@ package dynamo.torrent.parser;
  */
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -95,41 +94,6 @@ public class TorrentFile {
         info_hash_as_binary = new byte[20];
         info_hash_as_url = new String();
         info_hash_as_hex = new String();
-    }
-
-    /**
-     * Print the torrent information in a readable manner.
-     * @param detailed Choose if we want a detailed output or not. Detailed
-     * output prints the comment, the files list and the pieces hashes while the
-     * standard output simply prints tracker url, creator, creation date and
-     * info hash
-     */
-    public void printData(boolean detailed) {
-        System.out.println("Tracker URL: " + this.announceURL);
-        System.out.println("Torrent created by : " + this.createdBy);
-        System.out.println("Torrent creation date : " + new Date(this.creationDate));
-        System.out.println("Info hash :\n");
-        System.out.println("\t\t" + new String(this.info_hash_as_binary));
-        System.out.println("\t\t" + this.info_hash_as_hex);
-        System.out.println("\t\t" + this.info_hash_as_url);
-        if(detailed){
-            System.out.println("Comment :" + this.comment);
-            System.out.println("\nFiles List :\n");
-            for (int i = 0; i < length.size(); i++) {
-            	System.out.println("\t- " + fileNames.get(i) + " ( " + length.get(i) + " Bytes )");
-            }
-            System.out.println("\n");
-            System.out.println("Pieces hashes (piece length = " +
-                               this.pieceLength + ") :\n");
-            for (int i = 0; i < this.piece_hash_values_as_binary.size(); i++) {
-                System.out.println((i + 1) + ":\t\t" +
-                                   this.piece_hash_values_as_binary.get(i));
-                System.out.println("\t\t" + this.piece_hash_values_as_hex.get(i));
-                System.out.println("\t\t" + this.piece_hash_values_as_url.get(i));
-
-            }
-        }
-
     }
 
 }

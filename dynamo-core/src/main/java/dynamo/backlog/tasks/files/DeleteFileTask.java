@@ -2,9 +2,10 @@ package dynamo.backlog.tasks.files;
 
 import java.nio.file.Path;
 
+import dynamo.backlog.tasks.core.ImmediateTask;
 import dynamo.core.model.Task;
 
-public class DeleteFileTask extends Task {
+public class DeleteFileTask extends Task implements ImmediateTask {
 	
 	private Path path;
 

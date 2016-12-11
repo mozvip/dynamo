@@ -14,4 +14,10 @@ public class MagazineNameParserTest {
 		assertTrue( issueInfo.getIssueNumber() == 2078);
 	}
 
+	@Test
+	public void test2() {
+		MagazineIssueInfo issueInfo = parser.getIssueInfo("La Provence Marseille Du Mercredi 23 Novembre 2016 PDF");
+		assertTrue( issueInfo.getIssueNumber() == 2078);
+	}
+
 }

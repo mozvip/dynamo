@@ -1,5 +1,6 @@
 package dynamo.webapps.acoustid;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -12,16 +13,15 @@ import org.jaudiotagger.tag.Tag;
 
 import dynamo.core.Enableable;
 import dynamo.core.configuration.Configurable;
-import hclient.RetrofitClient;
-import retrofit.RestAdapter;
+import dynamo.core.configuration.Reconfigurable;
 
-public class AcoustId implements Enableable {
+public class AcoustID implements Enableable, Reconfigurable {
 	
 	@Configurable(folder=false, required=true)
 	private Path fpcalcPath;
 
 	// registed on https://acoustid.org/applications for Dynamo 0.0.1-SNAPSHOT
-	private String client = "iZWMfBHr";
+	private String apiKey = "iZWMfBHr";
 	
 	@Override
 	public boolean isEnabled() {
@@ -36,37 +36,52 @@ public class AcoustId implements Enableable {
 		this.fpcalcPath = fpcalcPath;
 	}
 	
-	private AcoustIdService service = null;
-
-	private AcoustId() {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://api.acoustid.org").setClient( new RetrofitClient() ).build();
-		service = restAdapter.create(AcoustIdService.class);
+	private AcoustIDClient client;
+	
+	private AcoustID() {
+		client = new AcoustIDClient( apiKey );
 	}
+	
+	
+
+	public AcoustIdLookupResults lookup(int duration, String fingerprint) {
+		return client.lookup(duration, fingerprint);
+	}
+
+	public AcoustIdLookupResults lookup(String trackid) {
+		return client.lookup(trackid);
+	}
+
+
 
 	static class SingletonHolder {
-		static AcoustId instance = new AcoustId();
+		static AcoustID instance = new AcoustID();
 	}
 
-	public static AcoustId getInstance() {
+	public static AcoustID getInstance() {
 		return SingletonHolder.instance;
 	}
-
-	public AcoustIdLookupResults lookup( int duration, String fingerprint) {
-		return service.lookup(client, duration, fingerprint);
+	
+	public AcoustIDFingerprint fingerprint( Path musicFile ) throws IOException {
+		return calculator.calculate(musicFile);
 	}
-
-	public AcoustIdLookupResults lookup( String trackid) {
-		return service.lookup(client, trackid);
+	
+	private AcoustIDFingerprintCalculator calculator = null;
+	
+	@Override
+	public void reconfigure() {
+		calculator = new AcoustIDFingerprintCalculator( fpcalcPath );
 	}
+	
 	
 	public void populateTag( AcoustIdLookupResults results, Tag audioTag, boolean overwrite ) throws KeyNotFoundException, FieldDataInvalidException {
 		if (results.getResults().size() > 0) {
-			AcoustIdLookupResult preferedResult = results.getResults().get(0);
+			AcoustIdLookupResult bestResult = results.getResults().get(0);
 
-			audioTag.setField(FieldKey.ACOUSTID_ID, preferedResult.getId());
+			audioTag.setField(FieldKey.ACOUSTID_ID, bestResult.getId());
 
-			if (preferedResult.getRecordings() != null && preferedResult.getRecordings().size() > 0) {
-				Recording preferedRecording = preferedResult.getRecordings().get(0);
+			if (bestResult.getRecordings() != null && bestResult.getRecordings().size() > 0) {
+				Recording preferedRecording = bestResult.getRecordings().get(0);
 				
 				String songTitle = preferedRecording.getTitle();
 				

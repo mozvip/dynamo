@@ -50,6 +50,16 @@ import java.util.Random;
  * @version 0.1
  */
 public class TorrentUtils {
+	
+	static MessageDigest md;
+	static {
+		try {
+			md = MessageDigest.getInstance("SHA-1");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
     /**
      * Convenience method to convert a byte to a hex string.
@@ -235,17 +245,9 @@ public class TorrentUtils {
      * @return byte[]
      */
     public static byte[] hash(byte[] hashThis) {
-        try {
-            byte[] hash = new byte[20];
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-
-            hash = md.digest(hashThis);
-            return hash;
-        } catch (NoSuchAlgorithmException nsae) {
-            System.err.println("SHA-1 algorithm is not available...");
-            System.exit(2);
-        }
-        return null;
+        byte[] hash = new byte[20];
+        hash = md.digest(hashThis);
+        return hash;
     }
 
     /**

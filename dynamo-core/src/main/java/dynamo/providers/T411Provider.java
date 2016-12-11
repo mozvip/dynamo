@@ -146,7 +146,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		}
 
 		search = URLEncoder.encode(search, "UTF-8");
-		String searchURL = String.format( baseURL + "/torrents/search/?search=%s&cat=210&submit=Recherche&subcat=%d%s", search, subcat, languageSuffix);
+		String searchURL = String.format( baseURL + "/torrents/search/?search=\\%40name+%s&cat=210&submit=Recherche&subcat=%d%s", search, subcat, languageSuffix);
 		
 		if (additionalParams != null) {
 			searchURL += "&" + additionalParams;
