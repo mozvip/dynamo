@@ -7,7 +7,7 @@ angular.module('dynamo.games', ['ngRoute', 'ngResource'])
       templateUrl: 'games/games.html',
       controller: 'GamesCtrl'
     }).when('/games-configuration', {
-      templateUrl: 'configuration/configuration-template.html',
+      templateUrl: 'games/games-configuration.html',
       controller: 'GamesConfigCtrl',
       resolve: {
         configuration: ['configurationService', function (configurationService) {
@@ -92,15 +92,20 @@ angular.module('dynamo.games', ['ngRoute', 'ngResource'])
 
     $scope.config = configuration.data;
 
-    $scope.itemsToConfigure = [
-      $scope.config['GamesManager.platforms'],
-      $scope.config['GamesManager.providers']
-    ];
+    $scope.refreshConfig = function() {
+
+      $scope.itemsToConfigure = [
+        $scope.config['GamesManager.platforms'],
+        $scope.config['GamesManager.providers']
+      ];
+
+
+    }
 
     $scope.saveSettings = function () {
       configurationService.saveItems($scope.itemsToConfigure);
     }
 
-    $scope.folders = {};
+    $scope.refreshConfig();
 
   }]);

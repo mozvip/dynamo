@@ -102,7 +102,8 @@ public class ConfigAnnotationManager {
 	public String getConfigString(String key) {
 		if (mockedConfig) {
 			if (mockedConfiguration.containsKey(key)) {
-				return mockedConfiguration.get(key).toString();
+				Object value = mockedConfiguration.get(key);
+				return value != null ? value.toString() : null;
 			}
 			return null;
 		}

@@ -49,9 +49,13 @@ angular.module('dynamo.configuration', ['ngRoute'])
                     return plugin.value && $scope.config[key].ifExpression == plugin.value;
                 });
                 configurationKeys.forEach(function(key) {
-                    plugin.itemsToConfigure.push( $scope.config[key] );  
+                    plugin.itemsToConfigure.push( $scope.config[key] );
                 }, this);
             }, this);
+        }
+
+        $scope.testPlugin = function( plugin ) {
+            alert( plugin );
         }
 
         $scope.saveSettings = function () {

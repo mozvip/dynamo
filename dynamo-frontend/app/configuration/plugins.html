@@ -3,6 +3,7 @@
         <label>{{pluginOption.taskClass.label}}</label>
         <select class="form-control" ng-model="pluginOption.value" ng-change="pluginChanged()" ng-options="option.klass as option.label for option in pluginOption.executorOptions" />
         <configuration-item ng-repeat="item in pluginOption.itemsToConfigure" item="item" />
+        <!-- <button class="btn btn-default" ng-click="testPlugin(pluginOption.value)">Test Setup</button> -->
     </div>
 
     <button ng-disabled="!settingsForm.$valid" class="btn btn-primary" ng-click="saveSettings()"><span class="glyphicon glyphicon-save" /> Save</button>

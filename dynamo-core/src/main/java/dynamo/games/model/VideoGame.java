@@ -28,7 +28,7 @@ public class VideoGame extends Downloadable {
 
 	@Override
 	public String getRelativeLink() {
-		return "index.html#/games/";
+		return "index.html#/games/"  + getStatus().name();
 	}
 
 	@Override

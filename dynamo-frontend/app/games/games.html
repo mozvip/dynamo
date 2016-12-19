@@ -29,4 +29,8 @@
   </div>
 </div>
 
-<ng-include src="'common/templates.html'" />
+<div class="row" ng-show="filteredList.length > 24">
+  <p class="text-center">
+    <uib-pagination total-items="filteredList.length" max-size="30" items-per-page="24" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+  </p>
+</div>
