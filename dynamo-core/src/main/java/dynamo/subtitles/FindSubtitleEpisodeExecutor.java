@@ -69,6 +69,10 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 
 		for (String seriesName : series.getAllNames()) {
 			
+			if (isCancelled()) {
+				break;
+			}
+
 			String filename = mainVideoFilePath.getFileName().toString();
 			String filenameWithoutExtension = filename; 
 			if ( filenameWithoutExtension.lastIndexOf('.') > 0 ) {
@@ -81,6 +85,11 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 			RemoteSubTitles selectedSubTitles = null;
 			
 			for (SubtitlesFinder subTitleFinder : finders) {
+				
+				if (isCancelled()) {
+					break;
+				}
+				
 				if (subTitleFinder.isEnabled()) {
 					selectedSubTitles = findFromFinder(subTitleFinder, details, series.getSubtitlesLanguage());
 				}

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -79,7 +80,7 @@ public class ManagedSeries implements Serializable {
 		List<String> allNames = new ArrayList<>();
 		allNames.add( getName() );
 		if (getAka() != null) {
-			allNames.addAll( getAka() );
+			allNames.addAll( getAka().stream().filter( a -> a != null && a.length() > 0).collect( Collectors.toList()) );
 		}
 		return allNames;
 	}
