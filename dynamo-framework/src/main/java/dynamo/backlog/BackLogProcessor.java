@@ -89,7 +89,7 @@ public class BackLogProcessor extends Thread {
 						submissions.stream()
 							.filter( s -> s != null)
 							.filter( s -> match( s, specs))
-							.forEach( s -> cancel( s.getSubmissionId() ) );
+							.forEach( s -> cancel( s ) );
 					}
 					
 					submissions.removeAll(
@@ -273,18 +273,8 @@ public class BackLogProcessor extends Thread {
 		}
 	}
 
-	private void cancel(long submissionId) {
-		for (Iterator<TaskSubmission> iterator = submissions.iterator(); iterator.hasNext();) {
-			TaskSubmission submission = iterator.next();
-			if (submission.getSubmissionId() == submissionId ) {
-				if (submission.getFuture() != null) {
-					submission.getFuture().cancel( false );
-				}
-				submission.getExecutor().cancel();
-				iterator.remove();
-				break;
-			}
-		}
+	private void cancel( TaskSubmission submission ) {
+		submission.getExecutor().cancel();
 	}
 
 	public boolean isRunningOrPending(Class<? extends Task> taskClass) {
