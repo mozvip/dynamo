@@ -136,6 +136,7 @@ public class DownloadableManager {
 	}
 	
 	public int updateStatus( Downloadable downloadable, DownloadableStatus newStatus ) {
+		downloadable.setStatus( newStatus );
 		return downloadableDAO.updateStatus(downloadable.getId(), newStatus);
 	}
 

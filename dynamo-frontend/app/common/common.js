@@ -114,7 +114,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   fileListService.openModal = function( downloadable ) {
     return $uibModal.open({
       animation: false,
-      templateUrl: 'common/fileList.html',
+      templateUrl: 'common/file-list.html',
       controller: 'FileListCtrl',
       size: 'lg',
       resolve: {
@@ -132,7 +132,35 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
 
 .controller('FileListCtrl', ['$scope', '$sce', '$uibModalInstance', 'filterFilter', 'fileList', 'fileListService', 'downloadable', function($scope, $sce, $uibModalInstance, filterFilter, fileList, fileListService, downloadable) {
 
-  $scope.files = fileList.data;
+  $scope.files = [];
+  $scope.folder = undefined;
+
+  fileList.data.forEach(function(file) {
+
+    var index = file.filePath.lastIndexOf('/');
+    if (index < 0) {
+      index = file.filePath.lastIndexOf('\\');
+    }
+    var fileFolder = file.filePath.substring(0, index);
+
+    if (!$scope.folder) {
+      $scope.folder = fileFolder;
+    } else {
+      if ($scope.folder.startsWith(fileFolder) ) {
+        $scope.folder = fileFolder;
+      }
+    }
+    $scope.files.push( file );
+  }, this);
+
+  $scope.files.forEach(function(file) {
+    if (file.filePath.startsWith($scope.folder)) {
+      file.fileName = file.filePath.substring($scope.folder.length + 1);
+    } else {
+      file.fileName = file.filePath;
+    }
+  }, this);
+
   $scope.downloadable = downloadable;
 
   $scope.cancel = function () {

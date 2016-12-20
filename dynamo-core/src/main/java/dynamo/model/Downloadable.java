@@ -61,6 +61,10 @@ public abstract class Downloadable {
 	public DownloadableStatus getStatus() {
 		return status;
 	}
+	
+	public void setStatus(DownloadableStatus status) {
+		this.status = status;
+	}
 
 	public List<String> getAlternateNames() {
 		return aka != null  ?Arrays.asList( aka.split(";") ) : new ArrayList<String>();
