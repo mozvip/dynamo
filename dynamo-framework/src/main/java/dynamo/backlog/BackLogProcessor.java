@@ -37,17 +37,21 @@ public class BackLogProcessor extends Thread {
 	private List<TaskSubmission> submissions = new ArrayList<>();
 	private List<TaskSubmission> submissionsToDisplay = new ArrayList<>();
 
-	private class UnscheduleSpecs {
+	private class SubmissionSpecs {
 		Class<? extends Task> taskClass;
+		long submissionId;
 		String expressionToVerify;
-		public UnscheduleSpecs(Class<? extends Task> taskClass, String expressionToVerify) {
+		public SubmissionSpecs(Class<? extends Task> taskClass, String expressionToVerify) {
 			super();
 			this.taskClass = taskClass;
 			this.expressionToVerify = expressionToVerify;
 		}
+		public SubmissionSpecs(long submissionId) {
+			this.submissionId = submissionId;
+		}
 	}
 	
-	private LinkedList<UnscheduleSpecs> toUnschedule = new LinkedList<>();
+	private LinkedList<SubmissionSpecs> toUnschedule = new LinkedList<>();
 
 	private BackLogProcessor() {
 		setDaemon( true );
@@ -81,16 +85,11 @@ public class BackLogProcessor extends Thread {
 
 					// cancel requested
 					while (toUnschedule.peek() != null) {
-						UnscheduleSpecs specs = toUnschedule.pop();
+						SubmissionSpecs specs = toUnschedule.pop();
 						submissions.stream()
 							.filter( s -> s != null)
-							.filter( s -> {
-								try {
-									return match( s.getTask(), specs.taskClass, specs.expressionToVerify);
-								} catch (ScriptException e) {
-									return false;
-								}
-							}).forEach( s -> cancel( s.getSubmissionId() ) );
+							.filter( s -> match( s, specs))
+							.forEach( s -> cancel( s.getSubmissionId() ) );
 					}
 					
 					submissions.removeAll(
@@ -216,37 +215,50 @@ public class BackLogProcessor extends Thread {
 		unschedule(null, expressionToVerify);
 	}
 
-	private boolean match( Task task, Class<? extends Task> taskClass, String expressionToVerify ) throws ScriptException {
-
+	private boolean evaluate( Task task, String expressionToVerify ) throws ScriptException {
 		boolean result = false;
+		if (expressionToVerify != null) {
+			synchronized ( this ) {
+				JavaScriptManager.getInstance().put("task", task);
+				result = (Boolean) JavaScriptManager.getInstance().eval( expressionToVerify );
+			}
+		} else {
+			result = true;
+		}
+		return result;
+	}
 
-		if (taskClass == null || taskClass.isAssignableFrom( task.getClass() )) {
-			if (expressionToVerify != null) {
-				synchronized ( this ) {
-					JavaScriptManager.getInstance().put("task", task);
-					result = (Boolean) JavaScriptManager.getInstance().eval( expressionToVerify );
-				}
-			} else {
-				result = true;
+	private boolean match( TaskSubmission submission, SubmissionSpecs specs ) {
+		boolean match = false;
+		Task task = submission.getTask();
+		if (specs.taskClass != null) {
+			match = specs.taskClass.isAssignableFrom( task.getClass() );
+		}
+		if (specs.expressionToVerify != null) {
+			try {
+				match = evaluate( task, specs.expressionToVerify );
+			} catch (ScriptException e) {
 			}
 		}
+		if (specs.submissionId >= 0 ) {
+			match = specs.submissionId == submission.getSubmissionId();
+		}
 		
-		return result;
-		
+		return match;
 	}
 
-	private boolean match( Task task, Class<? extends Task> taskClass ) {
-		return (taskClass.isAssignableFrom( task.getClass() ));
-	}
-
-	public boolean isRunningOrPending( Class<? extends Task> taskClass ) {
+	public boolean isRunningOrPending( SubmissionSpecs specs ) {
 		synchronized (submissions) {
-			return submissions.stream().filter( submission -> match( submission.getTask(), taskClass )).findAny().isPresent();
+			return submissions.stream().filter( submission -> match( submission, specs )).findAny().isPresent();
 		}
 	}
 
 	public void unschedule( Class<? extends Task> taskClass, String expressionToVerify ) {
-		toUnschedule.add( new UnscheduleSpecs( taskClass, expressionToVerify ) );
+		toUnschedule.add( new SubmissionSpecs( taskClass, expressionToVerify ) );
+	}
+
+	public void unschedule( long submissionId ) {
+		toUnschedule.add( new SubmissionSpecs( submissionId ) );
 	}
 
 	public void runImmediately(Task task, boolean reportQueued) {
@@ -261,20 +273,23 @@ public class BackLogProcessor extends Thread {
 		}
 	}
 
-	public void cancel(long submissionId) {
-		synchronized (submissions) {
-			for (Iterator<TaskSubmission> iterator = submissions.iterator(); iterator.hasNext();) {
-				TaskSubmission submission = iterator.next();
-				if (submission.getSubmissionId() == submissionId ) {
-					if (submission.getFuture() != null) {
-						submission.getFuture().cancel( false );
-					}
-					submission.getExecutor().cancel();
-					iterator.remove();
-					break;
+	private void cancel(long submissionId) {
+		for (Iterator<TaskSubmission> iterator = submissions.iterator(); iterator.hasNext();) {
+			TaskSubmission submission = iterator.next();
+			if (submission.getSubmissionId() == submissionId ) {
+				if (submission.getFuture() != null) {
+					submission.getFuture().cancel( false );
 				}
+				submission.getExecutor().cancel();
+				iterator.remove();
+				break;
 			}
 		}
+	}
+
+	public boolean isRunningOrPending(Class<? extends Task> taskClass) {
+		SubmissionSpecs specs = new SubmissionSpecs(taskClass, null);
+		return isRunningOrPending(specs);
 	}
 
 }

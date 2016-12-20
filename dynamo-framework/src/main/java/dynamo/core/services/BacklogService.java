@@ -27,7 +27,7 @@ public class BacklogService {
 	@Path("/cancel/{submissionId}")
 	@POST
 	public void cancel( @PathParam("submissionId") long submissionId ) {
-		BackLogProcessor.getInstance().cancel( submissionId );
+		BackLogProcessor.getInstance().unschedule( submissionId );
 	}
 
 }
