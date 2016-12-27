@@ -21,7 +21,7 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 	
 	protected final static Logger logger = LoggerFactory.getLogger( DownloadFinder.class );
 	
-	private Semaphore semaphore = new Semaphore(1);
+	private Semaphore semaphore = new Semaphore( 2 );
 
 	private boolean ready = false;
 	

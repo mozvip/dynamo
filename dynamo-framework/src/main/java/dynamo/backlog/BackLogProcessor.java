@@ -108,7 +108,7 @@ public class BackLogProcessor extends Thread {
 					if (nextInLine == null) {
 						
 						Optional<TaskSubmission> selectedSubmission = submissions.stream()
-							.filter( s -> s.getFuture() == null || s.getFuture().isDone())
+							.filter( s -> s.getFuture() == null)
 							.filter( s -> s.getMinDate() == null || s.getMinDate().isBefore( now ) )
 							.findFirst();					
 						submission = selectedSubmission.isPresent() ? selectedSubmission.get() : null;
