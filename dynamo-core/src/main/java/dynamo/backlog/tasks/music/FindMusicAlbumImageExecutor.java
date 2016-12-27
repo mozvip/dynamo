@@ -11,9 +11,9 @@ import dynamo.core.manager.ErrorManager;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.MusicManager;
 import dynamo.model.music.MusicAlbum;
+import dynamo.music.TheAudioDb;
 import dynamo.webapps.googleimages.GoogleImages;
-import dynamo.webapps.theaudiodb.AudioDBResponse;
-import dynamo.webapps.theaudiodb.TheAudioDB;
+import fr.mozvip.theaudiodb.model.AudioDbResponse;
 
 public class FindMusicAlbumImageExecutor extends FindDownloadableImageExecutor<MusicAlbum> {
 
@@ -44,9 +44,8 @@ public class FindMusicAlbumImageExecutor extends FindDownloadableImageExecutor<M
 		
 		if (album.getTadbAlbumId() != null && album.getTadbAlbumId() > 0) {
 			
-			AudioDBResponse response = TheAudioDB.getInstance().getAlbum( album.getTadbAlbumId() );
-			
 			try {
+				AudioDbResponse response = TheAudioDb.getInstance().getAlbum( album.getTadbAlbumId() );
 				return DownloadableManager.downloadImage( album, response.getAlbum().get(0).getStrAlbumThumb(), null );
 			} catch (IOException e) {
 				ErrorManager.getInstance().reportThrowable( e );

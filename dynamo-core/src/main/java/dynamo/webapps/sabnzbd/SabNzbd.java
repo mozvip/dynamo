@@ -1,5 +1,6 @@
 package dynamo.webapps.sabnzbd;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 import org.apache.commons.lang3.StringUtils;
@@ -8,17 +9,16 @@ import dynamo.core.Enableable;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.ConfigurationManager;
-import hclient.RetrofitClient;
-import retrofit.RestAdapter;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedString;
+import fr.mozvip.sabnzbd.SABNzbdClient;
+import fr.mozvip.sabnzbd.model.SABHistoryResponse;
+import fr.mozvip.sabnzbd.model.SabNzbdResponse;
 
 public class SabNzbd implements Reconfigurable, Enableable {
 
-	@Configurable(ifExpression="dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor", required=false)
+	@Configurable(ifExpression = "dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor", required = false)
 	private String apiKey;
 
-	@Configurable(ifExpression="dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor", required=true)
+	@Configurable(ifExpression = "dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor", required = true)
 	private String sabnzbdUrl;
 
 	public String getApiKey() {
@@ -37,7 +37,7 @@ public class SabNzbd implements Reconfigurable, Enableable {
 		this.sabnzbdUrl = sabnzbdUrl;
 	}
 
-	private SABNzbdService service = null;
+	private SABNzbdClient client;
 
 	private SabNzbd() {
 	}
@@ -49,19 +49,43 @@ public class SabNzbd implements Reconfigurable, Enableable {
 	public static SabNzbd getInstance() {
 		return SingletonHolder.instance;
 	}
+	
+	
 
-	public String addNZB( String niceName, Path nzbFilePath ) {
-		SabNzbdResponse response = service.addNZBByFileUpload(new TypedString("json"), new TypedString("addfile"), new TypedString( niceName ), new TypedFile("application/x-nzb", nzbFilePath.toFile()), new TypedString(apiKey));
-		return response.getNzo_ids().get(0);
+	public void deleteFromHistory(String clientId) throws IOException {
+		client.deleteFromHistory(clientId);
 	}
 
-	public SABHistoryResponse getHistory() {
-		return service.getHistory(apiKey).getHistory();
+	public void remove(String clientId) throws IOException {
+		client.remove(clientId);
 	}
 
-	public String addNZB( String niceName, String nzbURL ) {
-		SabNzbdResponse response = service.addNZBByURL( nzbURL, niceName, apiKey );
-		return response.getNzo_ids().get(0);
+	public SabNzbdResponse getQueueStatus() throws IOException {
+		return client.getQueueStatus();
+	}
+
+	public SabNzbdResponse getQueue() throws IOException {
+		return client.getQueue();
+	}
+
+	public void delete(String nzo_id) {
+		client.delete(nzo_id);
+	}
+
+	public void deleteFailed() {
+		client.deleteFailed();
+	}
+
+	public String addNZB(Path nzbFilePath) throws IOException {
+		return client.addNZB(nzbFilePath);
+	}
+
+	public SABHistoryResponse getHistory() throws IOException {
+		return client.getHistory();
+	}
+
+	public String addNZB(String niceName, String nzbURL) throws IOException {
+		return client.addNZB(niceName, nzbURL);
 	}
 
 	@Override
@@ -69,37 +93,14 @@ public class SabNzbd implements Reconfigurable, Enableable {
 		if (StringUtils.isBlank(sabnzbdUrl)) {
 			return;
 		}
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint( sabnzbdUrl ).setClient( new RetrofitClient() ).build();
-		service = restAdapter.create(SABNzbdService.class);
+		client = SABNzbdClient.Builder().baseUrl(sabnzbdUrl).apiKey(apiKey).build();
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return StringUtils.isNotBlank(sabnzbdUrl) && ConfigurationManager.getInstance().isActive(dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor.class);
-	}
-	
-	public void deleteFromHistory(String clientId) {
-		service.deleteFromHistory(clientId, apiKey);
-	}	
-
-	public void remove(String clientId) {
-		service.delete(clientId, apiKey);
+		return StringUtils.isNotBlank(sabnzbdUrl)
+				&& ConfigurationManager.getInstance().isActive(dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor.class);
 	}
 
-	public SabNzbdResponse getQueueStatus() {
-		return service.getQueueStatus(apiKey);
-	}
-
-	public SabNzbdResponse getQueue() {
-		return service.getQueue(apiKey);
-	}
-
-	public void delete(String nzo_id) {
-		service.delete(nzo_id, apiKey);
-	}
-
-	public void deleteFailed() {
-		service.deleteFailed(apiKey);
-	}
 
 }

@@ -1,5 +1,6 @@
 package dynamo.music.services;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import dynamo.core.EventManager;
 import dynamo.core.manager.DAOManager;
+import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.manager.MusicManager;
@@ -18,10 +20,10 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicArtist;
 import dynamo.model.music.MusicFile;
+import dynamo.music.TheAudioDb;
 import dynamo.music.jdbi.MusicAlbumDAO;
-import dynamo.webapps.theaudiodb.AudioDBAlbum;
-import dynamo.webapps.theaudiodb.AudioDBResponse;
-import dynamo.webapps.theaudiodb.TheAudioDB;
+import fr.mozvip.theaudiodb.model.AudioDbAlbum;
+import fr.mozvip.theaudiodb.model.AudioDbResponse;
 
 @Path("/music")
 public class MusicService {
@@ -59,10 +61,14 @@ public class MusicService {
 			id = existingAlbum.getId();
 		} else {
 			
-			AudioDBResponse response = TheAudioDB.getInstance().searchAlbum(artist.getName(), musicAlbum.getName());
-			AudioDBAlbum audioDBAlbum = null;
-			if (response.getAlbum() != null && response.getAlbum().size() == 1) {
-				audioDBAlbum = response.getAlbum().get(0);
+			AudioDbAlbum audioDBAlbum = null;
+			try {
+				AudioDbResponse response = TheAudioDb.getInstance().searchAlbum(artist.getName(), musicAlbum.getName());
+				if (response.getAlbum() != null && response.getAlbum().size() == 1) {
+					audioDBAlbum = response.getAlbum().get(0);
+				}
+			} catch (IOException e) {
+				ErrorManager.getInstance().reportThrowable( e );
 			}
 			
 			DownloadableManager.getInstance().updateName(musicAlbum.getId(), musicAlbum.getName());

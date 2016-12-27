@@ -39,7 +39,6 @@ public class ConfigurationManager {
 	private final static Logger LOGGER = LoggerFactory.getLogger( ConfigurationManager.class );
 	
 	private ConfigurationManager() {
-		initPlugins();
 	}
 
 	static class SingletonHolder {
@@ -213,7 +212,7 @@ public class ConfigurationManager {
 				try {
 					value = DynamoObjectFactory.getInstance( Class.forName( stringValue ));
 				} catch (ClassNotFoundException e) {
-					System.out.println( fieldType );
+					LOGGER.warn("Class {} referenced in configuration could not be found", stringValue);
 				}
 			}
 		}
@@ -264,6 +263,8 @@ public class ConfigurationManager {
     }
 
 	public void configureApplication() throws Exception {
+		
+		initPlugins();
 		
 		// get all instances to configure
 		List<?> instances = ConfigAnnotationManager.getInstance().getConfiguredClasses().parallelStream().map( klass -> DynamoObjectFactory.getInstance(klass)).filter(instance -> instance != null).collect( Collectors.toList() );

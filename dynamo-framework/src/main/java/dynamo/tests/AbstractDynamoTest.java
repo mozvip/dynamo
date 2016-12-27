@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import org.junit.BeforeClass;
 
 import dynamo.core.manager.ConfigAnnotationManager;
+import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.manager.LocalImageCache;
@@ -22,7 +23,7 @@ public abstract class AbstractDynamoTest {
 	protected static ResourceBundle privateData;
 	
 	@BeforeClass
-	public static void init() {
+	public static void init() throws Exception {
 		try (Connection conn = DAOManager.getInstance().getSingleConnection("dynamo")) {
 			DatabaseConnection connection = new JdbcConnection( conn );
 			Liquibase liquibase = new Liquibase("databases/dynamo.xml", new ClassLoaderResourceAccessor( AbstractDynamoTest.class.getClassLoader()), connection );
@@ -42,6 +43,8 @@ public abstract class AbstractDynamoTest {
 		}
 		ConfigAnnotationManager.mockConfiguration("test", "test");
 		LocalImageCache.getInstance().init(Paths.get("temp"));
+		
+		ConfigurationManager.getInstance().configureApplication();
 	}
 
 }

@@ -16,8 +16,8 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicQuality;
 import dynamo.music.jdbi.MusicAlbumDAO;
-import dynamo.webapps.acoustid.AcoustID;
-import dynamo.webapps.acoustid.AcoustIdLookupResults;
+import fr.mozvip.acoustid.AcoustIdClient;
+import fr.mozvip.acoustid.AcoustIdLookupResults;
 
 public class IdentifyMusicFileExecutor extends TaskExecutor<IdentifyMusicFileTask> {
 	
@@ -45,8 +45,8 @@ public class IdentifyMusicFileExecutor extends TaskExecutor<IdentifyMusicFileTas
 			return;
 		}
 		
-		AcoustIdLookupResults results = AcoustID.getInstance().lookup( acoustId );
-		AcoustID.getInstance().populateTag(results, audioTag, true);
+		AcoustIdLookupResults results = AcoustId.getInstance().lookup( acoustId );
+		AcoustId.getInstance().populateTag(results, audioTag, true);
 		audioFile.commit();
 		
 		String trackStr = audioTag.getFirst(FieldKey.TRACK);

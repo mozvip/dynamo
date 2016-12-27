@@ -1,8 +1,11 @@
 package dynamo.webapps.predb;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -15,9 +18,9 @@ import dynamo.parsers.ParsedMovieInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.suggesters.movies.MovieSuggester;
 import hclient.HTTPClient;
-import hclient.RetrofitClient;
-import retrofit.RestAdapter;
-import retrofit.client.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 @ClassDescription(label="PreDB")
 public class PreDB implements MovieSuggester {
@@ -27,8 +30,7 @@ public class PreDB implements MovieSuggester {
 	private PreDBService service = null;
 	
 	private PreDB() {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://predb.me").setClient( new RetrofitClient() ).build();
-		service = restAdapter.create(PreDBService.class);
+		service = new Retrofit.Builder().baseUrl("http://predb.me").build().create(PreDBService.class);
 	}
 
 	static class SingletonHolder {
@@ -39,14 +41,15 @@ public class PreDB implements MovieSuggester {
 		return SingletonHolder.instance;
 	}
 
-	protected WebDocument getWebDocumentFromResponse( Response response ) throws IOException {
-		byte[] data = new byte[ (int) response.getBody().length() ];
-		IOUtils.read( response.getBody().in(), data );	
-		return new WebDocument( response.getUrl(), data );
+	protected WebDocument getWebDocumentFromResponse( ResponseBody response, Charset charset ) throws IOException {
+		String contents = StringUtils.toEncodedString(response.bytes(), charset);
+		return new WebDocument( null, contents );
 	}
 
 	public WebDocument getResultsForCatsTagAndPage(String cats, String tag, int page) throws IOException {
-		return getWebDocumentFromResponse( service.getResultsForCatsTagAndPage(cats, tag, page) );
+		Response<ResponseBody> execute = service.getResultsForCatsTagAndPage(cats, tag, page).execute();
+		Charset charset = Charset.forName("UTF-8");
+		return getWebDocumentFromResponse( execute.body(), charset );
 	}
 
 	@Override

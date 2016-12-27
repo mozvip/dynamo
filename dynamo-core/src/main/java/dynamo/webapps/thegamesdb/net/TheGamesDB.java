@@ -1,8 +1,7 @@
 package dynamo.webapps.thegamesdb.net;
 
-import hclient.RetrofitClient;
-import retrofit.RestAdapter;
-import retrofit.converter.SimpleXMLConverter;
+import retrofit2.Retrofit;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 
 public class TheGamesDB {
@@ -10,8 +9,8 @@ public class TheGamesDB {
 	private TheGamesDBService service = null;
 
 	private TheGamesDB() {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint( "http://thegamesdb.net" ).setConverter(new SimpleXMLConverter()).setClient( new RetrofitClient() ).build();
-		service = restAdapter.create(TheGamesDBService.class);
+		Retrofit retrofit = new Retrofit.Builder().baseUrl( "http://thegamesdb.net" ).addConverterFactory( SimpleXmlConverterFactory.create() ).build();
+		service = retrofit.create(TheGamesDBService.class);
 	}
 
 	static class SingletonHolder {

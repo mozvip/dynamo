@@ -164,11 +164,19 @@ public class DownloadableManager {
 				String absoluteURL = String.format("http://%s:%d/%s", DynamoApplication.getInstance().getIpAddress(),  DynamoServer.getInstance().getPort(), downloadable.getRelativeLink() );
 				if (notifyOnDownload && newStatus == DownloadableStatus.DOWNLOADED && PushBullet.getInstance().isEnabled()) {
 					absoluteURL += "DOWNLOADED";
-					PushBullet.getInstance().pushLink( "Dynamo has downloaded something", downloadable.toString(), absoluteURL );
+					try {
+						PushBullet.getInstance().pushLink( "Dynamo has downloaded something", downloadable.toString(), absoluteURL );
+					} catch (IOException e) {
+						ErrorManager.getInstance().reportThrowable( e );
+					}
 				}
 				if (notifyOnSnatch && newStatus == DownloadableStatus.SNATCHED && PushBullet.getInstance().isEnabled()) {
 					absoluteURL += "SNATCHED";
-					PushBullet.getInstance().pushLink( "Dynamo has snatched something", downloadable.toString(), absoluteURL );
+					try {
+						PushBullet.getInstance().pushLink( "Dynamo has snatched something", downloadable.toString(), absoluteURL );
+					} catch (IOException e) {
+						ErrorManager.getInstance().reportThrowable( e );
+					}
 				}
 			}
 		}

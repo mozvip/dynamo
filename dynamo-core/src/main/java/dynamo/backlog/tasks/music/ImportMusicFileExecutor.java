@@ -27,7 +27,7 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicQuality;
 import dynamo.music.jdbi.MusicAlbumDAO;
-import dynamo.webapps.acoustid.AcoustID;
+import fr.mozvip.acoustid.AcoustIdClient;
 
 public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 	
@@ -130,14 +130,14 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 				ErrorManager.getInstance().reportThrowable( task, String.format("Error while trying to import %s : %s", musicFilePath.toString(), e.getClass().getName()), e);
 			}
 			
-			if (AcoustID.getInstance().isEnabled()) {
+			if (AcoustId.getInstance().isEnabled()) {
 				String acoustId = audioTag.getFirst(FieldKey.ACOUSTID_ID);
 				if (StringUtils.isBlank( acoustId)) {
 					BackLogProcessor.getInstance().schedule( new CalcAcoustIdTask( musicFilePath ), false );
 				}
 			}
 		} else {
-			if (AcoustID.getInstance().isEnabled()) {
+			if (AcoustId.getInstance().isEnabled()) {
 				BackLogProcessor.getInstance().schedule(new IdentifyMusicFileTask( musicFilePath ), false);
 			}
 		}

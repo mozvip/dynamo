@@ -12,7 +12,6 @@ import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.torrent.parser.TorrentFile;
 import dynamo.torrent.parser.TorrentProcessor;
-import dynamo.torrents.transmission.Transmission;
 import hclient.HTTPClient;
 
 public abstract class AbstractTorrentDownloadExecutor extends TaskExecutor<DownloadTorrentTask> {
@@ -67,9 +66,9 @@ public abstract class AbstractTorrentDownloadExecutor extends TaskExecutor<Downl
 			
 			// this has to be a magnet link
 			if (Transmission.getInstance().isEnabled()) {
-				long id = Transmission.getInstance().downloadByURL( task.getURL().getUrl() );
+				long id = Transmission.getInstance().downloadByUrl( task.getURL().getUrl() );
 				if (id >= 0) {
-					ident = "" + Transmission.getInstance().downloadByURL( task.getURL().getUrl() );
+					ident = "" + Transmission.getInstance().downloadByUrl( task.getURL().getUrl() );
 				} else {
 					throw new Exception( String.format("Could not download torrent at url %s", task.getURL() ) );
 				}

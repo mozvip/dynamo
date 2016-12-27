@@ -1,3 +1,18 @@
 [submodule "hclient"]
 	path = hclient
 	url = https://github.com/mozvip/hclient.git
+[submodule "acoustid-client"]
+	path = acoustid-client
+	url = https://github.com/mozvip/acoustid-client.git
+[submodule "transmission-client"]
+	path = transmission-client
+	url = https://github.com/mozvip/transmission-client.git
+[submodule "pushbullet-client"]
+	path = pushbullet-client
+	url = https://github.com/mozvip/pushbullet-client.git
+[submodule "theaudiodb-client"]
+	path = theaudiodb-client
+	url = https://github.com/mozvip/theaudiodb-client.git
+[submodule "sabnzbd-client"]
+	path = sabnzbd-client
+	url = https://github.com/mozvip/sabnzbd-client.git

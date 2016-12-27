@@ -5,7 +5,10 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.List;
 
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+
 import com.omertron.themoviedbapi.MovieDbException;
+import com.uwetrottmann.trakt5.entities.Movie;
 
 import dynamo.core.Enableable;
 import dynamo.core.Language;
@@ -28,14 +31,18 @@ public class TraktMovieSuggester implements MovieSuggester, Enableable {
 		if (!TraktManager.getInstance().isEnabled()) {
 			return;
 		}
-		
-		List<TraktMovie> recommandations = TraktManager.getInstance().getMovieRecommandations();
-		for (TraktMovie recommendation : recommandations) {
-			try {
-				MovieManager.getInstance().suggestImdbId( recommendation.getIds().get("imdb"), null, Language.EN, recommendation.getUrl() );
-			} catch (MovieDbException | ParseException | InterruptedException e) {
-				ErrorManager.getInstance().reportThrowable( e );
+
+		try {
+			List<Movie> recommandations = TraktManager.getInstance().getMovieRecommandations();
+			for (Movie recommendation : recommandations) {
+				try {
+					MovieManager.getInstance().suggestImdbId( recommendation.ids.imdb, null, Language.EN, recommendation.homepage );
+				} catch (MovieDbException | ParseException | InterruptedException e) {
+					ErrorManager.getInstance().reportThrowable( e );
+				}
 			}
+		} catch (OAuthSystemException e) {
+			ErrorManager.getInstance().reportThrowable( e );
 		}
 	}
 

@@ -83,14 +83,10 @@ public class ConfigAnnotationManager {
 	}
 	
 	public void setConfigString( String key, String value ) {
-		if (mockedConfig) {
-			mockedConfiguration.put(key, value);
+		if (items.containsKey( key )) {
+			items.get(key).setValue( value );
 		} else {
-			if (items.containsKey( key )) {
-				items.get(key).setValue( value );
-			} else {
-				ErrorManager.getInstance().reportWarning( String.format("Configuration item %s was not found", key));
-			}
+			ErrorManager.getInstance().reportWarning( String.format("Configuration item %s was not found", key));
 		}
 	}
 	
@@ -105,7 +101,6 @@ public class ConfigAnnotationManager {
 				Object value = mockedConfiguration.get(key);
 				return value != null ? value.toString() : null;
 			}
-			return null;
 		}
 		if (items.containsKey(key)) {
 			String value = items.get(key).getValue();

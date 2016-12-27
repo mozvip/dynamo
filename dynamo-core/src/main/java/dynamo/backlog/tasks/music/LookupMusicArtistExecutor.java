@@ -3,8 +3,8 @@ package dynamo.backlog.tasks.music;
 import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.TaskExecutor;
 import dynamo.model.music.MusicArtist;
+import dynamo.music.TheAudioDb;
 import dynamo.music.jdbi.MusicAlbumDAO;
-import dynamo.webapps.theaudiodb.TheAudioDB;
 
 public class LookupMusicArtistExecutor extends TaskExecutor<LookupMusicArtistTask> {
 	
@@ -24,7 +24,7 @@ public class LookupMusicArtistExecutor extends TaskExecutor<LookupMusicArtistTas
 		
 		// FIXME
 
-		TheAudioDB.getInstance().searchAlbums( artist.getName() );
+		TheAudioDb.getInstance().searchAlbums( artist.getName() );
 		
 	}
 

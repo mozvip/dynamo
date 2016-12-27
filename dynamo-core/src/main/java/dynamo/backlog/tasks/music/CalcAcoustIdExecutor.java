@@ -11,9 +11,9 @@ import org.jaudiotagger.tag.id3.ID3v1Tag;
 import org.jaudiotagger.tag.reference.ID3V2Version;
 
 import dynamo.core.model.TaskExecutor;
-import dynamo.webapps.acoustid.AcoustID;
-import dynamo.webapps.acoustid.AcoustIdLookupResults;
-import dynamo.webapps.acoustid.AcoustIDFingerprint;
+import fr.mozvip.acoustid.AcoustIdClient;
+import fr.mozvip.acoustid.AcoustIdFingerprint;
+import fr.mozvip.acoustid.AcoustIdLookupResults;
 
 public class CalcAcoustIdExecutor extends TaskExecutor<CalcAcoustIdTask> {
 	
@@ -37,7 +37,7 @@ public class CalcAcoustIdExecutor extends TaskExecutor<CalcAcoustIdTask> {
 	@Override
 	public void execute() throws Exception {
 		
-		AcoustIDFingerprint fingerprint = AcoustID.getInstance().fingerprint( task.getMusicFilePath() );
+		AcoustIdFingerprint fingerprint = AcoustId.getInstance().fingerprint( task.getMusicFilePath() );
 
 		if (fingerprint.getDuration() > 0 && fingerprint.getFingerprint() != null) {
 
@@ -50,8 +50,8 @@ public class CalcAcoustIdExecutor extends TaskExecutor<CalcAcoustIdTask> {
 			
 			// TODO: store duration somewhere too, in MusicFile ?
 
-			AcoustIdLookupResults results = AcoustID.getInstance().lookup( fingerprint.getDuration(), fingerprint.getFingerprint() );
-			AcoustID.getInstance().populateTag(results, audioTag, false);
+			AcoustIdLookupResults results = AcoustId.getInstance().lookup( fingerprint.getDuration(), fingerprint.getFingerprint() );
+			AcoustId.getInstance().populateTag(results, audioTag, false);
 			audioFile.setTag( audioTag );
 			audioFile.commit();
 		}

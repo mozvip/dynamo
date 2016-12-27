@@ -186,17 +186,6 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>hclient</groupId>
-			<artifactId>hclient</artifactId>
-			<version>0.0.2</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.21</version>
@@ -230,7 +219,52 @@
 		<dependency>
 			<groupId>com.uwetrottmann.trakt5</groupId>
 			<artifactId>trakt-java</artifactId>
-			<version>5.2.1</version>
+			<version>5.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>hclient</groupId>
+			<artifactId>hclient</artifactId>
+			<version>0.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.simpleframework</groupId>
+			<artifactId>simple-xml</artifactId>
+			<version>2.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.retrofit2</groupId>
+			<artifactId>converter-simplexml</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.retrofit2</groupId>
+			<artifactId>converter-jackson</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.mozvip</groupId>
+			<artifactId>transmission-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.mozvip</groupId>
+			<artifactId>acoustid-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.mozvip</groupId>
+			<artifactId>sabnzbd-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.mozvip</groupId>
+			<artifactId>theaudiodb-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.mozvip</groupId>
+			<artifactId>pushbullet-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<packaging>jar</packaging>

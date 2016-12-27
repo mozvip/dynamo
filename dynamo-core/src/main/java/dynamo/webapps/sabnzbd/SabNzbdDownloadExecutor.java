@@ -16,9 +16,7 @@ public class SabNzbdDownloadExecutor extends AbstractNZBDownloadExecutor {
 
 	@Override
 	public String handleNZBFile(Path nzbFilePath) throws Exception {
-		// FIXME
-		String niceName = nzbFilePath.getFileName().toString();
-		return SabNzbd.getInstance().addNZB(niceName, nzbFilePath);
+		return SabNzbd.getInstance().addNZB(nzbFilePath);
 	}
 
 }

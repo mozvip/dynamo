@@ -28,18 +28,19 @@ import dynamo.backlog.tasks.music.ImportMusicFolderTask;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DAOManager;
+import dynamo.core.manager.ErrorManager;
 import dynamo.finders.music.MusicAlbumFinder;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicArtist;
 import dynamo.model.music.MusicFile;
 import dynamo.model.music.MusicQuality;
+import dynamo.music.TheAudioDb;
 import dynamo.music.jdbi.MusicAlbumDAO;
 import dynamo.suggesters.RefreshMusicSuggestionsTask;
 import dynamo.suggesters.music.MusicAlbumSuggester;
-import dynamo.webapps.theaudiodb.AudioDBAlbum;
-import dynamo.webapps.theaudiodb.AudioDBResponse;
-import dynamo.webapps.theaudiodb.TheAudioDB;
+import fr.mozvip.theaudiodb.model.AudioDbAlbum;
+import fr.mozvip.theaudiodb.model.AudioDbResponse;
 import hclient.HTTPClient;
 
 public class MusicManager implements Reconfigurable {
@@ -291,8 +292,8 @@ public class MusicManager implements Reconfigurable {
 					folder = getPath( artistName, albumName );
 				}
 				
-				AudioDBAlbum audioDBAlbum = null;
-				AudioDBResponse response = TheAudioDB.getInstance().searchAlbum(artistName, albumName);
+				AudioDbAlbum audioDBAlbum = null;
+				AudioDbResponse response = TheAudioDb.getInstance().searchAlbum(artistName, albumName);
 				if (response.getAlbum() != null && response.getAlbum().size() == 1) {
 					audioDBAlbum = response.getAlbum().get( 0 );
 				}
@@ -319,10 +320,14 @@ public class MusicManager implements Reconfigurable {
 		if (artist == null) {
 			
 			Long tadbArtistId = null;
-			AudioDBResponse searchResult = TheAudioDB.getInstance().searchArtist( albumArtist );
-			if (searchResult.getArtists() != null && searchResult.getArtists().size() == 1) {
-				tadbArtistId = searchResult.getArtists().get(0).getIdArtist();
-			}
+			try {
+				AudioDbResponse searchResult = TheAudioDb.getInstance().searchArtist( albumArtist );
+				if (searchResult.getArtists() != null && searchResult.getArtists().size() == 1) {
+					tadbArtistId = searchResult.getArtists().get(0).getIdArtist();
+				}
+			} catch (IOException e) {
+				ErrorManager.getInstance().reportThrowable( e );
+			}	
 
 			List<String> aka = new ArrayList<String>();
 			aka.add( albumArtist.toUpperCase() );

@@ -1,7 +1,7 @@
 package dynamo.webapps.thegamesdb.net;
 
-import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public interface TheGamesDBService {
 	

@@ -1,16 +1,15 @@
 package dynamo.webapps.pushbullet;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
 
 import dynamo.core.Enableable;
 import dynamo.core.configuration.Configurable;
-import hclient.RetrofitClient;
-import retrofit.RestAdapter;
+import dynamo.core.configuration.Reconfigurable;
+import fr.mozvip.pushbullet.PushBulletClient;
+import fr.mozvip.pushbullet.model.PushBulletDevice;
 
-public class PushBullet implements Enableable {
+public class PushBullet implements Enableable, Reconfigurable {
 	
 	@Configurable
 	private String accessToken;
@@ -37,12 +36,8 @@ public class PushBullet implements Enableable {
 	public boolean isEnabled() {
 		return accessToken != null && deviceIdent != null;
 	}
-	
-	private PushBulletService service = null;
 
 	private PushBullet() {
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("https://api.pushbullet.com").setClient( new RetrofitClient() ).build();
-		service = restAdapter.create(PushBulletService.class);
 	}
 
 	static class SingletonHolder {
@@ -53,19 +48,25 @@ public class PushBullet implements Enableable {
 		return SingletonHolder.instance;
 	}
 
-	public List<PushBulletDevice> getDevices() {
-		if (StringUtils.isNoneEmpty( accessToken )) {
-			return service.getDevices("Bearer " + accessToken).getDevices();
-		}
-		return new ArrayList<>();
-	}
-	
-	public void pushNote( String title, String body ) {
-		service.push("Bearer " + accessToken, deviceIdent, "note", title, body, null);
+	private PushBulletClient client;
+
+	@Override
+	public void reconfigure() {
+		client = PushBulletClient.Builder().accessToken(accessToken).build();
 	}
 
-	public void pushLink( String title, String body, String url ) {
-		service.push("Bearer " + accessToken, deviceIdent, "link", title, body, url);
+	public void pushNote(String title, String body) throws IOException {
+		client.pushNote(deviceIdent, title, body);
 	}
+
+	public void pushLink(String title, String body, String url) throws IOException {
+		client.pushLink(deviceIdent, title, body, url);
+	}
+
+	public List<PushBulletDevice> getDevices() throws IOException {
+		return client.getDevices();
+	}
+	
+	
 
 }

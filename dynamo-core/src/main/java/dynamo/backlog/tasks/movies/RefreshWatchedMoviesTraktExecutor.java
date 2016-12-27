@@ -2,12 +2,13 @@ package dynamo.backlog.tasks.movies;
 
 import java.util.List;
 
+import com.uwetrottmann.trakt5.entities.BaseMovie;
+
 import dynamo.core.Language;
 import dynamo.core.model.TaskExecutor;
 import dynamo.model.DownloadableStatus;
 import dynamo.movies.model.MovieManager;
 import dynamo.trakt.TraktManager;
-import dynamo.trakt.TraktWatchedEntry;
 
 public class RefreshWatchedMoviesTraktExecutor extends TaskExecutor<RefreshWatchedMoviesTask> {
 
@@ -20,10 +21,10 @@ public class RefreshWatchedMoviesTraktExecutor extends TaskExecutor<RefreshWatch
 		if (!MovieManager.getInstance().isEnabled() || !TraktManager.getInstance().isEnabled()) {
 			return;
 		}
-		List<TraktWatchedEntry> watchedMovies = TraktManager.getInstance().getMoviesWatched();
+		List<BaseMovie> watchedMovies = TraktManager.getInstance().getMoviesWatched();
 		if (watchedMovies != null ) {
-			for (TraktWatchedEntry watched : watchedMovies) {
-				String imdbId = watched.getMovie().getIds().get("imdb");
+			for (BaseMovie watched : watchedMovies) {
+				String imdbId = watched.movie.ids.imdb;
 				MovieManager.getInstance().createByImdbID( imdbId, null, Language.EN, DownloadableStatus.IGNORED, true );
 			}
 		}

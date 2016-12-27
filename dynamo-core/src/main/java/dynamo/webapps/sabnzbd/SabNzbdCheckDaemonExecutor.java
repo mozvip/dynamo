@@ -21,6 +21,8 @@ import dynamo.manager.FolderManager;
 import dynamo.model.Downloadable;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
+import fr.mozvip.sabnzbd.model.SABHistoryResponse;
+import fr.mozvip.sabnzbd.model.SabNzbdResponseSlot;
 
 public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonTask> {
 

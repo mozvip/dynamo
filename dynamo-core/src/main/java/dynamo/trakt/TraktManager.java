@@ -1,40 +1,57 @@
 package dynamo.trakt;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
+import java.net.URISyntaxException;
 import java.util.List;
+import java.util.UUID;
 
-import org.apache.http.client.ClientProtocolException;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.uwetrottmann.trakt5.TraktV2;
+import com.uwetrottmann.trakt5.entities.AccessToken;
+import com.uwetrottmann.trakt5.entities.BaseMovie;
+import com.uwetrottmann.trakt5.entities.BaseShow;
+import com.uwetrottmann.trakt5.entities.Movie;
+import com.uwetrottmann.trakt5.entities.UserSlug;
+import com.uwetrottmann.trakt5.enums.Extended;
 
+import core.WebDocument;
 import dynamo.core.Enableable;
 import dynamo.core.Language;
+import dynamo.core.configuration.ClassDescription;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.ConfigAnnotationManager;
+import dynamo.core.manager.ErrorManager;
 import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
-import hclient.RetrofitClient;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
+import hclient.HTTPClient;
+import hclient.SimpleResponse;
+import retrofit2.Response;
 
+@ClassDescription(label = "Trakt")
 public class TraktManager implements Reconfigurable, MovieSuggester, Enableable {
-	
+
 	@Configurable
 	private boolean enabled;
-	
-	@Configurable(ifExpression="TraktManager.enabled", required=true)
+
+	@Configurable(ifExpression = "TraktManager.enabled", required = true)
 	private String username;
 
-	public static final String clientId = "1f93ab28686a87d36c0e198f15a34ba7c0d3fb45cbd3303515da246718b570a6";
-	private static final String clientSecret = "6c2324d35586037c7940b0d021a8ed88995a87ff964514011876d4ba03b2459d";
+	@Configurable(ifExpression = "TraktManager.enabled", required = true)
+	private String password;
 
-	private TraktService service;
+	public static final String CLIENT_ID = "1f93ab28686a87d36c0e198f15a34ba7c0d3fb45cbd3303515da246718b570a6";
+	private static final String CLIENT_SECRET = "6c2324d35586037c7940b0d021a8ed88995a87ff964514011876d4ba03b2459d";
+
+	private UserSlug userSlug;
+
+	private TraktV2 trakt;
 
 	private TraktManager() {
-
+		trakt = new TraktV2(CLIENT_ID, CLIENT_SECRET, "urn:ietf:wg:oauth:2.0:oob");
 	}
 
 	static class SingletonHolder {
@@ -43,7 +60,7 @@ public class TraktManager implements Reconfigurable, MovieSuggester, Enableable 
 
 	public static TraktManager getInstance() {
 		return SingletonHolder.instance;
-	}	
+	}
 
 	@Override
 	public boolean isEnabled() {
@@ -62,86 +79,83 @@ public class TraktManager implements Reconfigurable, MovieSuggester, Enableable 
 		this.username = username;
 	}
 
-	@JsonIgnore
-	public List<TraktMovie> getMovieRecommandations() throws ClientProtocolException, UnsupportedEncodingException, IOException {
-		return service.recommandationsMovies();
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@JsonIgnore
-	public List<TraktWatchedEntry> getMoviesWatched() throws ClientProtocolException, UnsupportedEncodingException, IOException {
-		return service.moviesWatched( username );
+	public List<Movie> getMovieRecommandations() throws IOException, OAuthSystemException, URISyntaxException {
+		Response<List<Movie>> response = trakt.recommendations().movies(Extended.FULL).execute();
+		return response.body();
+	}
+
+	private void auth() throws OAuthSystemException, IOException, URISyntaxException {
+		userSlug = new UserSlug(username);
+
+		String state = UUID.randomUUID().toString();
+
+		OAuthClientRequest buildAuthorizationRequest = trakt.buildAuthorizationRequest(state);
+
+		String authorizeURI;
+
+		SimpleResponse response = HTTPClient.getInstance().get(buildAuthorizationRequest.getLocationUri());
+		if (response.getLastRedirectLocationURL().endsWith("/signin")) {
+			WebDocument signinPage = response.getDocument();
+			response = HTTPClient.getInstance().submit(signinPage.jsoupSingle("form[action*=signin]"),
+					"user[login]=" + username, "user[password]=" + password);
+		}
+		authorizeURI = response.getLastRedirectLocationURL();
+
+		String authCode = authorizeURI.substring(authorizeURI.lastIndexOf('/') + 1).toUpperCase();
+		Response<AccessToken> resp = trakt.exchangeCodeForAccessToken(authCode);
+		String access_token = resp.body().access_token;
+		ConfigAnnotationManager.getInstance().setConfigString("TraktManager.access_token", access_token);
+		if (access_token != null) {
+			trakt.accessToken(resp.body().access_token);
+		}
 	}
 
 	@JsonIgnore
-	public List<TraktWatchedEntry> getShowsWatched() throws ClientProtocolException, UnsupportedEncodingException, IOException {
-		return service.showsWatched( username );
+	public List<BaseMovie> getMoviesWatched() throws IOException {
+		Response<List<BaseMovie>> response = trakt.users().watchedMovies(userSlug, Extended.FULL).execute();
+		return response.body();
 	}
-	
-	private TraktTokenResponse tokenResponse;
-	private String access_token;
+
+	@JsonIgnore
+	public List<BaseShow> getShowsWatched() throws IOException {
+		Response<List<BaseShow>> response = trakt.users().watchedShows(userSlug, Extended.FULL).execute();
+		return response.body();
+	}
 
 	@Override
 	public void reconfigure() {
 		if (!enabled) {
 			return;
 		}
-		access_token = ConfigAnnotationManager.getInstance().getConfigString("TraktManager.access_token");
-		if (access_token != null) {
-			RestAdapter restAdapter = new RestAdapter.Builder()
-			.setEndpoint("https://api.trakt.tv")
-			.setRequestInterceptor( new RequestInterceptor() {
-				@Override
-				public void intercept(RequestFacade request) {
-					request.addHeader("Content-type", "application/json");
-					request.addHeader("trakt-api-version", "2");
-					request.addHeader("trakt-api-key", clientId);
-					request.addHeader("Authorization", "Bearer " + access_token);
-				}
-			})
-			.setClient( new RetrofitClient() ).build();
-			service = restAdapter.create(TraktService.class);
-		} else {
-			RestAdapter restAdapter = new RestAdapter.Builder()
-			.setEndpoint("https://api.trakt.tv")
-			.setRequestInterceptor( new RequestInterceptor() {
-				@Override
-				public void intercept(RequestFacade request) {
-					request.addHeader("Content-type", "application/json");
-					request.addHeader("trakt-api-key", clientId);
-					request.addHeader("trakt-api-version", "2");
-				}
-			})
-			.setClient( new RetrofitClient() ).build();
-			service = restAdapter.create(TraktService.class);
+
+		try {
+			auth();
+		} catch (OAuthSystemException | IOException | URISyntaxException e) {
+			ErrorManager.getInstance().reportThrowable(e);
+			setEnabled(false);
 		}
 	}
 
 	@Override
 	public void suggestMovies() throws Exception {
-		List<TraktWatchListEntry> watchList = service.moviesWatchList( username );
-		for (TraktWatchListEntry watchListEntry : watchList) {
-			MovieManager.getInstance().suggestImdbId( watchListEntry.getMovie().getIds().get("imdb"), null, Language.EN, watchListEntry.getMovie().getUrl() );
+		Response<List<BaseMovie>> response = trakt.users().watchlistMovies(userSlug, Extended.FULL).execute();
+		List<BaseMovie> movies = response.body();
+		for (BaseMovie movie : movies) {
+			MovieManager.getInstance().suggestImdbId(movie.movie.ids.imdb, null, Language.EN, movie.movie.homepage);
 		}
 	}
-	
+
 	public String getName() {
 		return "Trakt watch list";
-	}
-	
-	@Override
-	public String toString() {
-		return "Trakt";
-	}
-	
-	public boolean auth( String code ) {
-		tokenResponse = service.token( new TraktTokenRequest( code, clientId, clientSecret) );
-		if (tokenResponse.getAccess_token() != null) {
-			Date expirationDate = new Date( tokenResponse.getCreated_at() + tokenResponse.getExpires_in() );
-			ConfigAnnotationManager.getInstance().setConfigString("TraktManager.access_token", tokenResponse.getAccess_token());
-			reconfigure();
-			return true;
-		}
-		return false;
 	}
 
 }
