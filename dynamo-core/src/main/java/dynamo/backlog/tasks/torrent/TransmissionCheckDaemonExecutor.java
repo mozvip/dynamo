@@ -50,7 +50,7 @@ public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCh
 		List<Path> files = new ArrayList<>();
 		for (TorrentFile file : torrent.getFiles()) {
 			if (file.getLength() > 0) {
-				String fileName = file.getName().replace('?', '¿');
+				String fileName = file.getName().replace('?', 'Â¿');
 				files.add( sourceFolder.resolve(fileName) );
 			}
 		}
