@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import core.WebDocument;
@@ -108,7 +109,7 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 		List<SearchResult> results = new ArrayList<>();
 		for (Element row : rows) {
 			String title = row.select("td.item a").text();
-			float size = parseSize( row.select("td.less.right").text() );
+			float size = parseSize( row.select("td.less.right").first().childNode(0).toString() );
 			Element downloadLink = row.select("a[title*=Download Nzb]").first();
 			if (downloadLink != null) {
 				results.add( new SearchResult(this, SearchResultType.NZB, title, downloadLink.absUrl("href"), searchURL, size) );
