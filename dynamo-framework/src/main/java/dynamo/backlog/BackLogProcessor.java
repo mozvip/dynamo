@@ -101,6 +101,10 @@ public class BackLogProcessor extends Thread {
 						.map( s -> s.getSubmissionId() )
 						.collect(Collectors.toList());
 					
+					submissions.values().stream()
+						.filter( s -> s.getTask() instanceof DaemonTask)
+						.forEach( s -> s.setFuture( null ) );
+
 					for (Long submissionId : deadSubmissionIds) {
 						submissions.remove( submissionId );
 					}
@@ -109,6 +113,7 @@ public class BackLogProcessor extends Thread {
 						for (Long submissionId : toRunNow) {
 							submissions.get(submissionId).setMinDate( null );
 						}
+						toRunNow.clear();
 					}
 
 					// copy for UI
