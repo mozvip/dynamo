@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.EventManager;
 import dynamo.core.Language;
-import dynamo.core.RemoteSubTitles;
-import dynamo.core.SubtitlesFinder;
 import dynamo.core.VideoDetails;
 import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
@@ -25,6 +24,8 @@ import dynamo.tvshows.model.ManagedEpisode;
 import dynamo.tvshows.model.ManagedSeries;
 import dynamo.tvshows.model.TVShowManager;
 import dynamo.video.VideoManager;
+import fr.mozvip.subtitles.EpisodeSubtitlesFinder;
+import fr.mozvip.subtitles.RemoteSubTitles;
 
 public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisodeTask> {
 	
@@ -32,12 +33,11 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 	
 	private ManagedEpisode episode;
 	private ManagedSeries series;
-	private static Set<SubtitlesFinder> finders;
+	private static Set<EpisodeSubtitlesFinder> finders;
 	
 	static {
-		finders = (Set<SubtitlesFinder>) DynamoObjectFactory.getInstances( SubtitlesFinder.class );
+		finders = (Set<EpisodeSubtitlesFinder>) DynamoObjectFactory.getInstances( EpisodeSubtitlesFinder.class );
 	}
-	
 	
 	public FindSubtitleEpisodeExecutor( FindSubtitleEpisodeTask item, HistoryDAO historyDAO ) {
 		super(item);
@@ -47,8 +47,8 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 		series = TVShowManager.getInstance().getManagedSeries( episode.getSeriesId() );
 	}
 	
-	private RemoteSubTitles findFromFinder( SubtitlesFinder subTitleFinder, VideoDetails details, Language subtitlesLanguage ) throws Exception {
-		return subTitleFinder.findSubtitles( details, subtitlesLanguage );
+	private RemoteSubTitles findFromFinder( EpisodeSubtitlesFinder subTitleFinder, VideoDetails details, Language subtitlesLanguage ) throws Exception {
+		return subTitleFinder.downloadEpisodeSubtitle(details.getName(), details.getSeason(), details.getEpisode(), details.getReleaseGroup(), new Locale(subtitlesLanguage.getShortName()));
 	}
 
 	@Override
@@ -84,15 +84,13 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 			VideoDetails details = new VideoDetails( mainVideoFilePath, seriesName, episode.getQuality(), episode.getSource(), episode.getReleaseGroup(), episode.getSeasonNumber(), episode.getEpisodeNumber(), metaData.getOpenSubtitlesHash() );		
 			RemoteSubTitles selectedSubTitles = null;
 			
-			for (SubtitlesFinder subTitleFinder : finders) {
+			for (EpisodeSubtitlesFinder subTitleFinder : finders) {
 				
 				if (isCancelled()) {
 					break;
 				}
 				
-				if (subTitleFinder.isEnabled()) {
-					selectedSubTitles = findFromFinder(subTitleFinder, details, series.getSubtitlesLanguage());
-				}
+				selectedSubTitles = findFromFinder(subTitleFinder, details, series.getSubtitlesLanguage());
 				if (selectedSubTitles != null && selectedSubTitles.getScore() >= 6) {
 					Files.write(destinationSRT, selectedSubTitles.getData(), StandardOpenOption.CREATE);
 
@@ -103,7 +101,7 @@ public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisod
 					// add subtitles to the list of files for this downloadable
 					DownloadableManager.getInstance().addFile( episode, destinationSRT, 1 );
 
-					break;				
+					break;
 				}
 			}
 		}

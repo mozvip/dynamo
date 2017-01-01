@@ -3,10 +3,12 @@ package dynamo.backlog;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -34,7 +36,7 @@ public class BackLogProcessor extends Thread {
 	private ExecutorService pool = Executors.newFixedThreadPool(15);
 	private TaskSubmission nextInLine = null;
 
-	private List<TaskSubmission> submissions = new ArrayList<>();
+	private Map<Long, TaskSubmission> submissions = new HashMap<>();
 	private List<TaskSubmission> submissionsToDisplay = new ArrayList<>();
 
 	private class SubmissionSpecs {
@@ -52,6 +54,7 @@ public class BackLogProcessor extends Thread {
 	}
 	
 	private LinkedList<SubmissionSpecs> toUnschedule = new LinkedList<>();
+	private Set<Long> toRunNow = new HashSet<>();
 
 	private BackLogProcessor() {
 		setDaemon( true );
@@ -82,32 +85,40 @@ public class BackLogProcessor extends Thread {
 				TaskSubmission submission = null;
 
 				synchronized (submissions) {
-
+					
 					// cancel requested
 					while (toUnschedule.peek() != null) {
 						SubmissionSpecs specs = toUnschedule.pop();
-						submissions.stream()
+						submissions.values().stream()
 							.filter( s -> s != null)
 							.filter( s -> match( s, specs))
 							.forEach( s -> cancel( s ) );
 					}
 					
-					submissions.removeAll(
-						submissions.stream()
-							.filter( s -> !(s.getTask() instanceof DaemonTask))
-							.filter( s -> s.getFuture() != null && (s.getFuture().isDone() || s.getFuture().isCancelled()))
-							.collect(Collectors.toList())
-					);
+					List<Long> deadSubmissionIds = submissions.values().stream()
+						.filter( s -> !(s.getTask() instanceof DaemonTask))
+						.filter( s -> s.getFuture() != null && (s.getFuture().isDone() || s.getFuture().isCancelled()))
+						.map( s -> s.getSubmissionId() )
+						.collect(Collectors.toList());
 					
+					for (Long submissionId : deadSubmissionIds) {
+						submissions.remove( submissionId );
+					}
+					
+					synchronized (toRunNow) {
+						for (Long submissionId : toRunNow) {
+							submissions.get(submissionId).setMinDate( null );
+						}
+					}
+
 					// copy for UI
-					submissionsToDisplay = new ArrayList<>();
-					submissionsToDisplay.addAll( submissions );
+					submissionsToDisplay = new ArrayList<>( submissions.values() );
 					
 					LocalDateTime now = LocalDateTime.now();
 					
 					if (nextInLine == null) {
 						
-						Optional<TaskSubmission> selectedSubmission = submissions.stream()
+						Optional<TaskSubmission> selectedSubmission = submissions.values().stream()
 							.filter( s -> s.getFuture() == null)
 							.filter( s -> s.getMinDate() == null || s.getMinDate().isBefore( now ) )
 							.findFirst();					
@@ -169,7 +180,7 @@ public class BackLogProcessor extends Thread {
 
 		synchronized (submissions) {
 
-			for (Iterator<TaskSubmission> iterator = submissions.iterator(); iterator.hasNext();) {
+			for (Iterator<TaskSubmission> iterator = submissions.values().iterator(); iterator.hasNext();) {
 				TaskSubmission s = iterator.next();
 				if (s.getTask().equals( task )) {
 					iterator.remove();
@@ -180,7 +191,7 @@ public class BackLogProcessor extends Thread {
 			if (backLogTaskClass != null) {
 				TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
 				submission = new TaskSubmission(task, executor, minDate );
-				submissions.add( submission );
+				submissions.put( submission.getSubmissionId(), submission );
 	
 				if (task instanceof LogQueuing) {
 					ErrorManager.getInstance().reportDebug(task, String.format("%s was queued", task.toString()));
@@ -249,7 +260,7 @@ public class BackLogProcessor extends Thread {
 
 	public boolean isRunningOrPending( SubmissionSpecs specs ) {
 		synchronized (submissions) {
-			return submissions.stream().filter( submission -> match( submission, specs )).findAny().isPresent();
+			return submissions.values().stream().filter( submission -> match( submission, specs )).findAny().isPresent();
 		}
 	}
 
@@ -280,6 +291,12 @@ public class BackLogProcessor extends Thread {
 	public boolean isRunningOrPending(Class<? extends Task> taskClass) {
 		SubmissionSpecs specs = new SubmissionSpecs(taskClass, null);
 		return isRunningOrPending(specs);
+	}
+
+	public void runNow(long submissionId) {
+		synchronized (toRunNow) {
+			toRunNow.add( submissionId );
+		}
 	}
 
 }

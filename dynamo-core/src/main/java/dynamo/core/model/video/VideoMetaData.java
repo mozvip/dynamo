@@ -1,19 +1,18 @@
 package dynamo.core.model.video;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
-
-import dynamo.core.Language;
 
 public class VideoMetaData {
 
-	private Set<Language> audioLanguages = new HashSet<>();
-	private Set<Language> subtitleLanguages = new HashSet<>();
+	private Set<Locale> audioLanguages = new HashSet<>();
+	private Set<Locale> subtitleLanguages = new HashSet<>();
 	private int width;
 	private int height;
 	private String openSubtitlesHash;
 
-	public VideoMetaData(Set<Language> audioLanguages, Set<Language> subtitleLanguages, int width, int height, String openSubtitlesHash) {
+	public VideoMetaData(Set<Locale> audioLanguages, Set<Locale> subtitleLanguages, int width, int height, String openSubtitlesHash) {
 		super();
 		this.audioLanguages = audioLanguages;
 		this.subtitleLanguages = subtitleLanguages;
@@ -22,11 +21,11 @@ public class VideoMetaData {
 		this.openSubtitlesHash = openSubtitlesHash;
 	}
 
-	public Set<Language> getAudioLanguages() {
+	public Set<Locale> getAudioLanguages() {
 		return audioLanguages;
 	}
 
-	public Set<Language> getSubtitleLanguages() {
+	public Set<Locale> getSubtitleLanguages() {
 		return subtitleLanguages;
 	}
 	

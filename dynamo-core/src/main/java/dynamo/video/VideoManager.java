@@ -1,33 +1,29 @@
 package dynamo.video;
 
 import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import core.RegExp;
-import core.WebDocument;
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;
+import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DAOManager;
-import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.video.VideoDAO;
 import dynamo.core.model.video.VideoMetaData;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
+import fr.mozvip.mediainfo.MediaInfo;
+import fr.mozvip.mediainfo.MediaInfoWrapper;
 
-public class VideoManager {
+public class VideoManager implements Reconfigurable {
 	
 	@Configurable(folder=false)
 	private Path mediaInfoBinaryPath;
@@ -52,66 +48,12 @@ public class VideoManager {
 		this.mediaInfoBinaryPath = mediaInfoBinaryPath;
 	}
 	
-	public MediaInfo getMediaInfo( Path videoFilePath ) throws IOException, InterruptedException {
-		if ( mediaInfoBinaryPath == null || !Files.isRegularFile( mediaInfoBinaryPath ) && Files.isExecutable( mediaInfoBinaryPath )) {
-			return null;
-		}
-
-		Path targetFile = Paths.get( videoFilePath.toAbsolutePath().toString() +".mediainfo.html" );
-		WebDocument html = null;
-
-		if (!Files.exists(targetFile)) {
-			ProcessBuilder pb = new ProcessBuilder( mediaInfoBinaryPath.toAbsolutePath().toString(), "--Output=HTML", videoFilePath.toAbsolutePath().toString() );
-			pb.redirectOutput( Redirect.to( targetFile.toFile() ) );
-			Process p = pb.start();
-			p.waitFor();
-		}
-		
-		html = new WebDocument( null, Files.readAllBytes( targetFile ) );
-		
-		MediaInfo mediaInfo = new MediaInfo();
-		
-		Element general = html.jsoupSingle("table:has(h2:contains(General))");
-		
-		Element video = html.jsoupSingle("table:has(h2:contains(Video))");
-		
-		Elements audioElements = html.jsoup("table:has(h2:contains(Audio))");
-		for (Element audioElement : audioElements) {
-			Elements languageElements = audioElement.select("td:has(i:contains(Language)) + td");
-			if (!languageElements.isEmpty()) {
-				String l = languageElements.first().text();
-				Language language = Language.getByFullName(l);
-				if (language != null) {
-					mediaInfo.addAudioLanguage(language);
-				} else {
-					ErrorManager.getInstance().reportWarning("Unrecognized language : " + l, true);
-				}
-			}
-		}
-
-		Elements textElements = html.jsoup("table:has(h2:contains(Text))");
-		for (Element textElement : textElements) {
-			Elements languageElements = textElement.select("td:has(i:contains(Language)) + td");
-			if (!languageElements.isEmpty()) {
-				String l = languageElements.first().text();			
-				Language language = Language.getByFullName(l);
-				if (language != null) {
-					mediaInfo.addSubtitle(language);
-				} else {
-					ErrorManager.getInstance().reportWarning("Unrecognized language : " + l, true);
-				}
-			}
-		}
-
-		return mediaInfo;
-	}
-	
 	public VideoMetaData getMetaData(Downloadable video, Path videoFilePath) throws IOException, InterruptedException { 
 		VideoMetaData metaData = videoDAO.getMetaData( video.getId() );
 		if (metaData == null) {
 			String openSubtitlesHash = OpenSubtitlesHasher.computeHash( videoFilePath );
 
-			MediaInfo mediaInfo = getMediaInfo( videoFilePath );
+			MediaInfo mediaInfo = mediaInfoClient.getMediaInfo( videoFilePath );
 			if (mediaInfo != null) {
 				metaData = new VideoMetaData(mediaInfo.getAudioLanguages(), mediaInfo.getSubtitles(), mediaInfo.getWidth(), mediaInfo.getHeight(), openSubtitlesHash);
 			} else {
@@ -183,6 +125,15 @@ public class VideoManager {
 		}
 
 		return false;
+	}
+	
+	private MediaInfoWrapper mediaInfoClient;
+
+	@Override
+	public void reconfigure() {
+
+		mediaInfoClient = MediaInfoWrapper.Builder().pathToMediaInfo(mediaInfoBinaryPath).build();
+		
 	}	
 
 }

@@ -7,7 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Scanner;
 import java.util.Set;
+import java.util.regex.MatchResult;
 
 import dynamo.core.manager.ErrorManager;
 import liquibase.util.StringUtils;
@@ -70,6 +73,32 @@ public class MapperUtils {
 			}
 		}
 		return val;
+	}
+
+	public static Set<Locale> getLocales(String value) {
+		List<String> collection = getStringList(value);
+		Set<Locale> locales = new HashSet<>();
+		for (String string : collection) {
+			try (Scanner scanner = new Scanner( string )) {
+				
+				Locale locale;
+				
+				if (scanner.findInLine("(\\w{2})_(\\w{2})") != null) {
+					MatchResult result = scanner.match();
+					
+					String language = result.group(1);
+					String country = result.group(2);
+					
+					locale = new Locale(language, country);
+				} else {
+					locale = new Locale( string );
+				}
+				
+				locales.add(locale);
+				
+			}
+		}
+		return locales;
 	}
 
 }

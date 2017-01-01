@@ -12,7 +12,6 @@ import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.backlog.tasks.files.DeleteFileTask;
-import dynamo.core.ReleaseGroup;
 import dynamo.core.model.DownloadableFile;
 import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.manager.DownloadableManager;
@@ -29,6 +28,7 @@ import dynamo.tvshows.model.ManagedSeries;
 import dynamo.tvshows.model.TVShowManager;
 import dynamo.tvshows.model.TVShowSeason;
 import dynamo.video.VideoManager;
+import fr.mozvip.subtitles.Release;
 
 public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 	
@@ -91,7 +91,7 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 					if ( episodeInfo != null ) {
 						managedEpisode.setQuality( episodeInfo.getQuality() );
 						managedEpisode.setSource( episodeInfo.getSource() );
-						managedEpisode.setReleaseGroup( ReleaseGroup.firstMatch( episodeInfo.getRelease() ).name() );
+						managedEpisode.setReleaseGroup( Release.firstMatch( episodeInfo.getRelease() ).name() );
 					}
 
 					managedEpisode.setAbsoluteNumber( managedEpisode.getEpisodeNumber() );

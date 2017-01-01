@@ -1,8 +1,8 @@
 package dynamo.parsers;
 
-import dynamo.core.ReleaseGroup;
 import dynamo.core.VideoQuality;
 import dynamo.core.VideoSource;
+import fr.mozvip.subtitles.Release;
 
 public class VideoInfo {
 	
@@ -31,7 +31,7 @@ public class VideoInfo {
 
 	protected void parseExtraData() {
 		source = VideoSource.findMatch( extraNameData );
-		release = ReleaseGroup.firstMatch(extraNameData).name();
+		release = Release.firstMatch(extraNameData).name();
 		if (quality == null) {
 			quality = VideoQuality.findMatch( extraNameData );
 		}

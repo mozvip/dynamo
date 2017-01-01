@@ -16,3 +16,6 @@
 [submodule "sabnzbd-client"]
 	path = sabnzbd-client
 	url = https://github.com/mozvip/sabnzbd-client.git
+[submodule "mediainfo-wrapper"]
+	path = mediainfo-wrapper
+	url = https://github.com/mozvip/mediainfo-wrapper.git

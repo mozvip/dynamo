@@ -80,6 +80,11 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
     $scope.submissions = filterFilter($scope.submissions, {'submissionId': '!' + executor.submissionId });
   }
 
+  $scope.runNow = function( executor ) {
+    BackendService.post('backlog/runNow/' + executor.submissionId);
+    $scope.submissions = filterFilter($scope.submissions, {'submissionId': '!' + executor.submissionId });
+  }
+
   $scope.$on('$destroy', function() {
       $timeout.cancel(tickTimeout);
   });  

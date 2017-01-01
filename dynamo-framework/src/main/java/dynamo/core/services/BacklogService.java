@@ -30,4 +30,10 @@ public class BacklogService {
 		BackLogProcessor.getInstance().unschedule( submissionId );
 	}
 
+	@Path("/runNow/{submissionId}")
+	@POST
+	public void runNow( @PathParam("submissionId") long submissionId ) {
+		BackLogProcessor.getInstance().runNow( submissionId );
+	}
+
 }
