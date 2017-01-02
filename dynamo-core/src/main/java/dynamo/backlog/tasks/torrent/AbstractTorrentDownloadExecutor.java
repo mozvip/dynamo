@@ -4,15 +4,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.apache.commons.lang3.StringUtils;
-
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.model.TaskExecutor;
 import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.torrent.parser.TorrentFile;
 import dynamo.torrent.parser.TorrentProcessor;
-import hclient.HTTPClient;
 
 public abstract class AbstractTorrentDownloadExecutor extends TaskExecutor<DownloadTorrentTask> {
 
@@ -29,46 +26,31 @@ public abstract class AbstractTorrentDownloadExecutor extends TaskExecutor<Downl
 	public void execute() throws Exception {
 	
 		Path filePath = task.getTorrentFilePath();
-		if (filePath == null && task.getURL() != null) {
+		if (filePath == null || !Files.exists(filePath)) {
 			if (task.getURL().getUrl().startsWith("http")) {
 				filePath = Files.createTempFile("dynamo", ".torrent");
-				String contentType = HTTPClient.getInstance().downloadToFile(task.getURL(), filePath, 0);
-				
-				if (StringUtils.equals(contentType, "text/html")) {
-					
-				}
 			}
-			
 		}
 		
 		String ident = null;
 
-		if (filePath != null) {
+		if (filePath != null && Files.exists(filePath)) {
 			try (InputStream input = Files.newInputStream( filePath )) {
 				TorrentFile torrentFile = TorrentProcessor.getTorrentFile( input );
 				if (torrentFile == null) {
+					Files.delete( task.getTorrentFilePath() );
 					throw new Exception("Downloaded file is not a torrent, will retry downloading it later");
 				} else {
-					if ( task.getDownloadable() != null) {
-						int i = 0;
-						for (String fileName : torrentFile.fileNames) {
-							long size = torrentFile.length.get( i );
-							searchResultDAO.createFile(fileName, size, task.getSearchResult().getUrl() );
-							i++;
-						}
-					}
-					
 					ident = handleTorrent( filePath );
 				}				
 			}
 
 		} else {
-			
-			// this has to be a magnet link
+
 			if (Transmission.getInstance().isEnabled()) {
 				long id = Transmission.getInstance().downloadByUrl( task.getURL().getUrl() );
 				if (id >= 0) {
-					ident = "" + Transmission.getInstance().downloadByUrl( task.getURL().getUrl() );
+					ident = "" + id;
 				} else {
 					throw new Exception( String.format("Could not download torrent at url %s", task.getURL() ) );
 				}
@@ -77,7 +59,7 @@ public abstract class AbstractTorrentDownloadExecutor extends TaskExecutor<Downl
 			}
 			
 		}
-		
+
 		DownloadableManager.getInstance().snatched( task.getDownloadable(), task.getSearchResult() );
 		if (ident != null && !ident.equals(task.getSearchResult().getClientId())) {
 			searchResultDAO.freeClientId( ident );

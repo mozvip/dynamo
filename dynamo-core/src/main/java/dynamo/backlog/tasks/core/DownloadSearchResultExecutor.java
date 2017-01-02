@@ -27,7 +27,7 @@ public class DownloadSearchResultExecutor extends TaskExecutor<DownloadSearchRes
 		if (result.getUrl().startsWith("http") ) {
 			DownloadFinder finder = DynamoObjectFactory.getInstance( task.getSearchResult().getProviderClass() );
 			// download the file locally
-			Path filePath = finder.download( result.getUrl(), task.getSearchResult().getReferer() );
+			Path filePath = finder.download( result.getUrl(), result.getReferer() );
 			if (filePath != null) {
 				if ( result.getType() == SearchResultType.TORRENT) {
 					BackLogProcessor.getInstance().schedule( new DownloadTorrentTask(filePath, result, task.getDownloadable()), false);
