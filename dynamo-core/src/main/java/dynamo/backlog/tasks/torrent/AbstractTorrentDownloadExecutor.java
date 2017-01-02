@@ -38,11 +38,13 @@ public abstract class AbstractTorrentDownloadExecutor extends TaskExecutor<Downl
 			try (InputStream input = Files.newInputStream( filePath )) {
 				TorrentFile torrentFile = TorrentProcessor.getTorrentFile( input );
 				if (torrentFile == null) {
-					Files.delete( task.getTorrentFilePath() );
-					throw new Exception("Downloaded file is not a torrent, will retry downloading it later");
+					DownloadableManager.getInstance().blackListSearchResult( task.getSearchResult().getUrl() );
+					throw new Exception("Downloaded file is not a torrent, blacklisting URL");
 				} else {
 					ident = handleTorrent( filePath );
-				}				
+				}
+			} finally {
+				Files.deleteIfExists( filePath );
 			}
 
 		} else {
