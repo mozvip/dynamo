@@ -4,6 +4,9 @@
             <button class="btn btn-danger" ng-click="cancel(submission)" ng-if="!submission.task.minutesFrequency">
                 <span class="glyphicon glyphicon-trash" />
             </button>
+            <button class="btn btn-default" ng-click="runNow(submission)" ng-if="!submission.task.minutesFrequency && !submission.executor.running">
+                <span class="glyphicon glyphicon-play" />
+            </button>
             <button class="btn btn-default" ng-click="runNow(submission)" ng-if="submission.task.minutesFrequency">
                 <span class="glyphicon glyphicon-refresh" />
             </button>
