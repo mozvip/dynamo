@@ -34,11 +34,13 @@ public class TraktMovieSuggester implements MovieSuggester, Enableable {
 
 		try {
 			List<Movie> recommandations = TraktManager.getInstance().getMovieRecommandations();
-			for (Movie recommendation : recommandations) {
-				try {
-					MovieManager.getInstance().suggestImdbId( recommendation.ids.imdb, null, Language.EN, recommendation.homepage );
-				} catch (MovieDbException | ParseException | InterruptedException e) {
-					ErrorManager.getInstance().reportThrowable( e );
+			if (recommandations != null) {
+				for (Movie recommendation : recommandations) {
+					try {
+						MovieManager.getInstance().suggestImdbId( recommendation.ids.imdb, null, Language.EN, recommendation.homepage );
+					} catch (MovieDbException | ParseException | InterruptedException e) {
+						ErrorManager.getInstance().reportThrowable( e );
+					}
 				}
 			}
 		} catch (OAuthSystemException e) {
