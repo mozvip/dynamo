@@ -142,21 +142,19 @@ public class ScanMovieFolderExecutor extends TaskExecutor<ScanMovieFolderTask> i
 					}
 				}
 
-				boolean mustRefresh = false;
-				if ( !DownloadableManager.hasImage( movie )) {
-					mustRefresh = true;
-				}
 				if ( movie.getImdbID() == null && movie.getMovieDbId() > 0 ) {
-					mustRefresh = true;
-				}
-				
-				if (mustRefresh && movie.getMovieDbId() > 0) {
 					try {
 						MovieInfo movieDb = TheMovieDB.getInstance().getMovieInfo( movie.getMovieDbId(), null );
 						MovieManager.getInstance().associate(movie, movieDb);
 					} catch (MovieDbException e) {
 						ErrorManager.getInstance().reportThrowable( e );
 					}							
+				} else {
+					if ( !DownloadableManager.hasImage( movie )) {
+						if (movie.getImdbID() != null || movie.getMovieDbId() > 0) {
+							BackLogProcessor.getInstance().schedule( new FindMovieImageTask( movie ), false);
+						}
+					}
 				}
 
 				MovieManager.getInstance().save( movie );

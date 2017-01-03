@@ -5,13 +5,18 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
+import java.util.List;
 
 import dynamo.core.manager.ErrorManager;
 
 public class FileUtils {
 
-	public static Path getFolderWithMostUsableSpace(Collection<Path> folders) {
+	public static Path getFolderWithMostUsableSpace(List<Path> folders) {
+		
+		if (folders.size() == 1) {
+			return folders.get(0);
+		}
+		
 		Path destinationFolder = Paths.get(".");
 		long currentFreeSpace = 0;
 		for (Path folder : folders) {
