@@ -175,7 +175,7 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>dynamo</groupId>
+			<groupId>com.github.mozvip</groupId>
 			<artifactId>dynamo-framework</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<exclusions>
