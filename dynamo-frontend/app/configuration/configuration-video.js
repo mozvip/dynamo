@@ -58,13 +58,11 @@ angular.module('dynamo.trakt', ['ngRoute', 'ngResource'])
   $scope.itemsToConfigure = [
       $scope.config['VideoManager.mediaInfoBinaryPath'],
       $scope.config['TraktManager.enabled'],
-      $scope.config['TraktManager.username']
+      $scope.config['TraktManager.username'],
+      $scope.config['TraktManager.password']
   ];
 
-  $scope.traktPinCode = '';
-
   $scope.saveSettings = function () {
-    BackendService.post('trakt/auth/' + $scope.traktPinCode);
     configurationService.saveItems($scope.itemsToConfigure);
   }
 
