@@ -91,7 +91,7 @@
   	<dependency>
   		<groupId>com.h2database</groupId>
   		<artifactId>h2</artifactId>
-  		<version>1.4.192</version>
+  		<version>1.4.193</version>
   	</dependency>
   	<dependency>
   		<groupId>org.slf4j</groupId>
@@ -104,7 +104,7 @@
   		<version>1.1.7</version>
   	</dependency>
   	<dependency>
-  		<groupId>hclient</groupId>
+  		<groupId>com.github.mozvip</groupId>
   		<artifactId>hclient</artifactId>
   		<version>0.0.3</version>
   	</dependency>

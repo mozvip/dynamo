@@ -222,7 +222,7 @@
 			<version>5.4.0</version>
 		</dependency>
 		<dependency>
-			<groupId>hclient</groupId>
+			<groupId>com.github.mozvip</groupId>
 			<artifactId>hclient</artifactId>
 			<version>0.0.3</version>
 		</dependency>
@@ -242,37 +242,37 @@
 			<version>2.1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.mozvip</groupId>
+			<groupId>com.github.mozvip</groupId>
 			<artifactId>transmission-client</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.mozvip</groupId>
+			<groupId>com.github.mozvip</groupId>
 			<artifactId>acoustid-client</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.mozvip</groupId>
+			<groupId>com.github.mozvip</groupId>
 			<artifactId>sabnzbd-client</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.mozvip</groupId>
+			<groupId>com.github.mozvip</groupId>
 			<artifactId>theaudiodb-client</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.mozvip</groupId>
+			<groupId>com.github.mozvip</groupId>
 			<artifactId>pushbullet-client</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.mozvip</groupId>
+			<groupId>com.github.mozvip</groupId>
 			<artifactId>subtitles-finder</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.mozvip</groupId>
+			<groupId>com.github.mozvip</groupId>
 			<artifactId>mediainfo-wrapper</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
