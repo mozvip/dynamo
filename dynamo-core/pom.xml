@@ -279,7 +279,7 @@
 	</dependencies>
 	<packaging>jar</packaging>
 	<parent>
-		<groupId>dynamo</groupId>
+		<groupId>com.github.mozvip</groupId>
 		<artifactId>dynamo</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../</relativePath>
