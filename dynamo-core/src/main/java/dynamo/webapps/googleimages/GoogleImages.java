@@ -7,12 +7,13 @@ import org.apache.http.conn.HttpHostConnectException;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.RegExp;
-import core.WebDocument;
-import core.WebResource;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.SimpleResponse;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
+import com.github.mozvip.hclient.core.WebResource;
+
 import dynamo.core.manager.ErrorManager;
-import hclient.HTTPClient;
-import hclient.SimpleResponse;
 
 public class GoogleImages {
 	

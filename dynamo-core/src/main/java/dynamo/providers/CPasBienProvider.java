@@ -9,8 +9,10 @@ import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.RegExp;
-import core.WebDocument;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
@@ -29,7 +31,6 @@ import dynamo.movies.model.MovieManager;
 import dynamo.parsers.ParsedMovieInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.suggesters.movies.MovieSuggester;
-import hclient.HTTPClient;
 
 @ClassDescription(label="CPasBien")
 public class CPasBienProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, TVShowSeasonProvider, MagazineProvider, MovieSuggester {

@@ -2,6 +2,7 @@ package dynamo.movies.model;
 
 import java.util.concurrent.Semaphore;
 
+import com.github.mozvip.hclient.HTTPClient;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.TheMovieDbApi;
 import com.omertron.themoviedbapi.enumeration.SearchType;
@@ -11,7 +12,6 @@ import com.omertron.themoviedbapi.results.ResultList;
 import dynamo.core.Language;
 import dynamo.core.manager.ErrorManager;
 import dynamo.httpclient.YAMJHttpClient;
-import hclient.HTTPClient;
 
 public class TheMovieDB {
 	

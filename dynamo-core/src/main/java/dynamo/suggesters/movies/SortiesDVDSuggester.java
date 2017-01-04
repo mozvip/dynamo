@@ -7,14 +7,14 @@ import java.text.ParseException;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.WebDocument;
+import com.github.mozvip.hclient.core.WebResource;
 import com.omertron.themoviedbapi.MovieDbException;
 
-import core.WebDocument;
-import core.WebResource;
 import dynamo.core.Language;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.movies.model.MovieManager;
-import hclient.HTTPClient;
 
 @ClassDescription(label="SortiesDVD.com")
 public class SortiesDVDSuggester implements MovieSuggester {

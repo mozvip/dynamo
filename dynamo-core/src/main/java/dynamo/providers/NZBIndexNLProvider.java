@@ -10,7 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.WebDocument;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.backlog.tasks.nzb.DownloadNZBTask;
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
@@ -30,7 +32,6 @@ import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import dynamo.movies.model.MovieManager;
-import hclient.HTTPClient;
 
 @ClassDescription(label="NZBIndex.nl")
 public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider, EpisodeFinder, MusicAlbumFinder, MagazineProvider, GameFinder {

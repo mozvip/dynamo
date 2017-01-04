@@ -1,8 +1,9 @@
 package dynamo.parsers;
 
+import com.github.mozvip.subtitles.Release;
+
 import dynamo.core.VideoQuality;
 import dynamo.core.VideoSource;
-import fr.mozvip.subtitles.Release;
 
 public class VideoInfo {
 	

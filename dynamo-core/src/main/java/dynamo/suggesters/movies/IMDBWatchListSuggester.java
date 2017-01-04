@@ -14,12 +14,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
+import com.github.mozvip.hclient.core.WebResource;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.thetvdbapi.model.Series;
 
-import core.RegExp;
-import core.WebDocument;
-import core.WebResource;
 import dynamo.core.Enableable;
 import dynamo.core.Language;
 import dynamo.core.configuration.ClassDescription;
@@ -29,7 +30,6 @@ import dynamo.model.DownloadableStatus;
 import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.TVShowSuggester;
 import dynamo.tvshows.model.TVShowManager;
-import hclient.HTTPClient;
 
 @ClassDescription(label="IMDB Watch Lists")
 public class IMDBWatchListSuggester implements MovieSuggester, TVShowSuggester, Enableable {

@@ -10,10 +10,11 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.id3.ID3v1Tag;
 import org.jaudiotagger.tag.reference.ID3V2Version;
 
+import com.github.mozvip.acoustid.AcoustIdClient;
+import com.github.mozvip.acoustid.AcoustIdFingerprint;
+import com.github.mozvip.acoustid.AcoustIdLookupResults;
+
 import dynamo.core.model.TaskExecutor;
-import fr.mozvip.acoustid.AcoustIdClient;
-import fr.mozvip.acoustid.AcoustIdFingerprint;
-import fr.mozvip.acoustid.AcoustIdLookupResults;
 
 public class CalcAcoustIdExecutor extends TaskExecutor<CalcAcoustIdTask> {
 	

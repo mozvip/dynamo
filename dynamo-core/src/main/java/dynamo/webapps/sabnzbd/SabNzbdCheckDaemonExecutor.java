@@ -10,6 +10,9 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.mozvip.sabnzbd.model.SABHistoryResponse;
+import com.github.mozvip.sabnzbd.model.SabNzbdResponseSlot;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.core.manager.DownloadableFactory;
@@ -21,8 +24,6 @@ import dynamo.manager.FolderManager;
 import dynamo.model.Downloadable;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
-import fr.mozvip.sabnzbd.model.SABHistoryResponse;
-import fr.mozvip.sabnzbd.model.SabNzbdResponseSlot;
 
 public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonTask> {
 

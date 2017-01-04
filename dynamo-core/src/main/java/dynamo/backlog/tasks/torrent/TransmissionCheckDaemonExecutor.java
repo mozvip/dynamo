@@ -5,6 +5,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.mozvip.transmission.model.Torrent;
+import com.github.mozvip.transmission.model.TorrentFile;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.FileOperationTask;
 import dynamo.core.Enableable;
@@ -17,8 +20,6 @@ import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
-import fr.mozvip.transmission.model.Torrent;
-import fr.mozvip.transmission.model.TorrentFile;
 
 public class TransmissionCheckDaemonExecutor extends TaskExecutor<TransmissionCheckDaemonTask> implements Enableable {
 

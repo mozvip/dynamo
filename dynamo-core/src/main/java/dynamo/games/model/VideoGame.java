@@ -2,7 +2,8 @@ package dynamo.games.model;
 
 import java.nio.file.Path;
 
-import core.FileNameUtils;
+import com.github.mozvip.hclient.core.FileNameUtils;
+
 import dynamo.manager.games.GamesManager;
 import dynamo.model.Downloadable;
 import dynamo.model.DownloadableStatus;

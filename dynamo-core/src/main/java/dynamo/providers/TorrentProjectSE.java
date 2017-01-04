@@ -8,7 +8,9 @@ import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.WebDocument;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.DownloadFinder;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.finders.music.MusicAlbumFinder;
@@ -21,7 +23,6 @@ import dynamo.model.ebooks.books.BookFinder;
 import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
-import hclient.HTTPClient;
 
 @ClassDescription(label="torrentproject.se")
 public class TorrentProjectSE extends DownloadFinder implements MagazineProvider, MusicAlbumFinder, GameFinder, BookFinder {

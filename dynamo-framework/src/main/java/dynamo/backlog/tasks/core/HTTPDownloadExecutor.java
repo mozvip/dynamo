@@ -5,12 +5,13 @@ import java.nio.file.Path;
 
 import org.apache.commons.lang3.StringUtils;
 
-import core.WebResource;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.WebResource;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.TaskExecutor;
 import dynamo.model.backlog.core.HTTPDownloadTask;
-import hclient.HTTPClient;
 
 public class HTTPDownloadExecutor extends TaskExecutor<HTTPDownloadTask> {
 

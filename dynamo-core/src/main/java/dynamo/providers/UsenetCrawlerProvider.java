@@ -8,7 +8,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
-import core.WebDocument;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.SimpleResponse;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
@@ -24,8 +27,6 @@ import dynamo.model.music.MusicQuality;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
 import dynamo.movies.model.MovieManager;
-import hclient.HTTPClient;
-import hclient.SimpleResponse;
 
 @ClassDescription(label="Usenet Crawler")
 public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvider, MusicAlbumFinder, MagazineProvider {

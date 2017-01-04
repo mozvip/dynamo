@@ -16,11 +16,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
+import com.github.mozvip.theaudiodb.model.AudioDbAlbum;
+import com.github.mozvip.theaudiodb.model.AudioDbResponse;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import core.RegExp;
-import core.WebDocument;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteTask;
 import dynamo.backlog.tasks.files.FileUtils;
@@ -39,9 +42,6 @@ import dynamo.music.TheAudioDb;
 import dynamo.music.jdbi.MusicAlbumDAO;
 import dynamo.suggesters.RefreshMusicSuggestionsTask;
 import dynamo.suggesters.music.MusicAlbumSuggester;
-import fr.mozvip.theaudiodb.model.AudioDbAlbum;
-import fr.mozvip.theaudiodb.model.AudioDbResponse;
-import hclient.HTTPClient;
 
 public class MusicManager implements Reconfigurable {
 

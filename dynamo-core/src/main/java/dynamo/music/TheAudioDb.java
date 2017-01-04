@@ -2,9 +2,10 @@ package dynamo.music;
 
 import java.io.IOException;
 
+import com.github.mozvip.theaudiodb.TheAudioDbClient;
+import com.github.mozvip.theaudiodb.model.AudioDbResponse;
+
 import dynamo.core.configuration.ClassDescription;
-import fr.mozvip.theaudiodb.TheAudioDbClient;
-import fr.mozvip.theaudiodb.model.AudioDbResponse;
 
 @ClassDescription(label="TheAudioDB")
 public class TheAudioDb {

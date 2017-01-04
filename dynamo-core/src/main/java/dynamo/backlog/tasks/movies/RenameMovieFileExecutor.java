@@ -6,7 +6,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 
-import core.RegExp;
+import com.github.mozvip.hclient.core.RegExp;
+
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.manager.DAOManager;

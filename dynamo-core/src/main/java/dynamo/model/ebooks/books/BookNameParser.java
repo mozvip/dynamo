@@ -1,6 +1,7 @@
 package dynamo.model.ebooks.books;
 
-import core.RegExp;
+import com.github.mozvip.hclient.core.RegExp;
+
 import dynamo.core.Language;
 
 public class BookNameParser {

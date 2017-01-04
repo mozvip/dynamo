@@ -6,13 +6,14 @@ import java.util.concurrent.ExecutionException;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.WebDocument;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.manager.ErrorManager;
 import dynamo.manager.MusicManager;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicArtist;
-import hclient.HTTPClient;
 
 @ClassDescription(label="AllMusic.com New Releases")
 public class AllMusicNewReleasesSuggester implements MusicAlbumSuggester {

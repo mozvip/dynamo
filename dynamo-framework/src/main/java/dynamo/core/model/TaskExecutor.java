@@ -5,10 +5,11 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.mozvip.hclient.HTTPClient;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.EventManager;
 import dynamo.core.manager.ErrorManager;
-import hclient.HTTPClient;
 
 public abstract class TaskExecutor<T extends Task> implements Runnable {
 

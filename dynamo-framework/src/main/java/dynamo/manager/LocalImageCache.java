@@ -10,12 +10,13 @@ import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.io.IOUtils;
 
-import core.FileNameUtils;
-import core.WebResource;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.FileNameUtils;
+import com.github.mozvip.hclient.core.WebResource;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.manager.ErrorManager;
 import dynamo.model.backlog.core.HTTPDownloadTask;
-import hclient.HTTPClient;
 
 public class LocalImageCache {
 	

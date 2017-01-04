@@ -14,7 +14,9 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.flac.FlacTag;
 import org.jaudiotagger.tag.images.Artwork;
 
-import core.RegExp;
+import com.github.mozvip.acoustid.AcoustIdClient;
+import com.github.mozvip.hclient.core.RegExp;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.MoveFileTask;
 import dynamo.core.manager.DAOManager;
@@ -27,7 +29,6 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicQuality;
 import dynamo.music.jdbi.MusicAlbumDAO;
-import fr.mozvip.acoustid.AcoustIdClient;
 
 public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 	

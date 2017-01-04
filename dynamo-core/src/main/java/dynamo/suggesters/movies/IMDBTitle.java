@@ -2,7 +2,7 @@ package dynamo.suggesters.movies;
 
 import java.util.Collection;
 
-import core.WebResource;
+import com.github.mozvip.hclient.core.WebResource;
 
 public class IMDBTitle {
 	

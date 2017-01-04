@@ -9,15 +9,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.RegExp;
-import core.WebDocument;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.Language;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.movies.model.MovieManager;
 import dynamo.parsers.ParsedMovieInfo;
 import dynamo.parsers.VideoNameParser;
 import dynamo.suggesters.movies.MovieSuggester;
-import hclient.HTTPClient;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.Retrofit;

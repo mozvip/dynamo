@@ -23,8 +23,8 @@ import org.yamj.api.common.http.CommonHttpClient;
 import org.yamj.api.common.http.DigestedResponse;
 import org.yamj.api.common.http.IUserAgentSelector;
 
-import hclient.HTTPClient;
-import hclient.SimpleResponse;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.SimpleResponse;
 
 public class YAMJHttpClient implements CommonHttpClient {
 	

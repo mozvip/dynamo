@@ -5,13 +5,14 @@ import java.nio.file.Path;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.mozvip.sabnzbd.SABNzbdClient;
+import com.github.mozvip.sabnzbd.model.SABHistoryResponse;
+import com.github.mozvip.sabnzbd.model.SabNzbdResponse;
+
 import dynamo.core.Enableable;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.ConfigurationManager;
-import fr.mozvip.sabnzbd.SABNzbdClient;
-import fr.mozvip.sabnzbd.model.SABHistoryResponse;
-import fr.mozvip.sabnzbd.model.SabNzbdResponse;
 
 public class SabNzbd implements Reconfigurable, Enableable {
 

@@ -15,7 +15,8 @@ import javax.servlet.ServletException;
 
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
-import core.RegExp;
+import com.github.mozvip.hclient.core.RegExp;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.DAOManager;

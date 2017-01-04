@@ -3,12 +3,13 @@ package dynamo.backlog.tasks.torrent;
 import java.io.IOException;
 import java.util.List;
 
+import com.github.mozvip.transmission.TransmissionClient;
+import com.github.mozvip.transmission.model.Torrent;
+
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.ConfigurationManager;
 import dynamo.core.manager.ErrorManager;
-import fr.mozvip.transmission.TransmissionClient;
-import fr.mozvip.transmission.model.Torrent;
 
 public class Transmission implements Reconfigurable {
 	

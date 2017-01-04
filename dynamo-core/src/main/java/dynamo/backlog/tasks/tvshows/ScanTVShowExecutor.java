@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.github.mozvip.subtitles.Release;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.backlog.tasks.core.VideoFileFilter;
@@ -28,7 +30,6 @@ import dynamo.tvshows.model.ManagedSeries;
 import dynamo.tvshows.model.TVShowManager;
 import dynamo.tvshows.model.TVShowSeason;
 import dynamo.video.VideoManager;
-import fr.mozvip.subtitles.Release;
 
 public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 	

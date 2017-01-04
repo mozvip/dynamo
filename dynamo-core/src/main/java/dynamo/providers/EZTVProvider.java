@@ -7,8 +7,9 @@ import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.RegExp;
-import core.WebDocument;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.configuration.ClassDescription;

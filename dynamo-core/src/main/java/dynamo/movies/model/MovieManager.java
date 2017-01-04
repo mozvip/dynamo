@@ -15,12 +15,12 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebResource;
 import com.omertron.themoviedbapi.MovieDbException;
 import com.omertron.themoviedbapi.model.movie.MovieInfo;
 import com.omertron.themoviedbapi.results.ResultList;
 
-import core.RegExp;
-import core.WebResource;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import dynamo.backlog.tasks.movies.FindMovieImageTask;

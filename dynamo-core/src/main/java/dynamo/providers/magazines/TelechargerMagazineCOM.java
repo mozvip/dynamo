@@ -7,8 +7,10 @@ import java.util.Set;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.RegExp;
-import core.WebDocument;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.Language;
 import dynamo.core.manager.ErrorManager;
 import dynamo.magazines.KioskIssuesSuggester;
@@ -17,7 +19,6 @@ import dynamo.magazines.MagazineManager;
 import dynamo.model.DownloadLocation;
 import dynamo.model.DownloadSuggestion;
 import dynamo.model.result.SearchResultType;
-import hclient.HTTPClient;
 
 public class TelechargerMagazineCOM implements KioskIssuesSuggester {
 

@@ -9,6 +9,9 @@ import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.SimpleResponse;
+import com.github.mozvip.hclient.core.WebDocument;
 import com.uwetrottmann.trakt5.TraktV2;
 import com.uwetrottmann.trakt5.entities.AccessToken;
 import com.uwetrottmann.trakt5.entities.BaseMovie;
@@ -17,7 +20,6 @@ import com.uwetrottmann.trakt5.entities.Movie;
 import com.uwetrottmann.trakt5.entities.UserSlug;
 import com.uwetrottmann.trakt5.enums.Extended;
 
-import core.WebDocument;
 import dynamo.core.Enableable;
 import dynamo.core.Language;
 import dynamo.core.configuration.ClassDescription;
@@ -27,8 +29,6 @@ import dynamo.core.manager.ConfigAnnotationManager;
 import dynamo.core.manager.ErrorManager;
 import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
-import hclient.HTTPClient;
-import hclient.SimpleResponse;
 import retrofit2.Response;
 
 @ClassDescription(label = "Trakt")

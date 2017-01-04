@@ -8,7 +8,10 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import core.RegExp;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.mediainfo.MediaInfo;
+import com.github.mozvip.mediainfo.MediaInfoWrapper;
+
 import dynamo.backlog.tasks.core.SubtitlesFileFilter;
 import dynamo.backlog.tasks.core.VideoFileFilter;
 import dynamo.core.Language;
@@ -20,8 +23,6 @@ import dynamo.core.model.video.VideoDAO;
 import dynamo.core.model.video.VideoMetaData;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.Downloadable;
-import fr.mozvip.mediainfo.MediaInfo;
-import fr.mozvip.mediainfo.MediaInfoWrapper;
 
 public class VideoManager implements Reconfigurable {
 	

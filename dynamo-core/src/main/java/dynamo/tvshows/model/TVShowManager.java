@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.RegExpMatcher;
 import com.omertron.thetvdbapi.TheTVDBApi;
 import com.omertron.thetvdbapi.TvDbException;
 import com.omertron.thetvdbapi.model.Episode;
@@ -38,8 +40,6 @@ import dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import dynamo.tvshows.jdbi.TVShowDAO;
 import dynamo.tvshows.jdbi.TVShowSeasonDAO;
 import dynamo.tvshows.jdbi.UnrecognizedDAO;
-import hclient.HTTPClient;
-import hclient.RegExpMatcher;
 
 
 public class TVShowManager implements Reconfigurable {

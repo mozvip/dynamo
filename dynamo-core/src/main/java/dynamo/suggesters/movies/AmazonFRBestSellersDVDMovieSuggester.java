@@ -1,6 +1,7 @@
 package dynamo.suggesters.movies;
 
-import core.WebResource;
+import com.github.mozvip.hclient.core.WebResource;
+
 import dynamo.core.Language;
 import dynamo.core.manager.ErrorManager;
 import dynamo.movies.model.Movie;

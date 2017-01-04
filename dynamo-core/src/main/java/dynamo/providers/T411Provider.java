@@ -11,9 +11,11 @@ import java.util.Set;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.RegExp;
-import core.WebDocument;
-import core.WebResource;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
+import com.github.mozvip.hclient.core.WebResource;
+
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
@@ -47,7 +49,6 @@ import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 import dynamo.utils.images.CoverImageFinder;
 import dynamo.webapps.googleimages.GoogleImages;
-import hclient.HTTPClient;
 
 @ClassDescription(label="Torrent 411")
 public class T411Provider extends DownloadFinder implements BookFinder, EpisodeFinder, TVShowSeasonProvider, MusicAlbumFinder, MovieProvider, MagazineProvider, GameFinder, KioskIssuesSuggester, BookSuggester, MovieSuggester {

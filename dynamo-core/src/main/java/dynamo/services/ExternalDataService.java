@@ -11,7 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
-import core.RegExp;
+import com.github.mozvip.hclient.core.RegExp;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.FindDownloadableImageTask;
 import dynamo.core.manager.DownloadableFactory;

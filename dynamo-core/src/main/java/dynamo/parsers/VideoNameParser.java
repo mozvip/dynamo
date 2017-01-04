@@ -5,7 +5,8 @@ import java.nio.file.Path;
 
 import org.apache.commons.lang3.StringUtils;
 
-import core.RegExp;
+import com.github.mozvip.hclient.core.RegExp;
+
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
 import dynamo.tvshows.model.ManagedSeries;

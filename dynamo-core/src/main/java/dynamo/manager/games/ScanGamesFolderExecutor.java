@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import core.RegExp;
+import com.github.mozvip.hclient.core.RegExp;
+
 import dynamo.backlog.tasks.core.ScanFolderExecutor;
 import dynamo.core.manager.ErrorManager;
 import dynamo.core.model.DownloadableFile;

@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import core.FileNameUtils;
-import core.WebResource;
+import com.github.mozvip.hclient.core.FileNameUtils;
+import com.github.mozvip.hclient.core.WebResource;
+
 import dynamo.backlog.tasks.files.FileUtils;
 import dynamo.core.Language;
 import dynamo.core.configuration.Configurable;

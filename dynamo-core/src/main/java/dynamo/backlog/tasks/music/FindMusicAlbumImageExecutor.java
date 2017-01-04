@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import core.WebResource;
+import com.github.mozvip.hclient.core.WebResource;
+import com.github.mozvip.theaudiodb.model.AudioDbResponse;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.FindDownloadableImageExecutor;
 import dynamo.core.manager.ErrorManager;
@@ -13,7 +15,6 @@ import dynamo.manager.MusicManager;
 import dynamo.model.music.MusicAlbum;
 import dynamo.music.TheAudioDb;
 import dynamo.webapps.googleimages.GoogleImages;
-import fr.mozvip.theaudiodb.model.AudioDbResponse;
 
 public class FindMusicAlbumImageExecutor extends FindDownloadableImageExecutor<MusicAlbum> {
 

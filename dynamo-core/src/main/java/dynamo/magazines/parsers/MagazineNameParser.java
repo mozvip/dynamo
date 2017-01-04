@@ -9,8 +9,8 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mozvip.hclient.core.RegExp;
 
-import core.RegExp;
 import dynamo.core.Language;
 import dynamo.core.manager.ErrorManager;
 import dynamo.parsers.DayParser;

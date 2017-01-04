@@ -9,7 +9,9 @@ import java.util.Map;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.WebDocument;
+import com.github.mozvip.hclient.SimpleResponse;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
@@ -20,7 +22,6 @@ import dynamo.finders.core.MovieProvider;
 import dynamo.magazines.MagazineProvider;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
-import hclient.SimpleResponse;
 
 @ClassDescription(label="BTKitty")
 public class BTKitty extends DownloadFinder implements MagazineProvider, EpisodeFinder, MovieProvider {

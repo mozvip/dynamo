@@ -10,8 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.github.mozvip.hclient.core.WebResource;
 
-import core.WebResource;
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;

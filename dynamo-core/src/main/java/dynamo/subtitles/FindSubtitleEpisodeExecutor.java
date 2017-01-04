@@ -8,6 +8,9 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
+import com.github.mozvip.subtitles.EpisodeSubtitlesFinder;
+import com.github.mozvip.subtitles.RemoteSubTitles;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.EventManager;
 import dynamo.core.Language;
@@ -24,8 +27,6 @@ import dynamo.tvshows.model.ManagedEpisode;
 import dynamo.tvshows.model.ManagedSeries;
 import dynamo.tvshows.model.TVShowManager;
 import dynamo.video.VideoManager;
-import fr.mozvip.subtitles.EpisodeSubtitlesFinder;
-import fr.mozvip.subtitles.RemoteSubTitles;
 
 public class FindSubtitleEpisodeExecutor extends TaskExecutor<FindSubtitleEpisodeTask> {
 	

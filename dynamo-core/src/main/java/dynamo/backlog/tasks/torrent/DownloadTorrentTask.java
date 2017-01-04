@@ -2,7 +2,8 @@ package dynamo.backlog.tasks.torrent;
 
 import java.nio.file.Path;
 
-import core.WebResource;
+import com.github.mozvip.hclient.core.WebResource;
+
 import dynamo.core.configuration.ClassDescription;
 import dynamo.core.model.Task;
 import dynamo.model.Downloadable;

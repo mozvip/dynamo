@@ -4,6 +4,8 @@ import java.nio.file.Path;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.mozvip.hclient.HTTPClient;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.core.DownloadFinder;
 import dynamo.core.manager.DynamoObjectFactory;
@@ -12,7 +14,6 @@ import dynamo.jdbi.SearchResultDAO;
 import dynamo.manager.DownloadableManager;
 import dynamo.model.result.NZB;
 import dynamo.model.result.NZBFile;
-import hclient.HTTPClient;
 
 public abstract class AbstractNZBDownloadExecutor extends TaskExecutor<DownloadNZBTask> {
 	private SearchResultDAO searchResultDAO;

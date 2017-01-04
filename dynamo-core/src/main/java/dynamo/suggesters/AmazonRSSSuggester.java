@@ -8,15 +8,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 
-import core.RegExp;
-import core.WebDocument;
 import dynamo.core.manager.ErrorManager;
-import hclient.HTTPClient;
 
 public abstract class AmazonRSSSuggester {
 	

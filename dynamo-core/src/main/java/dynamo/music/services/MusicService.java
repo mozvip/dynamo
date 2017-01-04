@@ -10,6 +10,9 @@ import javax.ws.rs.PathParam;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.mozvip.theaudiodb.model.AudioDbAlbum;
+import com.github.mozvip.theaudiodb.model.AudioDbResponse;
+
 import dynamo.core.EventManager;
 import dynamo.core.manager.DAOManager;
 import dynamo.core.manager.ErrorManager;
@@ -22,8 +25,6 @@ import dynamo.model.music.MusicArtist;
 import dynamo.model.music.MusicFile;
 import dynamo.music.TheAudioDb;
 import dynamo.music.jdbi.MusicAlbumDAO;
-import fr.mozvip.theaudiodb.model.AudioDbAlbum;
-import fr.mozvip.theaudiodb.model.AudioDbResponse;
 
 @Path("/music")
 public class MusicService {

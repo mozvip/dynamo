@@ -7,8 +7,10 @@ import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.RegExp;
-import core.WebDocument;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.VideoQuality;
@@ -20,7 +22,6 @@ import dynamo.games.model.VideoGame;
 import dynamo.magazines.MagazineProvider;
 import dynamo.model.result.SearchResult;
 import dynamo.model.result.SearchResultType;
-import hclient.HTTPClient;
 
 @ClassDescription(label="The Pirate Bay")
 public class PirateBayProvider extends DownloadFinder implements MovieProvider, MagazineProvider, GameFinder {

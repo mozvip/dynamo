@@ -12,17 +12,18 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 
+import com.github.mozvip.acoustid.AcoustIdClient;
+import com.github.mozvip.acoustid.AcoustIdFingerprint;
+import com.github.mozvip.acoustid.AcoustIdFingerprintCalculator;
+import com.github.mozvip.acoustid.AcoustIdLookupResult;
+import com.github.mozvip.acoustid.AcoustIdLookupResults;
+import com.github.mozvip.acoustid.model.Artist;
+import com.github.mozvip.acoustid.model.Recording;
+import com.github.mozvip.acoustid.model.ReleaseGroup;
+
 import dynamo.core.Enableable;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
-import fr.mozvip.acoustid.AcoustIdClient;
-import fr.mozvip.acoustid.AcoustIdFingerprint;
-import fr.mozvip.acoustid.AcoustIdFingerprintCalculator;
-import fr.mozvip.acoustid.AcoustIdLookupResult;
-import fr.mozvip.acoustid.AcoustIdLookupResults;
-import fr.mozvip.acoustid.model.Artist;
-import fr.mozvip.acoustid.model.Recording;
-import fr.mozvip.acoustid.model.ReleaseGroup;
 
 public class AcoustId implements Enableable, Reconfigurable {
 	

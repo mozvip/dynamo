@@ -9,13 +9,14 @@ import java.util.concurrent.Semaphore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.RegExpMatcher;
+
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.NotAlwaysReady;
 import dynamo.core.configuration.Reconfigurable;
 import dynamo.core.manager.DynamoObjectFactory;
 import dynamo.core.manager.ErrorManager;
-import hclient.HTTPClient;
-import hclient.RegExpMatcher;
 
 public abstract class DownloadFinder implements Reconfigurable, Enableable, NotAlwaysReady {
 	

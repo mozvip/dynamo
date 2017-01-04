@@ -8,8 +8,9 @@ import java.util.List;
 
 import org.w3c.dom.Node;
 
-import core.RegExp;
-import core.WebDocument;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.manager.ErrorManager;
 
 public class NZB {

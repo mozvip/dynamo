@@ -3,11 +3,12 @@ package dynamo.webapps.pushbullet;
 import java.io.IOException;
 import java.util.List;
 
+import com.github.mozvip.pushbullet.PushBulletClient;
+import com.github.mozvip.pushbullet.model.PushBulletDevice;
+
 import dynamo.core.Enableable;
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
-import fr.mozvip.pushbullet.PushBulletClient;
-import fr.mozvip.pushbullet.model.PushBulletDevice;
 
 public class PushBullet implements Enableable, Reconfigurable {
 	

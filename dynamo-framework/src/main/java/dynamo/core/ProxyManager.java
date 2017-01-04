@@ -3,9 +3,10 @@ package dynamo.core;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 
+import com.github.mozvip.hclient.HTTPClient;
+
 import dynamo.core.configuration.Configurable;
 import dynamo.core.configuration.Reconfigurable;
-import hclient.HTTPClient;
 
 public class ProxyManager implements Reconfigurable {
 

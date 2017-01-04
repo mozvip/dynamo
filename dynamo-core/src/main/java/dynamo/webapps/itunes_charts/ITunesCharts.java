@@ -3,16 +3,17 @@ package dynamo.webapps.itunes_charts;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.RegExp;
-import core.WebDocument;
-import core.WebResource;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.RegExp;
+import com.github.mozvip.hclient.core.WebDocument;
+import com.github.mozvip.hclient.core.WebResource;
+
 import dynamo.core.Language;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.manager.MusicManager;
 import dynamo.movies.model.MovieManager;
 import dynamo.suggesters.movies.MovieSuggester;
 import dynamo.suggesters.music.MusicAlbumSuggester;
-import hclient.HTTPClient;
 
 @ClassDescription(label="iTunes Chart")
 public class ITunesCharts implements MusicAlbumSuggester, MovieSuggester {

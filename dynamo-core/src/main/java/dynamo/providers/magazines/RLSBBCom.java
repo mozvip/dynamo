@@ -7,7 +7,9 @@ import java.util.Set;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.WebDocument;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.DownloadFinder;
 import dynamo.core.Language;
 import dynamo.core.configuration.ClassDescription;
@@ -17,7 +19,6 @@ import dynamo.magazines.MagazineManager;
 import dynamo.model.DownloadLocation;
 import dynamo.model.DownloadSuggestion;
 import dynamo.model.result.SearchResultType;
-import hclient.HTTPClient;
 
 @ClassDescription(label="RLSBB.com")
 public class RLSBBCom implements KioskIssuesSuggester {

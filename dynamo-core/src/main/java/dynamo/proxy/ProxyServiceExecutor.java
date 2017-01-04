@@ -8,7 +8,8 @@ import org.littleshoot.proxy.HttpProxyServer;
 import org.littleshoot.proxy.HttpProxyServerBootstrap;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
 
-import core.WebResource;
+import com.github.mozvip.hclient.core.WebResource;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.nzb.DownloadNZBTask;
 import dynamo.backlog.tasks.torrent.DownloadTorrentTask;

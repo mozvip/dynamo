@@ -5,13 +5,14 @@ import java.io.IOException;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.WebDocument;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.configuration.ClassDescription;
 import dynamo.magazines.KioskIssuesSuggester;
 import dynamo.magazines.KioskIssuesSuggesterException;
 import dynamo.magazines.MagazineManager;
 import dynamo.model.DownloadSuggestion;
-import hclient.HTTPClient;
 
 @ClassDescription(label="PDFMagazines.org")
 public class PDFMagazinesOrg implements KioskIssuesSuggester {

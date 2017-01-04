@@ -6,7 +6,10 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
-import core.RegExp;
+import com.github.mozvip.acoustid.AcoustIdClient;
+import com.github.mozvip.acoustid.AcoustIdLookupResults;
+import com.github.mozvip.hclient.core.RegExp;
+
 import dynamo.core.manager.DAOManager;
 import dynamo.core.model.DownloadableUtilsDAO;
 import dynamo.core.model.TaskExecutor;
@@ -16,8 +19,6 @@ import dynamo.model.DownloadableStatus;
 import dynamo.model.music.MusicAlbum;
 import dynamo.model.music.MusicQuality;
 import dynamo.music.jdbi.MusicAlbumDAO;
-import fr.mozvip.acoustid.AcoustIdClient;
-import fr.mozvip.acoustid.AcoustIdLookupResults;
 
 public class IdentifyMusicFileExecutor extends TaskExecutor<IdentifyMusicFileTask> {
 	

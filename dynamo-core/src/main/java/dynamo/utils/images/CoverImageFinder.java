@@ -10,9 +10,10 @@ import javax.imageio.ImageIO;
 
 import org.jsoup.nodes.Element;
 
-import core.RegExp;
+import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.core.RegExp;
+
 import dynamo.core.manager.ErrorManager;
-import hclient.HTTPClient;
 
 public class CoverImageFinder {
 	

@@ -15,6 +15,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.mozvip.hclient.HTTPClient;
+
 import dynamo.backlog.BackLogProcessor;
 import dynamo.backlog.tasks.core.CancelDownloadTask;
 import dynamo.backlog.tasks.core.VideoFileFilter;
@@ -55,7 +57,6 @@ import dynamo.tvshows.model.TVShowManager;
 import dynamo.tvshows.model.TVShowSeason;
 import dynamo.video.VideoManager;
 import dynamo.webapps.pushbullet.PushBullet;
-import hclient.HTTPClient;
 
 
 public class DownloadableManager {

@@ -7,12 +7,13 @@ import java.util.List;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.WebDocument;
+import com.github.mozvip.hclient.SimpleResponse;
+import com.github.mozvip.hclient.core.WebDocument;
+
 import dynamo.core.DownloadFinder;
 import dynamo.core.configuration.ClassDescription;
 import dynamo.magazines.MagazineProvider;
 import dynamo.model.result.SearchResult;
-import hclient.SimpleResponse;
 
 @ClassDescription(label="BinnewZ France")
 public class BinNewzFranceProvider extends DownloadFinder implements MagazineProvider {
