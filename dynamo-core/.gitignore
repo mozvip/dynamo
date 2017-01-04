@@ -2,5 +2,6 @@
 /data
 /temp
 /config.json
+/cookies.json
 /src/main/resources/private-data-do-not-commit.properties
 /*.db
