@@ -141,9 +141,9 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	protected List<SearchResult> searchVideo( String search, Language audioLanguage, int subcat, String additionalParams ) throws Exception {
 		String languageSuffix = "";
 		if ( audioLanguage == Language.EN ) {
-			languageSuffix = "&term[51][]=1209&term[51][]=1216";
+			languageSuffix = "term[17][]=540&term[17][]=542&term[17][]=1160&term[17][]=721";
 		} else if ( audioLanguage == Language.FR ) {
-			languageSuffix = "term[51][]=1210&term[51][]=1212&term[51][]=1215";
+			languageSuffix = "term[17][]=541&term[17][]=542&term[17][]=1160&term[17][]=719&term[17][]=720";
 		}
 
 		search = URLEncoder.encode(search, "UTF-8");
