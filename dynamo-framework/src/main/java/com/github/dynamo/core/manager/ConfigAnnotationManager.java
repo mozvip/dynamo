@@ -32,8 +32,6 @@ import com.github.dynamo.core.model.Task;
 import com.github.dynamo.core.services.ConfigurationItem;
 
 public class ConfigAnnotationManager {
-	public final static String DYNAMO_PACKAGE_PREFIX = "dynamo";
-	
 	private final static Logger LOGGER = LoggerFactory.getLogger(ConfigAnnotationManager.class);
 
 	private Set<Class<?>> configuredClasses = new HashSet<>();
