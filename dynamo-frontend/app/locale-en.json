@@ -21,7 +21,9 @@
     "Authorise.Trakt" : "Authorize Trakt",
 
     "Trak.PIN" : "Trakt PIN code",
+    "TraktManager.enabled" : "Enable Trakt",
     "TraktManager.username" : "Trakt Username",
+    "TraktManager.password" : "Trakt Password",
 
     "MovieManager.minimumSuggestionRating" : "Do not sugest movies with rating <",
     "MovieManager.audioLanguage": "Preferred Audio language",

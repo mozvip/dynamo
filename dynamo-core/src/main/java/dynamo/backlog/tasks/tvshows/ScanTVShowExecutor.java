@@ -85,7 +85,7 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 					
 					if (!managedEpisode.isDownloaded()) {
 						// cancel search for this episode
-						BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("this.episode.id == %d", managedEpisode.getId()) );
+						BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("task.episode.id == %d", managedEpisode.getId()) );
 						DownloadableManager.getInstance().addAllSimilarNamedFiles(p, managedEpisode);
 					}
 
@@ -99,7 +99,7 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 
 					if ( series.getSubtitlesLanguage() != null ) {
 						if ( VideoManager.isAlreadySubtitled( managedEpisode, series.getSubtitlesLanguage() )) {
-							BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format("this.episode.id == %d", managedEpisode.getId()) );
+							BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format("task.episode.id == %d", managedEpisode.getId()) );
 						} else {
 							BackLogProcessor.getInstance().schedule( new FindSubtitleEpisodeTask( managedEpisode ), false );
 						}
