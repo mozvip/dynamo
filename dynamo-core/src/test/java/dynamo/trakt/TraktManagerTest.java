@@ -9,11 +9,11 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.junit.Test;
 
+import com.github.dynamo.tests.AbstractDynamoTest;
+import com.github.dynamo.trakt.TraktManager;
 import com.uwetrottmann.trakt5.entities.BaseMovie;
 import com.uwetrottmann.trakt5.entities.BaseShow;
 import com.uwetrottmann.trakt5.entities.Movie;
-
-import dynamo.tests.AbstractDynamoTest;
 
 public class TraktManagerTest extends AbstractDynamoTest {
 	

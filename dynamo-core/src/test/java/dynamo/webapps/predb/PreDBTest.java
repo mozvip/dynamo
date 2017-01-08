@@ -2,7 +2,8 @@ package dynamo.webapps.predb;
 
 import org.junit.Test;
 
-import dynamo.tests.AbstractDynamoTest;
+import com.github.dynamo.tests.AbstractDynamoTest;
+import com.github.dynamo.webapps.predb.PreDB;
 
 public class PreDBTest extends AbstractDynamoTest {
 	

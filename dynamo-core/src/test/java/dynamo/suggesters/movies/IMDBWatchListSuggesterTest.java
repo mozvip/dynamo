@@ -6,7 +6,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import dynamo.tests.AbstractDynamoTest;
+import com.github.dynamo.suggesters.movies.IMDBTitle;
+import com.github.dynamo.suggesters.movies.IMDBWatchListSuggester;
+import com.github.dynamo.tests.AbstractDynamoTest;
 
 public class IMDBWatchListSuggesterTest extends AbstractDynamoTest {
 

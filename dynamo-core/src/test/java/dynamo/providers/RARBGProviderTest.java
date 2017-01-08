@@ -2,7 +2,8 @@ package dynamo.providers;
 
 import org.junit.Test;
 
-import dynamo.tests.AbstractDynamoTest;
+import com.github.dynamo.providers.RARBGProvider;
+import com.github.dynamo.tests.AbstractDynamoTest;
 
 public class RARBGProviderTest extends AbstractDynamoTest {
 

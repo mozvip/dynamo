@@ -3,7 +3,8 @@ package dynamo.providers.magazines;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import dynamo.magazines.KioskIssuesSuggesterException;
+import com.github.dynamo.magazines.KioskIssuesSuggesterException;
+import com.github.dynamo.providers.magazines.TelechargerMagazineCOM;
 
 public class TelechargerMagazineCOMTest {
 	

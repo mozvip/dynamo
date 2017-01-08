@@ -2,8 +2,9 @@ package dynamo.providers;
 
 import org.junit.Test;
 
-import dynamo.core.Language;
-import dynamo.tests.AbstractDynamoTest;
+import com.github.dynamo.core.Language;
+import com.github.dynamo.providers.BTKitty;
+import com.github.dynamo.tests.AbstractDynamoTest;
 
 public class BTKittyTest extends AbstractDynamoTest {
 

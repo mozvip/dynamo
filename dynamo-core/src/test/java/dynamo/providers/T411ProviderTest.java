@@ -5,12 +5,13 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import dynamo.core.Language;
-import dynamo.core.manager.ConfigAnnotationManager;
-import dynamo.core.manager.ConfigurationManager;
-import dynamo.core.manager.DynamoObjectFactory;
-import dynamo.model.result.SearchResult;
-import dynamo.tests.AbstractDynamoTest;
+import com.github.dynamo.core.Language;
+import com.github.dynamo.core.manager.ConfigAnnotationManager;
+import com.github.dynamo.core.manager.ConfigurationManager;
+import com.github.dynamo.core.manager.DynamoObjectFactory;
+import com.github.dynamo.model.result.SearchResult;
+import com.github.dynamo.providers.T411Provider;
+import com.github.dynamo.tests.AbstractDynamoTest;
 
 public class T411ProviderTest extends AbstractDynamoTest {
 	

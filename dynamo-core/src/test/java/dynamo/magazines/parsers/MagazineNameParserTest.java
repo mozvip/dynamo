@@ -4,6 +4,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.github.dynamo.magazines.parsers.MagazineIssueInfo;
+import com.github.dynamo.magazines.parsers.MagazineNameParser;
+
 public class MagazineNameParserTest {
 	
 	private MagazineNameParser parser = MagazineNameParser.getInstance();
