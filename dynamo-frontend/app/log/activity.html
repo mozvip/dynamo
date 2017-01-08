@@ -1,10 +1,10 @@
-<div ng-repeat="submission in submissions | orderBy:'minDate'" class="well">
+<div ng-repeat="submission in submissions" class="well">
     <div class="row">
         <div class="col-md-1">
             <button class="btn btn-danger" ng-click="cancel(submission)" ng-if="!submission.task.minutesFrequency">
                 <span class="glyphicon glyphicon-trash" />
             </button>
-            <button class="btn btn-default" ng-click="runNow(submission)" ng-if="!submission.task.minutesFrequency && !submission.executor.running">
+            <button class="btn btn-default" ng-click="runNow(submission)" ng-if="submission.minDate && !submission.task.minutesFrequency && !submission.executor.running">
                 <span class="glyphicon glyphicon-play" />
             </button>
             <button class="btn btn-default" ng-click="runNow(submission)" ng-if="submission.task.minutesFrequency && !submission.executor.running">

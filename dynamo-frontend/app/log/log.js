@@ -80,9 +80,9 @@ angular.module('dynamo.log', ['ngRoute', 'ngResource'])
     $scope.submissions = filterFilter($scope.submissions, {'submissionId': '!' + executor.submissionId });
   }
 
-  $scope.runNow = function( executor ) {
-    BackendService.post('backlog/runNow/' + executor.submissionId);
-    $scope.submissions = filterFilter($scope.submissions, {'submissionId': '!' + executor.submissionId });
+  $scope.runNow = function( submission ) {
+    BackendService.post('backlog/runNow/' + submission.submissionId);
+    submission.minDate = '';
   }
 
   $scope.$on('$destroy', function() {

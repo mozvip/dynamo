@@ -117,6 +117,7 @@ angular.module('dynamo.configuration', ['ngRoute'])
             $scope.config['RARBGProvider.enabled'],
             $scope.config['RARBGProvider.baseURL'],
             $scope.config['PirateBayProvider.enabled'],
+            $scope.config['PirateBayProvider.baseURL'],
             $scope.config['TorrentProjectSE.enabled'],
             $scope.config['UsenetCrawlerProvider.enabled'],
             $scope.config['UsenetCrawlerProvider.login'],

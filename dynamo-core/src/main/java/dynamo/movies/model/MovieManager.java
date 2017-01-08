@@ -203,7 +203,7 @@ public class MovieManager implements Reconfigurable {
 				DownloadableManager.getInstance().updateYear( movie.getId(), movie.getYear());
 			}
 		}
-		if (!DownloadableManager.hasImage( movie )) {
+		if (movie.getStatus() != DownloadableStatus.IGNORED && !DownloadableManager.hasImage( movie )) {
 			BackLogProcessor.getInstance().schedule( new FindMovieImageTask( movie ), false);
 		}
 	}
