@@ -41,7 +41,7 @@ public class ConfigurationItem {
 				String label = enumValue instanceof Labelized ? ((Labelized)enumValue).getLabel() : enumValue.name();
 				allowedValues.put( enumValue.name(), label );
 			}
-		} else if (type.getName().startsWith("dynamo.")) {
+		} else if (type.getName().startsWith("com.github.")) {	// FIXME
 			
 			Set<?> klasses = DynamoObjectFactory.getReflections().getSubTypesOf( type );
 			if (klasses != null && !klasses.isEmpty()) {
