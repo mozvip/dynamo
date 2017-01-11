@@ -245,11 +245,13 @@ public class BackLogProcessor extends Thread {
 	}
 
 	private boolean match( TaskSubmission submission, SubmissionSpecs specs ) {
-		boolean match = false;
 		Task task = submission.getTask();
 		if (specs.taskClass != null) {
-			match = specs.taskClass.isAssignableFrom( task.getClass() );
+			if (!specs.taskClass.isAssignableFrom( task.getClass() )) {
+				return false;
+			}
 		}
+		boolean match = true;
 		if (specs.expressionToVerify != null) {
 			try {
 				match = evaluate( task, specs.expressionToVerify );

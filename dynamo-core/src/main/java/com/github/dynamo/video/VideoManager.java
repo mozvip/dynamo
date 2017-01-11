@@ -2,6 +2,7 @@ package com.github.dynamo.video;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import com.github.dynamo.core.Language;
 import com.github.dynamo.core.configuration.Configurable;
 import com.github.dynamo.core.configuration.Reconfigurable;
 import com.github.dynamo.core.manager.DAOManager;
+import com.github.dynamo.core.manager.ErrorManager;
 import com.github.dynamo.core.model.DownloadableFile;
 import com.github.dynamo.core.model.video.VideoDAO;
 import com.github.dynamo.core.model.video.VideoMetaData;
@@ -64,28 +66,37 @@ public class VideoManager implements Reconfigurable {
 		return metaData;
 	}
 	
-	public Optional<Path> getMainVideoFile( long downloadableId ) {
-		Optional<DownloadableFile> optionalFile = DownloadableManager.getInstance()
-				.getAllFiles( downloadableId ).stream()
+	private static Optional<Path> selectMainVideoFile( Collection<DownloadableFile> files )  {
+		Optional<DownloadableFile> optionalFile = files.stream()
 				.filter( file -> VideoFileFilter.getInstance().accept( file.getFilePath() ))
 				.filter( file -> !file.getFilePath().getFileName().toString().contains("-sample"))
 				.findFirst();
 		return optionalFile.isPresent() ? Optional.of( optionalFile.get().getFilePath() ) : Optional.empty();
 	}
 	
+	public Optional<Path> getMainVideoFile( long downloadableId ) {
+		return selectMainVideoFile( DownloadableManager.getInstance().getAllFiles( downloadableId ) );
+	}
+	
 	public static boolean isAlreadySubtitled( Downloadable videoDownloadable, Language subtitlesLanguage ) throws IOException, InterruptedException {
 		
-		Optional<Path> mainVideoFile = getInstance().getMainVideoFile( videoDownloadable.getId() );
-		if (!mainVideoFile.isPresent()) {
-			throw new IOException( String.format( "No video file found for %s", videoDownloadable.getName()));
+		List<DownloadableFile> allFiles = DownloadableManager.getInstance().getAllFiles( videoDownloadable.getId() );
+		
+		Path mainVideoFilePath;
+		String filename;
+		
+		Optional<Path> optPath = selectMainVideoFile( allFiles );
+		if (optPath.isPresent()) {
+			mainVideoFilePath = optPath.get();
+			filename = mainVideoFilePath.getFileName().toString();
+		} else {
+			ErrorManager.getInstance().reportError(String.format("No video file found for %s", videoDownloadable.toString()));
+			return false;
 		}
-		Path mainVideoFilePath = mainVideoFile.get();
 		
 		if (subtitlesLanguage == null) {
 			return true;
 		}
-		
-		String filename = mainVideoFilePath.getFileName().toString();
 
 		if (subtitlesLanguage.getSubTokens() != null) {
 			// Test if the filename contains an indication of the subtitles (VOSTFR, ...)
@@ -102,7 +113,7 @@ public class VideoManager implements Reconfigurable {
 		}
 
 		List<DownloadableFile> subtitleFiles =
-				DownloadableManager.getInstance().getAllFiles( videoDownloadable.getId() ).stream()
+				allFiles.stream()
 				.filter( file -> SubtitlesFileFilter.getInstance().accept( file.getFilePath() ) )
 				.collect( Collectors.toList() );
 

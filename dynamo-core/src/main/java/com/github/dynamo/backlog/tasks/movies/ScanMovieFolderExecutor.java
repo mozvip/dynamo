@@ -83,6 +83,9 @@ public class ScanMovieFolderExecutor extends TaskExecutor<ScanMovieFolderTask> i
 		totalItems = contents.size();		
 		for (Path path : contents) {
 			if (VideoFileFilter.getInstance().accept( path )) {
+				if (path.getFileName().toString().contains(".sample.")) {
+					continue;
+				}
 				addMovie( getAssociatedFiles( path, contents ) );
 			}
 			itemsDone ++;
