@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +35,6 @@ import com.github.dynamo.core.model.HistoryDAO;
 import com.github.dynamo.core.model.Task;
 import com.github.dynamo.ebooks.model.EBook;
 import com.github.dynamo.jdbi.SearchResultDAO;
-import com.github.dynamo.manager.LocalImageCache;
 import com.github.dynamo.model.DownloadInfo;
 import com.github.dynamo.model.DownloadLocation;
 import com.github.dynamo.model.Downloadable;
@@ -213,12 +211,9 @@ public class DownloadableManager {
 
 		unrecognizedDAO.deleteUnrecognizedFile( newFile );
 
-		if (downloadable instanceof Video && VideoFileFilter.getInstance().accept( newFile )) {
+		if (downloadable instanceof Video && VideoManager.isMainVideoFile(newFile)) {
 			
-			Optional<Path> mainVideoFile = VideoManager.getInstance().getMainVideoFile( id );
-			if (mainVideoFile.isPresent()) {
-				downloadableDAO.updateLabel( id, mainVideoFile.get().getFileName().toString() );
-			}
+			downloadableDAO.updateLabel( id, newFile.getFileName().toString() );
 
 		} else if (downloadable instanceof TVShowSeason) {
 

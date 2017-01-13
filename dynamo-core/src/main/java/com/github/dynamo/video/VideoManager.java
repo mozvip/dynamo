@@ -66,10 +66,14 @@ public class VideoManager implements Reconfigurable {
 		return metaData;
 	}
 	
+	public static boolean isMainVideoFile( Path videoFile ) {
+		String fileName = videoFile.getFileName().toString();
+		return VideoFileFilter.getInstance().accept( videoFile ) && !fileName.contains("-sample") && !fileName.contains(".sample.");
+	}
+	
 	private static Optional<Path> selectMainVideoFile( Collection<DownloadableFile> files )  {
 		Optional<DownloadableFile> optionalFile = files.stream()
-				.filter( file -> VideoFileFilter.getInstance().accept( file.getFilePath() ))
-				.filter( file -> !file.getFilePath().getFileName().toString().contains("-sample"))
+				.filter( file -> isMainVideoFile( file.getFilePath() ))
 				.findFirst();
 		return optionalFile.isPresent() ? Optional.of( optionalFile.get().getFilePath() ) : Optional.empty();
 	}
