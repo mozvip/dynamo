@@ -41,7 +41,7 @@ public class BackLogProcessor extends Thread {
 
 	private class SubmissionSpecs {
 		Class<? extends Task> taskClass;
-		long submissionId;
+		long submissionId = -1;
 		String expressionToVerify;
 		public SubmissionSpecs(Class<? extends Task> taskClass, String expressionToVerify) {
 			super();
@@ -251,18 +251,18 @@ public class BackLogProcessor extends Thread {
 				return false;
 			}
 		}
-		boolean match = true;
+		if (specs.submissionId >= 0 ) {
+			if( specs.submissionId != submission.getSubmissionId()) {
+				return false;
+			}
+		}
 		if (specs.expressionToVerify != null) {
 			try {
-				match = evaluate( task, specs.expressionToVerify );
+				return evaluate( task, specs.expressionToVerify );
 			} catch (ScriptException e) {
 			}
 		}
-		if (specs.submissionId >= 0 ) {
-			match = specs.submissionId == submission.getSubmissionId();
-		}
-		
-		return match;
+		return false;
 	}
 
 	public boolean isRunningOrPending( SubmissionSpecs specs ) {
