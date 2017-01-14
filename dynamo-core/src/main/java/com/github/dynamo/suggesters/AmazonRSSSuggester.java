@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
 
 import com.github.dynamo.core.manager.ErrorManager;
 import com.github.mozvip.hclient.HTTPClient;
@@ -37,6 +38,10 @@ public abstract class AmazonRSSSuggester {
 				Element contributorElement = document.evaluateSingleElementJSoup(".riRssContributor>a");
 				if (contributorElement == null) {
 					contributorElement = document.evaluateSingleElementJSoup(".riRssContributor");
+				}
+
+				if (document.jsoup(".notPublishedYet").size() > 0) {
+					return;
 				}
 
 				if (contributorElement != null && contributorElement.textNodes() != null) {

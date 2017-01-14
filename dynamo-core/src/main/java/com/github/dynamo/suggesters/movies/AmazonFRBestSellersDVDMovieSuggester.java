@@ -1,6 +1,7 @@
 package com.github.dynamo.suggesters.movies;
 
 import com.github.dynamo.core.Language;
+import com.github.dynamo.core.configuration.ClassDescription;
 import com.github.dynamo.core.manager.ErrorManager;
 import com.github.dynamo.movies.model.Movie;
 import com.github.dynamo.movies.model.MovieManager;
@@ -8,6 +9,7 @@ import com.github.dynamo.parsers.VideoNameParser;
 import com.github.dynamo.suggesters.AmazonRSSSuggester;
 import com.github.mozvip.hclient.core.WebResource;
 
+@ClassDescription(label="amazon.fr Best Sellers")
 public class AmazonFRBestSellersDVDMovieSuggester extends AmazonRSSSuggester implements MovieSuggester {
 
 	@Override
@@ -25,11 +27,6 @@ public class AmazonFRBestSellersDVDMovieSuggester extends AmazonRSSSuggester imp
 			"(.*)" + VideoNameParser.SEPARATOR_REGEXP + "- Edition limit.e\\s+.*",
 			"(.*)" + VideoNameParser.SEPARATOR_REGEXP + "- Coffret\\s+.*"
 	};
-	
-	@Override
-	public String toString() {
-		return "amazon.fr Best Sellers";
-	}
 
 	@Override
 	protected void createSuggestion(String title, String contributor, String imageURL, String rssURL, String suggestionURL) throws Exception {
