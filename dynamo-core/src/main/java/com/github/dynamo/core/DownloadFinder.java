@@ -9,7 +9,6 @@ import java.util.concurrent.Semaphore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.dynamo.core.Enableable;
 import com.github.dynamo.core.configuration.Configurable;
 import com.github.dynamo.core.configuration.NotAlwaysReady;
 import com.github.dynamo.core.configuration.Reconfigurable;
@@ -95,7 +94,7 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 					configureProvider();
 				} catch (Exception e) {
 					String label = DynamoObjectFactory.getClassDescription( this.getClass() );
-					ErrorManager.getInstance().reportThrowable(String.format("Configuration of %s failed", label), e);
+					ErrorManager.getInstance().reportThrowable(String.format("Configuration of %s failed : %s", label, e.getMessage()), e);
 					setEnabled(false);
 				}
 				ready = true;
