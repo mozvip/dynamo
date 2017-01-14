@@ -241,7 +241,7 @@ public class MusicManager implements Reconfigurable {
 		
 		String albumName = getAlbumName( name );
 		String searchString = String.format("%s%s", artistName, albumName).toUpperCase().trim();
-		searchString = searchString.replaceAll("[\\W]", "");
+		searchString = searchString.replaceAll("[\\s-,\\.:<>]", "");
 		return searchString;
 	}
 	
