@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -112,8 +113,12 @@ public class VideoManager implements Reconfigurable {
 		}
 
 		VideoMetaData metaData = getInstance().getMetaData(videoDownloadable, mainVideoFilePath);
-		if (metaData.getSubtitleLanguages() != null && metaData.getSubtitleLanguages().contains( subtitlesLanguage )) {
-			return true;
+		if (metaData.getSubtitleLanguages() != null) {
+			for (Locale locale : metaData.getSubtitleLanguages()) {
+				if (locale.getLanguage().equals( subtitlesLanguage.getLocale().getLanguage() )) {
+					return true;
+				}
+			}
 		}
 
 		List<DownloadableFile> subtitleFiles =

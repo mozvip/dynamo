@@ -98,6 +98,6 @@ public enum Language implements Labelized {
 	}
 
 	public Locale getLocale() {
-		return locale != null ? locale : new Locale( shortName, "" );
+		return locale;
 	}
 }
