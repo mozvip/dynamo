@@ -22,3 +22,6 @@
 [submodule "subtitles-finder"]
 	path = subtitles-finder
 	url = https://github.com/mozvip/subtitles-finder.git
+[submodule "t411-client"]
+	path = t411-client
+	url = https://github.com/mozvip/t411-client.git

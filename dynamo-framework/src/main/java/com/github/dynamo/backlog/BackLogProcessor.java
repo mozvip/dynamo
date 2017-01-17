@@ -97,7 +97,7 @@ public class BackLogProcessor extends Thread {
 					
 					List<Long> deadSubmissionIds = submissions.values().stream()
 						.filter( s -> !(s.getTask() instanceof DaemonTask))
-						.filter( s -> s.getFuture() != null && s.getFuture().isDone() || s.getFuture().isCancelled() )
+						.filter( s -> s.getFuture() != null && (s.getFuture().isDone() || s.getFuture().isCancelled()) )
 						.map( s -> s.getSubmissionId() )
 						.collect(Collectors.toList());
 					
