@@ -7,7 +7,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>dynamo-core</module>
-		<module>hclient/hclient</module>
+		<module>hclient</module>
 		<module>dynamo-framework</module>
 		<module>acoustid-client</module>
 		<module>pushbullet-client</module>
