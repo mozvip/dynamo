@@ -212,11 +212,10 @@ public class MusicManager implements Reconfigurable {
 			rawArtistName = RegExp.filter(rawArtistName, regexp);	
 		}
 		
-		// replace "The Beatles" by "Beatles,The"
-		// FIXME : don't hardcode this behavior
-		String albumArtistWithoutThe = RegExp.extract( rawArtistName, "the\\s+(.*)" );
+		// replace "Beatles, The" by "The Beatles"
+		String albumArtistWithoutThe = RegExp.extract( rawArtistName, "(.*),\\s*the" );
 		if (albumArtistWithoutThe != null) {
-			rawArtistName = albumArtistWithoutThe + ",The";
+			rawArtistName = "The " + albumArtistWithoutThe;
 		}
 		
 		return rawArtistName.trim();
