@@ -2,6 +2,7 @@ package com.github.dynamo.music.services;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -63,9 +64,9 @@ public class MusicService {
 			
 			AudioDbAlbum audioDBAlbum = null;
 			try {
-				AudioDbResponse response = TheAudioDb.getInstance().searchAlbum(artist.getName(), musicAlbum.getName());
-				if (response.getAlbum() != null && response.getAlbum().size() == 1) {
-					audioDBAlbum = response.getAlbum().get(0);
+				Optional<AudioDbResponse> response = TheAudioDb.getInstance().searchAlbum(artist.getName(), musicAlbum.getName());
+				if (response.isPresent()) {
+					audioDBAlbum = response.get().getAlbum().get(0);
 				}
 			} catch (IOException e) {
 				ErrorManager.getInstance().reportThrowable( e );

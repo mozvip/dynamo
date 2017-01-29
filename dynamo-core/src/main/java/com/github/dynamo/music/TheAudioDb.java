@@ -1,6 +1,7 @@
 package com.github.dynamo.music;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import com.github.dynamo.core.configuration.ClassDescription;
 import com.github.mozvip.theaudiodb.TheAudioDbClient;
@@ -23,11 +24,11 @@ public class TheAudioDb {
 		return SingletonHolder.instance;
 	}
 
-	public AudioDbResponse searchArtist(String artistName) throws IOException {
+	public Optional<AudioDbResponse> searchArtist(String artistName) throws IOException {
 		return service.searchArtist(artistName);
 	}
 
-	public AudioDbResponse searchAlbum(String artistName, String albumName) throws IOException {
+	public Optional<AudioDbResponse> searchAlbum(String artistName, String albumName) throws IOException {
 		return service.searchAlbum(artistName, albumName);
 	}
 

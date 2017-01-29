@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -291,12 +292,13 @@ public class MusicManager implements Reconfigurable {
 				}
 				
 				AudioDbAlbum audioDBAlbum = null;
-				AudioDbResponse response = TheAudioDb.getInstance().searchAlbum(artistName, albumName);
-				if (response.getAlbum() != null && response.getAlbum().size() == 1) {
-					audioDBAlbum = response.getAlbum().get( 0 );
+				int year = -1;
+				Optional<AudioDbResponse> optAlbum = TheAudioDb.getInstance().searchAlbum(artistName, albumName);
+				if (optAlbum.isPresent()) {
+					audioDBAlbum = optAlbum.get().getAlbum().get( 0 );
+					year = audioDBAlbum.getIntYearReleased();
 				}
 
-				int year = audioDBAlbum != null ? audioDBAlbum.getIntYearReleased() : -1;
 				album = new MusicAlbum(
 						DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, year, status),
 						albumName, null, 
@@ -319,9 +321,9 @@ public class MusicManager implements Reconfigurable {
 			
 			Long tadbArtistId = null;
 			try {
-				AudioDbResponse searchResult = TheAudioDb.getInstance().searchArtist( albumArtist );
-				if (searchResult.getArtists() != null && searchResult.getArtists().size() == 1) {
-					tadbArtistId = searchResult.getArtists().get(0).getIdArtist();
+				Optional<AudioDbResponse> searchResult = TheAudioDb.getInstance().searchArtist( albumArtist );
+				if (searchResult.isPresent()) {
+					tadbArtistId = searchResult.get().getArtists().get(0).getIdArtist();
 				}
 			} catch (IOException e) {
 				ErrorManager.getInstance().reportThrowable( e );

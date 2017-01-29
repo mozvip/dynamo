@@ -276,6 +276,11 @@
 			<artifactId>mediainfo-wrapper</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.mozvip</groupId>
+			<artifactId>predb-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<packaging>jar</packaging>
 	<parent>
