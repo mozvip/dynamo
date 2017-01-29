@@ -9,8 +9,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.core.model.TaskExecutor;
-import com.github.dynamo.model.backlog.find.FindEpisodeTask;
-import com.github.dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import com.github.dynamo.tvshows.jdbi.TVShowDAO;
 import com.github.dynamo.tvshows.model.ManagedSeries;
 
@@ -27,10 +25,8 @@ public class DeleteShowExecutor extends TaskExecutor<DeleteShowTask> {
 
 	@Override
 	public void execute() throws Exception {
-		BackLogProcessor.getInstance().unschedule(RefreshFromTVDBTask.class, String.format("this.series.id == %s", series.getId()));
-		BackLogProcessor.getInstance().unschedule(ScanTVShowTask.class, String.format("this.series.id == %s", series.getId()));
-		BackLogProcessor.getInstance().unschedule(FindSubtitleEpisodeTask.class, String.format("this.episode.seriesId == %s", series.getId()));
-		BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("this.episode.seriesId == %s", series.getId()));
+		BackLogProcessor.getInstance().unschedule(String.format("task.series.id == %s", series.getId()));
+		BackLogProcessor.getInstance().unschedule(String.format("task.episode.seriesId == %s", series.getId()));
 
 		tvShowDAO.deleteTVShow(series.getId());
 
