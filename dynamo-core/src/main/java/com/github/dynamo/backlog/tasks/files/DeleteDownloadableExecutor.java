@@ -54,7 +54,7 @@ public class DeleteDownloadableExecutor extends TaskExecutor<DeleteDownloadableT
 				
 				TVShowManager.getInstance().saveEpisode(episode);
 				
-				BackLogProcessor.getInstance().unschedule( FindSeasonTask.class, String.format("this.downloadable.series.id == %s and this.downloadable.season == %d", episode.getSeriesId(), episode.getSeasonNumber()) );
+				BackLogProcessor.getInstance().unschedule( FindSeasonTask.class, String.format("task.downloadable.series.id == %s and task.downloadable.season == %d", episode.getSeriesId(), episode.getSeasonNumber()) );
 			}
 		}
 		

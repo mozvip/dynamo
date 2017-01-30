@@ -6,12 +6,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.backlog.tasks.core.ScanFolderExecutor;
 import com.github.dynamo.backlog.tasks.core.VideoFileFilter;
-import com.github.dynamo.backlog.tasks.files.DeleteFileTask;
+import com.github.dynamo.backlog.tasks.files.DeleteDownloadableTask;
 import com.github.dynamo.core.model.DownloadableFile;
 import com.github.dynamo.core.model.DownloadableUtilsDAO;
 import com.github.dynamo.manager.DownloadableManager;
@@ -49,6 +48,12 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 		
 		List<Path> videoFiles = FolderManager.getInstance().getContents(folder, VideoFileFilter.getInstance(), true);
 		for (Path p : videoFiles) {
+
+			DownloadableFile downloadableFile = DownloadableManager.getInstance().getFile( p );
+			if (downloadableFile != null) {
+				continue;
+			}
+
 			int seasonNumber = -1;
 			List<Integer> episodes = new ArrayList<Integer>();
 			
@@ -56,58 +61,42 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 			
 			boolean episodeInfoFound = false;
 			
-			if ( episodeInfo == null ) {
-				DownloadableFile downloadableFile = DownloadableManager.getInstance().getFile( p );
-				if ( downloadableFile != null) {
-					Optional<ManagedEpisode> optEpisode = existingEpisodes.stream()
-							.filter( episode -> downloadableFile.getDownloadableId() == episode.getId() )
-							.findFirst();
-					if (optEpisode.isPresent()) {
-						seasonNumber = optEpisode.get().getSeasonNumber();
-						episodes.add( optEpisode.get().getEpisodeNumber() );
-						
-						episodeInfoFound = true;
-					}
-				}
-				
-			} else {
-				
+			if ( episodeInfo != null ) {
 				seasonNumber = episodeInfo.getSeason();
 				episodes.addAll( episodeInfo.getEpisodes() );
 
-			}
-			
-			for (ManagedEpisode managedEpisode : existingEpisodes) {
-				if (managedEpisode.getSeasonNumber() == seasonNumber && episodes.contains( managedEpisode.getEpisodeNumber() )) {
-					
-					episodeInfoFound = true;
-					
-					if (!managedEpisode.isDownloaded()) {
-						// cancel search for this episode
-						BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("task.episode.id == %d", managedEpisode.getId()) );
-						DownloadableManager.getInstance().addAllSimilarNamedFiles(p, managedEpisode);
-					}
-
-					if ( episodeInfo != null ) {
-						managedEpisode.setQuality( episodeInfo.getQuality() );
-						managedEpisode.setSource( episodeInfo.getSource() );
-						managedEpisode.setReleaseGroup( Release.firstMatch( episodeInfo.getRelease() ).name() );
-					}
-
-					managedEpisode.setAbsoluteNumber( managedEpisode.getEpisodeNumber() );
-
-					if ( series.getSubtitlesLanguage() != null ) {
-						if ( VideoManager.isAlreadySubtitled( managedEpisode, series.getSubtitlesLanguage() )) {
-							BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format("task.episode.id == %d", managedEpisode.getId()) );
-						} else {
-							BackLogProcessor.getInstance().schedule( new FindSubtitleEpisodeTask( managedEpisode ), false );
+				for (ManagedEpisode managedEpisode : existingEpisodes) {
+					if (managedEpisode.getSeasonNumber() == seasonNumber && episodes.contains( managedEpisode.getEpisodeNumber() )) {
+						
+						episodeInfoFound = true;
+						
+						if (!managedEpisode.isDownloaded()) {
+							// cancel search for this episode
+							BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("task.episode.id == %d", managedEpisode.getId()) );
+							DownloadableManager.getInstance().addAllSimilarNamedFiles(p, managedEpisode);
 						}
+	
+						if ( episodeInfo != null ) {
+							managedEpisode.setQuality( episodeInfo.getQuality() );
+							managedEpisode.setSource( episodeInfo.getSource() );
+							managedEpisode.setReleaseGroup( Release.firstMatch( episodeInfo.getRelease() ).name() );
+						}
+	
+						managedEpisode.setAbsoluteNumber( managedEpisode.getEpisodeNumber() );
+	
+						if ( series.getSubtitlesLanguage() != null ) {
+							if ( VideoManager.isAlreadySubtitled( managedEpisode, series.getSubtitlesLanguage() )) {
+								BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format("task.episode.id == %d", managedEpisode.getId()) );
+							} else {
+								BackLogProcessor.getInstance().schedule( new FindSubtitleEpisodeTask( managedEpisode ), false );
+							}
+						}
+	
+						downloadableDAO.updateLabel( managedEpisode.getId(), p.getFileName().toString() );
+	
+						TVShowManager.getInstance().saveEpisode( managedEpisode );
+						VideoManager.getInstance().getMetaData(managedEpisode, p);
 					}
-
-					downloadableDAO.updateLabel( managedEpisode.getId(), p.getFileName().toString() );
-
-					TVShowManager.getInstance().saveEpisode( managedEpisode );
-					VideoManager.getInstance().getMetaData(managedEpisode, p);
 				}
 			}
 			
@@ -138,17 +127,20 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 		managedEpisodes = managedEpisodeDAO.findEpisodesForTVShow( series.getId() );
 		seasons = tvShowSeasonDAO.findSeasons( series.getId() );
 		
-		for ( ManagedEpisode managedEpisode : managedEpisodes ) {
-			if (managedEpisode.isDownloaded()) {
-				Optional<Path> mainVideoFile = VideoManager.getInstance().getMainVideoFile( managedEpisode.getId() );
-				if (mainVideoFile.isPresent()) {
-					Path path = mainVideoFile.get();
-					if (!Files.exists( path )) {
-						BackLogProcessor.getInstance().schedule( new DeleteFileTask( path ), false);
-					}
+		for ( ManagedEpisode episode : managedEpisodes ) {
+			boolean hasOneFileLeft = false;
+			List<DownloadableFile> episodeFiles = downloadableDAO.getAllFiles( episode.getId() );
+			for (DownloadableFile downloadableFile : episodeFiles) {
+				if (!Files.exists( downloadableFile.getFilePath() )) {
+					downloadableDAO.deleteFile( downloadableFile.getFilePath()	 );
 				} else {
-					TVShowManager.getInstance().ignoreOrDeleteEpisode( managedEpisode );
+					hasOneFileLeft = true;
 				}
+			}
+			
+			if (!hasOneFileLeft) {
+				episode.setIgnored();
+				BackLogProcessor.getInstance().runImmediately( new DeleteDownloadableTask( episode ), false );
 			}
 		}
 	}

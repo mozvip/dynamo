@@ -296,11 +296,6 @@ public class TVShowManager implements Reconfigurable {
 				series.getOriginalLanguage(), series.getMetaDataLanguage(), series.getAudioLanguage(), series.getSubtitlesLanguage(), series.isEnded(), series.isUseAbsoluteNumbering(), series.isAutoDownload(),
 				series.getWordsBlackList(), series.getAka(), series.getQualities() );
 	}
-	
-	public void ignoreOrDeleteEpisode( ManagedEpisode episode ) {
-		episode.setIgnored();
-		BackLogProcessor.getInstance().schedule( new DeleteDownloadableTask( episode ), false );		
-	}
 
 	@Override
 	public void reconfigure() {
