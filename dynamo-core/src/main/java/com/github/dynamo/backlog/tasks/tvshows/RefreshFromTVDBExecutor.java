@@ -137,6 +137,10 @@ public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 			managedEpisodeDAO.saveEpisode(
 					existingEpisode.getId(), episode.getEpisodeNumber(), firstAiredDate, existingEpisode.getQuality(), existingEpisode.getReleaseGroup(),  
 				 	existingEpisode.getSource(), existingEpisode.isWatched(), existingEpisode.getSeasonId() );
+			
+			if (!StringUtils.equals( existingEpisode.getName(), episode.getEpisodeName() )) {
+				DownloadableManager.getInstance().updateName( existingEpisode.getId(), episode.getEpisodeName());
+			}
 		}
 		
 		Path banner = LocalImageCache.getInstance().resolveLocal( "banners/" + series.getId() + ".jpg" );
