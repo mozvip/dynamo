@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.dynamo.backlog.tasks.core.FindDownloadableExecutor;
 import com.github.dynamo.core.DownloadFinder;
 import com.github.dynamo.core.Language;
@@ -59,6 +61,7 @@ public abstract class AbstractFindTVShowExecutor<T extends Downloadable> extends
 
 				for (String searchString : searchStrings) {
 					try {
+						searchString = StringUtils.stripAccents( searchString );						
 						allResults.addAll( findForSearchString( provider, searchString, series.getAudioLanguage() ) );
 					} catch (Exception e) {
 						ErrorManager.getInstance().reportThrowable(e);
