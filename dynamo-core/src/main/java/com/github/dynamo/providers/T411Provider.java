@@ -140,9 +140,9 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	protected List<SearchResult> searchVideo( String search, Language audioLanguage, int subcat, String additionalParams ) throws Exception {
 		String languageSuffix = "";
 		if ( audioLanguage == Language.EN ) {
-			languageSuffix = "term[17][]=540&term[17][]=542&term[17][]=1160&term[17][]=721";
+			languageSuffix = "term[51][]=540&term[51][]=1209&term[51][]=1212&term[51][]=1213&term[51][]=1216&term[51][]=1217";
 		} else if ( audioLanguage == Language.FR ) {
-			languageSuffix = "term[17][]=541&term[17][]=542&term[17][]=1160&term[17][]=719&term[17][]=720";
+			languageSuffix = "term[51][]=541&term[51][]=1210&term[51][]=1212&term[51][]=1213&term[51][]=1214&term[51][]=1215";
 		}
 
 		search = URLEncoder.encode(search, "UTF-8");
@@ -173,7 +173,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 		String searchParams = String.format("%s S%02dE%02d", searchString, seasonNumber, episodeNumber);
 		
 		String additionalParams = "term[45][]=" + ( 967 + seasonNumber );
-		additionalParams += "&term[46][]=" + ( 936 + (episodeNumber+1) );
+		additionalParams += "&term[46][]=" + ( 936 + episodeNumber );
 
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		results.addAll( searchVideo( searchParams, audioLanguage, 433, additionalParams ) );
