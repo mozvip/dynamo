@@ -16,7 +16,6 @@
 		<module>transmission-client</module>
 		<module>subtitles-finder</module>
 		<module>mediainfo-wrapper</module>
-		<module>t411-client</module>
 		<module>predb-client</module>
 	</modules>
 	<scm>
