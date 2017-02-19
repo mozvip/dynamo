@@ -176,6 +176,13 @@ public class BackLogProcessor extends Thread {
 			return null;
 		}
 		
+		Class<? extends TaskExecutor> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
+		if (backLogTaskClass == null) {
+			ErrorManager.getInstance().reportWarning( String.format( "No Executor capable of executing '%s' was found", task ));				
+			blackListedTaskClass.add( task.getClass() );
+			return null;
+		}		
+		
 		if (task instanceof ImmediateTask) {
 			runImmediately(task, reportQueued);
 			return null;
@@ -185,15 +192,18 @@ public class BackLogProcessor extends Thread {
 
 		synchronized (submissions) {
 
+			boolean found = false;
+			
 			for (Iterator<TaskSubmission> iterator = submissions.values().iterator(); iterator.hasNext();) {
 				TaskSubmission s = iterator.next();
 				if (s.getTask().equals( task )) {
-					iterator.remove();
+					s.setMinDate(minDate);
+					found = true;
+					break;
 				}
 			}
-			
-			Class<? extends TaskExecutor> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
-			if (backLogTaskClass != null) {
+
+			if (!found) {
 				TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
 				submission = new TaskSubmission(task, executor, minDate );
 				submissions.put( submission.getSubmissionId(), submission );
@@ -205,13 +215,10 @@ public class BackLogProcessor extends Thread {
 				if (nextInLine == null && (minDate == null || minDate.isBefore( LocalDateTime.now() ))) {
 					nextInLine = submission;
 				}
-	
-				if (reportQueued) {
-					EventManager.getInstance().reportInfo( String.format("%s has been queued", task.toString()));
-				}
-			} else {
-				ErrorManager.getInstance().reportWarning( String.format( "No Executor capable of executing '%s' was found", task ));				
-				blackListedTaskClass.add( task.getClass() );
+			}
+
+			if (reportQueued) {
+				EventManager.getInstance().reportInfo( String.format("%s has been queued", task.toString()));
 			}
 			
 		}
