@@ -2,7 +2,6 @@ package com.github.dynamo.core.manager;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.github.dynamo.core.manager.ErrorManager;
 import com.github.dynamo.core.model.DownloadableDAO;
 import com.github.dynamo.manager.DownloadableManager;
 import com.github.dynamo.model.DownloadInfo;
@@ -21,7 +20,7 @@ public class DownloadableFactory {
 	private DownloadableFactory() {
 	}
 	
-	public synchronized Downloadable createInstance( long downloadableId ) {
+	public Downloadable createInstance( long downloadableId ) {
 		DownloadInfo downloadInfo = DownloadableManager.getInstance().find( downloadableId );
 		if (downloadInfo != null) {
 			try {
@@ -33,7 +32,7 @@ public class DownloadableFactory {
 		return null;
 	}
 	
-	public synchronized Downloadable createInstance( long downloadableId, Class<? extends Downloadable> klass ) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, IllegalArgumentException, NoSuchMethodException, SecurityException {
+	public Downloadable createInstance( long downloadableId, Class<? extends Downloadable> klass ) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, IllegalArgumentException, NoSuchMethodException, SecurityException {
 		DownloadableDAO daoInstance = DownloadableManager.getInstance().getDAOInstance( klass );
 		return (Downloadable) daoInstance.getClass().getMethod("find", long.class).invoke( daoInstance, downloadableId );
 	}
