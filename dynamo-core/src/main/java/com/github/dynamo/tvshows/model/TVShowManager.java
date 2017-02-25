@@ -328,12 +328,8 @@ public class TVShowManager implements Reconfigurable {
 		return tvShowSeasonDAO.findSeasons( seriesId );
 	}
 
-	public List<ManagedEpisode> findEpisodes( ManagedSeries series ) {
-		List<ManagedEpisode> episodes = managedEpisodeDAO.findEpisodesForTVShow( series.getId() );
-		if (episodes == null) {
-			BackLogProcessor.getInstance().schedule( new RefreshFromTVDBTask( series ) );
-		}
-		return episodes;
+	public List<ManagedEpisode> findEpisodes( String tvShowId ) {
+		return managedEpisodeDAO.findEpisodesForTVShow( tvShowId );
 	}
 
 	public List<ManagedEpisode> findEpisodesForSeason(long seasonId) {

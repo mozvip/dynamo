@@ -91,7 +91,7 @@ public class TVShowsService {
 	@GET
 	@Path("/{id}/episodes")
 	public List<ManagedEpisode> getEpisodes(@PathParam("id") String id) {
-		return TVShowManager.getInstance().findEpisodes( TVShowManager.getInstance().getManagedSeries( id ) );
+		return TVShowManager.getInstance().findEpisodes( id );
 	}
 
 	@POST
