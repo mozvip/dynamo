@@ -9,7 +9,6 @@
 		<module>dynamo-core</module>
 		<module>hclient</module>
 		<module>dynamo-framework</module>
-		<module>acoustid-client</module>
 		<module>pushbullet-client</module>
 		<module>sabnzbd-client</module>
 		<module>theaudiodb-client</module>
