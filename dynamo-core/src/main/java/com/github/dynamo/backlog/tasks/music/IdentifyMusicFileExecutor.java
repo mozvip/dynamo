@@ -64,7 +64,7 @@ public class IdentifyMusicFileExecutor extends TaskExecutor<IdentifyMusicFileTas
 		String albumArtist = audioTag.getFirst(FieldKey.ALBUM_ARTIST);
 		String albumName = audioTag.getFirst(FieldKey.ALBUM);
 
-		MusicAlbum album = MusicManager.getInstance().getAlbum( albumArtist, albumName, DownloadableStatus.DOWNLOADED, null, MusicQuality.COMPRESSED, true );
+		MusicAlbum album = MusicManager.getInstance().getAlbum( albumArtist, albumName, DownloadableStatus.DOWNLOADED, null, MusicQuality.COMPRESSED );
 
 		// delete existing files if exists
 		downloadableUtilsDAO.deleteFile( task.getMusicFilePath() );

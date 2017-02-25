@@ -114,7 +114,7 @@ public class ImportMusicFileExecutor extends TaskExecutor<ImportMusicFileTask> {
 			
 			MusicAlbum musicAlbum = MusicManager.getInstance().getAlbum(
 					artistName, albumName, DownloadableStatus.DOWNLOADED,
-					albumDestinationFolder, audioTag instanceof FlacTag ? MusicQuality.LOSSLESS : MusicQuality.COMPRESSED, true);
+					albumDestinationFolder, audioTag instanceof FlacTag ? MusicQuality.LOSSLESS : MusicQuality.COMPRESSED);
 			
 			if (Files.exists( folderImage)) {
 				DownloadableManager.getInstance().downloadImage(musicAlbum, folderImage);

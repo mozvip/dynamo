@@ -3,14 +3,13 @@ package com.github.dynamo.music;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.DirectoryStream.Filter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.backlog.tasks.core.AudioFileFilter;
-import com.github.dynamo.backlog.tasks.music.ImportMusicFolderTask;
+import com.github.dynamo.backlog.tasks.music.ScanMusicFolderTask;
 import com.github.dynamo.core.FolderIdentifier;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class MusicAlbumFolderIdentifier implements FolderIdentifier {
 	
@@ -51,7 +50,7 @@ public class MusicAlbumFolderIdentifier implements FolderIdentifier {
 
 	@Override
 	public void onIdentify(Path dir) {
-		BackLogProcessor.getInstance().schedule( new ImportMusicFolderTask(dir, false));
+		BackLogProcessor.getInstance().schedule( new ScanMusicFolderTask(dir));
 	}
 
 }

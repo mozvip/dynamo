@@ -3,8 +3,6 @@ package com.github.dynamo.manager;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.nio.file.DirectoryStream.Filter;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,9 +16,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.github.dynamo.backlog.BackLogProcessor;
-import com.github.dynamo.backlog.tasks.files.DeleteTask;
 import com.github.dynamo.backlog.tasks.files.FileUtils;
-import com.github.dynamo.backlog.tasks.music.ImportMusicFolderTask;
+import com.github.dynamo.backlog.tasks.music.ScanMusicFolderTask;
 import com.github.dynamo.core.configuration.Configurable;
 import com.github.dynamo.core.configuration.Reconfigurable;
 import com.github.dynamo.core.manager.DAOManager;
@@ -56,9 +53,6 @@ public class MusicManager implements Reconfigurable {
 
 	@Configurable( contentsClass=MusicAlbumFinder.class )
 	private List<MusicAlbumFinder> musicDownloadProviders;	
-
-	@Configurable
-	private boolean cleanDuringImport;
 	
 	@Configurable( contentsClass=MusicAlbumSuggester.class, ordered=false )
 	private Collection<MusicAlbumSuggester> suggesters;
@@ -91,14 +85,6 @@ public class MusicManager implements Reconfigurable {
 
 	public void setFolders(List<Path> folders) {
 		this.folders = folders;
-	}
-
-	public boolean isCleanDuringImport() {
-		return cleanDuringImport;
-	}
-
-	public void setCleanDuringImport(boolean cleanDuringImport) {
-		this.cleanDuringImport = cleanDuringImport;
 	}
 	
 	public Collection<MusicAlbumSuggester> getSuggesters() {
@@ -256,7 +242,7 @@ public class MusicManager implements Reconfigurable {
 	}
 	
 	public void suggest( String artistName, String albumName, String imageURL, String referer, String suggestionURL) throws ExecutionException, IOException {
-		MusicAlbum album = getAlbum(artistName, albumName, DownloadableStatus.SUGGESTED, null, musicQuality, true);
+		MusicAlbum album = getAlbum(artistName, albumName, DownloadableStatus.SUGGESTED, null, musicQuality);
 		if (imageURL != null) {
 			DownloadableManager.downloadImage(album, imageURL, referer);
 		}
@@ -265,7 +251,7 @@ public class MusicManager implements Reconfigurable {
 		}
 	}
 
-	public synchronized MusicAlbum getAlbum( String artistName, String albumName, DownloadableStatus status, Path folder, MusicQuality quality, boolean createIfMissing ) throws ExecutionException, IOException {
+	public synchronized MusicAlbum getAlbum( String artistName, String albumName, DownloadableStatus status, Path folder, MusicQuality quality ) throws ExecutionException, IOException {
 		
 		MusicAlbum album = null;
 
@@ -286,27 +272,25 @@ public class MusicManager implements Reconfigurable {
 				DownloadableManager.getInstance().updateStatus(album, status);
 			}
 		} else {
-			if (createIfMissing) {
-				if (folder == null) {
-					folder = getPath( artistName, albumName );
-				}
-				
-				AudioDbAlbum audioDBAlbum = null;
-				int year = -1;
-				Optional<AudioDbResponse> optAlbum = TheAudioDb.getInstance().searchAlbum(artistName, albumName);
-				if (optAlbum.isPresent() && optAlbum.get().getAlbum() != null) {
-					audioDBAlbum = optAlbum.get().getAlbum().get( 0 );
-					year = audioDBAlbum.getIntYearReleased();
-				}
-
-				album = new MusicAlbum(
-						DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, year, status),
-						albumName, null, 
-						status, year, new Date(), folder, null, 
-						artist.getName(), null, quality, audioDBAlbum != null ? audioDBAlbum.getIdAlbum() : null
-				);
-				musicDAO.save(album.getId(), artist.getName(), audioDBAlbum != null ? audioDBAlbum.getIdAlbum() : null, audioDBAlbum != null ? audioDBAlbum.getStrGenre() : null, quality, searchString, folder);
+			if (folder == null) {
+				folder = getPath( artistName, albumName );
 			}
+			
+			AudioDbAlbum audioDBAlbum = null;
+			int year = -1;
+			Optional<AudioDbResponse> optAlbum = TheAudioDb.getInstance().searchAlbum(artistName, albumName);
+			if (optAlbum.isPresent() && optAlbum.get().getAlbum() != null) {
+				audioDBAlbum = optAlbum.get().getAlbum().get( 0 );
+				year = audioDBAlbum.getIntYearReleased();
+			}
+
+			album = new MusicAlbum(
+					DownloadableManager.getInstance().createDownloadable(MusicAlbum.class, albumName, year, status),
+					albumName, null, 
+					status, year, new Date(), folder, null, 
+					artist.getName(), null, quality, audioDBAlbum != null ? audioDBAlbum.getIdAlbum() : null
+			);
+			musicDAO.save(album.getId(), artist.getName(), audioDBAlbum != null ? audioDBAlbum.getIdAlbum() : null, audioDBAlbum != null ? audioDBAlbum.getStrGenre() : null, quality, searchString, folder);
 		}
 		
 		return album;
@@ -322,7 +306,7 @@ public class MusicManager implements Reconfigurable {
 			Long tadbArtistId = null;
 			try {
 				Optional<AudioDbResponse> searchResult = TheAudioDb.getInstance().searchArtist( albumArtist );
-				if (searchResult.isPresent()) {
+				if (searchResult.isPresent() && searchResult.get().getArtists() != null) {
 					tadbArtistId = searchResult.get().getArtists().get(0).getIdArtist();
 				}
 			} catch (IOException e) {
@@ -429,26 +413,11 @@ public class MusicManager implements Reconfigurable {
 	public void reconfigure() {
 		if (isEnabled()) {
 			for (Path path : getFolders()) {
-				BackLogProcessor.getInstance().schedule( new ImportMusicFolderTask( path, true ), false );
+				BackLogProcessor.getInstance().schedule( new ScanMusicFolderTask( path ), false );
 			}
 		} else {
-			BackLogProcessor.getInstance().unschedule( ImportMusicFolderTask.class );
+			BackLogProcessor.getInstance().unschedule( ScanMusicFolderTask.class );
 			BackLogProcessor.getInstance().unschedule( RefreshMusicSuggestionsTask.class );
-		}
-	}
-
-	public void cleanFolder(Path folder) throws IOException, InterruptedException {
-		// clean folder contents
-		Filter<Path> filter = new Filter<Path>() {	
-			@Override
-			public boolean accept(Path p) throws IOException {
-				String fileName = p.getFileName().toString();
-				return Files.size(p) == 0 || fileName.endsWith(".txt") || fileName.endsWith(".lnk") || fileName.endsWith(".sfv") || fileName.equalsIgnoreCase("thumbs.db") || fileName.equalsIgnoreCase("desktop.ini");
-			}
-		};
-		List<Path> contents = FolderManager.getInstance().getContents(folder, filter, true);
-		for (Path path : contents) {
-			BackLogProcessor.getInstance().schedule(new DeleteTask( path, true ), false);
 		}
 	}
 
