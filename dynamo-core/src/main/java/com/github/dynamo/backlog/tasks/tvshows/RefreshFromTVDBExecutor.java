@@ -66,6 +66,8 @@ public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 			series.setOriginalLanguage( Language.FR );
 		}
 		
+		TVShowSeason currentSeason = null;	
+		
 		for (Episode episode : episodes) {
 			
 			if (episode.getSeasonNumber() < 1) {
@@ -81,10 +83,12 @@ public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 				firstAiredDate = LocalDate.parse(episode.getFirstAired(), DateTimeFormatter.ofPattern("yyyy-MM-dd") );
 			}
 			
-			TVShowSeason season = tvShowSeasonDAO.findSeason( episode.getSeriesId(), episode.getSeasonNumber() );
-			if ( season != null ) {
-				seasonId = season.getId();
-				existingEpisode = managedEpisodeDAO.findEpisode( season.getId(), episode.getEpisodeNumber() );
+			if (currentSeason == null || currentSeason.getSeason() != episode.getSeasonNumber()) {
+				currentSeason = tvShowSeasonDAO.findSeason( episode.getSeriesId(), episode.getSeasonNumber() );
+			}
+			if ( currentSeason != null ) {
+				seasonId = currentSeason.getId();
+				existingEpisode = managedEpisodeDAO.findEpisode( currentSeason.getId(), episode.getEpisodeNumber() );
 			} else {
 				seasonId = DownloadableManager.getInstance().createDownloadable( TVShowSeason.class, String.format("%s S%02d", series.getName(), episode.getSeasonNumber()), firstAiredDate != null ? firstAiredDate.getYear() : -1, DownloadableStatus.IGNORED );
 				tvShowSeasonDAO.createSeason( seasonId, episode.getSeriesId(), episode.getSeasonNumber() );
@@ -124,7 +128,7 @@ public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 					DownloadableManager.getInstance().updateStatus ( existingEpisode, newStatusForEpisode );
 				}
 				
-			} else if ( existingEpisode.getStatus() == DownloadableStatus.IGNORED && newStatusForEpisode == DownloadableStatus.FUTURE ) {
+			} else if ( newStatusForEpisode == DownloadableStatus.FUTURE ) {
 				
 				DownloadableManager.getInstance().updateStatus ( existingEpisode, newStatusForEpisode );
 			
@@ -137,10 +141,7 @@ public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 			managedEpisodeDAO.saveEpisode(
 					existingEpisode.getId(), episode.getEpisodeNumber(), firstAiredDate, existingEpisode.getQuality(), existingEpisode.getReleaseGroup(),  
 				 	existingEpisode.getSource(), existingEpisode.isWatched(), existingEpisode.getSeasonId() );
-			
-			if (!StringUtils.equals( existingEpisode.getName(), episode.getEpisodeName() )) {
-				DownloadableManager.getInstance().updateName( existingEpisode.getId(), episode.getEpisodeName());
-			}
+			DownloadableManager.getInstance().updateName( existingEpisode.getId(), episode.getEpisodeName());
 		}
 		
 		Path banner = LocalImageCache.getInstance().resolveLocal( "banners/" + series.getId() + ".jpg" );

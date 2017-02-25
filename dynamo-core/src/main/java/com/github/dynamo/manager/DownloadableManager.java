@@ -120,7 +120,7 @@ public class DownloadableManager {
 	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
 	public void want( Downloadable downloadable ) {
-		downloadableDAO.updateStatus(downloadable.getId(), DownloadableStatus.WANTED);
+		updateStatus(downloadable, DownloadableStatus.WANTED);
 		downloadableDAO.updateLabel(downloadable.getId(), "");
 		scheduleFind( downloadable );
 	}

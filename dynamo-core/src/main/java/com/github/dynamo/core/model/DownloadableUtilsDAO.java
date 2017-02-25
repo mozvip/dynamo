@@ -24,7 +24,7 @@ import com.github.dynamo.model.DownloadableStatus;
 @DAO(databaseId="dynamo")
 public interface DownloadableUtilsDAO {
 
-	@SqlUpdate("UPDATE DOWNLOADABLE SET STATUS = :status WHERE ID = :downloadableId AND STATUS != :status")
+	@SqlUpdate("UPDATE DOWNLOADABLE SET STATUS = :status WHERE ID = :downloadableId")
 	public int updateStatus( @Bind("downloadableId") long downloadableId, @BindEnum("status") DownloadableStatus status );
 
 	@SqlUpdate("UPDATE DOWNLOADABLE SET NAME = :name WHERE ID = :downloadableId")
