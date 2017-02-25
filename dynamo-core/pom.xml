@@ -248,11 +248,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.mozvip</groupId>
-			<artifactId>acoustid-client</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.mozvip</groupId>
 			<artifactId>sabnzbd-client</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
