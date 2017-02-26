@@ -72,7 +72,7 @@ public class MusicService {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
 			
-			DownloadableManager.getInstance().updateName(musicAlbum.getId(), musicAlbum.getName());
+			downloadableDAO.updateName(musicAlbum.getId(), musicAlbum.getName());
 			dao.save(musicAlbum.getId(), artist.getName(), audioDBAlbum != null ? audioDBAlbum.getIdAlbum() : musicAlbum.getTadbAlbumId(), audioDBAlbum != null ? audioDBAlbum.getStrGenre() : musicAlbum.getGenre(), musicAlbum.getQuality(), newSearchString, musicAlbum.getFolder());
 		}
 		

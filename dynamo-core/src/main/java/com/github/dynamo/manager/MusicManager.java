@@ -51,6 +51,9 @@ public class MusicManager implements Reconfigurable {
 	@Configurable(contentsClass=Path.class )
 	private List<Path> folders;
 
+	@Configurable
+	private Path downloadFolder;
+
 	@Configurable( contentsClass=MusicAlbumFinder.class )
 	private List<MusicAlbumFinder> musicDownloadProviders;	
 	
@@ -69,6 +72,14 @@ public class MusicManager implements Reconfigurable {
 
 	public void setMusicQuality(MusicQuality musicQuality) {
 		this.musicQuality = musicQuality;
+	}
+	
+	public Path getDownloadFolder() {
+		return downloadFolder;
+	}
+	
+	public void setDownloadFolder(Path downloadFolder) {
+		this.downloadFolder = downloadFolder;
 	}
 
 	public List<MusicAlbumFinder> getMusicDownloadProviders() {

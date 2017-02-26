@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.core.Language;
+import com.github.dynamo.core.manager.DAOManager;
+import com.github.dynamo.core.model.DownloadableUtilsDAO;
 import com.github.dynamo.core.model.TaskExecutor;
 import com.github.dynamo.manager.DownloadableManager;
 import com.github.dynamo.manager.LocalImageCache;
@@ -30,13 +32,12 @@ public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 	
 	private	LocalDateTime nextRefreshDate = null;
 	
-	private TVShowSeasonDAO tvShowSeasonDAO;
-	private ManagedEpisodeDAO managedEpisodeDAO;
+	private TVShowSeasonDAO tvShowSeasonDAO = DAOManager.getInstance().getDAO(TVShowSeasonDAO.class);
+	private ManagedEpisodeDAO managedEpisodeDAO = DAOManager.getInstance().getDAO(ManagedEpisodeDAO.class);
+	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO(DownloadableUtilsDAO.class);
 
-	public RefreshFromTVDBExecutor( RefreshFromTVDBTask item, ManagedEpisodeDAO managedEpisodeDAO, TVShowSeasonDAO tvShowSeasonDAO ) {
+	public RefreshFromTVDBExecutor( RefreshFromTVDBTask item ) {
 		super( item );
-		this.tvShowSeasonDAO = tvShowSeasonDAO;
-		this.managedEpisodeDAO = managedEpisodeDAO;
 	}
 
 	@Override
@@ -141,7 +142,7 @@ public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 			managedEpisodeDAO.saveEpisode(
 					existingEpisode.getId(), episode.getEpisodeNumber(), firstAiredDate, existingEpisode.getQuality(), existingEpisode.getReleaseGroup(),  
 				 	existingEpisode.getSource(), existingEpisode.isWatched(), existingEpisode.getSeasonId() );
-			DownloadableManager.getInstance().updateName( existingEpisode.getId(), episode.getEpisodeName());
+			downloadableDAO.updateName( existingEpisode.getId(), episode.getEpisodeName());
 		}
 		
 		Path banner = LocalImageCache.getInstance().resolveLocal( "banners/" + series.getId() + ".jpg" );
@@ -156,7 +157,7 @@ public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 				LocalImageCache.getInstance().download( "posters", series.getId(), tvDbSeries.getPoster(), null );
 			}
 		}
-		
+
 		TVShowManager.getInstance().saveTVShow( series );
 
 		if (Files.exists( series.getFolder() )) {

@@ -15,6 +15,7 @@ import com.github.dynamo.core.model.DownloadableFile;
 import com.github.dynamo.core.model.DownloadableUtilsDAO;
 import com.github.dynamo.manager.DownloadableManager;
 import com.github.dynamo.manager.FolderManager;
+import com.github.dynamo.model.DownloadableStatus;
 import com.github.dynamo.model.backlog.find.FindEpisodeTask;
 import com.github.dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
 import com.github.dynamo.parsers.TVShowEpisodeInfo;
@@ -138,7 +139,7 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 				}
 			}
 			
-			if (!hasOneFileLeft) {
+			if (!hasOneFileLeft && episode.getStatus() == DownloadableStatus.DOWNLOADED) {
 				episode.setIgnored();
 				BackLogProcessor.getInstance().post( new DeleteDownloadableEvent( episode ) );
 			}

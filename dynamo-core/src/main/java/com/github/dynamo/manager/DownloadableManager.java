@@ -144,7 +144,7 @@ public class DownloadableManager {
 				if (notifyOnDownload && newStatus == DownloadableStatus.DOWNLOADED && PushBullet.getInstance().isEnabled()) {
 					absoluteURL += "DOWNLOADED";
 					try {
-						PushBullet.getInstance().pushLink( "Dynamo has downloaded something", downloadable.toString(), absoluteURL );
+						PushBullet.getInstance().pushLink( "'%s' was downloaded", downloadable.toString(), absoluteURL );
 					} catch (IOException e) {
 						ErrorManager.getInstance().reportThrowable( e );
 					}
@@ -152,7 +152,7 @@ public class DownloadableManager {
 				if (notifyOnSnatch && newStatus == DownloadableStatus.SNATCHED && PushBullet.getInstance().isEnabled()) {
 					absoluteURL += "SNATCHED";
 					try {
-						PushBullet.getInstance().pushLink( "Dynamo has snatched something", downloadable.toString(), absoluteURL );
+						PushBullet.getInstance().pushLink( "'%s' was snatched", downloadable.toString(), absoluteURL );
 					} catch (IOException e) {
 						ErrorManager.getInstance().reportThrowable( e );
 					}

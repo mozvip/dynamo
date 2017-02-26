@@ -61,10 +61,6 @@ public interface DownloadableUtilsDAO {
 	@SqlQuery("SELECT * FROM DOWNLOADABLE WHERE ID = :downloadableId")
 	@Mapper(DownloadInfoMapper.class)
 	public DownloadInfo find(@Bind("downloadableId") long downloadableId);
-
-	@SqlQuery("SELECT * FROM DOWNLOADABLE WHERE PATH=:path AND STATUS='DOWNLOADED'")
-	@Mapper(DownloadInfoMapper.class)
-	public List<DownloadInfo> findDownloadedByPath(@BindPath("path") Path path);
 	
 	@SqlUpdate("INSERT INTO DOWNLOADABLE_FILE(DOWNLOADABLE_ID, FILE_PATH, SIZE, FILE_INDEX) VALUES (:downloadableId, :path, :size, :index)")
 	@GetGeneratedKeys

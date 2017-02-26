@@ -53,7 +53,7 @@ public class DeleteDownloadableEventListener implements EventListener {
 			}
 		}
 		
-		downloadableDAO.updateStatus( downloadable.getId(), DownloadableStatus.IGNORED );
+		DownloadableManager.getInstance().updateStatus( downloadable, DownloadableStatus.IGNORED );
 		downloadableDAO.updateLabel( downloadable.getId(), null );
 
 		if (downloadable instanceof Movie || downloadable instanceof VideoGame || downloadable instanceof MusicAlbum) {
