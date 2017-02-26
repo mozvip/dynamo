@@ -28,7 +28,18 @@ public class T411ProviderTest extends AbstractDynamoTest {
 	@Test
 	public void testFindEpisodeStringLanguageIntInt() throws Exception {
 		List<SearchResult> results = provider.findEpisode("The Exorcist", Language.EN, 1, 1);
+		for (SearchResult searchResult : results) {
+			assert( searchResult.getTitle().contains("S01E01"));
+		}		
 		assert( results.size() > 0);
 	}
 
+	@Test
+	public void testFindEpisode() throws Exception {
+		List<SearchResult> results = provider.findEpisode("Walking Dead", Language.EN, 7, 10);
+		for (SearchResult searchResult : results) {
+			assert( searchResult.getTitle().contains("S07E10"));
+		}
+		assert( results.size() > 0);
+	}
 }

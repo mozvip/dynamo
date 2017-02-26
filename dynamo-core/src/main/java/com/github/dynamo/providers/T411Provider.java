@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 import org.jsoup.nodes.Element;
@@ -82,9 +85,35 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	public void setBaseURL(String baseURL) {
 		this.baseURL = baseURL;
 	}
+	
+	private Map<Integer, String> episodeValues = new HashMap<>();
+	private Map<Integer, String> seasonValues = new HashMap<>();
 
 	@Override
 	public void configureProvider() throws Exception {
+		
+		WebDocument tvShowTerms = client.getDocument(baseURL + "/torrents/terms/?subcat=433");
+		Elements episodeElements = tvShowTerms.jsoup(".terms-type-46 option");
+		for (Element element : episodeElements) {
+			try (Scanner sc = new Scanner(element.text())) {
+				if (sc.findInLine("Episode (\\d+)") != null) {
+					int episode = Integer.parseInt( sc.match().group(1) );
+					episodeValues.put(episode, element.attr("value"));
+				}
+			}
+		}
+		
+		Elements seasonElements = tvShowTerms.jsoup(".terms-type-45 option");
+		for (Element element : seasonElements) {
+			try (Scanner sc = new Scanner(element.text())) {
+				if (sc.findInLine("Saison (\\d+)") != null) {
+					int saison = Integer.parseInt( sc.match().group(1) );
+					seasonValues.put(saison, element.attr("value"));
+				}
+			}
+		}
+		
+		
 		WebDocument loginPage = client.getDocument(baseURL + "/users/login/", 0);
 		if (loginPage.jsoupSingle("a.logout") == null) { // not already logged in
 			WebDocument newPage = client.submit( loginPage.jsoupSingle("form#loginform"), "login="+login, "password="+password ).getDocument();
@@ -170,10 +199,10 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	@Override
 	public List<SearchResult> findEpisode( String searchString, Language audioLanguage, int seasonNumber, int episodeNumber ) throws Exception {
 
-		String searchParams = String.format("%s S%02dE%02d", searchString, seasonNumber, episodeNumber);
+		String searchParams = searchString;
 		
-		String additionalParams = "term[45][]=" + ( 967 + seasonNumber );
-		additionalParams += "&term[46][]=" + ( 936 + episodeNumber );
+		String additionalParams = "term[45][]=" + seasonValues.get(seasonNumber );
+		additionalParams += "&term[46][]=" + episodeValues.get( episodeNumber );
 
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		results.addAll( searchVideo( searchParams, audioLanguage, 433, additionalParams ) );
