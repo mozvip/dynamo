@@ -28,7 +28,7 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
     });
   }])
 
-  .controller('MusicAlbumCtrl', ['$scope', 'downloadableService', 'BackendService', 'album', 'files', '$location', function ($scope, downloadableService, BackendService, album, files, $location) {
+  .controller('MusicAlbumCtrl', ['$scope', 'downloadableService', 'fileListService', 'BackendService', 'album', 'files', '$location', '$sce', function ($scope, downloadableService, fileListService, BackendService, album, files, $location, $sce) {
 
     $scope.album = album.data;
     $scope.files = files.data;
@@ -37,6 +37,10 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
       BackendService.post('music/save', $scope.album).then( function( response ) {
         $location.path('music-album/' + response.data);
       });
+    }
+
+    $scope.downloadURL = function( file ) {
+      return $sce.trustAsResourceUrl(fileListService.downloadURL( file ));
     }
 
     $scope.filesMisplaced = false;
