@@ -41,7 +41,7 @@ public class DownloadableService {
 	@GET
 	public List<Downloadable> get(@QueryParam("type") String type, @QueryParam("status") String allStatus) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		Class<? extends Downloadable> klass = DownloadableManager.getInstance().getDownloadableTypeBySimpleName( type );
-		DownloadableDAO daoInstance = DownloadableManager.getInstance().getDAOInstance( klass );
+		DownloadableDAO daoInstance = DownloadableFactory.getInstance().getDAOInstance( klass );
 		String[] statuses = allStatus.split(",");
 		List<Downloadable> downloads = new ArrayList<>();
 		for (String status : statuses) {

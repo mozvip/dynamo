@@ -95,26 +95,9 @@ public class DownloadableManager {
 	}
 	
 	private Set<Class<? extends Downloadable>> downloadableTypes;
-	private Map<Class<? extends Downloadable>, Class<? extends DownloadableDAO>> downloadableDaos;
 	
 	private DownloadableManager() {
-
 		downloadableTypes = DynamoObjectFactory.getReflections().getSubTypesOf(Downloadable.class);
-		downloadableDaos = new HashMap<>();
-		Set<Class<? extends DownloadableDAO>> daos = DynamoObjectFactory.getReflections().getSubTypesOf(DownloadableDAO.class);
-		for (Class<? extends DownloadableDAO> dao : daos) {
-			try {
-				Class<? extends Downloadable> downloadableType = (Class<? extends Downloadable>) dao.getDeclaredMethod("find", long.class).getReturnType();
-				downloadableDaos.put(downloadableType, dao);
-			} catch (NoSuchMethodException | SecurityException e) {
-				ErrorManager.getInstance().reportThrowable( e );
-			}
-		}
-		
-	}
-	
-	public DownloadableDAO getDAOInstance( Class<? extends Downloadable> downloadableClass ) {
-		return DAOManager.getInstance().getDAO( downloadableDaos.get( downloadableClass ));
 	}
 	
 	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
