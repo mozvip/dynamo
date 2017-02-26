@@ -11,7 +11,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.dynamo.backlog.BackLogProcessor;
-import com.github.dynamo.backlog.tasks.files.DeleteTask;
+import com.github.dynamo.backlog.tasks.files.DeleteEvent;
 import com.github.dynamo.core.manager.DownloadableFactory;
 import com.github.dynamo.core.manager.ErrorManager;
 import com.github.dynamo.core.model.TaskExecutor;
@@ -89,7 +89,7 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 								iterator.remove();
 							} else if (DownloadableManager.getInstance().isBlackListed(path, downloadable)) {
 								iterator.remove();
-								BackLogProcessor.getInstance().schedule( new DeleteTask(path, false), false );
+								BackLogProcessor.getInstance().post( new DeleteEvent(path, false) );
 							}
 						}
 

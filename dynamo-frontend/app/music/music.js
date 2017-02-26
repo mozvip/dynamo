@@ -162,11 +162,9 @@ angular.module('dynamo.music', ['ngRoute', 'ngResource'])
 
     $scope.itemsToConfigure = [
       $scope.config['MusicManager.folders'],
-      $scope.config['MusicManager.cleanDuringImport'],
       $scope.config['MusicManager.musicDownloadProviders'],
       $scope.config['MusicManager.musicQuality'],
-      $scope.config['MusicManager.suggesters'],
-      $scope.config['AcoustId.fpcalcPath']
+      $scope.config['MusicManager.suggesters']
     ];
 
     $scope.saveSettings = function () {

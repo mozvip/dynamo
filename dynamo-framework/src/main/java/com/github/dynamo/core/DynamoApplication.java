@@ -90,6 +90,7 @@ public abstract class DynamoApplication {
 	}
 	
 	public synchronized void init() throws Exception {
+		
 		ConfigurationManager.getInstance().configureApplication();
 		
 		try {

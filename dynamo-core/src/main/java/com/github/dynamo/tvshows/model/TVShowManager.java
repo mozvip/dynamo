@@ -12,8 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.backlog.tasks.core.SubtitlesFileFilter;
-import com.github.dynamo.backlog.tasks.files.DeleteDownloadableTask;
-import com.github.dynamo.backlog.tasks.files.DeleteFileTask;
+import com.github.dynamo.backlog.tasks.files.DeleteFileEvent;
 import com.github.dynamo.backlog.tasks.tvshows.NewTVShowFolderTask;
 import com.github.dynamo.backlog.tasks.tvshows.RefreshFromTVDBTask;
 import com.github.dynamo.backlog.tasks.tvshows.ScanTVShowTask;
@@ -278,7 +277,7 @@ public class TVShowManager implements Reconfigurable {
 			try {
 				List<Path> subtitlesFiles = FolderManager.getInstance().getContents(series.getFolder(), SubtitlesFileFilter.getInstance(), true);
 				for ( Path subtitle : subtitlesFiles) {
-					BackLogProcessor.getInstance().schedule( new DeleteFileTask(subtitle), false );
+					BackLogProcessor.getInstance().post( new DeleteFileEvent(subtitle) );
 				}
 			} catch (IOException | InterruptedException e) {
 				ErrorManager.getInstance().reportThrowable(e);
@@ -369,7 +368,7 @@ public class TVShowManager implements Reconfigurable {
 	public void deleteUnrecognizedFile(long id) {
 		UnrecognizedFile file = unrecognizedDAO.getUnrecognizedFile(id);
 		unrecognizedDAO.deleteUnrecognizedFile(id);
-		BackLogProcessor.getInstance().schedule( new DeleteFileTask( file.getPath()), false );
+		BackLogProcessor.getInstance().post( new DeleteFileEvent( file.getPath()) );
 	}
 	
 }

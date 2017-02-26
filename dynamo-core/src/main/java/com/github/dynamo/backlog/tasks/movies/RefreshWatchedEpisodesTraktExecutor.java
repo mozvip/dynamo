@@ -3,7 +3,7 @@ package com.github.dynamo.backlog.tasks.movies;
 import java.util.List;
 
 import com.github.dynamo.backlog.BackLogProcessor;
-import com.github.dynamo.backlog.tasks.files.DeleteDownloadableTask;
+import com.github.dynamo.backlog.tasks.files.DeleteDownloadableEvent;
 import com.github.dynamo.core.model.TaskExecutor;
 import com.github.dynamo.model.DownloadableStatus;
 import com.github.dynamo.trakt.TraktManager;
@@ -52,7 +52,7 @@ public class RefreshWatchedEpisodesTraktExecutor extends TaskExecutor<RefreshWat
 								managedEpisodeDAO.setWatched( managedEpisode.getId() ) ;
 								if (TVShowManager.getInstance().isDeleteWatched()) {
 									if (managedEpisode.getStatus() == DownloadableStatus.DOWNLOADED) {
-										BackLogProcessor.getInstance().schedule( new DeleteDownloadableTask( managedEpisode ));
+										BackLogProcessor.getInstance().post( new DeleteDownloadableEvent( managedEpisode ));
 									}
 								}
 							}

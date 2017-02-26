@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.backlog.tasks.core.FindDownloadableImageTask;
-import com.github.dynamo.backlog.tasks.files.DeleteDownloadableTask;
+import com.github.dynamo.backlog.tasks.files.DeleteDownloadableEvent;
 import com.github.dynamo.core.manager.DAOManager;
 import com.github.dynamo.core.manager.DownloadableFactory;
 import com.github.dynamo.core.manager.DynamoObjectFactory;
@@ -61,7 +61,7 @@ public class DownloadableService {
 	@DELETE
 	@Path("{id}")
 	public void delete(@PathParam("id") long id) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		BackLogProcessor.getInstance().schedule( new DeleteDownloadableTask( id ));
+		BackLogProcessor.getInstance().post( new DeleteDownloadableEvent( id ));
 	}
 	
 	@POST

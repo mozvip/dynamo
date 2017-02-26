@@ -16,7 +16,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.dynamo.backlog.BackLogProcessor;
-import com.github.dynamo.backlog.tasks.files.DeleteDownloadableTask;
+import com.github.dynamo.backlog.tasks.files.DeleteDownloadableEvent;
 import com.github.dynamo.backlog.tasks.movies.FindMovieImageTask;
 import com.github.dynamo.backlog.tasks.movies.MovieCleanupTask;
 import com.github.dynamo.backlog.tasks.movies.ScanMovieFolderTask;
@@ -350,7 +350,7 @@ public class MovieManager implements Reconfigurable {
 
 	public Movie deleteMovie( long movieId ) {
 		Movie movie = movieDAO.find( movieId );
-		BackLogProcessor.getInstance().schedule( new DeleteDownloadableTask( movie ));
+		BackLogProcessor.getInstance().post( new DeleteDownloadableEvent( movie ));
 		return movie;
 	}
 

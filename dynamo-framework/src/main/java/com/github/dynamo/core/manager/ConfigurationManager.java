@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +33,7 @@ import com.github.dynamo.core.model.InitTask;
 import com.github.dynamo.core.model.ServiceTask;
 import com.github.dynamo.core.model.Task;
 import com.github.dynamo.core.model.TaskExecutor;
+import com.google.common.eventbus.EventBus;
 
 import javassist.Modifier;
 
@@ -318,6 +320,15 @@ public class ConfigurationManager {
 			}
 		}
 
+		registerListeners();
+	}
+
+	private void registerListeners() throws InstantiationException, IllegalAccessException {
+		EventBus eventBus = BackLogProcessor.getInstance().newEventBus();
+		Set<Class<? extends EventListener>> eventListeners = DynamoObjectFactory.getReflections().getSubTypesOf(EventListener.class);
+		for (Class<? extends EventListener> klass : eventListeners) {
+			eventBus.register( klass.newInstance() );
+		}
 	}
 
 }

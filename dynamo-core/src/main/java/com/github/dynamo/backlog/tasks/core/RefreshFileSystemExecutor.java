@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.dynamo.backlog.BackLogProcessor;
-import com.github.dynamo.backlog.tasks.files.DeleteDownloadableTask;
-import com.github.dynamo.backlog.tasks.files.DeleteFileTask;
+import com.github.dynamo.backlog.tasks.files.DeleteDownloadableEvent;
+import com.github.dynamo.backlog.tasks.files.DeleteFileEvent;
 import com.github.dynamo.backlog.tasks.tvshows.ScanTVShowTask;
 import com.github.dynamo.core.manager.DownloadableFactory;
 import com.github.dynamo.core.model.DownloadableFile;
@@ -70,13 +70,13 @@ public class RefreshFileSystemExecutor extends TaskExecutor<RefreshFileSystemTas
 				
 				if (Files.notExists(downloadableFile.getFilePath())) {
 
-					BackLogProcessor.getInstance().schedule( new DeleteFileTask( downloadableFile.getFilePath() ), false );
+					BackLogProcessor.getInstance().post( new DeleteFileEvent( downloadableFile.getFilePath() ) );
 
 					if (downloadable instanceof ManagedEpisode) {
 						BackLogProcessor.getInstance().schedule(new ScanTVShowTask(((ManagedEpisode) downloadable).getSeries()));
 					} else {
 						// was deleted manually
-						BackLogProcessor.getInstance().schedule( new DeleteDownloadableTask(downloadable), false );
+						BackLogProcessor.getInstance().post( new DeleteDownloadableEvent(downloadable) );
 					}
 				}
 			}

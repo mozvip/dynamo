@@ -10,7 +10,7 @@ import java.util.List;
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.backlog.tasks.core.ScanFolderExecutor;
 import com.github.dynamo.backlog.tasks.core.VideoFileFilter;
-import com.github.dynamo.backlog.tasks.files.DeleteDownloadableTask;
+import com.github.dynamo.backlog.tasks.files.DeleteDownloadableEvent;
 import com.github.dynamo.core.model.DownloadableFile;
 import com.github.dynamo.core.model.DownloadableUtilsDAO;
 import com.github.dynamo.manager.DownloadableManager;
@@ -140,7 +140,7 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 			
 			if (!hasOneFileLeft) {
 				episode.setIgnored();
-				BackLogProcessor.getInstance().runImmediately( new DeleteDownloadableTask( episode ), false );
+				BackLogProcessor.getInstance().post( new DeleteDownloadableEvent( episode ) );
 			}
 		}
 	}

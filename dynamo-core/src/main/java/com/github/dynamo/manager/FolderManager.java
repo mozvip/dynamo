@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.backlog.TaskSubmission;
 import com.github.dynamo.backlog.tasks.files.CopyFileTask;
-import com.github.dynamo.backlog.tasks.files.DeleteTask;
+import com.github.dynamo.backlog.tasks.files.DeleteEvent;
 import com.github.dynamo.backlog.tasks.files.MoveFileTask;
 import com.github.dynamo.model.Downloadable;
 
@@ -115,7 +115,7 @@ public class FolderManager {
 			if (Files.isDirectory(entry)) {
 				List<Path> folderContents = getAllFilesFrom(entry, deleteEmptyFolders); 
 				if (folderContents == null || folderContents.isEmpty()) {
-					BackLogProcessor.getInstance().schedule( new DeleteTask( folder, false ));
+					BackLogProcessor.getInstance().post( new DeleteEvent( folder, false ));
 				} else {
 					paths.addAll( folderContents );
 				}

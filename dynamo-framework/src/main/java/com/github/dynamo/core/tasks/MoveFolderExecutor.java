@@ -10,7 +10,6 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import com.github.dynamo.backlog.BackLogProcessor;
-import com.github.dynamo.core.manager.FileSystemManager;
 import com.github.dynamo.core.model.TaskExecutor;
 
 public class MoveFolderExecutor extends TaskExecutor<MoveFolderTask> {

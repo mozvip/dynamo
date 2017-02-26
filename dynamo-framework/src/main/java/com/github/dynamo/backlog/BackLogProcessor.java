@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 import javax.script.ScriptException;
 
-import com.github.dynamo.backlog.tasks.core.ImmediateTask;
 import com.github.dynamo.core.Enableable;
 import com.github.dynamo.core.EventManager;
 import com.github.dynamo.core.LogQueuing;
@@ -27,6 +26,7 @@ import com.github.dynamo.core.model.DaemonTask;
 import com.github.dynamo.core.model.Task;
 import com.github.dynamo.core.model.TaskExecutor;
 import com.github.dynamo.scripting.JavaScriptManager;
+import com.google.common.eventbus.EventBus;
 
 public class BackLogProcessor extends Thread {
 
@@ -35,6 +35,7 @@ public class BackLogProcessor extends Thread {
 	private Set<Class> blackListedTaskClass = new HashSet<>();
 	private ExecutorService pool = Executors.newFixedThreadPool(15);
 	private TaskSubmission nextInLine = null;
+	private EventBus eventBus;
 
 	private Map<Long, TaskSubmission> submissions = new HashMap<>();
 	private List<TaskSubmission> submissionsToDisplay = new ArrayList<>();
@@ -77,7 +78,7 @@ public class BackLogProcessor extends Thread {
 
 		try {
 			for (;;) {
-
+				
 				if (shutdownRequested) {
 					break;
 				}
@@ -182,12 +183,7 @@ public class BackLogProcessor extends Thread {
 			blackListedTaskClass.add( task.getClass() );
 			return null;
 		}		
-		
-		if (task instanceof ImmediateTask) {
-			runImmediately(task, reportQueued);
-			return null;
-		} 
-		
+	
 		TaskSubmission submission = null;
 
 		synchronized (submissions) {
@@ -313,4 +309,13 @@ public class BackLogProcessor extends Thread {
 		}
 	}
 
+	public void post(Object event) {
+		eventBus.post( event );
+	}
+
+	public EventBus newEventBus() {
+		eventBus = new EventBus();
+		return eventBus;
+	}
+	
 }

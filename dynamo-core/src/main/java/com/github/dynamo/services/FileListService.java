@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.github.dynamo.backlog.BackLogProcessor;
-import com.github.dynamo.backlog.tasks.files.DeleteFileTask;
+import com.github.dynamo.backlog.tasks.files.DeleteFileEvent;
 import com.github.dynamo.backlog.tasks.files.MoveFileTask;
 import com.github.dynamo.core.manager.DAOManager;
 import com.github.dynamo.core.manager.DownloadableFactory;
@@ -56,7 +56,7 @@ public class FileListService {
 	@DELETE
 	public void delete(@QueryParam("path") String pathStr) {
 		java.nio.file.Path path = Paths.get(pathStr);
-		BackLogProcessor.getInstance().schedule(new DeleteFileTask(path), false);
+		BackLogProcessor.getInstance().post(new DeleteFileEvent(path));
 	}
 
 	@GET

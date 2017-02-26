@@ -40,7 +40,7 @@ public class MoveFileTaskExecutor extends FileOperationTaskExecutor<MoveFileTask
 		if (Files.isWritable(source.getParent()) && !source.toAbsolutePath().equals( destination.toAbsolutePath() )) {
 			Files.createDirectories( destination.getParent() );
 			Files.copy( source, destination, StandardCopyOption.REPLACE_EXISTING);
-			BackLogProcessor.getInstance().schedule(new DeleteFileTask(source), false);
+			BackLogProcessor.getInstance().post(new DeleteFileEvent(source));
 			DownloadableManager.getInstance().addFile( task.getDownloadable(), destination );
 		}
 

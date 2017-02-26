@@ -26,8 +26,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamo.core.configuration.Configurable;
-import com.github.dynamo.core.configuration.Reconfigurable;
 import com.github.dynamo.core.configuration.Configurable.DEFAULT;
+import com.github.dynamo.core.configuration.Reconfigurable;
 import com.github.dynamo.core.model.Task;
 import com.github.dynamo.core.services.ConfigurationItem;
 

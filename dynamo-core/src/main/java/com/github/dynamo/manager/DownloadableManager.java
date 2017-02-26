@@ -7,17 +7,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.dynamo.backlog.BackLogProcessor;
-import com.github.dynamo.backlog.tasks.core.CancelDownloadTask;
+import com.github.dynamo.backlog.tasks.core.CancelDownloadEvent;
 import com.github.dynamo.backlog.tasks.core.VideoFileFilter;
-import com.github.dynamo.backlog.tasks.files.DeleteFileTask;
+import com.github.dynamo.backlog.tasks.files.DeleteFileEvent;
 import com.github.dynamo.backlog.tasks.tvshows.ScanTVShowTask;
 import com.github.dynamo.core.DynamoApplication;
 import com.github.dynamo.core.DynamoServer;
@@ -28,7 +26,6 @@ import com.github.dynamo.core.manager.DownloadableFactory;
 import com.github.dynamo.core.manager.DynamoObjectFactory;
 import com.github.dynamo.core.manager.ErrorManager;
 import com.github.dynamo.core.model.DownloableCount;
-import com.github.dynamo.core.model.DownloadableDAO;
 import com.github.dynamo.core.model.DownloadableFile;
 import com.github.dynamo.core.model.DownloadableUtilsDAO;
 import com.github.dynamo.core.model.HistoryDAO;
@@ -286,7 +283,7 @@ public class DownloadableManager {
 		}
 		// delete all corresponding files
 		getAllFiles(downloadableId).forEach(
-				downloadedFile -> BackLogProcessor.getInstance().schedule( new DeleteFileTask(downloadedFile.getFilePath()), true));
+				downloadedFile -> BackLogProcessor.getInstance().post( new DeleteFileEvent(downloadedFile.getFilePath())));
 		want(downloadableId);
 	}
 	
@@ -308,7 +305,7 @@ public class DownloadableManager {
 		List<SearchResult> searchResults = searchResultDAO.findSearchResults( downloadableId );
 		for (SearchResult searchResult : searchResults) {
 			if (searchResult.isDownloaded() && StringUtils.isNotEmpty( searchResult.getClientId() )) {
-				BackLogProcessor.getInstance().schedule( new CancelDownloadTask( searchResult ));
+				BackLogProcessor.getInstance().post( new CancelDownloadEvent( searchResult ));
 			}
 		}
 	}

@@ -100,7 +100,6 @@ public class DynamoServer {
 			.setContextPath("")
 			.setDeploymentName("dynamo.war")
 			.setResourceManager( new ClassPathResourceManager( getClass().getClassLoader() ) )
-			.addInitParameter("com.sun.faces.expressionFactory", "com.sun.el.ExpressionFactoryImpl")
 			.addWelcomePage("index.html");
 
 		registerServlet( servletDeploymentInfo, JerseyServletContainerInitializer.class );

@@ -3,7 +3,7 @@ package com.github.dynamo.backlog.tasks.music;
 import java.util.List;
 
 import com.github.dynamo.backlog.BackLogProcessor;
-import com.github.dynamo.backlog.tasks.files.DeleteDownloadableTask;
+import com.github.dynamo.backlog.tasks.files.DeleteDownloadableEvent;
 import com.github.dynamo.core.model.TaskExecutor;
 import com.github.dynamo.model.music.MusicAlbum;
 import com.github.dynamo.music.jdbi.MusicAlbumDAO;
@@ -23,7 +23,7 @@ public class DeleteMusicArtistExecutor extends TaskExecutor<DeleteMusicArtistTas
 		if (albums != null) {
 			for (MusicAlbum album : albums) {
 				// FIXME : do we want to physically remove the files as well ?
-				BackLogProcessor.getInstance().schedule( new DeleteDownloadableTask( album ), false );
+				BackLogProcessor.getInstance().post( new DeleteDownloadableEvent( album ) );
 			}
 		}
 		musicDAO.deleteArtist( task.getArtistName() );
