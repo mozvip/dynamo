@@ -91,7 +91,7 @@ public class MusicAlbum extends Downloadable {
 		if ( folder != null ) {
 			return folder;
 		} else {
-			return MusicManager.getInstance().getPath(getArtistName(), getName() );
+			return MusicManager.getInstance().getDownloadPath(getArtistName(), getName() );
 		}
 	}
 

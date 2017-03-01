@@ -16,7 +16,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.github.dynamo.backlog.BackLogProcessor;
-import com.github.dynamo.backlog.tasks.files.FileUtils;
 import com.github.dynamo.backlog.tasks.music.ScanMusicFolderTask;
 import com.github.dynamo.core.configuration.Configurable;
 import com.github.dynamo.core.configuration.Reconfigurable;
@@ -283,9 +282,6 @@ public class MusicManager implements Reconfigurable {
 				DownloadableManager.getInstance().updateStatus(album, status);
 			}
 		} else {
-			if (folder == null) {
-				folder = getPath( artistName, albumName );
-			}
 			
 			AudioDbAlbum audioDBAlbum = null;
 			int year = -1;
@@ -352,11 +348,11 @@ public class MusicManager implements Reconfigurable {
 		
 	}
 
-	public Path getPath( String albumArtist, String album ) {
-		return getPath( FileUtils.getFolderWithMostUsableSpace( getFolders() ), getArtistName(albumArtist), album );
+	public Path getDownloadPath( String albumArtist, String album ) {
+		return getPath( downloadFolder, getArtistName(albumArtist), album );
 		
 	}
-	
+
 	public String cleanForFileName( String string ) {
 		string = string.replace(':', '-');
 		string = string.replace('"', '_');	// FIXME
