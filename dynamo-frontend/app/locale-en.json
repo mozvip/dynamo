@@ -46,7 +46,11 @@
 
     "TVShowManager.audioLanguage" : "Default Audio Language for TV Shows",
 
-    "MusicManager.cleanDuringImport" : "Clean music folders during scan (remove useless files like *.nfo, ...)",
+    "MusicManager.downloadFolder" : "Folder where music will be downloaded before it is moved to the Library",
+    "MusicManager.suggesters" : "Suggest music from",
+    "MusicManager.musicQuality" : "Preferred Music Quality",
+    "MusicManager.musicDownloadProviders" : "Download music from",
+    "MusicManager.folders" : "Music Library folders",
 
     "MovieManager.folders" : "Folders for movies storage",
     "RefreshMovieSuggestionExecutor.movieSuggesters" : "Use movie suggestions from",
