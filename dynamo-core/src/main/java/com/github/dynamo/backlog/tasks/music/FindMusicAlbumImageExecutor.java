@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.backlog.tasks.core.FindDownloadableImageExecutor;
 import com.github.dynamo.core.manager.ErrorManager;
@@ -46,7 +48,10 @@ public class FindMusicAlbumImageExecutor extends FindDownloadableImageExecutor<M
 			
 			try {
 				AudioDbResponse response = TheAudioDb.getInstance().getAlbum( album.getTadbAlbumId() );
-				return DownloadableManager.downloadImage( album, response.getAlbum().get(0).getStrAlbumThumb(), null );
+				String strAlbumThumb = response.getAlbum().get(0).getStrAlbumThumb();
+				if (StringUtils.isNotBlank( strAlbumThumb)) {
+					return DownloadableManager.downloadImage( album, strAlbumThumb, null );
+				}
 			} catch (IOException e) {
 				ErrorManager.getInstance().reportThrowable( e );
 			}
