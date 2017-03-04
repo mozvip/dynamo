@@ -34,6 +34,7 @@ import com.github.dynamo.core.model.ServiceTask;
 import com.github.dynamo.core.model.Task;
 import com.github.dynamo.core.model.TaskExecutor;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import javassist.Modifier;
 
@@ -325,9 +326,10 @@ public class ConfigurationManager {
 
 	private void registerListeners() throws InstantiationException, IllegalAccessException {
 		EventBus eventBus = BackLogProcessor.getInstance().newEventBus();
-		Set<Class<? extends EventListener>> eventListeners = DynamoObjectFactory.getReflections().getSubTypesOf(EventListener.class);
-		for (Class<? extends EventListener> klass : eventListeners) {
-			eventBus.register( klass.newInstance() );
+
+		Set<Method> subscribeMethods = DynamoObjectFactory.getReflections().getMethodsAnnotatedWith(Subscribe.class);
+		for (Method method : subscribeMethods) {
+			eventBus.register( method.getDeclaringClass() );
 		}
 	}
 

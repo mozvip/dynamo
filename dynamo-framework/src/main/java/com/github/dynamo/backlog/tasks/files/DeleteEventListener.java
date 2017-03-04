@@ -8,11 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.EventListener;
 
 import com.google.common.eventbus.Subscribe;
 
-public class DeleteEventListener implements EventListener {
+public class DeleteEventListener {
 
 	@Subscribe
 	public void execute( DeleteEvent event ) throws IOException {

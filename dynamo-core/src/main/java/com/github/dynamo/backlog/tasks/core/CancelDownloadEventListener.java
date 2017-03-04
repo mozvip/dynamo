@@ -1,7 +1,6 @@
 package com.github.dynamo.backlog.tasks.core;
 
 import java.io.IOException;
-import java.util.EventListener;
 
 import com.github.dynamo.backlog.tasks.torrent.Transmission;
 import com.github.dynamo.core.manager.DAOManager;
@@ -10,7 +9,7 @@ import com.github.dynamo.model.result.SearchResultType;
 import com.github.dynamo.webapps.sabnzbd.SabNzbd;
 import com.google.common.eventbus.Subscribe;
 
-public class CancelDownloadEventListener implements EventListener {
+public class CancelDownloadEventListener {
 
 	SearchResultDAO searchResultDAO = DAOManager.getInstance().getDAO( SearchResultDAO.class );
 

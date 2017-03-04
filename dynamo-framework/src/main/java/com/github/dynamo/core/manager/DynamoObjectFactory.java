@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
+import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
@@ -20,7 +21,7 @@ import com.google.common.cache.LoadingCache;
 
 public class DynamoObjectFactory {
 	
-	private static Reflections reflections = new Reflections("com.github", new FieldAnnotationsScanner(), new SubTypesScanner( false ), new TypeAnnotationsScanner());
+	private static Reflections reflections = new Reflections("com.github", new FieldAnnotationsScanner(), new SubTypesScanner( false ), new MethodAnnotationsScanner(), new TypeAnnotationsScanner());
 	
 	private static final String NO_INSTANCE_MARKER = "NO_INSTANCE";
 	

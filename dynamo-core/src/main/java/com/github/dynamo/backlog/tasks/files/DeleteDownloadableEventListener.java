@@ -1,6 +1,5 @@
 package com.github.dynamo.backlog.tasks.files;
 
-import java.util.EventListener;
 import java.util.List;
 
 import com.github.dynamo.backlog.BackLogProcessor;
@@ -19,7 +18,7 @@ import com.github.dynamo.tvshows.model.ManagedEpisode;
 import com.github.dynamo.tvshows.model.TVShowManager;
 import com.google.common.eventbus.Subscribe;
 
-public class DeleteDownloadableEventListener implements EventListener {
+public class DeleteDownloadableEventListener {
 	
 	private DownloadableUtilsDAO downloadableDAO = DAOManager.getInstance().getDAO( DownloadableUtilsDAO.class );
 
