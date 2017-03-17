@@ -1,0 +1,5 @@
+.vagrant
+dynamo/data
+dynamo/glowroot
+logs
+admin

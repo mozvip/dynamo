@@ -1,22 +1,25 @@
-<div class="form-inline">
-  <div class="form-group">
-    <input type="text" ng-model="filterArtist" class="form-control" placeholder="Filter artist ..." ng-change="filterChanged()"/>
-  </div>
-  <div class="form-group">
-    <input type="text" ng-model="filterName" class="form-control" placeholder="Filter name ..." ng-change="filterChanged()"/>
+<div class="row">
+  <div class="form-inline">
+    <div class="form-group">
+      <input type="text" ng-model="filterArtist" class="form-control" placeholder="Filter artist ..." ng-change="filterChanged()"/>
+    </div>
+    <div class="form-group">
+      <input type="text" ng-model="filterName" class="form-control" placeholder="Filter name ..." ng-change="filterChanged()"/>
+    </div>
   </div>
 </div>
 
-<div class="row" ng-show="filteredList.length > itemsPerPage">
+<div class="row">
   <p class="text-center">
-    <uib-pagination total-items="filteredList.length" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+      <uib-pagination ng-show="filteredList.length > itemsPerPage" total-items="filteredList.length" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
   </p>
 </div>
 
 <div class="thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents" style="height: 330px; margin-bottom: 0px; ">
-  <a ng-href="#/music-album/{{downloadable.id}}">
+  <a ng-href="#/music-album/{{downloadable.id}}" ng-if="downloadable.status == 'DOWNLOADED'">
     <img ng-src="{{imageURL(downloadable.image)}}" alt="{{downloadable.artistName}} - {{downloadable.name}}" style="width: 260px; height: 260px;" />
   </a>
+  <img ng-if="downloadable.status != 'DOWNLOADED'" ng-src="{{imageURL(downloadable.image)}}" alt="{{downloadable.artistName}} - {{downloadable.name}}" style="width: 260px; height: 260px;" />
   <div class="buttons">
     <button title="Show files" type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></button>
 

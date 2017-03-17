@@ -5,7 +5,26 @@
     </div>
 
     <div class="panel-body" ng-if="item.values && item.values.length > 0">
-      <ul dnd-list="item.values" dnd-allowed-types="[item.key]">
+
+      <div ng-if="item.values.length == 1">
+        <div class="row" ng-repeat="row in item.values">
+          <div class="col-md-11">
+            <div class="input-group" ng-if="item.type=='java.nio.file.Path'">
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-folder-open" />
+              </span>
+              <input ng-required="true" ng-change="changeValue()" valid-folder class="form-control" type="text" ng-model="row.value" />
+            </div>
+            <input ng-if="item.type=='java.lang.String'" ng-required="true" ng-change="changeValue()" class="form-control" type="text" ng-model="row.value" />
+            <p ng-if="item.allowedValues" class="form-control-static">{{item.allowedValues[row.value]}}</p>
+          </div>
+          <div class="col-md-1">
+            <button class="btn btn-sm btn-danger" ng-click="removeRow($index)"><span class="glyphicon glyphicon-trash" /></button>
+          </div>  
+        </div>
+      </div>
+
+      <ul dnd-list="item.values" dnd-allowed-types="[item.key]" ng-if="item.values.length > 1">
         <li ng-repeat="row in item.values"
             dnd-draggable="row"
             dnd-moved="removeRow($index)"
@@ -31,9 +50,7 @@
         </li>
 
         <li class="dndPlaceholder">
-
         </li>
-
     </ul>
    </div>
     <div class="panel-footer" ng-if="hasRemainingValues()">
