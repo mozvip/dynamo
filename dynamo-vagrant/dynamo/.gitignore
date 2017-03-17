@@ -1,2 +1,5 @@
 /dynamo.pid
 /dynamo.trace.db
+/config.json
+/cookies.json
+/core.trace.db
