@@ -194,6 +194,7 @@ public class BackLogProcessor extends Thread {
 				TaskSubmission s = iterator.next();
 				if (s.getTask().equals( task )) {
 					s.setMinDate(minDate);
+					s.setFuture( null );
 					found = true;
 					break;
 				}

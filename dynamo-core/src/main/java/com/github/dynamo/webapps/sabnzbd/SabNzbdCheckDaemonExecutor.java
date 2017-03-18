@@ -44,6 +44,10 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 		for (SearchResult searchResult : results) {
 			
 			Downloadable downloadable = DownloadableFactory.getInstance().createInstance( searchResult.getDownloadableId() );
+			if (downloadable == null) {
+				searchResultDAO.deleteResultForDownloadableId( searchResult.getDownloadableId() );
+				continue;
+			}
 
 			Optional<SabNzbdResponseSlot> optSlot = response.getSlots().stream().filter( slot -> slot.getNzo_id().equals(searchResult.getClientId())).findFirst();
 
@@ -53,7 +57,7 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 				
 				boolean failed = StringUtils.equals(slot.getStatus(), "Failed");
 				boolean completed = StringUtils.equals(slot.getStatus(), "Completed"); 
-				
+
 				if (!(failed || completed)) {
 					continue;
 				}
@@ -62,16 +66,14 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 					sab.deleteFromHistory( slot.getNzo_id() );
 				}
 				
-				if (downloadable == null) {
-					searchResultDAO.deleteResultForDownloadableId( searchResult.getDownloadableId() );
-					// TODO: remove files 
-				}
 				if (!downloadable.isDownloaded()) {
 					
 					if (failed) {
 						DownloadableManager.getInstance().redownload( downloadable );
 					} else {
 					
+						// downloaded successfully
+						
 						Path sourceFolder = Paths.get( slot.getStorage() ).toAbsolutePath();
 						
 						List<Path> files;
