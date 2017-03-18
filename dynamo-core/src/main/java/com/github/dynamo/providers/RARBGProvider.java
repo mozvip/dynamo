@@ -4,13 +4,18 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.dynamo.core.DownloadFinder;
 import com.github.dynamo.core.Language;
 import com.github.dynamo.core.VideoQuality;
@@ -40,12 +45,23 @@ import com.github.mozvip.hclient.core.WebDocument;
 @ClassDescription(label="RARBG")
 public class RARBGProvider extends DownloadFinder implements MovieSuggester, GameFinder, MovieProvider, EpisodeFinder, TVShowSeasonProvider, BookFinder, MusicAlbumFinder {
 	
+	private final static Logger LOGGER = LoggerFactory.getLogger( RARBGProvider.class );
+	
 	private final static int MAX_PAGES = 10;
 	
 	private final WebClient webClient = new WebClient();
 	
 	@Configurable(ifExpression="RARBGProvider.enabled", required=true, defaultValue="https://rarbg.to")
 	private String baseURL = "https://rarbg.to";
+	
+	public RARBGProvider() {
+		webClient.waitForBackgroundJavaScriptStartingBefore(10000);
+		try {
+			webClient.getPage( baseURL );
+		} catch (FailingHttpStatusCodeException | IOException e) {
+			ErrorManager.getInstance().reportThrowable( e );
+		}
+	}
 	
 	public String getBaseURL() {
 		return baseURL;
@@ -55,13 +71,51 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 		this.baseURL = baseURL;
 	}
 	
-	protected WebDocument getDocument( String url ) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	protected synchronized WebDocument getDocument( String url ) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
 		try {
 			Thread.sleep( 500 );
 		} catch (InterruptedException e) {
 		}
-		Page webPage = webClient.getPage( url );
-		return new WebDocument(url, webPage.getWebResponse().getContentAsString());
+		HtmlPage webPage = webClient.getPage( url );
+		WebDocument document = new WebDocument(url, webPage.getWebResponse().getContentAsString());
+		
+		if (webPage.getUrl().toString().contains("threat_defence.php")) {
+			Element script = document.jsoup("script").last();
+			String windowLocation = null;
+			String valueSk = null;
+			try (Scanner scanner = new Scanner(script.data())) {
+				String pattern = null;
+				while (true) {
+					try {
+						scanner.nextLine();
+					} catch (NoSuchElementException e ){
+						break;
+					}
+					pattern = scanner.findInLine("window.location.href = \\\"(.*)\\\";");
+					if (pattern != null) {
+						windowLocation = scanner.match().group(1);
+					}
+					pattern = scanner.findInLine("var value_sk = '(.*)';");
+					if (pattern != null) {
+						valueSk = scanner.match().group(1);
+					}
+				}
+			}
+			
+			windowLocation = windowLocation.replace("\"+value_sk+\"", valueSk);
+			windowLocation = windowLocation.replace("\"+ref_cookie+\"", "rarbg.to");
+			windowLocation = baseURL + windowLocation;
+			
+			solveCatpcha( new WebDocument(windowLocation, webClient.getPage( windowLocation ).getWebResponse().getContentAsString()) ) ;
+		}
+		return document;
+	}
+
+	private void solveCatpcha(WebDocument webDocument) {
+		Element image = webDocument.jsoup("img[src*=/captcha2/]").first();
+		
+		String captchaUrl = image.absUrl("src");
+		LOGGER.debug("Solving captcha from image {}", captchaUrl);
 	}
 
 	@Override
@@ -208,7 +262,7 @@ public class RARBGProvider extends DownloadFinder implements MovieSuggester, Gam
 	@Override
 	public List<SearchResult> findMovie(String name, int year, VideoQuality videoQuality, Language audioLanguage,
 			Language subtitlesLanguage) throws Exception {
-		return extractResultsFromURL( buildURL( String.format("%s %d", name, year), new int[] { 14, 17, 42, 44, 45, 46, 47, 48 } ));
+		return extractResultsFromURL( buildURL( String.format("%s %d", getCleanName( name ), year), new int[] { 14, 17, 42, 44, 45, 46, 47, 48 } ));
 	}
 
 	@Override

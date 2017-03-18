@@ -48,6 +48,11 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 		semaphore.release();
 	}
 	
+	public String getCleanName( String name ) {
+		name = name.replaceAll("\\W", " ").trim();
+		return name.replaceAll("\\s+", " ").trim();
+	}
+	
 	public abstract boolean needsLanguageInSearchString();
 
 	protected HTTPClient client = HTTPClient.getInstance();
