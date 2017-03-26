@@ -70,7 +70,11 @@ public abstract class DownloadFinder implements Reconfigurable, Enableable, NotA
 		return null;
 	}
 
-	public String plus(String value) throws UnsupportedEncodingException {
+	public String searchString(String value) throws UnsupportedEncodingException {
+		
+		value = value.replaceAll("[\\(\\)\\[\\]!-]", " ");
+		value = value.replaceAll("\\s+", " ");
+		
 		return URLEncoder.encode(value, "UTF-8");
 	}
 	

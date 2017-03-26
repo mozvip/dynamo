@@ -443,7 +443,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 
 	@Override
 	public List<SearchResult> findBook(Book book) throws Exception {
-		String searchURL = String.format("%s/torrents/search/?subcat=408&search=%%40name+%s&order=added&type=desc", baseURL, plus(book.getName()) );
+		String searchURL = String.format("%s/torrents/search/?subcat=408&search=%%40name+%s&order=added&type=desc", baseURL, searchString(book.getName()) );
 		return extractResults( searchURL, 1 );		
 	}
 

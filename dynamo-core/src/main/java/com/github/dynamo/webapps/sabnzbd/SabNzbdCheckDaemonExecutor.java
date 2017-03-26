@@ -110,7 +110,7 @@ public class SabNzbdCheckDaemonExecutor extends TaskExecutor<SabNzbdCheckDaemonT
 				
 			} else {
 				// download is not present from queue, redownload
-				DownloadableManager.getInstance().redownload( downloadable );
+				// FIXME : DownloadableManager.getInstance().redownload( downloadable );
 			}
 		}
 	}

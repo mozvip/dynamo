@@ -60,13 +60,13 @@ public class TorrentProjectSE extends DownloadFinder implements MagazineProvider
 
 	@Override
 	public List<SearchResult> findDownloadsForMagazine(String issueSearchString) throws Exception {
-		return extractResults( client.getDocument(String.format("%s/?s=%s&filter=3000", BASE_URL, plus(issueSearchString)), HTTPClient.REFRESH_ONE_DAY));
+		return extractResults( client.getDocument(String.format("%s/?s=%s&filter=3000", BASE_URL, searchString(issueSearchString)), HTTPClient.REFRESH_ONE_DAY));
 	}
 
 	@Override
 	public List<SearchResult> findMusicAlbum(String artist, String album, MusicQuality quality) throws MusicAlbumSearchException {
 		try {
-			return extractResults( client.getDocument(String.format("%s/?s=%s+%s&filter=1000", BASE_URL, plus(artist), plus(album)), HTTPClient.REFRESH_ONE_DAY));
+			return extractResults( client.getDocument(String.format("%s/?s=%s+%s&filter=1000", BASE_URL, searchString(artist), searchString(album)), HTTPClient.REFRESH_ONE_DAY));
 		} catch (IOException | URISyntaxException e) {
 			throw new MusicAlbumSearchException( e );
 		}
@@ -102,7 +102,7 @@ public class TorrentProjectSE extends DownloadFinder implements MagazineProvider
 			break;
 		}
 
-		return extractResults( client.getDocument(String.format("%s/?s=%s+%s&filter=%s", BASE_URL, plus(videoGame.getName()), additionalParams, filter), HTTPClient.REFRESH_ONE_DAY));
+		return extractResults( client.getDocument(String.format("%s/?s=%s+%s&filter=%s", BASE_URL, searchString(videoGame.getName()), additionalParams, filter), HTTPClient.REFRESH_ONE_DAY));
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class TorrentProjectSE extends DownloadFinder implements MagazineProvider
 
 	@Override
 	public List<SearchResult> findBook(Book book) throws Exception {
-		return extractResults( client.getDocument(String.format("%s/?s=%s+%s&filter=1000", BASE_URL, plus(book.getAuthor()), plus(book.getName())), HTTPClient.REFRESH_ONE_DAY));
+		return extractResults( client.getDocument(String.format("%s/?s=%s+%s&filter=1000", BASE_URL, searchString(book.getAuthor()), searchString(book.getName())), HTTPClient.REFRESH_ONE_DAY));
 	}
 
 }

@@ -187,7 +187,9 @@ public class DownloadableManager {
 		Long id = downloadable.getId();
 
 		long fileId = downloadableDAO.createFile( id, newFile, Files.size( newFile ), fileIndex );
-		downloadableDAO.updateStatus( id, DownloadableStatus.DOWNLOADED );
+		if (downloadable.getStatus() != DownloadableStatus.DOWNLOADED) {
+			updateStatus( downloadable, DownloadableStatus.DOWNLOADED );
+		}
 
 		unrecognizedDAO.deleteUnrecognizedFile( newFile );
 

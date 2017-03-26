@@ -198,11 +198,7 @@ public class ScanMovieFolderExecutor extends TaskExecutor<ScanMovieFolderTask> i
 			}
 		}
 
-		if (movie != null) {
-			if (movie.getStatus() != DownloadableStatus.DOWNLOADED) {
-				DownloadableManager.getInstance().updateStatus( movie, DownloadableStatus.DOWNLOADED);
-			}
-		} else {
+		if (movie == null) {
 			// create new movie
 			movieName = movieDb != null ? movieDb.getTitle() : movieName;
 

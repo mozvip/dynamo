@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.concurrent.Semaphore;
 
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.core.manager.FileSystemManager;
@@ -14,6 +15,8 @@ public class CopyFileExecutor extends TaskExecutor<CopyFileTask> {
 	
 	private Path source;
 	private Path destination;
+	
+	private static Semaphore copySemaphore = new Semaphore(1);
 
 	public CopyFileExecutor(CopyFileTask task) {
 		super(task);
@@ -32,13 +35,18 @@ public class CopyFileExecutor extends TaskExecutor<CopyFileTask> {
 	}	
 
 	@Override
-	public void execute() throws IOException {
+	public void execute() throws IOException, InterruptedException {
 		if (!Files.exists(source)) {
 			throw new IOException( String.format("Source file %s does not exist", source.toAbsolutePath().toString() ));
 		}
 		if (!source.equals( destination )) {
 			Files.createDirectories( destination.getParent() );
-			Files.copy( source, destination, StandardCopyOption.REPLACE_EXISTING );
+			copySemaphore.acquire();
+			try {
+				Files.copy( source, destination, StandardCopyOption.REPLACE_EXISTING );
+			} finally {
+				copySemaphore.release();
+			}
 		}
 		DownloadableManager.getInstance().addFile( task.getDownloadable(), destination );
 	}

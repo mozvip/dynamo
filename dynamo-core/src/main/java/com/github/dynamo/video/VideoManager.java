@@ -69,7 +69,7 @@ public class VideoManager implements Reconfigurable {
 	
 	public static boolean isMainVideoFile( Path videoFile ) {
 		String fileName = videoFile.getFileName().toString();
-		return VideoFileFilter.getInstance().accept( videoFile ) && !fileName.contains("-sample") && !fileName.contains(".sample.");
+		return VideoFileFilter.getInstance().accept( videoFile ) && !StringUtils.containsIgnoreCase(fileName, "sample");
 	}
 	
 	private static Optional<Path> selectMainVideoFile( Collection<DownloadableFile> files )  {

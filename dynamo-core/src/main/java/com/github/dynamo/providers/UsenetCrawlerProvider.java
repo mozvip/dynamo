@@ -59,7 +59,7 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 
 		long minSize = MovieManager.getInstance().getMinimumSizeForMovie(videoQuality);
 		
-		name = plus(name);
+		name = searchString(name);
 		
 		String searchURL = String.format("%s/search?val=%s&min=%d&t=2000", BASE_URL, name, minSize);
 		
@@ -95,7 +95,7 @@ public class UsenetCrawlerProvider extends DownloadFinder implements MovieProvid
 		int maxSize = quality == MusicQuality.COMPRESSED ? 500000000 : 2000000000;
 
 		try {
-			String searchURL = String.format("%s/search?val=%s %s&age=-1&max=%d&index=3&t=%d", BASE_URL, plus(artist), plus(album), maxSize, t);
+			String searchURL = String.format("%s/search?val=%s %s&age=-1&max=%d&index=3&t=%d", BASE_URL, searchString(artist), searchString(album), maxSize, t);
 			return extractResults(searchURL);
 		} catch (IOException e) {
 			throw new MusicAlbumSearchException( e );

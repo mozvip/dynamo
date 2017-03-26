@@ -122,7 +122,7 @@ public class PirateBayProvider extends DownloadFinder implements MovieProvider, 
 			break;
 		}
 		
-		String searchString = plus(videoGame.getName());
+		String searchString = searchString(videoGame.getName());
 		String searchURL = String.format("%s/search/%s/0/99/%d", baseURL, searchString, subcat);
 		return extractResults(searchURL);
 	}

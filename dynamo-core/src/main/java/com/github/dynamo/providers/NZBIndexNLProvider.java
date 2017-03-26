@@ -79,7 +79,7 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 		
 		int minimumSize = MovieManager.getInstance().getMinimumSizeForMovie(videoQuality);
 		
-		String searchURL = String.format( "%s/search/?q=%s+%d" + SEARCH_SUFFIX, BASE_URL, plus(name), year, minimumSize );
+		String searchURL = String.format( "%s/search/?q=%s+%d" + SEARCH_SUFFIX, BASE_URL, searchString(name), year, minimumSize );
 		List<SearchResult> results = extractResults( searchURL );
 		if (videoQuality != null && videoQuality != VideoQuality.SD) {
 			return results.stream().filter( movie -> StringUtils.containsAny( movie.getTitle(), videoQuality.getAliases() )).collect( Collectors.toList() );
@@ -91,14 +91,14 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 	@Override
 	public List<SearchResult> findEpisode(String searchString, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
 		int minimumSize = 100;
-		String searchURL = String.format( "%s/search/?q=%s+S%02dE%02d" + SEARCH_SUFFIX, BASE_URL, plus(searchString), seasonNumber, episodeNumber, minimumSize );
+		String searchURL = String.format( "%s/search/?q=%s+S%02dE%02d" + SEARCH_SUFFIX, BASE_URL, searchString(searchString), seasonNumber, episodeNumber, minimumSize );
 		return extractResults( searchURL );
 	}
 
 	@Override
 	public List<SearchResult> findEpisode(String seriesName, Language audioLanguage, int absoluteEpisodeNumber) throws Exception {
 		int minimumSize = 100;
-		String searchURL = String.format( "%s/search/?q=%s+%d" + SEARCH_SUFFIX, BASE_URL, plus(seriesName), absoluteEpisodeNumber, minimumSize );
+		String searchURL = String.format( "%s/search/?q=%s+%d" + SEARCH_SUFFIX, BASE_URL, searchString(seriesName), absoluteEpisodeNumber, minimumSize );
 		return extractResults( searchURL );
 	}
 
@@ -107,7 +107,7 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 		int minimumSize = 40;
 		try {
 			String searchURL = String.format( "%s/search/?q=%s+%s" + SEARCH_SUFFIX,
-					BASE_URL, plus(artist), plus(album), minimumSize );
+					BASE_URL, searchString(artist), searchString(album), minimumSize );
 			return extractResults( searchURL );
 		} catch (IOException | URISyntaxException e) {
 			throw new MusicAlbumSearchException( e );
@@ -118,7 +118,7 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 	public List<SearchResult> findDownloadsForMagazine(String issueSearchString) throws Exception {
 		int minimumSize = 30;
 		String searchURL = String.format( "%s/search/?q=%s" + SEARCH_SUFFIX,
-				BASE_URL, plus(issueSearchString), minimumSize );
+				BASE_URL, searchString(issueSearchString), minimumSize );
 		return extractResults( searchURL );
 	}
 
@@ -144,7 +144,7 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 			return null;	// FIXME
 		}
 		
-		String searchURL = String.format( "%s/search/?q=%s&age=&max=25", BASE_URL, plus( videoGame.getName() ) );
+		String searchURL = String.format( "%s/search/?q=%s&age=&max=25", BASE_URL, searchString( videoGame.getName() ) );
 		for (int group : groups) {
 			searchURL = searchURL + "&g[]=" + group;
 		}
