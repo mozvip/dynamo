@@ -25,6 +25,7 @@ import com.github.dynamo.model.Downloadable;
 import com.github.mozvip.hclient.core.RegExp;
 import com.github.mozvip.mediainfo.MediaInfo;
 import com.github.mozvip.mediainfo.MediaInfoWrapper;
+import com.github.mozvip.subtitles.opensubtitles.OpenSubtitlesHasher;
 
 public class VideoManager implements Reconfigurable {
 	
