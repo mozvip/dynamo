@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -328,8 +327,13 @@ public class ConfigurationManager {
 		EventBus eventBus = BackLogProcessor.getInstance().newEventBus();
 
 		Set<Method> subscribeMethods = DynamoObjectFactory.getReflections().getMethodsAnnotatedWith(Subscribe.class);
+		Set<Class> klasses = new HashSet<>();
 		for (Method method : subscribeMethods) {
-			eventBus.register( method.getDeclaringClass() );
+			klasses.add( method.getDeclaringClass() );
+		}
+		for (Class klass : klasses) {
+			Object eventListener = klass.newInstance();
+			eventBus.register( eventListener );
 		}
 	}
 

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.core.EventManager;
 import com.github.dynamo.core.manager.ErrorManager;
 import com.github.mozvip.hclient.HTTPClient;
@@ -197,10 +196,6 @@ public abstract class TaskExecutor<T extends Task> implements Runnable {
 			return ((TaskExecutor<?>)obj).getTask().equals( this.getTask() );
 		}
 		return false;
-	}
-
-	protected void runSync( Task task ) throws Exception {
-		BackLogProcessor.getInstance().runImmediately( task, false );
 	}
 
 }

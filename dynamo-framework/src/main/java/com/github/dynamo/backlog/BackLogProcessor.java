@@ -283,18 +283,6 @@ public class BackLogProcessor extends Thread {
 		toUnschedule.add( new SubmissionSpecs( submissionId ) );
 	}
 
-	public void runImmediately(Task task, boolean reportQueued) {
-		Class<? extends TaskExecutor> backLogTaskClass = ConfigurationManager.getInstance().getActivePlugin( task.getClass() );
-		if (backLogTaskClass != null) {
-			TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
-			try {
-				executor.execute();
-			} catch (Exception e) {
-				ErrorManager.getInstance().reportThrowable( e );
-			}
-		}
-	}
-
 	private void cancel( TaskSubmission submission ) {
 		submission.getExecutor().cancel();
 	}
