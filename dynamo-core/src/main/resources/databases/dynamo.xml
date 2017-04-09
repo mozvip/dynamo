@@ -397,5 +397,11 @@
 		<addForeignKeyConstraint constraintName="FK_SUGGESTION_URL_DOWNLOADABLE" referencedTableName="DOWNLOADABLE" baseColumnNames="DOWNLOADABLE_ID" baseTableName="SUGGESTION_URL" referencedColumnNames="ID" onDelete="CASCADE"/>
 		<dropColumn tableName="DOWNLOADABLE" columnName="SUGGESTEDBY"/>
 	</changeSet>
+	
+	<changeSet id="30" author="mozvip">
+		<addColumn tableName="VIDEO_METADATA">
+			<column name="FPS" type="DOUBLE"></column>
+		</addColumn>
+	</changeSet>
 
 </databaseChangeLog>

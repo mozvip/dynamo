@@ -26,7 +26,7 @@ import com.github.dynamo.finders.core.EpisodeFinder;
 import com.github.dynamo.finders.core.TVShowSeasonProvider;
 import com.github.dynamo.manager.DownloadableManager;
 import com.github.dynamo.manager.FolderManager;
-import com.github.dynamo.model.backlog.subtitles.FindSubtitleEpisodeTask;
+import com.github.dynamo.subtitles.FindSubtitleEpisodeTask;
 import com.github.dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import com.github.dynamo.tvshows.jdbi.TVShowDAO;
 import com.github.dynamo.tvshows.jdbi.TVShowSeasonDAO;

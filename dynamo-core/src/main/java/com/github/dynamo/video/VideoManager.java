@@ -1,6 +1,7 @@
 package com.github.dynamo.video;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -59,9 +60,9 @@ public class VideoManager implements Reconfigurable {
 
 			MediaInfo mediaInfo = mediaInfoClient.getMediaInfo( videoFilePath );
 			if (mediaInfo != null) {
-				metaData = new VideoMetaData(mediaInfo.getAudioLanguages(), mediaInfo.getSubtitles(), mediaInfo.getWidth(), mediaInfo.getHeight(), openSubtitlesHash);
+				metaData = new VideoMetaData(mediaInfo.getAudioLanguages(), mediaInfo.getSubtitles(), mediaInfo.getWidth(), mediaInfo.getHeight(), mediaInfo.getFps(), openSubtitlesHash);
 			} else {
-				metaData = new VideoMetaData(null, null, -1, -1, openSubtitlesHash);
+				metaData = new VideoMetaData(null, null, -1, -1, BigDecimal.valueOf(25.0d), openSubtitlesHash);
 			}
 			videoDAO.saveMetaData( video.getId(), metaData.getAudioLanguages(), metaData.getSubtitleLanguages(), metaData.getWidth(), metaData.getHeight(), metaData.getOpenSubtitlesHash());
 		}

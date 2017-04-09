@@ -8,7 +8,6 @@ import java.util.Set;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
-import com.github.dynamo.core.Language;
 import com.github.dynamo.core.model.MapperUtils;
 
 public class VideoMetaDataMapper implements ResultSetMapper<VideoMetaData> {
@@ -20,6 +19,7 @@ public class VideoMetaDataMapper implements ResultSetMapper<VideoMetaData> {
 				(Set<Locale>) MapperUtils.getLocales(r.getString("SUBTITLE_LANGUAGES")),
 				r.getInt("WIDTH"),
 				r.getInt("HEIGHT"),
+				r.getBigDecimal("FPS"),
 				r.getString("OPENSUBTITLES_HASH")
 		);
 	}

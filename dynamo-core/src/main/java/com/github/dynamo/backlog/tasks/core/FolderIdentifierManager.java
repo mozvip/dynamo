@@ -21,11 +21,11 @@ public class FolderIdentifierManager {
 	private FolderIdentifierManager() {
 	}
 
-	private Set<FolderIdentifier> folderIdentifiers;
+	private Set<? extends FolderIdentifier> folderIdentifiers;
 	
-	public synchronized Set<FolderIdentifier> getFolderIdentifiers() {
+	public synchronized Set<? extends FolderIdentifier> getFolderIdentifiers() {
 		if (folderIdentifiers == null) {
-			folderIdentifiers = (Set<FolderIdentifier>) DynamoObjectFactory.getInstances( FolderIdentifier.class );
+			folderIdentifiers = DynamoObjectFactory.getInstances( FolderIdentifier.class );
 		}
 		return folderIdentifiers;
 	}
