@@ -70,6 +70,7 @@
 	<div class="buttons">
     <a target="_blank" ng-show="downloadable.imdbID" class="btn btn-default btn-sm" href="http://www.imdb.com/title/{{downloadable.imdbID}}"><img src="imdb.png" /></a>
 
+		<button type="button" title="Refresh Image" ng-click="updateImage(downloadable)" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span></button>
 		<button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openFileList(downloadable)" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></button>
 		<button type="button" ng-show="downloadable.status == 'DOWNLOADED'" ng-click="openMovieSearch(downloadable)" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
     <button type="button" ng-show="downloadable.status != 'DOWNLOADED'" title="Search Results" class="btn btn-sm btn-default" ng-click="openSearchResults(downloadable)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>

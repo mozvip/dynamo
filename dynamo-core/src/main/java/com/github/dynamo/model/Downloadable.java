@@ -15,7 +15,6 @@ public abstract class Downloadable {
 	private Long id;
 	private String name;
 	private DownloadableStatus status = DownloadableStatus.IGNORED;
-	private String type;
 	private String label;
 	private String aka;
 	protected int year;
@@ -71,7 +70,7 @@ public abstract class Downloadable {
 	}
 	
 	public String getType() {
-		return type;
+		return simpleClassName;
 	}
 	
 	public String getAka() {

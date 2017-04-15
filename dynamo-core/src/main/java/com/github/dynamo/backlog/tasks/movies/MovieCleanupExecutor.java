@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.core.model.DownloadableUtilsDAO;
 import com.github.dynamo.core.model.ReportProgress;
 import com.github.dynamo.core.model.TaskExecutor;
@@ -86,9 +85,6 @@ public class MovieCleanupExecutor extends TaskExecutor<MovieCleanupTask> impleme
 					}
 				}
 				
-				if (Files.exists( moviePath ) && task.isRename()) {
-					BackLogProcessor.getInstance().schedule(new RenameMovieFileTask( movie ), false);
-				}
 			} else {
 
 				downloadableDAO.delete( movie.getId() );

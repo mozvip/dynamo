@@ -163,6 +163,10 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
     $rootScope.moviesWantedCount ++;    
   }
 
+  $scope.updateImage = function( downloadable ) {
+    downloadableService.updateImage( downloadable.id );
+  }
+
   $scope.delete = function( downloadable ) {
     downloadableService.delete( downloadable.id );
     $scope.removeFromList( downloadable );

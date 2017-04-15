@@ -343,10 +343,6 @@ public class MovieManager implements Reconfigurable {
 	public List<Movie> getWantedMovies() {
 		return movieDAO.findWanted();
 	}
-	
-	public List<Movie> findByStatus( DownloadableStatus status ) {
-		return movieDAO.findByStatus( status );
-	}
 
 	public Movie deleteMovie( long movieId ) {
 		Movie movie = movieDAO.find( movieId );
