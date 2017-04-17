@@ -167,6 +167,11 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
     $uibModalInstance.dismiss('cancel');
   };
 
+  $scope.renameFiles = function() {
+    
+    $uibModalInstance.dismiss('cancel');
+  }
+
   $scope.downloadURL = function( file ) {
     return $sce.trustAsResourceUrl(fileListService.downloadURL( file ));
   }

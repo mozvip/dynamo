@@ -20,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.backlog.tasks.core.FindDownloadableImageTask;
 import com.github.dynamo.backlog.tasks.files.DeleteDownloadableEvent;
+import com.github.dynamo.backlog.tasks.files.RenameDownloadableFilesTask;
 import com.github.dynamo.core.manager.DAOManager;
 import com.github.dynamo.core.manager.DownloadableFactory;
 import com.github.dynamo.core.manager.DynamoObjectFactory;
@@ -70,6 +71,14 @@ public class DownloadableService {
 		DownloadableManager.getInstance().redownload(id, false);
 	}
 	
+	@POST
+	@Path("/rename-files/{id}")
+	public void renameFiles(@PathParam("id") long id) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException  {
+		Downloadable downloadable = DownloadableFactory.getInstance().createInstance(id);
+		RenameDownloadableFilesTask<Downloadable> task = DynamoObjectFactory.createInstance( RenameDownloadableFilesTask.class, downloadable);
+		BackLogProcessor.getInstance().schedule( task );
+	}
+
 	@POST
 	@Path("/delete-suggestions/{type}")
 	public void redownload(@PathParam("type") String type) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException  {

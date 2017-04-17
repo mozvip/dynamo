@@ -23,7 +23,7 @@
         <tr ng-repeat="item in files">
           <td>
             <div class="btn-group btn-group-sm" style="min-width: 100px;" role="group">
-              <button class="btn btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{item.filePath}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No,  cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="delete(item)">
+              <button class="btn btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{item.filePath}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No,  cancel!","closeOnConfirm":true,"closeOnCancel":true}' sweet-on-confirm="delete(item)">
                 <span class="glyphicon glyphicon-trash" />
               </button>
               <a class="btn btn-default" ng-href="{{downloadURL(item.filePath)}}" target="_blank">
@@ -47,5 +47,10 @@
           </td>
         </tr>
       </table>
+
+      <button ng-click="renameFiles()" ng-show="downloadable.type == 'Movie'" class="btn btn-primary btn-block">
+        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Rename movie files
+      </button>
+
     </div>
 </script>
