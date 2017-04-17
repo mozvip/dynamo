@@ -29,7 +29,7 @@
               <a class="btn btn-default" ng-href="{{downloadURL(item.filePath)}}" target="_blank">
                 <span class="glyphicon glyphicon-download" />
               </a>
-              <a ng-click="playVideo(item)" class="btn btn-default" ng-if="item.filePath.endsWith('.mkv') || item.filePath.endsWith('.mp4') || item.filePath.endsWith('.avi')">
+              <a ng-click="playVideo(item)" class="btn btn-default" ng-if="item.filePath.endsWith('.mkv') || item.filePath.endsWith('.mp4') || item.filePath.endsWith('.avi') || item.filePath.endsWith('.mpg')">
                 <span class="glyphicon glyphicon-play" />
               </a>
             </div>
@@ -48,7 +48,7 @@
         </tr>
       </table>
 
-      <button ng-click="renameFiles()" ng-show="downloadable.type == 'Movie'" class="btn btn-primary btn-block">
+      <button ng-show="downloadable.type == 'Movie'" class="btn btn-primary btn-block" sweetalert sweet-options='{"title":"Confirm Rename","text":"Are you sure you want to rename files ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, rename them!","cancelButtonText":"No,  cancel!","closeOnConfirm":true,"closeOnCancel":true}' sweet-on-confirm="renameFiles()">
         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Rename movie files
       </button>
 

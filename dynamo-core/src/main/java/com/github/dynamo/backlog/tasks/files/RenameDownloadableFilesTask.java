@@ -8,5 +8,10 @@ public abstract class RenameDownloadableFilesTask<T extends Downloadable> extend
 	public RenameDownloadableFilesTask(T downloadable) {
 		super(downloadable);
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("Rename files for %s", downloadable.toString());
+	}
 
 }

@@ -108,6 +108,9 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   fileListService.delete = function( path ) {
     return BackendService.delete('file-list?path=' + path);
   }
+  fileListService.renameFiles = function( downloadable ) {
+    return BackendService.post('downloadable/rename-files/' + downloadable.id);
+  }
   fileListService.downloadURL = function( path ) {
     return BackendService.getBackendURL() + 'file-list/download?path=' + path;
   }
@@ -168,7 +171,7 @@ angular.module('dynamo.common', ['ngRoute', 'ngResource'])
   };
 
   $scope.renameFiles = function() {
-    
+    fileListService.renameFiles($scope.downloadable);
     $uibModalInstance.dismiss('cancel');
   }
 

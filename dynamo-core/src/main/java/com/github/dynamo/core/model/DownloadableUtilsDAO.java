@@ -81,8 +81,8 @@ public interface DownloadableUtilsDAO {
 	@SqlUpdate("DELETE FROM DOWNLOADABLE_FILE WHERE FILE_PATH = :path")
 	public void deleteFile(@BindPath("path") Path path);
 
-	@SqlUpdate("DELETE FROM DOWNLOADABLE_FILE WHERE FILE_ID = :fileId")
-	public void deleteFile(@Bind("fileId") long fileId);
+	@SqlUpdate("UPDATE DOWNLOADABLE_FILE SET FILE_PATH = :newPath WHERE FILE_PATH = :oldPath")
+	public void updatePath(@BindPath("oldPath") Path oldPath, @BindPath("newPath") Path newPath);
 
 	@SqlQuery("SELECT * FROM DOWNLOADABLE_FILE WHERE FILE_PATH = :path")
 	@Mapper(DownloadableFileMapper.class)
