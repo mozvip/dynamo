@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/github/dynamo/backlog/tasks/torrent/TransmissionCheckDaemonExecutor.java=UTF-8
 encoding//src/main/java/com/github/dynamo/magazines/parsers/MagazineNameParser.java=UTF-8
+encoding//src/main/java/com/github/dynamo/parsers/VideoNameParser.java=UTF-8
 encoding//src/main/java/com/github/dynamo/providers/T411Provider.java=UTF-8

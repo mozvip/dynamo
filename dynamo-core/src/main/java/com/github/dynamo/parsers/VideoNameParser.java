@@ -12,7 +12,7 @@ import com.github.mozvip.hclient.core.RegExp;
 
 public class VideoNameParser {
 
-	private final static String NAME_REGEXP = "[é!&,'\\[\\]\\w\\s\\.\\d-:½]+";
+	private final static String NAME_REGEXP = "[Ã©!&,'\\[\\]\\w\\s\\.\\d-:Â½]+";
 	public final static String SEPARATOR_REGEXP = "[\\s\\.]+";
 	
 	private static String[] filters = new String[] {
