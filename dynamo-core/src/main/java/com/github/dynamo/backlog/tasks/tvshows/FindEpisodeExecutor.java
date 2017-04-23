@@ -71,7 +71,7 @@ public class FindEpisodeExecutor extends AbstractFindTVShowExecutor<ManagedEpiso
 	@Override
 	protected void selectResult(SearchResult selectedResult) {
 		super.selectResult(selectedResult);
-		BackLogProcessor.getInstance().unschedule( FindSeasonTask.class, String.format("this.downloadable.id == %d", episode.getSeasonId() ));
+		BackLogProcessor.getInstance().unschedule( FindSeasonTask.class, String.format("task.downloadable.id == %d", episode.getSeasonId() ));
 	}
 	
 	@Override

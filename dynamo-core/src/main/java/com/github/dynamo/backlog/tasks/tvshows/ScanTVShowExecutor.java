@@ -47,6 +47,11 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 
 	private void parseFolder( ManagedSeries series, List<TVShowSeason> seasons, List<ManagedEpisode> existingEpisodes, Path folder ) throws IOException, InterruptedException {
 		
+		for (TVShowSeason season : seasons) {
+			// No files should be associated to seasons
+			downloadableDAO.deleteFiles( season.getId() );
+		}
+		
 		List<Path> videoFiles = FolderManager.getInstance().getContents(folder, VideoFileFilter.getInstance(), true);
 		for (Path p : videoFiles) {
 
