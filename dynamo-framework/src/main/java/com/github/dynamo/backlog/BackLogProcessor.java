@@ -188,30 +188,24 @@ public class BackLogProcessor extends Thread {
 
 		synchronized (submissions) {
 
-			boolean found = false;
-			
 			for (Iterator<TaskSubmission> iterator = submissions.values().iterator(); iterator.hasNext();) {
 				TaskSubmission s = iterator.next();
 				if (s.getTask().equals( task )) {
-					s.setMinDate(minDate);
-					s.setFuture( null );
-					found = true;
+					iterator.remove();
 					break;
 				}
 			}
 
-			if (!found) {
-				TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
-				submission = new TaskSubmission(task, executor, minDate );
-				submissions.put( submission.getSubmissionId(), submission );
-	
-				if (task instanceof LogQueuing) {
-					ErrorManager.getInstance().reportDebug(task, String.format("%s was queued", task.toString()));
-				}
-				
-				if (nextInLine == null && (minDate == null || minDate.isBefore( LocalDateTime.now() ))) {
-					nextInLine = submission;
-				}
+			TaskExecutor<Task> executor = ConfigurationManager.getInstance().newExecutorInstance( backLogTaskClass, task );
+			submission = new TaskSubmission(task, executor, minDate );
+			submissions.put( submission.getSubmissionId(), submission );
+
+			if (task instanceof LogQueuing) {
+				ErrorManager.getInstance().reportDebug(task, String.format("%s was queued", task.toString()));
+			}
+			
+			if (nextInLine == null && (minDate == null || minDate.isBefore( LocalDateTime.now() ))) {
+				nextInLine = submission;
 			}
 
 			if (reportQueued) {

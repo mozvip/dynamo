@@ -282,7 +282,7 @@ public class TVShowManager implements Reconfigurable {
 			} catch (IOException | InterruptedException e) {
 				ErrorManager.getInstance().reportThrowable(e);
 			}
-			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "task.episode.seriesId == '%s'", series.getId() ) );
+			BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format( "this.episode.seriesId == '%s'", series.getId() ) );
 		}
 
 		BackLogProcessor.getInstance().schedule( new RefreshFromTVDBTask( series ), false );

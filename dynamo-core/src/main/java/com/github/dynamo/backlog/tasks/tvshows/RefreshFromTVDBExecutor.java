@@ -48,12 +48,13 @@ public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 
 		ManagedSeries series = task.getSeries();
 
-		Series tvDbSeries = TVShowManager.getInstance().getSeries( series.getId(), series.getMetaDataLanguage() != null ? series.getMetaDataLanguage() : series.getOriginalLanguage() );
+		Language metaDataLanguage = series.getMetaDataLanguage() != null ? series.getMetaDataLanguage() : series.getOriginalLanguage();
+		Series tvDbSeries = TVShowManager.getInstance().getSeries( series.getId(), metaDataLanguage );
 		if ( tvDbSeries == null ) {
 			return;
 		}
 
-		List<Episode> episodes = TVShowManager.getInstance().getAllEpisodes( series.getId(), series.getMetaDataLanguage() != null ? series.getMetaDataLanguage() : series.getOriginalLanguage() );
+		List<Episode> episodes = TVShowManager.getInstance().getAllEpisodes( series.getId(), metaDataLanguage );
 		if ( episodes == null ) {
 			return;
 		}
@@ -63,7 +64,7 @@ public class RefreshFromTVDBExecutor extends TaskExecutor<RefreshFromTVDBTask> {
 		
 		if (StringUtils.isNotBlank( tvDbSeries.getLanguage() )) {
 			// TODO
-		} else if (StringUtils.equalsIgnoreCase( tvDbSeries.getNetwork(), "France 2") || StringUtils.endsWith( tvDbSeries.getNetwork(), "(FR)")) {
+		} else if (StringUtils.equalsIgnoreCase( tvDbSeries.getNetwork(), "La Une") || StringUtils.equalsIgnoreCase( tvDbSeries.getNetwork(), "France 2") || StringUtils.endsWith( tvDbSeries.getNetwork(), "(FR)")) {
 			series.setOriginalLanguage( Language.FR );
 		}
 		
