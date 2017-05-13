@@ -46,8 +46,8 @@ public class MovieDBService {
 	}
 	
 	@PUT
-	public Movie selectMovie(@QueryParam("id") long id, @QueryParam("movieDbId") int movieDbId) throws MovieDbException, IOException, InterruptedException {
-		MovieInfo movieDb = TheMovieDB.getInstance().getMovieInfo( movieDbId, null );
+	public Movie selectMovie(@QueryParam("id") long id, @QueryParam("movieDbId") int movieDbId, @QueryParam("language") Language language) throws MovieDbException, IOException, InterruptedException {
+		MovieInfo movieDb = TheMovieDB.getInstance().getMovieInfo( movieDbId, language );
 		return MovieManager.getInstance().associate(id, movieDb);
 	}
 

@@ -11,10 +11,12 @@ import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.backlog.tasks.core.ScanFolderExecutor;
 import com.github.dynamo.backlog.tasks.core.VideoFileFilter;
 import com.github.dynamo.backlog.tasks.files.DeleteDownloadableEvent;
+import com.github.dynamo.core.manager.DownloadableFactory;
 import com.github.dynamo.core.model.DownloadableFile;
 import com.github.dynamo.core.model.DownloadableUtilsDAO;
 import com.github.dynamo.manager.DownloadableManager;
 import com.github.dynamo.manager.FolderManager;
+import com.github.dynamo.model.Downloadable;
 import com.github.dynamo.model.DownloadableStatus;
 import com.github.dynamo.model.backlog.find.FindEpisodeTask;
 import com.github.dynamo.parsers.TVShowEpisodeInfo;
@@ -57,6 +59,10 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 
 			DownloadableFile downloadableFile = DownloadableManager.getInstance().getFile( p );
 			if (downloadableFile != null) {
+				Downloadable downloadable = DownloadableFactory.getInstance().createInstance( downloadableFile.getDownloadableId() );
+				if (!downloadable.getStatus().equals( DownloadableStatus.DOWNLOADED )) {
+					downloadableDAO.updateStatus(downloadable.getId(), DownloadableStatus.DOWNLOADED);
+				}
 				continue;
 			}
 
@@ -99,6 +105,7 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 						}
 	
 						downloadableDAO.updateLabel( managedEpisode.getId(), p.getFileName().toString() );
+						DownloadableManager.getInstance().addFile( managedEpisode, p );
 	
 						TVShowManager.getInstance().saveEpisode( managedEpisode );
 						VideoManager.getInstance().getMetaData(managedEpisode, p);

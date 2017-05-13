@@ -5,7 +5,12 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/movies/:status', {
     templateUrl: 'movies/movies.html',
-    controller: 'MoviesCtrl'
+    controller: 'MoviesCtrl',
+    resolve: {
+      languages: ['languageService', function(  languageService  ) {
+        return languageService.find();
+      }]      
+    }    
   }).when('/movies-configuration', {
     templateUrl: 'configuration/configuration-template.html',
     controller: 'MoviesConfigCtrl',
@@ -37,8 +42,8 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
     }
     return BackendService.get( url );
   }
-  movieDbSearchService.associate =  function( id, movieDbId ) {
-    return $http.put(BackendService.getBackendURL() + 'movie-db?id=' + id + '&movieDbId=' + movieDbId);
+  movieDbSearchService.associate =  function( id, movieDbId, language ) {
+    return $http.put(BackendService.getBackendURL() + 'movie-db?id=' + id + '&movieDbId=' + movieDbId + "&language=" + language);
   }
   return movieDbSearchService;
 }])
@@ -71,22 +76,26 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 
 }])
 
-. controller('MovieSearchCtrl', ['$scope', '$uibModalInstance', 'fileList', 'movies', 'movie', 'movieDbSearchService', function($scope, $uibModalInstance, fileList, movies, movie, movieDbSearchService) {
+. controller('MovieSearchCtrl', ['$scope', '$uibModalInstance', 'fileList', 'movies', 'movie', 'movieDbSearchService', 'languages', function($scope, $uibModalInstance, fileList, movies, movie, movieDbSearchService, languages) {
 
   $scope.files = fileList.data;
   $scope.movies = movies.data;
   $scope.movieName = movie.name;
   $scope.movieYear = ( movie.year != -1 ? movie.year : '');
 
+  $scope.language = 'EN';
+
+  $scope.languages = languages.data;
+
   $scope.search = function() {
     var year = ($scope.movieYear ? $scope.movieYear : -1);
-    movieDbSearchService.find( $scope.movieName, year, 'en').then( function( response ) {
+    movieDbSearchService.find( $scope.movieName, year, $scope.language).then( function( response ) {
       $scope.movies = response.data;
     });
   };
 
   $scope.select = function( movieDbId ) {
-    movieDbSearchService.associate( movie.id, movieDbId ).then( function( response ) {
+    movieDbSearchService.associate( movie.id, movieDbId, $scope.language ).then( function( response ) {
       movie = response.data;
       $uibModalInstance.close( movie );
     });
@@ -125,7 +134,7 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('MoviesCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'movieDbSearchService', 'filterFilter', 'BackendService', function( $scope, $rootScope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, movieDbSearchService, filterFilter, BackendService ) {
+.controller('MoviesCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'movieDbSearchService', 'filterFilter', 'BackendService', 'languages', function( $scope, $rootScope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, movieDbSearchService, filterFilter, BackendService, languages ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
@@ -221,6 +230,9 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
         },
         movies: function () {
           return movieDbSearchService.find( movieName, movie.year, 'en' );
+        },
+        languages: function () {
+          return languages;
         },
         movie: movie
       }

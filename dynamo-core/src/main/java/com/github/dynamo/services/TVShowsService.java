@@ -66,7 +66,11 @@ public class TVShowsService {
 	@POST
 	@Path("/rescan/{id}")
 	public void rescan(@PathParam("id") String id) {
-		BackLogProcessor.getInstance().schedule( new ScanTVShowTask( TVShowManager.getInstance().getManagedSeries( id ) ), true );
+		
+		ManagedSeries managedSeries = TVShowManager.getInstance().getManagedSeries( id );
+		
+		
+		BackLogProcessor.getInstance().schedule( new ScanTVShowTask( managedSeries ), true );
 	}
 	
 	@POST
