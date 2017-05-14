@@ -27,7 +27,7 @@ angular.module('dynamo', [
 ])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/welcome'});
+  $routeProvider.otherwise({redirectTo: '#/welcome'});
 }])
 
 .config(['$translateProvider', function ($translateProvider) {
@@ -39,6 +39,9 @@ angular.module('dynamo', [
   $translateProvider.useCookieStorage();
 }])
 
+.config(['$locationProvider', function ($locationProvider) {
+  $locationProvider.html5Mode(true).hashPrefix('!');
+}])
 
 .controller('MenuCtrl', ['$scope', '$rootScope', 'eventDataService', 'downloadableService', function($scope, $rootScope, eventDataService, downloadableService) {
 

@@ -31,7 +31,7 @@ public class TVShowSeason extends Downloadable {
 
 	@Override
 	public String getRelativeLink() {
-		return String.format( "#/tvshow-detail/%s#season%d", seriesId, season ); 
+		return String.format( "/tvshow-detail/%s#season%d", seriesId, season ); 
 	}
 	
 	private ManagedSeries series = null;

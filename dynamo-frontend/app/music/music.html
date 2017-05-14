@@ -16,7 +16,7 @@
 </div>
 
 <div class="thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents" style="height: 330px; margin-bottom: 0px; ">
-  <a ng-href="#/music-album/{{downloadable.id}}" ng-if="downloadable.status == 'DOWNLOADED'">
+  <a ng-href="/music-album/{{downloadable.id}}" ng-if="downloadable.status == 'DOWNLOADED'">
     <img ng-src="{{imageURL(downloadable.image)}}" alt="{{downloadable.artistName}} - {{downloadable.name}}" style="width: 260px; height: 260px;" />
   </a>
   <img ng-if="downloadable.status != 'DOWNLOADED'" ng-src="{{imageURL(downloadable.image)}}" alt="{{downloadable.artistName}} - {{downloadable.name}}" style="width: 260px; height: 260px;" />

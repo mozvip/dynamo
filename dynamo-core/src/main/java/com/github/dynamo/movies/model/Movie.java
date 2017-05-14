@@ -148,7 +148,7 @@ public class Movie extends Downloadable implements Video {
 
 	@Override
 	public String getRelativeLink() {
-		return "index.html#/movies/" + getStatus().name();
+		return "/movies/" + getStatus().name();
 	}
 	@Override
 	public int hashCode() {

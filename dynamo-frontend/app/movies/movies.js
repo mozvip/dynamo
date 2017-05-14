@@ -134,7 +134,7 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
 
 }])
 
-.controller('MoviesCtrl', ['$scope', '$rootScope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'movieDbSearchService', 'filterFilter', 'BackendService', 'languages', function( $scope, $rootScope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, movieDbSearchService, filterFilter, BackendService, languages ) {
+.controller('MoviesCtrl', ['$scope', '$document', '$rootScope', '$routeParams', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'movieDbSearchService', 'filterFilter', 'BackendService', 'languages', function( $scope, $document, $rootScope, $routeParams, downloadableService, fileListService, searchResultsService, $uibModal, movieDbSearchService, filterFilter, BackendService, languages ) {
 
   $scope.currentPage = 1;
   $scope.allItems = [];
@@ -219,11 +219,14 @@ angular.module('dynamo.movies', ['ngRoute', 'ngResource'])
       movieName = movieName.substr(0, movieName.length - 4);
     }
 
+    var parentElem = angular.element($document[0].querySelector('.container-fluid'));
+
     var modalInstance = $uibModal.open({
       animation: false,
       templateUrl: 'movieSearch.html',
       controller: 'MovieSearchCtrl',
       size: 'lg',
+      appendTo: parentElem,
       resolve: {
         fileList: function () {
           return fileListService.get( movie.id );
