@@ -12,11 +12,11 @@ import com.github.mozvip.transmission.model.Torrent;
 
 public class Transmission implements Reconfigurable {
 	
-	@Configurable(ifExpression="dynamo.backlog.tasks.torrent.DownloadTorrentTransmissionExecutor")
+	@Configurable(ifExpression="com.github.dynamo.backlog.tasks.torrent.DownloadTorrentTransmissionExecutor")
 	private String transmissionUrl;
-	@Configurable(ifExpression="dynamo.backlog.tasks.torrent.DownloadTorrentTransmissionExecutor")
+	@Configurable(ifExpression="com.github.dynamo.backlog.tasks.torrent.DownloadTorrentTransmissionExecutor")
 	private String username;
-	@Configurable(ifExpression="dynamo.backlog.tasks.torrent.DownloadTorrentTransmissionExecutor")
+	@Configurable(ifExpression="com.github.dynamo.backlog.tasks.torrent.DownloadTorrentTransmissionExecutor")
 	private String password;
 	
 	private TransmissionClient transmission;

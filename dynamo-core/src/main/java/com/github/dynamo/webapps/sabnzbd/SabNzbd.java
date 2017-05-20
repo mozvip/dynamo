@@ -15,10 +15,10 @@ import com.github.mozvip.sabnzbd.model.SabNzbdResponse;
 
 public class SabNzbd implements Reconfigurable, Enableable {
 
-	@Configurable(ifExpression = "dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor", required = false)
+	@Configurable(ifExpression = "com.github.dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor", required = false)
 	private String apiKey;
 
-	@Configurable(ifExpression = "dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor", required = true)
+	@Configurable(ifExpression = "com.github.dynamo.webapps.sabnzbd.SabNzbdDownloadExecutor", required = true)
 	private String sabnzbdUrl;
 
 	public String getApiKey() {

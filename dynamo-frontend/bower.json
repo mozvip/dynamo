@@ -12,7 +12,6 @@
     "angular-mocks": "~1.6.4",
     "html5-boilerplate": "^5.3.0",
     "angular-websocket": "~1.0.14",
-    "ui-bootstrap": "~2.5.0",
     "bootstrap": "~3.3.7",
     "angular-messages": "~1.6.4",
     "toastr": "~2.1.2",
@@ -27,7 +26,8 @@
     "angular-cookies": "~1.6.4",
     "angular-drag-and-drop-lists": "~2.1.0",
     "angular-animate": "~1.6.4",
-    "angular-touch": "~1.6.4"
+    "angular-touch": "~1.6.4",
+    "angular-bootstrap": "~2.5.0"
   },
   "resolutions": {
     "angular": "1.6.4",
