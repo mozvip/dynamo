@@ -2,10 +2,10 @@ package com.github.dynamo.manager;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -161,6 +161,18 @@ public class DownloadableManager {
 		}
 	}
 	
+	public static List<Path> getAssociatedFiles( Path file, List<Path> fromList ) {
+		List<Path> matches = new ArrayList<>();
+		String fileName = file.getFileName().toString();
+		final String filePrefix = fileName.substring(0,  fileName.lastIndexOf('.'));
+		for (Path path : fromList) {
+			if (path.getFileName().toString().startsWith( filePrefix )) {
+				matches.add( path );
+			}
+		}
+		return matches;
+	}	
+	
 	public void snatched( Downloadable downloadable, SearchResult result ) {
 		
 		if (result != null) {
@@ -178,8 +190,8 @@ public class DownloadableManager {
 		}
 	}
 	
-	public void addFile( Downloadable downloadable, Path newFile ) throws IOException {
-		addFile( downloadable, newFile, 0 );
+	public long addFile( Downloadable downloadable, Path newFile ) throws IOException {
+		return addFile( downloadable, newFile, 0 );
 	}
 
 	public long addFile( Downloadable downloadable, Path newFile, int fileIndex ) throws IOException {
@@ -450,24 +462,6 @@ public class DownloadableManager {
 	public static boolean downloadImage( Class<? extends Downloadable> downloadableClass, long downloadableId, String url, String referer ) throws IOException {
 		Path localFile = resolveImage(downloadableClass, downloadableId);
 		return downloadImage(localFile, url, referer);
-	}
-	
-	public void addAllSimilarNamedFiles(Path p, Downloadable downloadable) throws IOException, InterruptedException {
-		
-		String fileName = p.getFileName().toString();
-		final String filePrefix = fileName.substring(0,  fileName.lastIndexOf('.'));
-
-		List<Path> relatedFiles = FolderManager.getInstance().getContents(p.getParent(), new DirectoryStream.Filter<Path>() {
-			@Override
-			public boolean accept(Path path) {
-				return path.getFileName().toString().startsWith( filePrefix );
-			}
-		}, false);
-		for (Path relatedFile : relatedFiles) {
-			if (relatedFile.getFileName().toString().startsWith( filePrefix )) {
-				addFile( downloadable, relatedFile );
-			}
-		}
 	}
 
 	public void deleteSuggestions(Class<? extends Downloadable> klass) {

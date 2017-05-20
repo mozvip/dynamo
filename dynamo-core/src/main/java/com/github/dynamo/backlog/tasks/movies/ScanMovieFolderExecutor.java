@@ -75,7 +75,8 @@ public class ScanMovieFolderExecutor extends TaskExecutor<ScanMovieFolderTask> i
 			}
 		}
 		return matches;
-	}
+	}	
+	
 	
 	@Override
 	public void execute() throws Exception {

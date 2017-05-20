@@ -40,7 +40,7 @@ public class TVShowEpisodeInfo extends VideoInfo {
 		this.lastEpisode = lastEpisode;
 	}
 
-	public Collection<? extends Integer> getEpisodes() {
+	public Collection<Integer> getEpisodes() {
 		List<Integer> episodes = new ArrayList<Integer>();
 		for (int i=firstEpisode; i<=lastEpisode; i++) {
 			episodes.add( i );
