@@ -95,9 +95,11 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 					}
 				}
 
-				currentEpisode.setQuality( episodeInfo.getQuality() );
-				currentEpisode.setSource( episodeInfo.getSource() );
-				currentEpisode.setReleaseGroup( Release.firstMatch( episodeInfo.getRelease() ).name() );
+				if (currentEpisode != null) {
+					currentEpisode.setQuality( episodeInfo.getQuality() );
+					currentEpisode.setSource( episodeInfo.getSource() );
+					currentEpisode.setReleaseGroup( Release.firstMatch( episodeInfo.getRelease() ).name() );
+				}
 
 			}
 			
