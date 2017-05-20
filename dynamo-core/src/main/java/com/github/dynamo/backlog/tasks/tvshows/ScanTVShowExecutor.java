@@ -92,11 +92,12 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 					Optional<ManagedEpisode> ep = existingEpisodes.stream().filter( managedEpisode -> managedEpisode.getSeasonNumber() == episodeInfo.getSeason() && episodes.contains( managedEpisode.getEpisodeNumber() ) ).findFirst();
 					if (ep.isPresent()) {
 						currentEpisode = ep.get();
-						currentEpisode.setQuality( episodeInfo.getQuality() );
-						currentEpisode.setSource( episodeInfo.getSource() );
-						currentEpisode.setReleaseGroup( Release.firstMatch( episodeInfo.getRelease() ).name() );
 					}
 				}
+
+				currentEpisode.setQuality( episodeInfo.getQuality() );
+				currentEpisode.setSource( episodeInfo.getSource() );
+				currentEpisode.setReleaseGroup( Release.firstMatch( episodeInfo.getRelease() ).name() );
 
 			}
 			
@@ -124,9 +125,9 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 			// subtitles search
 			if ( series.getSubtitlesLanguage() != null ) {
 				if ( !subtitled && !VideoManager.isAlreadySubtitled( currentEpisode, series.getSubtitlesLanguage() )) {
-					BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format("task.episode.id == %d", currentEpisode.getId()) );
-				} else {
 					BackLogProcessor.getInstance().schedule( new FindSubtitleEpisodeTask( currentEpisode ), false );
+				} else {
+					BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format("task.episode.id == %d", currentEpisode.getId()) );
 				}
 			}
 
