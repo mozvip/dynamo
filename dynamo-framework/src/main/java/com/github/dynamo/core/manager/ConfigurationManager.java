@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,10 +57,10 @@ public class ConfigurationManager {
 		configureApplication();
 	}
 	
-	private Map<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> pluginOptions = new HashMap<>();
+	private Map<Class<? extends Task>, List<Class<? extends TaskExecutor>>> pluginOptions = new HashMap<>();
 	private Map<Class<? extends Task>, Class<? extends TaskExecutor>> activePlugins = new HashMap<>();
 
-	public Map<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> getPluginOptions() {
+	public Map<Class<? extends Task>, List<Class<? extends TaskExecutor>>> getPluginOptions() {
 		return pluginOptions;
 	}
 
@@ -87,8 +86,8 @@ public class ConfigurationManager {
 	}
 
 	private void initPlugins() {
-		Reflections r = DynamoObjectFactory.getReflections();
-		Set<Class<? extends TaskExecutor>> matchingClasses = r.getSubTypesOf( TaskExecutor.class );
+		Set<Class<? extends TaskExecutor>> matchingClasses = DynamoObjectFactory.getReflections().getSubTypesOf( TaskExecutor.class );
+		
 		for (Class<? extends TaskExecutor> executorClass : matchingClasses) {
 			if (executorClass.isInterface() || Modifier.isAbstract( executorClass.getModifiers() )) {
 				continue;
@@ -107,9 +106,9 @@ public class ConfigurationManager {
 			}
 		}
 		
-		for (Entry<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> entry : pluginOptions.entrySet()) {
+		for (Entry<Class<? extends Task>, List<Class<? extends TaskExecutor>>> entry : pluginOptions.entrySet()) {
 			Class<? extends Task> taskType = entry.getKey();
-			Collection<Class<? extends TaskExecutor>> options = entry.getValue();
+			List<Class<? extends TaskExecutor>> options = entry.getValue();
 
 			String className = ConfigAnnotationManager.getInstance().getConfigString( String.format("Plugin.%s", taskType.getName()) );
 
@@ -121,17 +120,11 @@ public class ConfigurationManager {
 					ErrorManager.getInstance().reportThrowable( e );
 				}
 				if (activePlugin != null && !options.contains( activePlugin )) {
-					ErrorManager.getInstance().reportError( "" );
+					ErrorManager.getInstance().reportError( null, String.format("%s is not a valid plugin for %s", className, taskType.getName()) );
 					activePlugin = null;
 				}
 			}
-			if (activePlugin == null && options != null && options.size() == 1) {
-				activePlugin = options.iterator().next();
-				activePlugins.put( taskType, activePlugin );
-			}
-			if (activePlugin != null) {
-				activePlugins.put( taskType, activePlugin );
-			}
+			activePlugins.put( taskType, activePlugin != null ? activePlugin : options.get( 0 ) );
 		}
 	}
 		

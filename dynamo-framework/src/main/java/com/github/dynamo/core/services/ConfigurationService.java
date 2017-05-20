@@ -27,10 +27,10 @@ public class ConfigurationService {
 	@GET
 	@Path("/plugin-options")
 	public List<PluginOption> getPluginOptions() {
-		Map<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> pluginOptions = ConfigurationManager.getInstance().getPluginOptions();
+		Map<Class<? extends Task>, List<Class<? extends TaskExecutor>>> pluginOptions = ConfigurationManager.getInstance().getPluginOptions();
 		
 		List<PluginOption> result = new ArrayList<>();
-		for (Map.Entry<Class<? extends Task>, Collection<Class<? extends TaskExecutor>>> entry : pluginOptions.entrySet()) {
+		for (Map.Entry<Class<? extends Task>, List<Class<? extends TaskExecutor>>> entry : pluginOptions.entrySet()) {
 			if (entry.getValue() != null && entry.getValue().size() > 1) {
 				Class<? extends Task> taskClass = entry.getKey();
 				LabelledClass task = new LabelledClass( taskClass );
