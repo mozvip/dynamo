@@ -64,7 +64,7 @@ public class FindSubtitleEpisodeExecutor extends AbstractFindSubtitlesExecutor<F
 			RemoteSubTitles remoteSubTitles;
 			try {
 				remoteSubTitles = future.get();
-				if (remoteSubTitles.getScore() > currentScore) {
+				if (remoteSubTitles != null && remoteSubTitles.getScore() > currentScore) {
 					currentScore = remoteSubTitles.getScore();
 					selectedSubTitles = remoteSubTitles;
 				}
