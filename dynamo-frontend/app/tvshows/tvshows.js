@@ -145,17 +145,6 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 
   $scope.selectedEpisode = {};
 
-  $scope.addAka = function() {
-    if ($scope.newAka.trim() == '') {
-      return;
-    }
-    if ($scope.tvshow.aka.findIndex( function( element ) {
-      return element === $scope.newAka;
-    }) == -1) {
-      $scope.tvshow.aka.push($scope.newAka);
-    }
-  }
-
   $scope.wantSeasonEnabled = function( seasonNumber ) {
     var enabled = false;
     $scope.episodes.forEach(function(episode) {

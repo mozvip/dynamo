@@ -20,7 +20,7 @@ public class MapperUtils {
 	
 	public static List<String> getStringList( String value ) {
 		List<String> collection = null;
-		if (value != null) {
+		if (StringUtils.isNotEmpty(value)) {
 			collection = StringUtils.splitAndTrim( value, ";" );
 		}
 		return collection;

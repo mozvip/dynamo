@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.github.dynamo.core.Language;
 import com.github.dynamo.core.VideoQuality;
 
-@JsonIgnoreProperties({"relativeLink"})
+@JsonInclude(value=Include.NON_NULL)
 public class ManagedSeries implements Serializable {
 
 	/**
@@ -75,6 +77,7 @@ public class ManagedSeries implements Serializable {
 		return aka;
 	}
 
+	@JsonIgnore
 	public List<String> getAllNames() {
 		List<String> allNames = new ArrayList<>();
 		allNames.add( getName() );
@@ -189,6 +192,7 @@ public class ManagedSeries implements Serializable {
 		return getName();
 	}
 
+	@JsonIgnore
 	public String getRelativeLink() {
 		return String.format("/tvshow-detail/%s", getId());
 	}

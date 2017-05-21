@@ -12,6 +12,7 @@ angular.module('dynamo', [
   'ng-sweet-alert',
   'pascalprecht.translate',
   'dndLists',
+  'ngTagsInput',
   'dynamo.common',
   'dynamo.trakt',
   'dynamo.log',
