@@ -79,24 +79,26 @@ public class MapperUtils {
 	public static Set<Locale> getLocales(String value) {
 		List<String> collection = getStringList(value);
 		Set<Locale> locales = new HashSet<>();
-		for (String string : collection) {
-			try (Scanner scanner = new Scanner( string )) {
-				
-				Locale locale;
-				
-				if (scanner.findInLine("(\\w{2})_(\\w{2})") != null) {
-					MatchResult result = scanner.match();
+		if (collection != null) {
+			for (String string : collection) {
+				try (Scanner scanner = new Scanner( string )) {
 					
-					String language = result.group(1);
-					String country = result.group(2);
+					Locale locale;
 					
-					locale = new Locale(language, country);
-				} else {
-					locale = new Locale( string );
+					if (scanner.findInLine("(\\w{2})_(\\w{2})") != null) {
+						MatchResult result = scanner.match();
+						
+						String language = result.group(1);
+						String country = result.group(2);
+						
+						locale = new Locale(language, country);
+					} else {
+						locale = new Locale( string );
+					}
+					
+					locales.add(locale);
+					
 				}
-				
-				locales.add(locale);
-				
 			}
 		}
 		return locales;
