@@ -27,7 +27,8 @@
     "angular-drag-and-drop-lists": "~2.1.0",
     "angular-animate": "~1.6.4",
     "angular-touch": "~1.6.4",
-    "angular-bootstrap": "~2.5.0"
+    "angular-bootstrap": "~2.5.0",
+    "ng-tags-input": "3.2.0"
   },
   "resolutions": {
     "angular": "1.6.4",
