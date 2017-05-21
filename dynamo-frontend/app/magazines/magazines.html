@@ -18,7 +18,7 @@
 
 <div class="row" ng-show="filteredList.length > itemsPerPage">
   <p class="text-center">
-    <uib-pagination total-items="filteredList.length" max-size="30" force-ellipses="true" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+    <ul uib-pagination total-items="filteredList.length" max-size="30" force-ellipses="true" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></ul>
   </p>
 </div>
 
@@ -38,6 +38,6 @@
 
 <div class="row col-md-12" ng-show="filteredList.length > itemsPerPage">
   <p class="text-center">
-    <uib-pagination total-items="filteredList.length" max-size="30" force-ellipses="true" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+    <ul uib-pagination total-items="filteredList.length" max-size="30" force-ellipses="true" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></ul>
   </p>
 </div>

@@ -2,6 +2,7 @@ package com.github.dynamo.movies.model;
 
 import java.nio.file.Path;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.dynamo.backlog.tasks.files.FileUtils;
 import com.github.dynamo.core.Language;
 import com.github.dynamo.core.VideoQuality;
@@ -147,8 +148,9 @@ public class Movie extends Downloadable implements Video {
 	}
 
 	@Override
+	@JsonIgnore
 	public String getRelativeLink() {
-		return "/movies/" + getStatus().name();
+		return "index.html#!/movies/" + getStatus().name();
 	}
 	@Override
 	public int hashCode() {

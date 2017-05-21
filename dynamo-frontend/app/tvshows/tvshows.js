@@ -123,6 +123,14 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
 .controller('TVShowDetailsCtrl', ['$scope', '$filter', 'tvshow', 'tvShowsService', 'tvdbService', 'downloadableService', 'fileListService', 'searchResultsService', '$uibModal', 'filterFilter', 'languages', 'episodes', 'unrecognizedFiles', 'BackendService', '$location', function( $scope, $filter, tvshow, tvShowsService, tvdbService, downloadableService, fileListService, searchResultsService, $uibModal, filterFilter, languages, episodes, unrecognizedFiles, BackendService, $location ) {
 
   $scope.tvshow = tvshow.data;
+
+  $scope.alternateNames = [];
+  if ($scope.tvshow.aka) {
+    $scope.tvshow.aka.forEach(function(alias) {
+      $scope.alternateNames.push({'text':alias});
+    }, this);
+  }
+  
   $scope.episodes = $filter('orderBy')(episodes.data, '-seasonNumber');
   $scope.languages = languages.data;
   $scope.unrecognizedFiles = unrecognizedFiles.data;
@@ -140,6 +148,12 @@ angular.module('dynamo.tvshows', ['ngRoute', 'ngResource'])
   }, this);
 
   $scope.saveTVShow = function() {
+    if ($scope.alternateNames) {
+      $scope.tvshow.aka = [];
+      $scope.alternateNames.forEach(function(alias) {
+        $scope.tvshow.aka.push(alias.text);
+      }, this);
+    }
     BackendService.post('tvshows/save', $scope.tvshow );
   }
 

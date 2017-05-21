@@ -3,6 +3,7 @@ package com.github.dynamo.model.music;
 import java.nio.file.Path;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.dynamo.manager.MusicManager;
 import com.github.dynamo.model.Downloadable;
 import com.github.dynamo.model.DownloadableStatus;
@@ -61,8 +62,9 @@ public class MusicAlbum extends Downloadable {
 	}
 	
 	@Override
+	@JsonIgnore
 	public String getRelativeLink() {
-		return String.format("/music-album/%d", getId());
+		return String.format("index.html#!/music-album/%d", getId());
 	}
 	
 	@Override

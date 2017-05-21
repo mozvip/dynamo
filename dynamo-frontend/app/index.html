@@ -6,8 +6,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <base href="/index.html" />
-
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
   <title>Dynamo</title>
 
@@ -36,62 +34,62 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" ng-href="#">Dynamo</a>
+          <a class="navbar-brand" ng-href="index.html">Dynamo</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-play"></span> Movies <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a ng-show="moviesCollectionCount > 0" ng-href="/movies/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{moviesCollectionCount}}</span></a></li>
-                <li><a ng-show="moviesWantedCount > 0" ng-href="/movies/WANTED,SNATCHED">Wanted <span class="badge">{{moviesWantedCount}}</span></a></li>
-                <li><a ng-show="moviesSuggestionCount > 0" ng-href="/movies/SUGGESTED">Suggestions <span class="badge">{{moviesSuggestionCount}}</span></a></li>
-                <li><a ng-href="/movies-manual-add"><span class="glyphicon glyphicon-plus"></span> Manual Add</a></li>
-                <li><a ng-href="/movies-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
+                <li><a ng-show="moviesCollectionCount > 0" ng-href="index.html#!/movies/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{moviesCollectionCount}}</span></a></li>
+                <li><a ng-show="moviesWantedCount > 0" ng-href="index.html#!/movies/WANTED,SNATCHED">Wanted <span class="badge">{{moviesWantedCount}}</span></a></li>
+                <li><a ng-show="moviesSuggestionCount > 0" ng-href="index.html#!/movies/SUGGESTED">Suggestions <span class="badge">{{moviesSuggestionCount}}</span></a></li>
+                <li><a ng-href="index.html#!/movies-manual-add"><span class="glyphicon glyphicon-plus"></span> Manual Add</a></li>
+                <li><a ng-href="index.html#!/movies-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
               </ul>
             </li>
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Magazines <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a ng-show="magazinesCollectionCount > 0" ng-href="/magazines/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{magazinesCollectionCount}}</span></a></li>
-                <li><a ng-show="magazinesWantedCount > 0" ng-href="/magazines/WANTED,SNATCHED">Wanted <span class="badge">{{magazinesWantedCount}}</span></a></li>
-                <li><a ng-show="magazinesSuggestionCount > 0" ng-href="/magazines/SUGGESTED">Suggestions <span class="badge">{{magazinesSuggestionCount}}</span></a></li>
-                <li><a ng-href="/magazines-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
+                <li><a ng-show="magazinesCollectionCount > 0" ng-href="index.html#!/magazines/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{magazinesCollectionCount}}</span></a></li>
+                <li><a ng-show="magazinesWantedCount > 0" ng-href="index.html#!/magazines/WANTED,SNATCHED">Wanted <span class="badge">{{magazinesWantedCount}}</span></a></li>
+                <li><a ng-show="magazinesSuggestionCount > 0" ng-href="index.html#!/magazines/SUGGESTED">Suggestions <span class="badge">{{magazinesSuggestionCount}}</span></a></li>
+                <li><a ng-href="index.html#!/magazines-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
               </ul>
             </li>
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Books <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a ng-show="booksCollectionCount > 0" ng-href="/books/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{booksCollectionCount}}</span></a></li>
-                <li><a ng-show="booksWantedCount > 0" ng-href="/books/WANTED,SNATCHED">Wanted <span class="badge">{{booksWantedCount}}</span></a></li>
-                <li><a ng-show="booksSuggestionCount > 0" ng-href="/books/SUGGESTED">Suggestions <span class="badge">{{booksSuggestionCount}}</span></a></li>
-                <li><a ng-href="/books-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
+                <li><a ng-show="booksCollectionCount > 0" ng-href="index.html#!/books/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{booksCollectionCount}}</span></a></li>
+                <li><a ng-show="booksWantedCount > 0" ng-href="index.html#!/books/WANTED,SNATCHED">Wanted <span class="badge">{{booksWantedCount}}</span></a></li>
+                <li><a ng-show="booksSuggestionCount > 0" ng-href="index.html#!/books/SUGGESTED">Suggestions <span class="badge">{{booksSuggestionCount}}</span></a></li>
+                <li><a ng-href="index.html#!/books-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
               </ul>
             </li>
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Games <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a ng-show="gamesCollectionCount > 0" ng-href="/games/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{gamesCollectionCount}}</span></a></li>
-                <li><a ng-show="gamesWantedCount > 0" ng-href="/games/WANTED,SNATCHED">Wanted <span class="badge">{{gamesWantedCount}}</span></a></li>
-                <li><a ng-show="gamesSuggestionCount > 0" ng-href="/games/SUGGESTED">Suggestions <span class="badge">{{gamesSuggestionCount}}</span></a></li>
-                <li><a ng-href="/games-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
+                <li><a ng-show="gamesCollectionCount > 0" ng-href="index.html#!/games/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{gamesCollectionCount}}</span></a></li>
+                <li><a ng-show="gamesWantedCount > 0" ng-href="index.html#!/games/WANTED,SNATCHED">Wanted <span class="badge">{{gamesWantedCount}}</span></a></li>
+                <li><a ng-show="gamesSuggestionCount > 0" ng-href="index.html#!/games/SUGGESTED">Suggestions <span class="badge">{{gamesSuggestionCount}}</span></a></li>
+                <li><a ng-href="index.html#!/games-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
               </ul>
             </li>
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-music"></span> Music <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a ng-show="musicAlbumsCollectionCount > 0" ng-href="/music/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{musicAlbumsCollectionCount}}</span></a></li>
-                <li><a ng-show="musicAlbumsWantedCount > 0" ng-href="/music/WANTED,SNATCHED">Wanted <span class="badge">{{musicAlbumsWantedCount}}</span></a></li>
-                <li><a ng-show="musicAlbumsSuggestionCount > 0" ng-href="/music/SUGGESTED">Suggestions <span class="badge">{{musicAlbumsSuggestionCount}}</a></li>
-                <li><a ng-href="/music-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
+                <li><a ng-show="musicAlbumsCollectionCount > 0" ng-href="index.html#!/music/DOWNLOADED"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{musicAlbumsCollectionCount}}</span></a></li>
+                <li><a ng-show="musicAlbumsWantedCount > 0" ng-href="index.html#!/music/WANTED,SNATCHED">Wanted <span class="badge">{{musicAlbumsWantedCount}}</span></a></li>
+                <li><a ng-show="musicAlbumsSuggestionCount > 0" ng-href="index.html#!/music/SUGGESTED">Suggestions <span class="badge">{{musicAlbumsSuggestionCount}}</a></li>
+                <li><a ng-href="index.html#!/music-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
               </ul>
             </li>
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">TV Shows <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a ng-href="/tvshows"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{tvShowsCollectionCount}}</span></a></li>
-                <li><a ng-href="/tvshows-add"><span class="glyphicon glyphicon-plus"></span> Add new</a></li>
-                <li><a ng-href="/tvshows-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
+                <li><a ng-href="index.html#!/tvshows"><span class="glyphicon glyphicon-list"></span> Collection <span class="badge">{{tvShowsCollectionCount}}</span></a></li>
+                <li><a ng-href="index.html#!/tvshows-add"><span class="glyphicon glyphicon-plus"></span> Add new</a></li>
+                <li><a ng-href="index.html#!/tvshows-configuration"><span class="glyphicon glyphicon-cog"></span> Configuration</a></li>
               </ul>
             </li>
           </ul>
@@ -99,20 +97,20 @@
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Configuration <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a ng-href="/plugins"><span class="glyphicon glyphicon-cog"></span> Plugins</a></li>
-                <li><a ng-href="/configuration-providers"><span class="glyphicon glyphicon-cog"></span> Providers</a></li>
-                <li><a ng-href="/configuration-notifications"><span class="glyphicon glyphicon-cog"></span> Notifications</a></li>
-                <li><a ng-href="/configuration-video"><span class="glyphicon glyphicon-cog"></span> Video</a></li>
-                <li><a ng-href="/configuration-subtitles"><span class="glyphicon glyphicon-subtitles"></span> Subtitles</a></li>
+                <li><a ng-href="index.html#!/plugins"><span class="glyphicon glyphicon-cog"></span> Plugins</a></li>
+                <li><a ng-href="index.html#!/configuration-providers"><span class="glyphicon glyphicon-cog"></span> Providers</a></li>
+                <li><a ng-href="index.html#!/configuration-notifications"><span class="glyphicon glyphicon-cog"></span> Notifications</a></li>
+                <li><a ng-href="index.html#!/configuration-video"><span class="glyphicon glyphicon-cog"></span> Video</a></li>
+                <li><a ng-href="index.html#!/configuration-subtitles"><span class="glyphicon glyphicon-subtitles"></span> Subtitles</a></li>
               </ul>
             </li>
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Log <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a ng-href="/wanted"><span class="glyphicon glyphicon-heart"></span> Wanted</a></li>
-                <li><a ng-href="/history"><span class="glyphicon glyphicon-th-list"></span> History</a></li>
-                <li><a ng-href="/log"><span class="glyphicon glyphicon-th-list"></span> System Log</a></li>
-                <li><a ng-href="/activity"><span class="glyphicon glyphicon-tasks"></span> Activity</a></li>
+                <li><a ng-href="index.html#!/wanted"><span class="glyphicon glyphicon-heart"></span> Wanted</a></li>
+                <li><a ng-href="index.html#!/history"><span class="glyphicon glyphicon-th-list"></span> History</a></li>
+                <li><a ng-href="index.html#!/log"><span class="glyphicon glyphicon-th-list"></span> System Log</a></li>
+                <li><a ng-href="index.html#!/activity"><span class="glyphicon glyphicon-tasks"></span> Activity</a></li>
               </ul>
             </li>
           </ul>

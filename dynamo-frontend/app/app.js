@@ -41,7 +41,7 @@ angular.module('dynamo', [
 }])
 
 .config(['$locationProvider', function ($locationProvider) {
-  $locationProvider.html5Mode(true).hashPrefix('!');
+  $locationProvider.html5Mode(false);
 }])
 
 .controller('MenuCtrl', ['$scope', '$rootScope', 'eventDataService', 'downloadableService', function($scope, $rootScope, eventDataService, downloadableService) {

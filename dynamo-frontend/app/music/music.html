@@ -9,14 +9,12 @@
   </div>
 </div>
 
-<div class="row">
-  <p class="text-center">
-      <uib-pagination ng-show="filteredList.length > itemsPerPage" total-items="filteredList.length" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
-  </p>
+<div class="row" ng-show="filteredList.length > itemsPerPage">
+  <ul uib-pagination max-size="30" total-items="filteredList.length" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()" boundary-link-numbers="true"></ul>
 </div>
 
 <div class="thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents" style="height: 330px; margin-bottom: 0px; ">
-  <a ng-href="/music-album/{{downloadable.id}}" ng-if="downloadable.status == 'DOWNLOADED'">
+  <a ng-href="index.html#!/music-album/{{downloadable.id}}" ng-if="downloadable.status == 'DOWNLOADED'">
     <img ng-src="{{imageURL(downloadable.image)}}" alt="{{downloadable.artistName}} - {{downloadable.name}}" style="width: 260px; height: 260px;" />
   </a>
   <img ng-if="downloadable.status != 'DOWNLOADED'" ng-src="{{imageURL(downloadable.image)}}" alt="{{downloadable.artistName}} - {{downloadable.name}}" style="width: 260px; height: 260px;" />
@@ -39,8 +37,6 @@
   </div>
 </div>
 
-<div class="row col-md-12" ng-show="filteredList.length > itemsPerPage">
-  <p class="text-center">
-    <uib-pagination total-items="filteredList.length" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
-  </p>
+<div class="row" ng-show="filteredList.length > itemsPerPage">
+  <ul uib-pagination max-size="30" total-items="filteredList.length" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()" boundary-link-numbers="true"></ul>
 </div>

@@ -3,6 +3,7 @@ package com.github.dynamo.tvshows.model;
 import java.nio.file.Path;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.dynamo.core.VideoQuality;
 import com.github.dynamo.core.VideoSource;
@@ -136,8 +137,9 @@ public class ManagedEpisode extends Downloadable implements Video {
 	}
 
 	@Override
+	@JsonIgnore
 	public String getRelativeLink() {
-		return String.format( "/tvshow-detail/%s#season%d", seriesId, seasonNumber ); 
+		return String.format( "index.html#!/tvshow-detail/%s#season%d", seriesId, seasonNumber ); 
 	}
 	
 	private ManagedSeries series = null;

@@ -5,9 +5,7 @@
 </div>
 
 <div class="row" ng-show="filteredList.length > 24">
-  <p class="text-center">
-    <uib-pagination total-items="filteredList.length" max-size="30" force-ellipses="true" items-per-page="24" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
-  </p>
+  <ul uib-pagination total-items="filteredList.length" max-size="30" force-ellipses="true" items-per-page="24" ng-model="currentPage" ng-change="pageChanged()"></ul>
 </div>
 
 <div class="thumbnail downloadable-thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents">
