@@ -15,13 +15,8 @@ service transmission-daemon stop
 cp /vagrant/etc/transmission-daemon/settings.json /etc/transmission-daemon/settings.json
 service transmission-daemon start
 
-# configure beet
-cp /vagrant/etc/beets/config.yaml /home/ubuntu/.config/beets/config.yaml
-
 adduser --system sabnzbd --disabled-login --disabled-password
 adduser --system dynamo --disabled-login --disabled-password
 
 cp /vagrant/etc/default/sabnzbdplus /etc/default/sabnzbdplus
 service sabnzbdplus start
-
-cd /dynamo/dynamo

@@ -1,6 +1,5 @@
 .vagrant
 dynamo/data
-dynamo/glowroot
 logs
 admin
 /ubuntu-xenial-16.04-cloudimg-console.log
