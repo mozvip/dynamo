@@ -22,5 +22,3 @@ cp /vagrant/etc/default/sabnzbdplus /etc/default/sabnzbdplus
 service sabnzbdplus start
 
 cd /dynamo/dynamo
-wget -q https://github.com/glowroot/glowroot/releases/download/v0.9.12/glowroot-0.9.12-dist.zip
-unzip glowroot-0.9.12-dist.zip
