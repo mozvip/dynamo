@@ -61,7 +61,7 @@ public abstract class AbstractFindTVShowExecutor<T extends Downloadable> extends
 
 				for (String searchString : searchStrings) {
 					try {
-						searchString = StringUtils.stripAccents( searchString );						
+						searchString = StringUtils.stripAccents( searchString );
 						allResults.addAll( findForSearchString( provider, searchString, series.getAudioLanguage() ) );
 					} catch (Exception e) {
 						ErrorManager.getInstance().reportThrowable(e);

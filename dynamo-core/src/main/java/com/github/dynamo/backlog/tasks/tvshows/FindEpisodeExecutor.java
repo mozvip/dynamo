@@ -1,18 +1,10 @@
 package com.github.dynamo.backlog.tasks.tvshows;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.core.DownloadFinder;
 import com.github.dynamo.core.Language;
-import com.github.dynamo.core.VideoQuality;
 import com.github.dynamo.finders.core.EpisodeFinder;
 import com.github.dynamo.jdbi.SearchResultDAO;
 import com.github.dynamo.manager.DownloadableManager;
@@ -38,24 +30,6 @@ public class FindEpisodeExecutor extends AbstractFindTVShowExecutor<ManagedEpiso
 		return TVShowManager.getInstance().getTvshowEpisodeProviders();
 	}
 	
-	public List<SearchResult> filter( List<SearchResult> unfilteredResults ) {
-		
-		List<SearchResult> results;
-		if (series.getQualities() != null) {
-			Set<String> aliases = new HashSet<>();
-			for (VideoQuality quality : series.getQualities()) {
-				aliases.addAll( Arrays.asList( quality.getAliases()) );
-			}
-			String[] qualities = (String[]) aliases.toArray(new String[aliases.size()]);
-			results = new ArrayList<>();
-			results.addAll( unfilteredResults.stream().filter( tvshow -> StringUtils.containsAny(tvshow.getTitle(), qualities)).collect( Collectors.toList()) );
-		} else {
-			results = unfilteredResults;
-		}
-		
-		return results;
-	}
-
 	@Override
 	public List<SearchResult> findForSearchString(DownloadFinder provider, String searchString, Language audioLanguage) throws Exception {
 		EpisodeFinder episodeFinder = (EpisodeFinder) provider;
@@ -65,7 +39,7 @@ public class FindEpisodeExecutor extends AbstractFindTVShowExecutor<ManagedEpiso
 		} else {
 			results = episodeFinder.findEpisode( searchString, audioLanguage, episode.getSeasonNumber(), episode.getEpisodeNumber() );
 		}
-		return filter( results );
+		return results;
 	}
 	
 	@Override
