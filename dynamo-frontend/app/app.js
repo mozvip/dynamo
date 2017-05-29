@@ -28,7 +28,7 @@ angular.module('dynamo', [
 ])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '#/welcome'});
+  $routeProvider.otherwise({redirectTo: '/welcome'});
 }])
 
 .config(['$translateProvider', function ($translateProvider) {

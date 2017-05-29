@@ -7,10 +7,9 @@
       <a href="#/tvshows-unrecognized">There are {{unrecognizeds.length}} unrecognized folders</a>
     </p>
   </div>
-</div>
-
-<div class="row" ng-show="filteredList.length >itemsPerPage">
-  <ul uib-pagination total-items="filteredList.length" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></ul>
+  <div class="form-group" ng-show="filteredList.length >itemsPerPage">
+    <ul uib-pagination total-items="filteredList.length" items-per-page="itemsPerPage" ng-model="currentPage" ng-change="pageChanged()"></ul>
+  </div>
 </div>
 
 <div class="thumbnail downloadable-thumbnail col-xs-12 col-sm-4 col-md-3 col-lg-2" ng-repeat="downloadable in pageContents">
