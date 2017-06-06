@@ -48,6 +48,7 @@ import com.github.dynamo.suggesters.movies.MovieSuggester;
 import com.github.dynamo.utils.images.CoverImageFinder;
 import com.github.dynamo.webapps.googleimages.GoogleImages;
 import com.github.mozvip.hclient.HTTPClient;
+import com.github.mozvip.hclient.SimpleResponse;
 import com.github.mozvip.hclient.core.RegExp;
 import com.github.mozvip.hclient.core.WebDocument;
 import com.github.mozvip.hclient.core.WebResource;
@@ -59,7 +60,7 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 	private String login;
 	@Configurable(ifExpression="T411Provider.enabled", required=true)
 	private String password;
-	@Configurable(ifExpression="T411Provider.enabled", required=true, defaultValue="http://www.t411.li")
+	@Configurable(ifExpression="T411Provider.enabled", required=true, defaultValue="http://www.t411.al")
 	private String baseURL;
 
 	public String getLogin() {
@@ -112,11 +113,11 @@ public class T411Provider extends DownloadFinder implements BookFinder, EpisodeF
 				}
 			}
 		}
-		
-		
+
 		WebDocument loginPage = client.getDocument(baseURL + "/users/login/", 0);
 		if (loginPage.jsoupSingle("a.logout") == null) { // not already logged in
-			WebDocument newPage = client.submit( loginPage.jsoupSingle("form#loginform"), "login="+login, "password="+password ).getDocument();
+			SimpleResponse response = client.submit( loginPage.jsoupSingle("form#loginform"), "login="+login, "password="+password );
+			WebDocument newPage = response.getDocument();
 			if ( newPage.jsoupSingle("a.logout") == null) {
 				setEnabled( false );
 				throw new LoginFailedException( DynamoObjectFactory.getClassDescription( this.getClass()), login );
