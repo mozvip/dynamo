@@ -78,7 +78,7 @@ public class FindAlbumExecutor extends FindDownloadableExecutor<MusicAlbum> {
 			albumNames.add( albumName.replace("+", "plus") );
 			albumNames.add( albumName.replace('/', ' ') );
 			albumNames.add( albumName );
-			
+
 			for (String testName : albumNames) {
 				List<SearchResult> results = musicAlbumFinder.findMusicAlbum( musicAlbum.getArtistName(), testName, musicAlbum.getQuality() );
 				if (results != null && !results.isEmpty()) {

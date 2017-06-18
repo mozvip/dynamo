@@ -20,7 +20,6 @@ import com.github.dynamo.core.model.DownloadableUtilsDAO;
 import com.github.dynamo.manager.DownloadableManager;
 import com.github.dynamo.manager.FolderManager;
 import com.github.dynamo.model.DownloadableStatus;
-import com.github.dynamo.model.backlog.find.FindEpisodeTask;
 import com.github.dynamo.parsers.TVShowEpisodeInfo;
 import com.github.dynamo.parsers.VideoNameParser;
 import com.github.dynamo.subtitles.FindSubtitleEpisodeTask;
@@ -119,11 +118,11 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 				}
 			}
 
+			currentEpisode.setAbsoluteNumber( currentEpisode.getEpisodeNumber() );
+
 			TVShowManager.getInstance().saveEpisode( currentEpisode );
 			VideoManager.getInstance().getMetaData(currentEpisode, p);
 
-			currentEpisode.setAbsoluteNumber( currentEpisode.getEpisodeNumber() );
-			
 			// subtitles search
 			if ( series.getSubtitlesLanguage() != null ) {
 				if ( !subtitled && !VideoManager.isAlreadySubtitled( currentEpisode, series.getSubtitlesLanguage() )) {
@@ -132,9 +131,6 @@ public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 					BackLogProcessor.getInstance().unschedule( FindSubtitleEpisodeTask.class, String.format("task.episode.id == %d", currentEpisode.getId()) );
 				}
 			}
-
-			// cancel search for this episode
-			BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("task.episode.id == %d", currentEpisode.getId()) );
 		}
 	}
 

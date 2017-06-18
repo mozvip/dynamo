@@ -26,6 +26,7 @@ import com.github.dynamo.finders.core.EpisodeFinder;
 import com.github.dynamo.finders.core.TVShowSeasonProvider;
 import com.github.dynamo.manager.DownloadableManager;
 import com.github.dynamo.manager.FolderManager;
+import com.github.dynamo.model.backlog.find.FindEpisodeTask;
 import com.github.dynamo.subtitles.FindSubtitleEpisodeTask;
 import com.github.dynamo.tvshows.jdbi.ManagedEpisodeDAO;
 import com.github.dynamo.tvshows.jdbi.TVShowDAO;
@@ -317,6 +318,15 @@ public class TVShowManager implements Reconfigurable {
 	public void saveEpisode(ManagedEpisode episode) {
 		managedEpisodeDAO.saveEpisode( episode.getId(), episode.getEpisodeNumber(), episode.getFirstAired(), episode.getQuality(), episode.getReleaseGroup(),  
 			 	episode.getSource(), episode.isWatched(), episode.getSeasonId() );
+		
+		if (episode.isDownloaded()) {
+			// cancel search for this episode
+			BackLogProcessor.getInstance().unschedule(FindEpisodeTask.class, String.format("task.episode.id == %d", episode.getId()) );
+			// cancel download for this episode
+			DownloadableManager.getInstance().cancelDownload(episode.getId());			
+		}
+		
+		
 	}
 
 	public List<UnrecognizedFile> getUnrecognizedFiles( String seriesId ) {

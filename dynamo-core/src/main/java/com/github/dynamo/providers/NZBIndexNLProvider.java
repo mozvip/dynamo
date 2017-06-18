@@ -106,6 +106,9 @@ public class NZBIndexNLProvider extends DownloadFinder implements MovieProvider,
 	public List<SearchResult> findMusicAlbum(String artist, String album, MusicQuality quality) throws MusicAlbumSearchException {
 		int minimumSize = 40;
 		try {
+			
+			album = album.replaceAll("\'", "");
+			
 			String searchURL = String.format( "%s/search/?q=%s+%s" + SEARCH_SUFFIX,
 					BASE_URL, searchString(artist), searchString(album), minimumSize );
 			return extractResults( searchURL );
