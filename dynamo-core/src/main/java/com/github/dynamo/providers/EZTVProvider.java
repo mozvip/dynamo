@@ -71,7 +71,12 @@ public class EZTVProvider extends DownloadFinder implements EpisodeFinder {
 
 	@Override
 	public List<SearchResult> findEpisode(String seriesName, Language audioLanguage, int seasonNumber, int episodeNumber) throws Exception {
-		return search( String.format("%s s%02de%02d", seriesName, seasonNumber, episodeNumber));
+		String[] searchPatterns = new String[] { String.format("%s s%02de%02d", seriesName, seasonNumber, episodeNumber), String.format("%s %dx%02d", seriesName, seasonNumber, episodeNumber) };
+		List<SearchResult> results = new ArrayList<>();
+		for (String pattern : searchPatterns) {
+			results.addAll( search(pattern) );
+		}
+		return results;
 	}
 
 	@Override
