@@ -218,9 +218,9 @@ public class VideoNameParser {
 		name = name.replace('.', ' ');
 		name = name.replace('_', ' ');
 		
-		name = RegExp.keepOnlyGroups(name, "(.*)" + SEPARATOR_REGEXP + "[Bb][Ll][Uu][Rr][Aa][Yy](.*)");
-		name = RegExp.keepOnlyGroups(name, "(.*)" + SEPARATOR_REGEXP + "[Ff][Rr]E[Nn][Cc][Hh](.*)");
-		name = RegExp.keepOnlyGroups(name, "(.*)" + SEPARATOR_REGEXP + "X264(.*)");
+		name = RegExp.keepOnlyGroups(name, "(.*)" + SEPARATOR_REGEXP + "bluray(.*)");
+		name = RegExp.keepOnlyGroups(name, "(.*)" + SEPARATOR_REGEXP + "french(.*)");
+		name = RegExp.keepOnlyGroups(name, "(.*)" + SEPARATOR_REGEXP + "x264(.*)");
 		return name;
 	}
 

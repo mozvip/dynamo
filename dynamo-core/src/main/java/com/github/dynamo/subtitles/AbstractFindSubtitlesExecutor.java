@@ -96,8 +96,8 @@ public abstract class AbstractFindSubtitlesExecutor<T extends AbstractFindSubtit
 		if (selectedSubTitles != null) {
 			Files.write(destinationSRT, selectedSubTitles.getData(), StandardOpenOption.CREATE);
 
-			String message = String.format("Subtitles for <a href='%s'>%s</a> have been found",
-					downloadable.getRelativeLink(), downloadable.toString());
+			String message = String.format("Subtitles for <a href='%s'>%s</a> have been found : %s",
+					downloadable.getRelativeLink(), downloadable.toString(), selectedSubTitles.getTitle());
 			historyDAO.insert(message, DownloadableStatus.SUBTITLED, downloadable.getId());
 			EventManager.getInstance().reportSuccess(message);
 
