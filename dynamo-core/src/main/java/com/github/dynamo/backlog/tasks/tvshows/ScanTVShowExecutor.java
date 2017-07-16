@@ -31,7 +31,7 @@ import com.github.dynamo.tvshows.model.ManagedSeries;
 import com.github.dynamo.tvshows.model.TVShowManager;
 import com.github.dynamo.tvshows.model.TVShowSeason;
 import com.github.dynamo.video.VideoManager;
-import com.github.mozvip.subtitles.Release;
+import com.github.mozvip.subtitles.model.Release;
 
 public class ScanTVShowExecutor extends ScanFolderExecutor<ScanTVShowTask> {
 	

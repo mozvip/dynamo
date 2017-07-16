@@ -2,7 +2,7 @@ package com.github.dynamo.parsers;
 
 import com.github.dynamo.core.VideoQuality;
 import com.github.dynamo.core.VideoSource;
-import com.github.mozvip.subtitles.Release;
+import com.github.mozvip.subtitles.model.Release;
 
 public class VideoInfo {
 	

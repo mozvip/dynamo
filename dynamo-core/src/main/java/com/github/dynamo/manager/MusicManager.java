@@ -285,9 +285,9 @@ public class MusicManager implements Reconfigurable {
 			
 			AudioDbAlbum audioDBAlbum = null;
 			int year = -1;
-			Optional<AudioDbResponse> optAlbum = TheAudioDb.getInstance().searchAlbum(artistName, albumName);
-			if (optAlbum.isPresent() && optAlbum.get().getAlbum() != null) {
-				audioDBAlbum = optAlbum.get().getAlbum().get( 0 );
+			Optional<AudioDbAlbum> optAlbum = TheAudioDb.getInstance().searchAlbum(artistName, albumName);
+			if (optAlbum.isPresent()) {
+				audioDBAlbum = optAlbum.get();
 				year = audioDBAlbum.getIntYearReleased();
 			}
 

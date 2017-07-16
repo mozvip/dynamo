@@ -28,16 +28,12 @@
                             <input type="checkbox" ng-model="tvshow.autoDownload" ng-change="saveTVShow()"> Automatically download new episodes
                         </label>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group form-inline">
                         <label class="control-label">Metadata Language</label>
                         <select ng-model="tvshow.metaDataLanguage" ng-change="saveTVShow()" class="form-control" ng-options="item.key as item.value for item in languages | orderBy: 'value'"/>
-                    </div>                        
-                    <div class="form-group">
                         <label class="control-label">Audio Language</label>
                         <select ng-model="tvshow.audioLanguage" ng-change="saveTVShow()" class="form-control" ng-options="item.key as item.value for item in languages | orderBy: 'value'">
                         </select>
-                    </div>                        
-                    <div class="form-group">
                         <label class="control-label">Subtitles Language</label>
                         <select ng-model="tvshow.subtitlesLanguage" ng-change="saveTVShow()" class="form-control" ng-options="item.key as item.value for item in languages | orderBy: 'value'">
                             <option value="">None</option>
@@ -45,12 +41,14 @@
                     </div>                        
                     <div class="form-group">
                         <label class="control-label">Alternate names : </label>
-                        <tags-input ng-model="alternateNames" replaceSpacesWithDashes="false" placeholder="Add an additional name" on-tag-added="saveTVShow()" on-tag-removed="saveTVShow()" />
+                        <tags-input ng-model="alternateNames" replace-spaces-with-dashes="false" placeholder="Add an additional name" on-tag-added="saveTVShow()" on-tag-removed="saveTVShow()" />
                     </div>
                 </form>
-                <button class="btn btn-block btn-default" ng-click="wrongShow()"><span class="glyphicon glyphicon-exclamation-sign" /> Wrong Show</button>
-                <button class="btn btn-block btn-default" ng-click="rescan()"><span class="glyphicon glyphicon-refresh" /> Rescan Files</button>
-                <button class="btn btn-block btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{tvshow.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="deleteTVShow()"><span class="glyphicon glyphicon-trash" /> Delete {{tvshow.name}}</button>
+                <div class="button-list">
+                    <button class="btn btn-default" ng-click="wrongShow()"><span class="glyphicon glyphicon-exclamation-sign" /> Wrong Show</button>
+                    <button class="btn btn-default" ng-click="rescan()"><span class="glyphicon glyphicon-refresh" /> Rescan Files</button>
+                    <button class="btn btn-danger" sweetalert sweet-options='{"title":"Confirm Delete","text":"Are you sure you want to delete {{tvshow.name}} ?","type":"warning","showCancelButton":true,"confirmButtonColor":"#DD6B55","confirmButtonText":"Yes, delete it!","cancelButtonText":"No, cancel!","closeOnConfirm":true,"closeOnCancel":true}'' sweet-on-confirm="deleteTVShow()"><span class="glyphicon glyphicon-trash" /> Delete {{tvshow.name}}</button>
+                </div>
             </div>
         </div>
 

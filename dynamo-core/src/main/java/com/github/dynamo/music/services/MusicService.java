@@ -15,7 +15,6 @@ import com.github.dynamo.core.EventManager;
 import com.github.dynamo.core.manager.DAOManager;
 import com.github.dynamo.core.manager.ErrorManager;
 import com.github.dynamo.core.model.DownloadableUtilsDAO;
-import com.github.dynamo.manager.DownloadableManager;
 import com.github.dynamo.manager.MusicManager;
 import com.github.dynamo.model.DownloadableStatus;
 import com.github.dynamo.model.music.MusicAlbum;
@@ -24,7 +23,6 @@ import com.github.dynamo.model.music.MusicFile;
 import com.github.dynamo.music.TheAudioDb;
 import com.github.dynamo.music.jdbi.MusicAlbumDAO;
 import com.github.mozvip.theaudiodb.model.AudioDbAlbum;
-import com.github.mozvip.theaudiodb.model.AudioDbResponse;
 
 @Path("/music")
 public class MusicService {
@@ -64,9 +62,9 @@ public class MusicService {
 			
 			AudioDbAlbum audioDBAlbum = null;
 			try {
-				Optional<AudioDbResponse> response = TheAudioDb.getInstance().searchAlbum(artist.getName(), musicAlbum.getName());
+				Optional<AudioDbAlbum> response = TheAudioDb.getInstance().searchAlbum(artist.getName(), musicAlbum.getName());
 				if (response.isPresent()) {
-					audioDBAlbum = response.get().getAlbum().get(0);
+					audioDBAlbum = response.get();
 				}
 			} catch (IOException e) {
 				ErrorManager.getInstance().reportThrowable( e );

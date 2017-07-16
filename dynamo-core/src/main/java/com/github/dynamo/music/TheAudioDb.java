@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.github.dynamo.core.configuration.ClassDescription;
 import com.github.mozvip.theaudiodb.TheAudioDbClient;
+import com.github.mozvip.theaudiodb.model.AudioDbAlbum;
 import com.github.mozvip.theaudiodb.model.AudioDbResponse;
 
 @ClassDescription(label="TheAudioDB")
@@ -28,7 +29,7 @@ public class TheAudioDb {
 		return service.searchArtist(artistName);
 	}
 
-	public Optional<AudioDbResponse> searchAlbum(String artistName, String albumName) throws IOException {
+	public Optional<AudioDbAlbum> searchAlbum(String artistName, String albumName) throws IOException {
 		return service.searchAlbum(artistName, albumName);
 	}
 

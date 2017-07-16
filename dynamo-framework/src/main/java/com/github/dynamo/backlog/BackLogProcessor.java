@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 
 import javax.script.ScriptException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.dynamo.core.Enableable;
 import com.github.dynamo.core.EventManager;
 import com.github.dynamo.core.LogQueuing;
@@ -29,6 +32,8 @@ import com.github.dynamo.scripting.JavaScriptManager;
 import com.google.common.eventbus.EventBus;
 
 public class BackLogProcessor extends Thread {
+	
+	private final static Logger LOGGER = LoggerFactory.getLogger(BackLogProcessor.class);
 
 	private boolean shutdownRequested = false;
 
@@ -72,6 +77,17 @@ public class BackLogProcessor extends Thread {
 	public Collection<TaskSubmission> getSubmissions() {
 		return submissionsToDisplay;
 	}
+	
+	public Collection<TaskSubmission> getSubmissions( String queryExpression ) {
+		return submissionsToDisplay.stream().filter( s -> {
+			try {
+				return evaluate(s.getTask(), queryExpression);
+			} catch (ScriptException e) {
+				LOGGER.error(e.getMessage(), e);
+				return false;
+			}
+		} ).collect(Collectors.toList());
+	}	
 	
 	@Override
 	public void run() {

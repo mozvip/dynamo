@@ -24,6 +24,12 @@ public class BacklogService {
 		return BackLogProcessor.getInstance().getSubmissions();
 	}
 	
+	@Path("/query")
+	@GET
+	public Collection<TaskSubmission> query(@PathParam("query") String query) {
+		return BackLogProcessor.getInstance().getSubmissions( query );
+	}
+	
 	@Path("/cancel/{submissionId}")
 	@POST
 	public void cancel( @PathParam("submissionId") long submissionId ) {

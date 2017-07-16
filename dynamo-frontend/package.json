@@ -2,9 +2,9 @@
   "name": "dynamo-frontend",
   "private": true,
   "version": "0.0.0",
-  "description": "A starter project for AngularJS",
-  "repository": "https://github.com/angular/angular-seed",
-  "license": "MIT",
+  "description": "Javascript Frontend for Dynamo",
+  "repository": "https://github.com/mozvip/dynamo",
+  "license": "Apache 2.0",
   "devDependencies": {
     "bower": "^1.8.0",
     "http-server": "^0.9.0"
@@ -17,6 +17,10 @@
     "preupdate-webdriver": "npm install"
   },
   "dependencies": {
-    "eslint": "^3.5.0"
-  }
+    "bootstrap": "^3.3.7",
+    "eslint": "^3.5.0",
+    "webpack": "^2.6.1"
+  },
+  "main": "index.js",
+  "author": "guillaume.serre@gmail.com"
 }
