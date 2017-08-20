@@ -2,9 +2,9 @@ package com.github.dynamo.core.tasks;
 
 import com.github.dynamo.core.model.TaskExecutor;
 
-public class MethodInvokeExecutor extends TaskExecutor<InvokeMethodTask> {
+public class InvokeMethodExecutor extends TaskExecutor<InvokeMethodTask> {
 
-	public MethodInvokeExecutor(InvokeMethodTask task) {
+	public InvokeMethodExecutor(InvokeMethodTask task) {
 		super(task);
 	}
 

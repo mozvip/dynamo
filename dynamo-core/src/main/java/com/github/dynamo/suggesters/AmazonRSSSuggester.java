@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
-import org.jsoup.select.Elements;
 
 import com.github.dynamo.core.manager.ErrorManager;
 import com.github.mozvip.hclient.HTTPClient;

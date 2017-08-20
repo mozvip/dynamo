@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.github.dynamo.backlog.BackLogProcessor;
 import com.github.dynamo.core.manager.ErrorManager;
 import com.github.dynamo.core.model.TaskExecutor;
-import com.github.dynamo.model.backlog.core.HTTPDownloadTask;
 import com.github.mozvip.hclient.HTTPClient;
 import com.github.mozvip.hclient.core.WebResource;
 

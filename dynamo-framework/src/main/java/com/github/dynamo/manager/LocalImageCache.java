@@ -11,8 +11,8 @@ import java.nio.file.StandardOpenOption;
 import org.apache.commons.io.IOUtils;
 
 import com.github.dynamo.backlog.BackLogProcessor;
+import com.github.dynamo.backlog.tasks.core.HTTPDownloadTask;
 import com.github.dynamo.core.manager.ErrorManager;
-import com.github.dynamo.model.backlog.core.HTTPDownloadTask;
 import com.github.mozvip.hclient.HTTPClient;
 import com.github.mozvip.hclient.core.FileNameUtils;
 import com.github.mozvip.hclient.core.WebResource;

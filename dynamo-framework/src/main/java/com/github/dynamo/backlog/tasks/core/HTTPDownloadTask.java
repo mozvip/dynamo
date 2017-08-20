@@ -1,4 +1,4 @@
-package com.github.dynamo.model.backlog.core;
+package com.github.dynamo.backlog.tasks.core;
 
 import java.nio.file.Path;
 
